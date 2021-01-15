@@ -1,9 +1,10 @@
+import Fullscreen from '../../components/Fullscreen/Fullscreen';
 import LoginForm from '../../components/LoginForm/LoginForm';
 
 export default function LoginPage() {
 	return (
-		<div className="centered-fullscreen">
+		<Fullscreen>
 			<LoginForm />
-		</div>
+		</Fullscreen>
 	);
 }

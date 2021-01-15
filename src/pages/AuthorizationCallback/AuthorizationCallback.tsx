@@ -3,6 +3,7 @@ import { getSessionId } from '../../api/api';
 import * as qs from 'query-string';
 import React from 'react';
 import Box from '../../components/Box/Box';
+import Fullscreen from '../../components/Fullscreen/Fullscreen';
 
 export function AuthorizationCallback() {
 	const { provider } = useParams<{ provider: string }>();
@@ -45,8 +46,8 @@ export function AuthorizationCallback() {
 
 export default function AuthorizationCallbackPage() {
 	return (
-		<div className="centered-fullscreen">
+		<Fullscreen>
 			<AuthorizationCallback />
-		</div>
+		</Fullscreen>
 	);
 }

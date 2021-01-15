@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-export const API_SERVER_URL = 'http://localhost:5000';
+import { API_SERVER_URL } from '../lib/constants';
 
 axios.defaults.baseURL = API_SERVER_URL;
 
