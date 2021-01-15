@@ -1,7 +1,7 @@
 import { Link, Redirect, useLocation, useParams } from 'react-router-dom';
-import { getSessionId } from '../../api/api';
+import { createSession } from '../../api/api';
 import * as qs from 'query-string';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Box from '../../components/Box/Box';
 import Fullscreen from '../../components/Fullscreen/Fullscreen';
 
@@ -9,6 +9,19 @@ export function AuthorizationCallback() {
 	const { provider } = useParams<{ provider: string }>();
 	const { code } = qs.parse(useLocation().search);
 	const [state, setState] = React.useState<'loading' | 'error' | 'loaded'>('loading');
+
+	useEffect(() => {
+		if (typeof code !== 'string') {
+			setState('error');
+		} else {
+			createSession(code, provider)
+				.then((sessionId) => {
+					localStorage.setItem('session_id', sessionId);
+					setState('loaded');
+				})
+				.catch((err) => setState('error'));
+		}
+	}, [code, provider]);
 
 	const LoginError = () => (
 		<Box>
@@ -23,20 +36,11 @@ export function AuthorizationCallback() {
 		</Box>
 	);
 
+	console.log('Rendered');
+
 	switch (state) {
 		case 'loading':
-			if (typeof code !== 'string') {
-				setState('error');
-				return <LoginError />;
-			} else {
-				getSessionId(code, provider)
-					.then((sessionId) => {
-						localStorage.setItem('session_id', sessionId);
-						setState('loaded');
-					})
-					.catch((err) => setState('error'));
-				return <Loading />;
-			}
+			return <Loading />;
 		case 'loaded':
 			return <Redirect to="/" />;
 		case 'error':

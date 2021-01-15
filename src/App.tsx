@@ -1,6 +1,9 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
+import Logout from './components/Logout/Logout';
 import AuthorizationCallback from './pages/AuthorizationCallback/AuthorizationCallback';
+import DefaultPage from './pages/DefaultPage/DefaultPage';
+import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SpacePage from './pages/SpacePage/SpacePage';
 
@@ -12,7 +15,9 @@ function App() {
 					<Route path="/auth/:provider/callback" component={AuthorizationCallback} />
 					<Route path="/space/:spaceId" component={SpacePage} />
 					<Route path="/login" exact component={LoginPage} />
-					<Route path="/" exact component={LoginPage} />
+					<Route path="/logout" exact component={Logout} />
+					<Route path="/home" exact component={HomePage} />
+					<Route path="/" exact component={DefaultPage} />
 				</Switch>
 			</BrowserRouter>
 		</div>

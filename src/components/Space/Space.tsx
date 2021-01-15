@@ -1,3 +1,5 @@
+import Fullscreen from '../Fullscreen/Fullscreen';
+
 export default function Space() {
-	return <div className="centered-fullscreen"></div>;
+	return <Fullscreen></Fullscreen>;
 }

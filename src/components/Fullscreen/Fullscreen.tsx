@@ -6,7 +6,7 @@ export default function Fullscreen({
 	centerVertical = true,
 	centerHorizontal = true
 }: {
-	children: React.ReactNode;
+	children?: React.ReactNode;
 	centerVertical?: boolean;
 	centerHorizontal?: boolean;
 }) {
