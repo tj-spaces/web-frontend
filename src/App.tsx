@@ -1,5 +1,12 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import './App.css';
+
+import './App.sass';
+import './styles/alignment.sass';
+import './styles/border-radius.sass';
+import './styles/display.sass';
+import './styles/spacing.sass';
+import './styles/typography.sass';
+
 import Logout from './components/Logout/Logout';
 import AuthorizationCallback from './pages/AuthorizationCallback/AuthorizationCallback';
 import ClusterPage from './pages/ClusterPage/ClusterPage';

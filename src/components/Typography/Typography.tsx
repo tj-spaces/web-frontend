@@ -1,5 +1,4 @@
 import classnames from 'classnames';
-import './Typography.sass';
 
 export type TypographyType = 'title' | 'h1' | 'h2' | 'paragraph' | 'compact';
 export type TypographyColor = 'light' | 'dark';
@@ -38,6 +37,7 @@ export default function Typography({
 		center: 'text-center'
 	};
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const displayClasses = {
 		inline: 'typography-display-inline',
 		block: 'typography-display-block'

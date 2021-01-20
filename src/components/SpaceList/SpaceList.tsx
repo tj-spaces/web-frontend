@@ -1,5 +1,5 @@
 import { ISpace } from '../../typings/Space';
-import Flexbox from '../Flexbox/Flexbox';
+import Box from '../Box/Box';
 import SpaceListItem from '../SpaceListItem/SpaceListItem';
 
 export default function SpaceList({ spaces }: { spaces: ISpace[] | undefined }) {
@@ -10,10 +10,10 @@ export default function SpaceList({ spaces }: { spaces: ISpace[] | undefined }) 
 	console.log(spaces);
 
 	return (
-		<Flexbox direction="column">
+		<Box display="flex-column">
 			{spaces.map(({ id, name }) => (
 				<SpaceListItem key={id} name={name} id={id} />
 			))}
-		</Flexbox>
+		</Box>
 	);
 }

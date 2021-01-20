@@ -1,6 +1,10 @@
+import React from 'react';
 import { createRef, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { createCluster } from '../../api/api';
+import Box from '../Box/Box';
+import Button from '../Button/Button';
+import Typography from '../Typography/Typography';
 
 export default function ClusterCreateButton() {
 	const clusterNameRef = createRef<HTMLInputElement>();
@@ -32,19 +36,21 @@ export default function ClusterCreateButton() {
 	}
 
 	return (
-		<div>
+		<Box display="flex-row" className="font-size-lg" justifyContent="space-between">
 			{isClusterCreating ? (
-				<span>Creating cluster...</span>
+				<Typography type="compact">Loading...</Typography>
 			) : (
 				<>
-					<input ref={clusterNameRef} type="text"></input>
-					<select ref={visibilityRef}>
+					<input ref={clusterNameRef} type="text" style={{ flex: 3, marginRight: '0.25em' }} />
+					<select ref={visibilityRef} style={{ flex: 1, margin: '0 0.25em' }}>
 						<option value="public">Public</option>
 						<option value="unlisted">Unlisted</option>
 					</select>
-					<button onClick={() => create()}>Create A Cluster</button>
+					<Button onClick={() => create()} style={{ flex: 1, marginLeft: '0.25em' }}>
+						Create
+					</Button>
 				</>
 			)}
-		</div>
+		</Box>
 	);
 }

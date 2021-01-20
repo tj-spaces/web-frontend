@@ -1,12 +1,13 @@
 import { createRef, useContext, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { createSpace } from '../../api/api';
-import ClusterCurrentClusterContext from '../ClusterCurrentClusterContext/ClusterCurrentClusterContext';
+import Button from '../Button/Button';
+import ClusterIdContext from '../ClusterIdContext/ClusterIdContext';
 
 export default function SpaceCreateButton() {
 	const spaceNameRef = createRef<HTMLInputElement>();
 
-	const clusterId = useContext(ClusterCurrentClusterContext);
+	const clusterId = useContext(ClusterIdContext);
 	const [isSpaceCreating, setIsSpaceCreating] = useState<boolean>(false);
 	const [isSpaceCreated, setIsSpaceCreated] = useState<boolean>(false);
 	const [newlyCreatedSpaceId, setNewlyCreatedSpaceId] = useState<string>();
@@ -24,7 +25,7 @@ export default function SpaceCreateButton() {
 	}
 
 	if (isSpaceCreated && newlyCreatedSpaceId) {
-		return <Redirect to={`/cluster/${clusterId}/space/${newlyCreatedSpaceId}`} />;
+		return <Redirect to={`/clusters/${clusterId}/spaces/${newlyCreatedSpaceId}`} />;
 	}
 
 	return (
@@ -34,7 +35,7 @@ export default function SpaceCreateButton() {
 			) : (
 				<>
 					<input ref={spaceNameRef} type="text"></input>
-					<button onClick={() => create()}>Add a Space</button>
+					<Button onClick={() => create()}>Add a Space</Button>
 				</>
 			)}
 		</div>

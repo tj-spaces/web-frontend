@@ -1,15 +1,10 @@
-import './Button.css';
+import { ButtonHTMLAttributes, DetailedHTMLProps, forwardRef } from 'react';
+import './Button.sass';
 
-export default function Button({
-	children,
-	...props
-}: { children: React.ReactNode } & React.DetailedHTMLProps<
-	React.ButtonHTMLAttributes<HTMLButtonElement>,
-	HTMLButtonElement
->) {
-	return (
-		<button className={'button' + props.className ? ' ' + props.className : ''} {...props}>
-			{children}
-		</button>
-	);
-}
+type ButtonProps = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+	return <button ref={ref} className="button" {...props} />;
+});
+
+export default Button;
