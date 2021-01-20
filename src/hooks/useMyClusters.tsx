@@ -3,10 +3,10 @@ import { getMyClusters } from '../api/api';
 import { ICluster } from '../typings/Cluster';
 
 export default function useMyClusters() {
-	const [spaces, setSpaces] = useState<ICluster[]>();
+	const [spaces, setClusters] = useState<ICluster[]>();
 
 	useEffect(() => {
-		getMyClusters().then((spaces) => setSpaces(spaces));
+		getMyClusters().then((clusters) => setClusters(clusters));
 	}, []);
 
 	return spaces;

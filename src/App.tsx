@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Logout from './components/Logout/Logout';
 import AuthorizationCallback from './pages/AuthorizationCallback/AuthorizationCallback';
+import ClusterPage from './pages/ClusterPage/ClusterPage';
 import DefaultPage from './pages/DefaultPage/DefaultPage';
 import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
@@ -13,7 +14,8 @@ function App() {
 			<BrowserRouter>
 				<Switch>
 					<Route path="/auth/:provider/callback" component={AuthorizationCallback} />
-					<Route path="/space/:spaceId" component={SpacePage} />
+					<Route path="/clusters/:clusterId/spaces/:spaceId" component={SpacePage} />
+					<Route path="/clusters/:clusterId" component={ClusterPage} />
 					<Route path="/login" exact component={LoginPage} />
 					<Route path="/logout" exact component={Logout} />
 					<Route path="/home" exact component={HomePage} />
