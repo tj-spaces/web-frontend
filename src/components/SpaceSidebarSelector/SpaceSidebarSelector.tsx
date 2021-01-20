@@ -1,4 +1,4 @@
-import { ISpace } from '../../typings/Space';
+import { ICluster } from '../../typings/Cluster';
 import Flexbox from '../Flexbox/Flexbox';
 import SpaceSidebarSelectorItem from '../SpaceSidebarSelectorItem/SpaceSidebarSelectorItem';
 
@@ -7,7 +7,7 @@ export default function SpaceSidebarSelector({
 	activeSpace,
 	setActiveSpace
 }: {
-	spaces: ISpace[];
+	spaces: ICluster[];
 	activeSpace?: number;
 	setActiveSpace: (spaceId: number) => any;
 }) {

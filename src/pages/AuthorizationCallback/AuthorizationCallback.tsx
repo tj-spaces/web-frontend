@@ -6,6 +6,8 @@ import Box from '../../components/Box/Box';
 import Fullscreen from '../../components/Fullscreen/Fullscreen';
 
 export function AuthorizationCallback() {
+	document.title = 'Logging In';
+
 	const { provider } = useParams<{ provider: string }>();
 	const { code } = qs.parse(useLocation().search);
 	const [state, setState] = React.useState<'loading' | 'error' | 'loaded'>('loading');

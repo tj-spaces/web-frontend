@@ -1,11 +1,11 @@
-import { ISpace } from '../../typings/Space';
+import { ICluster } from '../../typings/Cluster';
 
 export default function SpaceSidebarSelectorItem({
 	space,
 	isActive,
 	setActiveSpace
 }: {
-	space: ISpace;
+	space: ICluster;
 	isActive: boolean;
 	setActiveSpace: (spaceId: number) => any;
 }) {

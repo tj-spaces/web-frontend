@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import useMySpaces from '../../hooks/useMySpaces';
+import useMySpaces from '../../hooks/useMyClusters';
 import SpaceSidebar from '../SpaceSidebar/SpaceSidebar';
 
 export default function SpaceContainer() {

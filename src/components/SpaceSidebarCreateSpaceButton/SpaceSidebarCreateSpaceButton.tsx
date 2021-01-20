@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import { createSpace } from '../../api/api';
+import { createCluster } from '../../api/api';
 
 export default function SpaceSidebarCreateSpace() {
 	const spaceNameRef = createRef<HTMLInputElement>();
@@ -13,7 +13,7 @@ export default function SpaceSidebarCreateSpace() {
 			if (visibility !== 'public' && visibility !== 'unlisted') {
 				alert('Please choose a different visibility option');
 			} else {
-				createSpace(spaceName, visibility);
+				createCluster(spaceName, visibility);
 			}
 		}
 	}
