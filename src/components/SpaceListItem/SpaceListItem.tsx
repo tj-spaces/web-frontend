@@ -2,8 +2,6 @@ import { ISpace } from '../../typings/Space';
 import { Link } from 'react-router-dom';
 
 export default function SpaceListItem({ clusterId, space }: { clusterId: string; space: ISpace }) {
-	console.log(space);
-
 	return (
 		<div
 			className="hoverable-light-box foreground-color-muted column-item"

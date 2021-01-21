@@ -30,6 +30,12 @@ export default function Sidebar() {
 					<i className="fas fa-sign-out-alt"></i>
 				</Link>
 			</SidebarIcon>
+
+			<SidebarIcon>
+				<Link to="/explore">
+					<i className="fas fa-compass"></i>
+				</Link>
+			</SidebarIcon>
 		</Box>
 	);
 }

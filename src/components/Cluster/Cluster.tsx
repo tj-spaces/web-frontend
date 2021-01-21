@@ -17,7 +17,7 @@ export default function Cluster({ id }: { id: string }) {
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
 	return (
-		<Box display="flex-column" height="100%" width="100%">
+		<Box display="flex-column" className="overflow-y-auto" height="100%" width="100%">
 			<ClusterIdContext.Provider value={{ id, spaces }}>
 				{isSettingsOpen && <ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />}
 

@@ -31,7 +31,7 @@ export async function createSession(code: string, provider: string): Promise<str
 	}
 }
 
-export function makeAPIPostCall(url: string, data: any) {
+export function makeAPIPostCall(url: string, data?: any) {
 	return new Promise<AxiosResponse>((resolve, reject) => {
 		axios
 			.post(url, data, { headers: { Authorization: 'Bearer ' + getSessionId() } })
@@ -98,6 +98,10 @@ export async function createCluster(name: string, visibility: ClusterVisibility)
 
 export async function createSpace(clusterId: string, name: string): Promise<string> {
 	return (await makeAPIPostCall('/api/clusters/' + clusterId + '/spaces', { name })).data.space_id;
+}
+
+export async function joinCluster(clusterId: string): Promise<void> {
+	await makeAPIPostCall('/api/clusters/' + clusterId + '/join');
 }
 
 export async function getCluster(id: string): Promise<ICluster> {

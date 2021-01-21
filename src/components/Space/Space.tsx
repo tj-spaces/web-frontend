@@ -17,24 +17,25 @@ export default function Space({ id }: { id: string }) {
 		connection.emit('join_space', id);
 
 		connection.on('peers', (peers: { [id: string]: ISpaceParticipant }) => {
-			setParticipants((participants) => {
-				for (let id in peers) {
-					participants.set(id, peers[id]);
-				}
-				return participants;
-			});
+			let participants = new Map<string, ISpaceParticipant>();
+
+			for (let [id, participant] of Object.entries(peers)) {
+				participants.set(id, participant);
+			}
+
+			setParticipants(participants);
 		});
 
 		connection.on('peer_joined', (peer: ISpaceParticipant) => {
 			setParticipants((participants) => {
-				participants.set(peer.participantId, peer);
+				participants.set(peer.accountId, peer);
 				return participants;
 			});
 		});
 
 		connection.on('peer_left', (peer: ISpaceParticipant) => {
 			setParticipants((participants) => {
-				participants.delete(peer.participantId);
+				participants.delete(peer.accountId);
 				return participants;
 			});
 		});
@@ -50,17 +51,20 @@ export default function Space({ id }: { id: string }) {
 	return (
 		<CurrentSpaceContext.Provider value={id}>
 			{space ? (
-				<div style={{ height: '100vh' }} className="flex-column">
+				<div style={{ height: '100vh' }} className="flex-column padding-2">
 					<Typography type="title" alignment="center">
 						{space.name}
 					</Typography>
 					<br />
-					Currently here:
-					{Array.from(participants.values()).map((participant) => {
-						return <span>{participant.participantId}</span>;
-					})}
+
+					<div className="text-center">
+						<h2>Here</h2>
+						{Array.from(participants.values()).map((participant) => {
+							return <span key={participant.accountId}>{participant.displayName}</span>;
+						})}
+					</div>
 					<div className="flex-row">
-						<Button to="..">Back</Button>
+						<Button to="..">Leave</Button>
 					</div>
 				</div>
 			) : (
