@@ -5,6 +5,7 @@ import CurrentClusterContext from '../CurrentClusterContext/CurrentClusterContex
 
 import './SpaceList.sass';
 import '../../styles/box.sass';
+import SpaceListItem from '../SpaceListItem/SpaceListItem';
 
 export default function SpaceList({ spaces = [] }: { spaces?: ISpace[] }) {
 	const cluster = useContext(CurrentClusterContext);
@@ -12,16 +13,7 @@ export default function SpaceList({ spaces = [] }: { spaces?: ISpace[] }) {
 	return (
 		<div className="space-list">
 			{spaces.map((space) => (
-				<div
-					className="hoverable-light-box foreground-color-muted column-item"
-					style={{ height: '5em', fontSize: '1.25em' }}
-				>
-					<b>
-						<Link to={`/clusters/${cluster.id}/spaces/${space.id}`} className="unstyled-link">
-							{space.name}
-						</Link>
-					</b>
-				</div>
+				<SpaceListItem clusterId={cluster.id!} space={space} />
 			))}
 		</div>
 	);

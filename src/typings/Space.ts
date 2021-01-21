@@ -2,6 +2,7 @@ export type ISpace = {
 	id: string;
 	name: string;
 	color: string;
+	online_count: number;
 } & (
 	| {
 			type: 'direct';

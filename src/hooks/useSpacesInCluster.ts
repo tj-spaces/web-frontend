@@ -7,6 +7,9 @@ export default function useSpacesInCluster(clusterId: string) {
 
 	useEffect(() => {
 		getSpacesInCluster(clusterId).then((spaces) => setSpaces(spaces));
+
+		// Reset to empty array
+		return () => setSpaces([]);
 	}, [clusterId]);
 
 	return spaces;
