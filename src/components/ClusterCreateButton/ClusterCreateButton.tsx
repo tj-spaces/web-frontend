@@ -40,7 +40,7 @@ export default function ClusterCreateButton() {
 	}
 
 	return (
-		<div className="sidebar-icon">
+		<>
 			<Typography type="h1" onClick={() => setIsOpen(true)}>
 				+
 			</Typography>
@@ -70,6 +70,6 @@ export default function ClusterCreateButton() {
 					</Box>
 				</Modal>
 			)}
-		</div>
+		</>
 	);
 }

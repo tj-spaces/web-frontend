@@ -1,28 +1,25 @@
-import { useState } from 'react';
 import useCluster from '../../hooks/useCluster';
 import useSpacesInCluster from '../../hooks/useSpacesInCluster';
 import Box from '../Box/Box';
-import ClusterIdContext from '../ClusterIdContext/ClusterIdContext';
-import ClusterSidebar from '../ClusterSidebar/ClusterSidebar';
+import ClusterIdContext from '../CurrentClusterContext/CurrentClusterContext';
 import SpaceList from '../SpaceList/SpaceList';
-import Typography from '../Typography/Typography';
 
 export type SelectedPanelType = 'spaces' | 'posts';
 
 export default function Cluster({ id }: { id: string }) {
 	const cluster = useCluster(id);
-	const [selectedPanel, setSelectedPanel] = useState<SelectedPanelType>();
 	const spaces = useSpacesInCluster(id) ?? [];
 
 	return (
-		<ClusterIdContext.Provider value={{ id, spaces }}>
-			<Box display="flex-column" height="100%">
-				<h2 style={{ marginLeft: '0.5em', flex: 1 }}>{cluster?.name ?? 'Loading...'}</h2>
-				<div className="background-color-2" style={{ flex: 16 }}>
+		<Box display="flex-column" height="100%">
+			<ClusterIdContext.Provider value={{ id, spaces }}>
+				<h1 style={{ marginLeft: '0.5em', flex: 1 }}>{cluster?.name ?? 'Loading...'}</h1>
+				<div className="background-color-2 padding-comfortable" style={{ flex: 16 }}>
+					<h2>Spaces</h2>
 					<SpaceList spaces={spaces} />
-					<ClusterSidebar selectedPanel={selectedPanel} setSelectedPanel={setSelectedPanel} />
+					<h2>Posts</h2>
 				</div>
-			</Box>
-		</ClusterIdContext.Provider>
+			</ClusterIdContext.Provider>
+		</Box>
 	);
 }

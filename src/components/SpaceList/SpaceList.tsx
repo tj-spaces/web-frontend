@@ -1,18 +1,27 @@
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { ISpace } from '../../typings/Space';
-import SpaceCreateButton from '../SpaceCreateButton/SpaceCreateButton';
-import SpaceListItem from '../SpaceListItem/SpaceListItem';
-import './SpaceList.sass';
+import CurrentClusterContext from '../CurrentClusterContext/CurrentClusterContext';
 
-export default function SpaceList({ spaces }: { spaces: ISpace[] | undefined }) {
-	if (spaces == null) {
-		return <h1>Loading...</h1>;
-	}
+import './SpaceList.sass';
+import '../../styles/box.sass';
+
+export default function SpaceList({ spaces = [] }: { spaces?: ISpace[] }) {
+	const cluster = useContext(CurrentClusterContext);
 
 	return (
 		<div className="space-list">
-			<SpaceCreateButton />
 			{spaces.map((space) => (
-				<SpaceListItem key={space.id} space={space} />
+				<div
+					className="hoverable-light-box foreground-color-muted row-item"
+					style={{ width: '5em', height: '5em', fontSize: '1.25em' }}
+				>
+					<b>
+						<Link to={`/clusters/${cluster.id}/spaces/${space.id}`} className="unstyled-link">
+							{space.name}
+						</Link>
+					</b>
+				</div>
 			))}
 		</div>
 	);

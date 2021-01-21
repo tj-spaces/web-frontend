@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { createSpace } from '../../api/api';
 import Box from '../Box/Box';
 import Button from '../Button/Button';
-import CurrentClusterContext from '../ClusterIdContext/ClusterIdContext';
+import CurrentClusterContext from '../CurrentClusterContext/CurrentClusterContext';
 import Typography from '../Typography/Typography';
 import Modal from '../Modal/Modal';
 

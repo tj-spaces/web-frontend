@@ -1,13 +1,13 @@
 import React from 'react';
 import useSpace from '../../hooks/useSpace';
 import Button from '../Button/Button';
-import SpaceIdContext from '../SpaceIdContext/SpaceIdContext';
+import CurrentSpaceContext from '../CurrentSpaceContext/CurrentSpaceContext';
 import Typography from '../Typography/Typography';
 
 export default function Space({ id }: { id: string }) {
 	const space = useSpace(id);
 	return (
-		<SpaceIdContext.Provider value={id}>
+		<CurrentSpaceContext.Provider value={id}>
 			{space ? (
 				<>
 					<Typography type="title" alignment="center">
@@ -20,6 +20,6 @@ export default function Space({ id }: { id: string }) {
 			) : (
 				<span>Loading...</span>
 			)}
-		</SpaceIdContext.Provider>
+		</CurrentSpaceContext.Provider>
 	);
 }

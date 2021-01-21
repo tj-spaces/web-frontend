@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { SelectedPanelType } from '../Cluster/Cluster';
-import CurrentClusterContext from '../ClusterIdContext/ClusterIdContext';
+import CurrentClusterContext from '../CurrentClusterContext/CurrentClusterContext';
 import ClusterSidebarSpaceLink from '../ClusterSidebarSpaceLink/ClusterSidebarSpaceLink';
 import './ClusterSidebar.sass';
 

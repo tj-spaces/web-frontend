@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 import { CSSProperties } from 'react';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const classes = {
 	borderRadius: {
 		none: 'border-radius-none',
