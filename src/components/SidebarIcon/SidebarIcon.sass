@@ -5,14 +5,22 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	background-color: #282c34
-	cursor: pointer
+	background-color: #282828
 	margin-top: 0.25rem
 	margin-bottom: 0.25rem
 
 	text-decoration: none
 	color: #ffffff
 
+	transition: width 0.5s ease, height 0.5s ease
+
+	& >*
+		cursor: pointer
+
 	& >a
 		text-decoration: none
 		color: #ffffff
+
+	&:hover
+		width: 4.5rem
+		height: 4.5rem

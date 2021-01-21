@@ -3,14 +3,14 @@ import { Redirect } from 'react-router-dom';
 import { createSpace } from '../../api/api';
 import Box from '../Box/Box';
 import Button from '../Button/Button';
-import ClusterIdContext from '../ClusterIdContext/ClusterIdContext';
+import CurrentClusterContext from '../ClusterIdContext/ClusterIdContext';
 import Typography from '../Typography/Typography';
 import Modal from '../Modal/Modal';
 
 export default function SpaceCreateButton() {
 	const spaceNameRef = createRef<HTMLInputElement>();
 
-	const clusterId = useContext(ClusterIdContext);
+	const cluster = useContext(CurrentClusterContext);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isSpaceCreating, setIsSpaceCreating] = useState<boolean>(false);
 	const [isSpaceCreated, setIsSpaceCreated] = useState<boolean>(false);
@@ -21,7 +21,7 @@ export default function SpaceCreateButton() {
 			const spaceName = spaceNameRef.current.value;
 			if (spaceName) {
 				setIsSpaceCreating(true);
-				createSpace(clusterId!, spaceName).then((newSpaceId) => {
+				createSpace(cluster.id!, spaceName).then((newSpaceId) => {
 					setNewlyCreatedSpaceId(newSpaceId);
 					setIsSpaceCreated(true);
 				});
@@ -30,7 +30,7 @@ export default function SpaceCreateButton() {
 	}
 
 	if (isSpaceCreated && newlyCreatedSpaceId) {
-		return <Redirect to={`/clusters/${clusterId}/spaces/${newlyCreatedSpaceId}`} />;
+		return <Redirect to={`/clusters/${cluster}/spaces/${newlyCreatedSpaceId}`} />;
 	}
 
 	return (
@@ -43,7 +43,7 @@ export default function SpaceCreateButton() {
 						<input ref={spaceNameRef} type="text" style={{ flex: 3 }} />
 					</Box>
 					<Box display="flex-row">
-						{isSpaceCreating ? (
+						{!isSpaceCreating ? (
 							<>
 								<Button onClick={() => create()} style={{ flex: 1 }}>
 									Create

@@ -1,9 +1,5 @@
-import Box from '../Box/Box';
+import '../../styles/box.sass';
 
 export default function HoverableBox({ children }: { children: React.ReactNode }) {
-	return (
-		<Box center borderRadiusSize="bubble" backgroundColor="#202020" padding="compact">
-			{children}
-		</Box>
-	);
+	return <div className="hoverable-light-box">{children}</div>;
 }

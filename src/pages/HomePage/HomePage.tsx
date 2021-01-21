@@ -10,7 +10,7 @@ export default function HomePage() {
 	document.title = 'Home';
 
 	const myClusters = useMyClusters() ?? [];
-	const { clusterId, spaceId } = useParams<{ clusterId: string; spaceId?: string }>();
+	const { clusterId } = useParams<{ clusterId?: string; spaceId?: string }>();
 
 	return (
 		<Box display="flex-row" width="100vw" height="100vh">
@@ -30,7 +30,7 @@ export default function HomePage() {
 				))}
 				<ClusterCreateButton />
 			</Box>
-			<div style={{ flex: 15, margin: '2em' }}>{clusterId && <Cluster id={clusterId} />}</div>
+			<div style={{ flex: 15 }}>{clusterId && <Cluster id={clusterId} />}</div>
 		</Box>
 	);
 }

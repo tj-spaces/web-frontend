@@ -1,6 +1,7 @@
 import { ISpace } from '../../typings/Space';
-import Box from '../Box/Box';
+import SpaceCreateButton from '../SpaceCreateButton/SpaceCreateButton';
 import SpaceListItem from '../SpaceListItem/SpaceListItem';
+import './SpaceList.sass';
 
 export default function SpaceList({ spaces }: { spaces: ISpace[] | undefined }) {
 	if (spaces == null) {
@@ -8,10 +9,11 @@ export default function SpaceList({ spaces }: { spaces: ISpace[] | undefined }) 
 	}
 
 	return (
-		<Box display="flex-column">
-			{spaces.map(({ id, name }) => (
-				<SpaceListItem key={id} name={name} id={id} />
+		<div className="space-list">
+			<SpaceCreateButton />
+			{spaces.map((space) => (
+				<SpaceListItem key={space.id} space={space} />
 			))}
-		</Box>
+		</div>
 	);
 }

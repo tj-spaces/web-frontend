@@ -12,7 +12,6 @@ import AuthorizationCallback from './pages/AuthorizationCallback/AuthorizationCa
 import DefaultPage from './pages/DefaultPage/DefaultPage';
 import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
-import SpacePage from './pages/SpacePage/SpacePage';
 
 function App() {
 	return (
@@ -20,7 +19,7 @@ function App() {
 			<BrowserRouter>
 				<Switch>
 					<Route path="/auth/:provider/callback" component={AuthorizationCallback} />
-					<Route path="/clusters/:clusterId/spaces/:spaceId" component={SpacePage} />
+					<Route path="/clusters/:clusterId/spaces/:spaceId" component={HomePage} />
 					<Route path="/clusters/:clusterId" component={HomePage} />
 					<Route path="/login" exact component={LoginPage} />
 					<Route path="/logout" exact component={Logout} />
