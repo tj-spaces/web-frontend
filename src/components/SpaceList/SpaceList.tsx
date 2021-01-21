@@ -7,8 +7,6 @@ export default function SpaceList({ spaces }: { spaces: ISpace[] | undefined }) 
 		return <h1>Loading...</h1>;
 	}
 
-	console.log(spaces);
-
 	return (
 		<Box display="flex-column">
 			{spaces.map(({ id, name }) => (

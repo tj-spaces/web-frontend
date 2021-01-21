@@ -1,9 +1,0 @@
-.cluster-list {
-  display: flex;
-  flex-direction: column;
-}
-
-/* See https://stackoverflow.com/questions/20626685/better-way-to-set-distance-between-flexbox-items/48752954#48752954 */
-.cluster-list>*+* {
-  margin-left: 10px;
-}

@@ -1,13 +1,17 @@
-import { createRef, useContext, useState } from 'react';
+import React, { createRef, useContext, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { createSpace } from '../../api/api';
+import Box from '../Box/Box';
 import Button from '../Button/Button';
 import ClusterIdContext from '../ClusterIdContext/ClusterIdContext';
+import Typography from '../Typography/Typography';
+import Modal from '../Modal/Modal';
 
 export default function SpaceCreateButton() {
 	const spaceNameRef = createRef<HTMLInputElement>();
 
 	const clusterId = useContext(ClusterIdContext);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isSpaceCreating, setIsSpaceCreating] = useState<boolean>(false);
 	const [isSpaceCreated, setIsSpaceCreated] = useState<boolean>(false);
 	const [newlyCreatedSpaceId, setNewlyCreatedSpaceId] = useState<string>();
@@ -15,12 +19,13 @@ export default function SpaceCreateButton() {
 	function create() {
 		if (spaceNameRef.current) {
 			const spaceName = spaceNameRef.current.value;
-
-			setIsSpaceCreating(true);
-			createSpace(clusterId!, spaceName).then((newSpaceId) => {
-				setNewlyCreatedSpaceId(newSpaceId);
-				setIsSpaceCreated(true);
-			});
+			if (spaceName) {
+				setIsSpaceCreating(true);
+				createSpace(clusterId!, spaceName).then((newSpaceId) => {
+					setNewlyCreatedSpaceId(newSpaceId);
+					setIsSpaceCreated(true);
+				});
+			}
 		}
 	}
 
@@ -30,13 +35,22 @@ export default function SpaceCreateButton() {
 
 	return (
 		<div>
-			{isSpaceCreating ? (
-				<span>Creating space...</span>
-			) : (
-				<>
-					<input ref={spaceNameRef} type="text"></input>
-					<Button onClick={() => create()}>Add a Space</Button>
-				</>
+			<Button onClick={() => setIsOpen(true)}>Create Space</Button>
+			{isOpen && (
+				<Modal>
+					<Typography type="h1">Create Space</Typography>
+					<Box display="flex-row">
+						<input ref={spaceNameRef} type="text" style={{ flex: 3 }} />
+					</Box>
+					<Box display="flex-row">
+						<Button onClick={() => create()} style={{ flex: 1 }}>
+							Create
+						</Button>
+						<Button onClick={() => setIsOpen(false)} style={{ flex: 1 }}>
+							Cancel
+						</Button>
+					</Box>
+				</Modal>
 			)}
 		</div>
 	);

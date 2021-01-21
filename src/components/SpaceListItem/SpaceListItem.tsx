@@ -1,16 +1,19 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import Box from '../Box/Box';
 import CurrentClusterContext from '../ClusterIdContext/ClusterIdContext';
+import HoverableBox from '../HoverableBox/HoverableBox';
+import Typography from '../Typography/Typography';
 
 export default function SpaceListItem({ id, name }: { id: string; name: string }) {
 	const clusterId = useContext(CurrentClusterContext);
 
 	return (
-		<Box center padding="comfortable" margin="comfortable">
-			<Link to={`/cluster/${clusterId}/space/${id}`} className="unstyled-link">
-				{name}
-			</Link>
-		</Box>
+		<HoverableBox>
+			<Typography type="h1" alignment="center">
+				<Link to={`/clusters/${clusterId}/spaces/${id}`} className="unstyled-link">
+					{name}
+				</Link>
+			</Typography>
+		</HoverableBox>
 	);
 }

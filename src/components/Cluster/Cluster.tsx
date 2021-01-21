@@ -9,11 +9,11 @@ export default function Cluster({ id, creatorId, name }: { id: string; creatorId
 
 	return (
 		<ClusterIdContext.Provider value={id}>
-			<Typography type="h1" alignment="center">
+			<Typography type="title" alignment="center">
 				{name}
 			</Typography>
-			<SpaceList spaces={spaces} />
 			<SpaceCreateButton />
+			<SpaceList spaces={spaces} />
 		</ClusterIdContext.Provider>
 	);
 }

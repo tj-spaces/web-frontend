@@ -1,10 +1,13 @@
 import { ButtonHTMLAttributes, DetailedHTMLProps, forwardRef } from 'react';
 import './Button.sass';
 
-type ButtonProps = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
+type ButtonProps = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
+	type?: 'small' | 'large';
+};
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-	return <button ref={ref} className="button" {...props} />;
+	const { type = 'small' } = props;
+	return <button ref={ref} className={'button button-' + type} {...props} />;
 });
 
 export default Button;
