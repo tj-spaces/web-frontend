@@ -63,6 +63,27 @@ export function makeAPIGetCall(url: string) {
 	});
 }
 
+export function makeAPIDeleteCall(url: string) {
+	return new Promise<AxiosResponse>((resolve, reject) => {
+		axios
+			.delete(url, {
+				headers: { Authorization: 'Bearer ' + getSessionId() }
+			})
+			.then((successfulResponse) => resolve(successfulResponse))
+			.catch((error) => {
+				if (error.response.status === 401) {
+					localStorage.removeItem('session_id');
+				} else {
+					reject(new APIError(url, error.response.data.error));
+				}
+			});
+	});
+}
+
+export async function deleteCluster(id: string): Promise<void> {
+	await makeAPIDeleteCall('/api/clusters/' + id);
+}
+
 export async function getDiscoverableClusters(): Promise<ICluster[]> {
 	return (await makeAPIGetCall('/api/discoverable-clusters')).data.clusters;
 }

@@ -12,10 +12,8 @@ export default function Sidebar() {
 	return (
 		<Box
 			display="flex-column"
+			className="background-color-dark-0 align-items-center box-shadow"
 			style={{
-				backgroundColor: '#202020',
-				height: '100%',
-				alignItems: 'center',
 				padding: '1em'
 			}}
 		>
