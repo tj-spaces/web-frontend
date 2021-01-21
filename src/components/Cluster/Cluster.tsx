@@ -14,10 +14,14 @@ export default function Cluster({ id }: { id: string }) {
 		<Box display="flex-column" height="100%" width="100%">
 			<ClusterIdContext.Provider value={{ id, spaces }}>
 				<h1 className="padding-comfortable">{cluster?.name ?? 'Loading...'}</h1>
-				<div className="background-color-light-1 padding-comfortable" style={{ height: '100%' }}>
-					<h1 className="color-dark-1">Spaces</h1>
-					<SpaceList spaces={spaces} />
-					<h1 className="color-dark-1">Posts</h1>
+				<div className="background-color-light-1 padding-y-2 flex-row" style={{ height: '100%' }}>
+					<div style={{ flex: 1 }} className="padding-x-2">
+						<h1 className="color-dark-1">Spaces</h1>
+						<SpaceList spaces={spaces} />
+					</div>
+					<div style={{ flex: 2 }} className="padding-x-2">
+						<h1 className="color-dark-1">Posts</h1>
+					</div>
 				</div>
 			</ClusterIdContext.Provider>
 		</Box>

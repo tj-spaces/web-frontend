@@ -13,8 +13,8 @@ export default function SpaceList({ spaces = [] }: { spaces?: ISpace[] }) {
 		<div className="space-list">
 			{spaces.map((space) => (
 				<div
-					className="hoverable-light-box foreground-color-muted row-item"
-					style={{ width: '5em', height: '5em', fontSize: '1.25em' }}
+					className="hoverable-light-box foreground-color-muted column-item"
+					style={{ height: '5em', fontSize: '1.25em' }}
 				>
 					<b>
 						<Link to={`/clusters/${cluster.id}/spaces/${space.id}`} className="unstyled-link">
