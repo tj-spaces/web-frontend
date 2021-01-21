@@ -1,8 +1,9 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { API_SERVER_URL } from '../lib/constants';
 import getSessionId from '../lib/getSessionId';
 import { ICluster, ClusterVisibility } from '../typings/Cluster';
 import { ISpace } from '../typings/Space';
+import { IUser } from '../typings/User';
 
 axios.defaults.baseURL = API_SERVER_URL;
 
@@ -30,98 +31,68 @@ export async function createSession(code: string, provider: string): Promise<str
 	}
 }
 
-export async function getDiscoverableClusters(): Promise<ICluster[]> {
-	const response = await axios.get('/api/discoverable-clusters', {
-		headers: { Authorization: 'Bearer ' + getSessionId() }
-	});
-
-	if (response.status === 200) {
-		return response.data.spaces;
-	} else {
-		throw new APIError('/api/discoverable-clusters', response.data.error);
-	}
-}
-
-export function getMyClusters(): Promise<ICluster[]> {
-	return new Promise((resolve, reject) => {
+export function makeAPIPostCall(url: string, data: any) {
+	return new Promise<AxiosResponse>((resolve, reject) => {
 		axios
-			.get('/api/users/@me/clusters', {
-				headers: { Authorization: 'Bearer ' + getSessionId() }
-			})
-			.then((successfulResponse) => resolve(successfulResponse.data.clusters))
+			.post(url, data, { headers: { Authorization: 'Bearer ' + getSessionId() } })
+			.then((successfulResponse) => resolve(successfulResponse))
 			.catch((error) => {
-				reject(new APIError('/api/users/@me/clusters', error.response.data.error));
+				if (error.response.status === 401) {
+					localStorage.removeItem('session_id');
+				} else {
+					reject(new APIError('/api/users/@me', error.response.data.error));
+				}
 			});
 	});
 }
 
-export function createCluster(name: string, visibility: ClusterVisibility): Promise<string> {
-	return new Promise<string>((resolve, reject) => {
+export function makeAPIGetCall(url: string) {
+	return new Promise<AxiosResponse>((resolve, reject) => {
 		axios
-			.post('/api/clusters', { name, visibility }, { headers: { Authorization: 'Bearer ' + getSessionId() } })
-			.then((successfulResponse) => {
-				resolve(successfulResponse.data.cluster_id);
-			})
-			.catch((error) => {
-				reject(new APIError('/api/clusters', error.response.data.error));
-			});
-	});
-}
-
-export function createSpace(clusterId: string, name: string): Promise<string> {
-	return new Promise<string>((resolve, reject) => {
-		axios
-			.post(
-				'/api/clusters/' + clusterId + '/spaces',
-				{ name },
-				{ headers: { Authorization: 'Bearer ' + getSessionId() } }
-			)
-			.then((successfulResponse) => {
-				resolve(successfulResponse.data.space_id);
-			})
-			.catch((error) => {
-				reject(new APIError('/api/clusters/' + clusterId + '/spaces', error.response.data.error));
-			});
-	});
-}
-
-export function getCluster(id: string): Promise<ICluster> {
-	return new Promise<ICluster>((resolve, reject) => {
-		axios
-			.get('/api/clusters/' + id, { headers: { Authorization: 'Bearer ' + getSessionId() } })
-			.then((successfulResponse) => {
-				resolve(successfulResponse.data.cluster);
-			})
-			.catch((error) => {
-				reject(new APIError('/api/clusters', error.response.data.error));
-			});
-	});
-}
-
-export function getSpace(spaceId: string): Promise<ISpace> {
-	return new Promise<ISpace>((resolve, reject) => {
-		axios
-			.get('/api/spaces/' + spaceId, {
+			.get(url, {
 				headers: { Authorization: 'Bearer ' + getSessionId() }
 			})
 			.then((successfulResponse) => {
 				resolve(successfulResponse.data.space);
 			})
 			.catch((error) => {
-				reject(new APIError('/api/clusters/' + spaceId, error.response.data.error));
+				if (error.response.status === 401) {
+					localStorage.removeItem('session_id');
+				} else {
+					reject(new APIError(url, error.response.data.error));
+				}
 			});
 	});
 }
 
+export async function getDiscoverableClusters(): Promise<ICluster[]> {
+	return (await makeAPIGetCall('/api/discoverable-clusters')).data.clusters;
+}
+
+export async function getMyClusters(): Promise<ICluster[]> {
+	return (await makeAPIGetCall('/api/users/@me/clusters')).data.clusters;
+}
+
+export async function createCluster(name: string, visibility: ClusterVisibility): Promise<string> {
+	return (await makeAPIPostCall('/api/clusters', { name, visibility })).data.cluster_id;
+}
+
+export async function createSpace(clusterId: string, name: string): Promise<string> {
+	return (await makeAPIPostCall('/api/clusters/' + clusterId + '/spaces', { name })).data.space_id;
+}
+
+export async function getCluster(id: string): Promise<ICluster> {
+	return (await makeAPIGetCall('/api/clusters/' + id)).data.cluster;
+}
+
+export async function getMe(): Promise<IUser> {
+	return (await makeAPIGetCall('/api/users/@me')).data.user;
+}
+
+export async function getSpace(spaceId: string): Promise<ISpace> {
+	return (await makeAPIGetCall('/api/spaces/' + spaceId)).data.space;
+}
+
 export async function getSpacesInCluster(id: string): Promise<ISpace[]> {
-	return new Promise<ISpace[]>((resolve, reject) => {
-		axios
-			.get('/api/clusters/' + id + '/spaces', { headers: { Authorization: 'Bearer ' + getSessionId() } })
-			.then((successfulResponse) => {
-				resolve(successfulResponse.data.spaces);
-			})
-			.catch((error) => {
-				reject(new APIError('/api/clusters/' + id + '/spaces', error.response.data.error));
-			});
-	});
+	return (await makeAPIGetCall('/api/clusters/' + id + '/spaces')).data.spaces;
 }
