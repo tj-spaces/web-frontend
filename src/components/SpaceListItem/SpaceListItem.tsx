@@ -9,7 +9,7 @@ export default function SpaceListItem({ id, name }: { id: string; name: string }
 
 	return (
 		<HoverableBox>
-			<Typography type="h1" alignment="center">
+			<Typography type="h2" alignment="center">
 				<Link to={`/clusters/${clusterId}/spaces/${id}`} className="unstyled-link">
 					{name}
 				</Link>

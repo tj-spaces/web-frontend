@@ -6,6 +6,7 @@ import Box from '../Box/Box';
 import Button from '../Button/Button';
 import Modal from '../Modal/Modal';
 import Typography from '../Typography/Typography';
+import '../SidebarIcon/SidebarIcon.sass';
 
 export default function ClusterCreateButton() {
 	const clusterNameRef = createRef<HTMLInputElement>();
@@ -39,8 +40,10 @@ export default function ClusterCreateButton() {
 	}
 
 	return (
-		<>
-			<Button onClick={() => setIsOpen(true)}>Create Cluster</Button>
+		<div className="sidebar-icon">
+			<Typography type="h1" onClick={() => setIsOpen(true)}>
+				+
+			</Typography>
 			{isOpen && (
 				<Modal>
 					<Typography type="h1">Create Cluster</Typography>
@@ -52,7 +55,7 @@ export default function ClusterCreateButton() {
 						</select>
 					</Box>
 					<Box display="flex-row">
-						{isClusterCreating ? (
+						{!isClusterCreating ? (
 							<>
 								<Button onClick={() => create()} style={{ flex: 1 }}>
 									Create
@@ -67,6 +70,6 @@ export default function ClusterCreateButton() {
 					</Box>
 				</Modal>
 			)}
-		</>
+		</div>
 	);
 }

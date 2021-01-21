@@ -1,4 +1,5 @@
 import classnames from 'classnames';
+import { CSSProperties } from 'react';
 
 const classes = {
 	borderRadius: {
@@ -40,16 +41,18 @@ export type BoxJustifyContent = 'space-around' | 'space-evenly' | 'space-between
 export default function Box({
 	children,
 	backgroundColor,
-	borderRadiusSize = 'bubble',
+	borderRadiusSize = 'none',
 	margin = 'none',
 	padding = 'none',
 	center = false,
 	display = 'block',
 	alignItems,
 	justifyContent,
+	flex,
 	width,
 	height,
-	className
+	className,
+	style
 }: {
 	children: React.ReactNode;
 	backgroundColor?: string;
@@ -63,6 +66,8 @@ export default function Box({
 	className?: string;
 	alignItems?: BoxAlignItems;
 	justifyContent?: BoxJustifyContent;
+	flex?: number;
+	style?: CSSProperties;
 }) {
 	return (
 		<div
@@ -76,7 +81,7 @@ export default function Box({
 				justifyContent ? 'justify-content-' + alignItems : '',
 				className
 			)}
-			style={{ backgroundColor, width, height }}
+			style={{ backgroundColor, width, height, flex, ...style }}
 		>
 			{children}
 		</div>

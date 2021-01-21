@@ -52,9 +52,7 @@ export function makeAPIGetCall(url: string) {
 			.get(url, {
 				headers: { Authorization: 'Bearer ' + getSessionId() }
 			})
-			.then((successfulResponse) => {
-				resolve(successfulResponse.data.space);
-			})
+			.then((successfulResponse) => resolve(successfulResponse))
 			.catch((error) => {
 				if (error.response.status === 401) {
 					localStorage.removeItem('session_id');

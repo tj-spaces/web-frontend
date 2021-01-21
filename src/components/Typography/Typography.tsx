@@ -10,13 +10,15 @@ export default function Typography({
 	color = 'light',
 	alignment = 'left',
 	// display = 'inline',
-	children
+	children,
+	onClick
 }: {
 	type: TypographyType;
 	color?: TypographyColor;
 	alignment?: TypographyAlignment;
 	// display?: TypographyDisplay;
 	children: React.ReactNode;
+	onClick?: () => void;
 }) {
 	const colorClasses = {
 		light: 'color-light',
@@ -51,6 +53,7 @@ export default function Typography({
 				alignmentClasses[alignment]
 				// displayClasses[display]
 			)}
+			onClick={onClick}
 		>
 			{children}
 		</span>

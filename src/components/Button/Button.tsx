@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps, forwardRef } from 'react';
+import { ButtonHTMLAttributes, CSSProperties, DetailedHTMLProps, forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 import './Button.sass';
 
@@ -10,14 +10,15 @@ type ButtonProps = (
 			to: string;
 	  }
 ) & {
-	type?: 'small' | 'large';
+	type?: 'small' | 'medium' | 'large';
+	style?: CSSProperties;
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-	const { type = 'small' } = props;
+	const { type = 'medium' } = props;
 	if ('to' in props) {
 		return (
-			<Link to={props.to} className={'button button-' + type}>
+			<Link to={props.to} className={'button button-' + type} style={props.style}>
 				{props.children}
 			</Link>
 		);

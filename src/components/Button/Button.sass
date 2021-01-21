@@ -1,5 +1,6 @@
+@import "../../styles/border-radius"
+
 .button
-  border-radius: 0.25em
   border: 0px
   padding: 0.25em
   background-color: #282828
@@ -9,9 +10,20 @@
     cursor: pointer
 
 .button-small
+  @extend .border-radius-crisp
+
   padding: 0.25em
   font-size: 1rem
 
-.button-large
-  padding: 0.25rem
+.button-medium
+  @extend .border-radius-bubble
+
+  padding: 0.5em
   font-size: 1.5rem
+  border-radius: 0.5em
+
+.button-large
+  @extend .border-radius-bubble
+
+  padding: 0.75rem
+  font-size: 2rem
