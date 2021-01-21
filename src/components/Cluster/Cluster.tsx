@@ -11,13 +11,13 @@ export default function Cluster({ id }: { id: string }) {
 	const spaces = useSpacesInCluster(id) ?? [];
 
 	return (
-		<Box display="flex-column" height="100%">
+		<Box display="flex-column" height="100%" width="100%">
 			<ClusterIdContext.Provider value={{ id, spaces }}>
-				<h1 style={{ marginLeft: '0.5em', flex: 1 }}>{cluster?.name ?? 'Loading...'}</h1>
-				<div className="background-color-2 padding-comfortable" style={{ flex: 16 }}>
-					<h2>Spaces</h2>
+				<h1 className="padding-comfortable">{cluster?.name ?? 'Loading...'}</h1>
+				<div className="background-color-light-1 padding-comfortable" style={{ height: '100%' }}>
+					<h1 className="color-dark-1">Spaces</h1>
 					<SpaceList spaces={spaces} />
-					<h2>Posts</h2>
+					<h1 className="color-dark-1">Posts</h1>
 				</div>
 			</ClusterIdContext.Provider>
 		</Box>
