@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import useMyClusters from '../../hooks/useMyClusters';
 import Box from '../Box/Box';
 import ClusterCreateButton from '../ClusterCreateButton/ClusterCreateButton';
@@ -24,6 +25,12 @@ export default function Sidebar() {
 
 			<SidebarIcon>
 				<ClusterCreateButton />
+			</SidebarIcon>
+
+			<SidebarIcon>
+				<Link to="/logout">
+					<i className="fas fa-sign-out-alt"></i>
+				</Link>
 			</SidebarIcon>
 		</Box>
 	);

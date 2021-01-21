@@ -1,3 +1,5 @@
+@import "../../styles/theme"
+
 .sidebar-icon
 	border-radius: 1rem
 	width: 4rem
@@ -5,20 +7,19 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	background-color: #282828
+	background-color: $spaces-color-dark-1
 
 	text-decoration: none
-	color: #ffffff
+	color: $spaces-color-light-0
 
-	transition: width 0.5s ease, height 0.5s ease
+	transition: background-color 0.5s ease
 
 	& >*
 		cursor: pointer
 
 	& >a
 		text-decoration: none
-		color: #ffffff
+		color: $spaces-color-light-0
 
 	&:hover
-		width: 4.5rem
-		height: 4.5rem
+		background-color: $spaces-color-dark-3
