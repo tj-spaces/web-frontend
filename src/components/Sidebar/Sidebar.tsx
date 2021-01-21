@@ -10,32 +10,28 @@ export default function Sidebar() {
 	const myClusters = useMyClusters() ?? [];
 
 	return (
-		<Box
-			display="flex-column"
-			className="background-color-dark-0 align-items-center box-shadow"
-			style={{
-				padding: '1em'
-			}}
-		>
-			{myClusters.map((cluster) => (
-				<SpaceSidebarIcon key={cluster.id} title={cluster.name} to={`/clusters/${cluster.id}`} />
-			))}
+		<div className="background-color-dark-0 box-shadow overflow-y-auto">
+			<Box display="flex-column" className="align-items-center padding-1">
+				{myClusters.map((cluster) => (
+					<SpaceSidebarIcon key={cluster.id} title={cluster.name} to={`/clusters/${cluster.id}`} />
+				))}
 
-			<SidebarIcon>
-				<ClusterCreateButton />
-			</SidebarIcon>
+				<SidebarIcon>
+					<ClusterCreateButton />
+				</SidebarIcon>
 
-			<SidebarIcon>
-				<Link to="/logout">
-					<i className="fas fa-sign-out-alt"></i>
-				</Link>
-			</SidebarIcon>
+				<SidebarIcon>
+					<Link to="/logout">
+						<i className="fas fa-sign-out-alt"></i>
+					</Link>
+				</SidebarIcon>
 
-			<SidebarIcon>
-				<Link to="/explore">
-					<i className="fas fa-compass"></i>
-				</Link>
-			</SidebarIcon>
-		</Box>
+				<SidebarIcon>
+					<Link to="/explore">
+						<i className="fas fa-compass"></i>
+					</Link>
+				</SidebarIcon>
+			</Box>
+		</div>
 	);
 }

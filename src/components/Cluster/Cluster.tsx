@@ -6,6 +6,7 @@ import Box from '../Box/Box';
 import ClusterSettingsModal from '../ClusterSettingsModal/ClusterSettingsModal';
 import ClusterIdContext from '../CurrentClusterContext/CurrentClusterContext';
 import Space from '../Space/Space';
+import SpaceCreateButton from '../SpaceCreateButton/SpaceCreateButton';
 import SpaceList from '../SpaceList/SpaceList';
 
 export type SelectedPanelType = 'spaces' | 'posts';
@@ -32,6 +33,7 @@ export default function Cluster({ id }: { id: string }) {
 					<div style={{ flex: 1 }} className="padding-x-2">
 						<h1 className="color-dark-1">Spaces</h1>
 						<SpaceList spaces={spaces} />
+						<SpaceCreateButton />
 					</div>
 					<div style={{ flex: 2 }} className="padding-x-2">
 						<h1 className="color-dark-1">Posts</h1>

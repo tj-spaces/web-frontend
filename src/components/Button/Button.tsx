@@ -10,20 +10,20 @@ type ButtonProps = (
 			to: string;
 	  }
 ) & {
-	type?: 'small' | 'medium' | 'large';
+	variant?: 'small' | 'medium' | 'large';
 	style?: CSSProperties;
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-	const { type = 'medium' } = props;
+	const { variant = 'medium' } = props;
 	if ('to' in props) {
 		return (
-			<Link to={props.to} className={'button button-' + type} style={props.style}>
+			<Link to={props.to} className={'button button-' + variant} style={props.style}>
 				{props.children}
 			</Link>
 		);
 	} else {
-		return <button ref={ref} className={'button button-' + type} {...props} />;
+		return <button ref={ref} className={'button button-' + variant} {...props} />;
 	}
 });
 

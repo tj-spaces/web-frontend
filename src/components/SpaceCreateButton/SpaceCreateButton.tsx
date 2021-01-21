@@ -4,7 +4,6 @@ import { createSpace } from '../../api/api';
 import Box from '../Box/Box';
 import Button from '../Button/Button';
 import CurrentClusterContext from '../CurrentClusterContext/CurrentClusterContext';
-import Typography from '../Typography/Typography';
 import Modal from '../Modal/Modal';
 
 export default function SpaceCreateButton() {
@@ -30,25 +29,36 @@ export default function SpaceCreateButton() {
 	}
 
 	if (isSpaceCreated && newlyCreatedSpaceId) {
-		return <Redirect to={`/clusters/${cluster}/spaces/${newlyCreatedSpaceId}`} />;
+		return <Redirect to={`/clusters/${cluster.id}/spaces/${newlyCreatedSpaceId}`} />;
 	}
 
 	return (
 		<>
-			<Button onClick={() => setIsOpen(true)}>Create Space</Button>
+			<Button onClick={() => setIsOpen(true)} variant="small">
+				Create Space
+			</Button>
 			{isOpen && (
 				<Modal>
-					<Typography type="h1">Create Space</Typography>
-					<Box display="flex-row">
+					<h1>Create Space</h1>
+					<Box display="flex-row" alignItems="center" className="font-size-h2 margin-bottom-2">
+						<span className="margin-right-2">Name</span>{' '}
 						<input ref={spaceNameRef} type="text" style={{ flex: 3 }} />
 					</Box>
 					<Box display="flex-row">
 						{!isSpaceCreating ? (
 							<>
-								<Button onClick={() => create()} style={{ flex: 1 }}>
+								<Button
+									onClick={() => create()}
+									className="button button-medium margin-right-2"
+									style={{ flex: 1 }}
+								>
 									Create
 								</Button>
-								<Button onClick={() => setIsOpen(false)} style={{ flex: 1 }}>
+								<Button
+									onClick={() => setIsOpen(false)}
+									className="button button-medium margin-left-2"
+									style={{ flex: 1 }}
+								>
 									Cancel
 								</Button>
 							</>
