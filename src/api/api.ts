@@ -98,17 +98,17 @@ export function getCluster(id: string): Promise<ICluster> {
 	});
 }
 
-export function getSpace(clusterId: string, spaceId: string): Promise<ISpace> {
+export function getSpace(spaceId: string): Promise<ISpace> {
 	return new Promise<ISpace>((resolve, reject) => {
 		axios
-			.get('/api/clusters/' + clusterId + '/spaces/' + spaceId, {
+			.get('/api/spaces/' + spaceId, {
 				headers: { Authorization: 'Bearer ' + getSessionId() }
 			})
 			.then((successfulResponse) => {
 				resolve(successfulResponse.data.space);
 			})
 			.catch((error) => {
-				reject(new APIError('/api/clusters/' + clusterId + '/spaces/' + spaceId, error.response.data.error));
+				reject(new APIError('/api/clusters/' + spaceId, error.response.data.error));
 			});
 	});
 }

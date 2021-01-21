@@ -34,7 +34,7 @@ export default function SpaceCreateButton() {
 	}
 
 	return (
-		<div>
+		<>
 			<Button onClick={() => setIsOpen(true)}>Create Space</Button>
 			{isOpen && (
 				<Modal>
@@ -43,15 +43,21 @@ export default function SpaceCreateButton() {
 						<input ref={spaceNameRef} type="text" style={{ flex: 3 }} />
 					</Box>
 					<Box display="flex-row">
-						<Button onClick={() => create()} style={{ flex: 1 }}>
-							Create
-						</Button>
-						<Button onClick={() => setIsOpen(false)} style={{ flex: 1 }}>
-							Cancel
-						</Button>
+						{isSpaceCreating ? (
+							<>
+								<Button onClick={() => create()} style={{ flex: 1 }}>
+									Create
+								</Button>
+								<Button onClick={() => setIsOpen(false)} style={{ flex: 1 }}>
+									Cancel
+								</Button>
+							</>
+						) : (
+							<>Creating...</>
+						)}
 					</Box>
 				</Modal>
 			)}
-		</div>
+		</>
 	);
 }

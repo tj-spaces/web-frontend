@@ -39,7 +39,7 @@ export default function ClusterCreateButton() {
 	}
 
 	return (
-		<div>
+		<>
 			<Button onClick={() => setIsOpen(true)}>Create Cluster</Button>
 			{isOpen && (
 				<Modal>
@@ -52,15 +52,21 @@ export default function ClusterCreateButton() {
 						</select>
 					</Box>
 					<Box display="flex-row">
-						<Button onClick={() => create()} style={{ flex: 1 }}>
-							Create
-						</Button>
-						<Button onClick={() => setIsOpen(false)} style={{ flex: 1 }}>
-							Cancel
-						</Button>
+						{isClusterCreating ? (
+							<>
+								<Button onClick={() => create()} style={{ flex: 1 }}>
+									Create
+								</Button>
+								<Button onClick={() => setIsOpen(false)} style={{ flex: 1 }}>
+									Cancel
+								</Button>
+							</>
+						) : (
+							<>Creating...</>
+						)}
 					</Box>
 				</Modal>
 			)}
-		</div>
+		</>
 	);
 }
