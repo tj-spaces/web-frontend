@@ -5,7 +5,6 @@ import { createCluster } from '../../api/api';
 import Box from '../Box/Box';
 import Button from '../Button/Button';
 import Modal from '../Modal/Modal';
-import Typography from '../Typography/Typography';
 import '../SidebarIcon/SidebarIcon.sass';
 
 export default function ClusterCreateButton() {
@@ -41,14 +40,16 @@ export default function ClusterCreateButton() {
 
 	return (
 		<>
-			<Typography type="h1" onClick={() => setIsOpen(true)}>
-				+
-			</Typography>
+			<h1 onClick={() => setIsOpen(true)}>+</h1>
 			{isOpen && (
 				<Modal>
-					<Typography type="h1">Create Cluster</Typography>
-					<Box display="flex-row">
+					<h1>Create Cluster</h1>
+					<Box display="flex-row" alignItems="center" className="font-size-h2 margin-bottom-2">
+						<span className="margin-right-2">Name</span>{' '}
 						<input ref={clusterNameRef} type="text" style={{ flex: 3 }} />
+					</Box>
+					<Box display="flex-row" alignItems="center" className="font-size-h2 margin-bottom-2">
+						<span className="margin-right-2">Visibility</span>{' '}
 						<select ref={visibilityRef} style={{ flex: 1 }}>
 							<option value="public">Public</option>
 							<option value="unlisted">Unlisted</option>
@@ -57,10 +58,18 @@ export default function ClusterCreateButton() {
 					<Box display="flex-row">
 						{!isClusterCreating ? (
 							<>
-								<Button onClick={() => create()} style={{ flex: 1 }}>
+								<Button
+									onClick={() => create()}
+									className="button button-medium margin-right-2"
+									style={{ flex: 1 }}
+								>
 									Create
 								</Button>
-								<Button onClick={() => setIsOpen(false)} style={{ flex: 1 }}>
+								<Button
+									onClick={() => setIsOpen(false)}
+									className="button button-medium margin-left-2"
+									style={{ flex: 1 }}
+								>
 									Cancel
 								</Button>
 							</>
