@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { ISpace } from '../../typings/Space';
 import CurrentClusterContext from '../CurrentClusterContext/CurrentClusterContext';
 

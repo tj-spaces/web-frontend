@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import useCluster from '../../hooks/useCluster';
 import useSpacesInCluster from '../../hooks/useSpacesInCluster';
 import Box from '../Box/Box';
 import ClusterSettingsModal from '../ClusterSettingsModal/ClusterSettingsModal';
 import ClusterIdContext from '../CurrentClusterContext/CurrentClusterContext';
+import Space from '../Space/Space';
 import SpaceList from '../SpaceList/SpaceList';
 
 export type SelectedPanelType = 'spaces' | 'posts';
@@ -11,6 +13,7 @@ export type SelectedPanelType = 'spaces' | 'posts';
 export default function Cluster({ id }: { id: string }) {
 	const cluster = useCluster(id);
 	const spaces = useSpacesInCluster(id) ?? [];
+	const { spaceId } = useParams<{ spaceId?: string }>();
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
 	return (
@@ -24,6 +27,7 @@ export default function Cluster({ id }: { id: string }) {
 						<i className="fas fa-cog pressable"></i>
 					</span>
 				</h1>
+				{spaceId && <Space id={spaceId} />}
 				<div className="background-color-light-1 padding-y-2 flex-row" style={{ height: '100%' }}>
 					<div style={{ flex: 1 }} className="padding-x-2">
 						<h1 className="color-dark-1">Spaces</h1>
