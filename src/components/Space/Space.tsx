@@ -67,7 +67,7 @@ export default function Space({ id }: { id: string }) {
 	// twilioToken
 	useEffect(() => {
 		if (twilioToken) {
-			twilio.connect(twilioToken, { video: { width: 1280 }, audio: true }).then((room) => {
+			twilio.connect(twilioToken, { audio: true }).then((room) => {
 				setTwilioRoom(room);
 			});
 		}
@@ -177,10 +177,7 @@ export default function Space({ id }: { id: string }) {
 								))}
 							</div>
 
-							<div
-								className="position-absolute"
-								style={{ left: '0px', top: '0px', width: '100%', height: '100%', zIndex: -1 }}
-							>
+							<div className="flex-row margin-y-1 justify-content-center">
 								{Object.keys(participants).length && (
 									<>
 										<SpaceParticipantLocal

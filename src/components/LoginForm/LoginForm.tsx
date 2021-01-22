@@ -5,7 +5,7 @@ import Box from '../Box/Box';
 export default function LoginForm() {
 	return (
 		<Box>
-			<h1>Log In</h1>
+			<h1 className="text-center">Log In</h1>
 			<h2>
 				<a href={getGoogleAuthorizationUrl()}>Google</a>
 			</h2>
