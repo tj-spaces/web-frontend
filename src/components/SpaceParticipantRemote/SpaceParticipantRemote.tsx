@@ -3,7 +3,7 @@ import * as twilio from 'twilio-video';
 import useTracks from '../../hooks/useTracks';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import SpaceAudioContext from '../SpaceAudioContext/SpaceAudioContext';
-import { defaultPannerNodeSettings } from '../SpatialAudio/SpatialAudio';
+import { defaultPannerNodeSettings } from '../../lib/defaultPannerNodeSettings';
 
 export default function SpaceParticipantRemote({
 	twilioParticipant,
