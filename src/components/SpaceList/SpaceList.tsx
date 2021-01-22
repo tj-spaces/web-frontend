@@ -12,7 +12,7 @@ export default function SpaceList({ spaces = [] }: { spaces?: ISpace[] }) {
 	return (
 		<div className="space-list">
 			{spaces.map((space) => (
-				<SpaceListItem clusterId={cluster.id!} space={space} />
+				<SpaceListItem clusterId={cluster.id!} space={space} key={space.id} />
 			))}
 		</div>
 	);

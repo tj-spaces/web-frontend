@@ -16,22 +16,25 @@ import DefaultPage from './pages/DefaultPage/DefaultPage';
 import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import ClusterExplorerPage from './pages/ClusterExplorerPage/ClusterExplorerPage';
+import AuthContextManager from './components/AuthContextManager/AuthContextManager';
 
 function App() {
 	return (
 		<div className="App">
-			<BrowserRouter>
-				<Switch>
-					<Route path="/auth/:provider/callback" component={AuthorizationCallback} />
-					<Route path="/clusters/:clusterId/spaces/:spaceId" component={HomePage} />
-					<Route path="/clusters/:clusterId" component={HomePage} />
-					<Route path="/login" exact component={LoginPage} />
-					<Route path="/logout" exact component={Logout} />
-					<Route path="/home" exact component={HomePage} />
-					<Route path="/explore" exact component={ClusterExplorerPage} />
-					<Route path="/" exact component={DefaultPage} />
-				</Switch>
-			</BrowserRouter>
+			<AuthContextManager>
+				<BrowserRouter>
+					<Switch>
+						<Route path="/auth/:provider/callback" component={AuthorizationCallback} />
+						<Route path="/clusters/:clusterId/spaces/:spaceId" component={HomePage} />
+						<Route path="/clusters/:clusterId" component={HomePage} />
+						<Route path="/login" exact component={LoginPage} />
+						<Route path="/logout" exact component={Logout} />
+						<Route path="/home" exact component={HomePage} />
+						<Route path="/explore" exact component={ClusterExplorerPage} />
+						<Route path="/" exact component={DefaultPage} />
+					</Switch>
+				</BrowserRouter>
+			</AuthContextManager>
 		</div>
 	);
 }
