@@ -22,8 +22,17 @@ export default function SpaceParticipantRemote({
 
 	// [audioContext, audioTrack]
 	useEffect(() => {
-		if (audioTrack) {
-			let audioSource = audioContext.createMediaStreamTrackSource(audioTrack.track?.mediaStreamTrack!);
+		console.log(
+			'audioCtx is',
+			audioContext,
+			'CreateMediaStreamTrackSource is',
+			audioContext.createMediaStreamTrackSource
+		);
+
+		if (audioTrack?.track) {
+			let audioSource = audioContext.createMediaStreamSource(
+				new MediaStream([audioTrack.track.mediaStreamTrack])
+			);
 			pannerNode.current = new PannerNode(audioContext, defaultPannerNodeSettings);
 			audioSource.connect(pannerNode.current).connect(audioContext.destination);
 
@@ -47,8 +56,8 @@ export default function SpaceParticipantRemote({
 
 	const audioRef = useRef<HTMLAudioElement>(null);
 
-	if (audioTrack) {
-		audioTrack.track!.attach(audioRef.current!);
+	if (audioTrack?.track) {
+		audioTrack.track.attach(audioRef.current!);
 	}
 
 	return (

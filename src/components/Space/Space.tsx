@@ -8,6 +8,7 @@ import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import AuthContext from '../AuthContext/AuthContext';
 import Button from '../Button/Button';
 import CurrentSpaceContext from '../CurrentSpaceContext/CurrentSpaceContext';
+import LocalParticipantContext from '../LocalParticipantContext/LocalParticipantContext';
 import SpaceAudioContext from '../SpaceAudioContext/SpaceAudioContext';
 import SpaceParticipantListing from '../SpaceParticipantListing/SpaceParticipantListing';
 import SpaceParticipantLocal from '../SpaceParticipantLocal/SpaceParticipantLocal';
@@ -16,13 +17,14 @@ import Typography from '../Typography/Typography';
 
 export default function Space({ id }: { id: string }) {
 	const space = useSpace(id);
-	const [participants, setParticipants] = useState(new Map<string, ISpaceParticipant>());
+	const [participants, setParticipants] = useState<{ [participantId: string]: ISpaceParticipant }>({});
 	const [twilioParticipants, setTwilioParticipants] = useState(new Map<string, twilio.RemoteParticipant>());
 	const [localTwilioParticipant, setLocalTwilioParticipant] = useState<twilio.LocalParticipant>();
 	const [twilioToken, setTwilioToken] = useState<string>();
 	const [twilioRoom, setTwilioRoom] = useState<twilio.Room>();
 	const [muted, setMuted_DO_NOT_USE_DIRECTLY] = useState<boolean>(false);
 	const [cameraEnabled, setCameraEnabled_DO_NOT_USE_DIRECTLY] = useState<boolean>(true);
+	const lastCameraDeviceId = useRef<string>();
 	const audioContext = useRef(new AudioContext());
 	const { user } = useContext(AuthContext);
 
@@ -36,26 +38,21 @@ export default function Space({ id }: { id: string }) {
 		});
 
 		connection.on('peers', (peers: { [id: string]: ISpaceParticipant }) => {
-			let participants = new Map<string, ISpaceParticipant>();
-
-			for (let [id, participant] of Object.entries(peers)) {
-				participants.set(id, participant);
-			}
-
-			setParticipants(participants);
+			setParticipants(peers);
 		});
 
 		connection.on('peer_joined', (peer: ISpaceParticipant) => {
-			setParticipants((participants) => {
-				participants.set(peer.accountId, peer);
-				return participants;
-			});
+			setParticipants((participants) => ({
+				...participants,
+				[peer.accountId]: peer
+			}));
 		});
 
-		connection.on('peer_left', (peer: ISpaceParticipant) => {
+		connection.on('peer_left', (peerId: string) => {
 			setParticipants((participants) => {
-				participants.delete(peer.accountId);
-				return participants;
+				let newParticipants = { ...participants };
+				delete newParticipants[peerId];
+				return newParticipants;
 			});
 		});
 
@@ -120,8 +117,8 @@ export default function Space({ id }: { id: string }) {
 
 	const muteSelf = useCallback(() => {
 		if (localTwilioParticipant) {
-			localTwilioParticipant.audioTracks.forEach((localAudioTrack) => {
-				localAudioTrack.track.disable();
+			localTwilioParticipant.audioTracks.forEach(({ track }) => {
+				track.disable();
 			});
 
 			setMuted_DO_NOT_USE_DIRECTLY(true);
@@ -130,8 +127,8 @@ export default function Space({ id }: { id: string }) {
 
 	const unmuteSelf = useCallback(() => {
 		if (localTwilioParticipant) {
-			localTwilioParticipant.audioTracks.forEach((localAudioTrack) => {
-				localAudioTrack.track.enable();
+			localTwilioParticipant.audioTracks.forEach(({ track }) => {
+				track.enable();
 			});
 
 			setMuted_DO_NOT_USE_DIRECTLY(false);
@@ -140,18 +137,22 @@ export default function Space({ id }: { id: string }) {
 
 	const enableCamera = useCallback(() => {
 		if (localTwilioParticipant) {
-			localTwilioParticipant.videoTracks.forEach((localVideoTrack) => {
-				localVideoTrack.track.enable();
+			// When enabling the camera, we must get the camera feed again
+			twilio.createLocalVideoTrack({ deviceId: { exact: lastCameraDeviceId.current } }).then((track) => {
+				localTwilioParticipant.publishTrack(track, { priority: 'low' });
+				setCameraEnabled_DO_NOT_USE_DIRECTLY(true);
 			});
-
-			setCameraEnabled_DO_NOT_USE_DIRECTLY(true);
 		}
 	}, [localTwilioParticipant]);
 
 	const disableCamera = useCallback(() => {
 		if (localTwilioParticipant) {
-			localTwilioParticipant.videoTracks.forEach((localVideoTrack) => {
-				localVideoTrack.track.disable();
+			// When disabling the camera, the VideoTrack must be unpublished
+			localTwilioParticipant.videoTracks.forEach(({ track }) => {
+				lastCameraDeviceId.current = track.mediaStreamTrack.getSettings().deviceId;
+				track.stop();
+				localTwilioParticipant.emit('trackUnpublished', track);
+				localTwilioParticipant.unpublishTrack(track);
 			});
 
 			setCameraEnabled_DO_NOT_USE_DIRECTLY(false);
@@ -161,69 +162,80 @@ export default function Space({ id }: { id: string }) {
 	return (
 		<CurrentSpaceContext.Provider value={id}>
 			<SpaceAudioContext.Provider value={audioContext.current}>
-				{space ? (
-					<div style={{ height: '100vh' }} className="flex-column padding-2 position-relative">
-						<Typography type="title" alignment="center">
-							{space.name}
-						</Typography>
-						<br />
+				<LocalParticipantContext.Provider value={localTwilioParticipant ?? null}>
+					{space ? (
+						<div style={{ height: '100vh' }} className="flex-column padding-2 position-relative">
+							<Typography type="title" alignment="center">
+								{space.name}
+							</Typography>
+							<br />
 
-						<div className="text-center">
-							<h2>Here</h2>
-							{Array.from(participants.values()).map((participant) => (
-								<SpaceParticipantListing participant={participant} key={participant.accountId} />
-							))}
-						</div>
+							<div className="text-center flex-column">
+								<h2>Here</h2>
+								{Object.values(participants).map((participant) => (
+									<SpaceParticipantListing participant={participant} key={participant.accountId} />
+								))}
+							</div>
 
-						<div
-							className="position-absolute"
-							style={{ left: '0px', top: '0px', width: '100%', height: '100%', zIndex: -1 }}
-						>
-							{participants.size && (
-								<>
-									<SpaceParticipantLocal
-										spacesParticipant={participants.get(user?.id!)!}
-										twilioParticipant={localTwilioParticipant!}
-									/>
-									{Array.from(twilioParticipants.entries()).map(([id, participant]) => (
-										<SpaceParticipantRemote
-											twilioParticipant={participant}
-											spacesParticipant={participants.get(id)!}
+							<div
+								className="position-absolute"
+								style={{ left: '0px', top: '0px', width: '100%', height: '100%', zIndex: -1 }}
+							>
+								{Object.keys(participants).length && (
+									<>
+										<SpaceParticipantLocal
+											spacesParticipant={participants[user?.id!]}
+											twilioParticipant={localTwilioParticipant!}
 										/>
-									))}
-								</>
-							)}
+										{Object.values(participants).map((participant) => {
+											if (participant.accountId !== user?.id) {
+												return (
+													<SpaceParticipantRemote
+														twilioParticipant={
+															twilioParticipants.get(participant.accountId)!
+														}
+														spacesParticipant={participant}
+														key={id}
+													/>
+												);
+											} else {
+												return null;
+											}
+										})}
+									</>
+								)}
+							</div>
+
+							<div className="flex-row">
+								<Button to=".." className="row-item">
+									Leave
+								</Button>
+
+								{muted ? (
+									<Button onClick={() => unmuteSelf()} className="row-item">
+										<i className="fas fa-microphone-slash"></i>
+									</Button>
+								) : (
+									<Button onClick={() => muteSelf()} className="row-item">
+										<i className="fas fa-microphone"></i>
+									</Button>
+								)}
+
+								{cameraEnabled ? (
+									<Button onClick={() => disableCamera()} className="row-item">
+										<i className="fas fa-video"></i>
+									</Button>
+								) : (
+									<Button onClick={() => enableCamera()} className="row-item">
+										<i className="fas fa-video-slash"></i>
+									</Button>
+								)}
+							</div>
 						</div>
-
-						<div className="flex-row">
-							<Button to=".." className="row-item">
-								Leave
-							</Button>
-
-							{muted ? (
-								<Button onClick={() => unmuteSelf()} className="row-item">
-									<i className="fas fa-microphone-slash"></i>
-								</Button>
-							) : (
-								<Button onClick={() => muteSelf()} className="row-item">
-									<i className="fas fa-microphone"></i>
-								</Button>
-							)}
-
-							{cameraEnabled ? (
-								<Button onClick={() => disableCamera()} className="row-item">
-									<i className="fas fa-video"></i>
-								</Button>
-							) : (
-								<Button onClick={() => enableCamera()} className="row-item">
-									<i className="fas fa-video-slash"></i>
-								</Button>
-							)}
-						</div>
-					</div>
-				) : (
-					<span>Loading...</span>
-				)}
+					) : (
+						<span>Loading...</span>
+					)}
+				</LocalParticipantContext.Provider>
 			</SpaceAudioContext.Provider>
 		</CurrentSpaceContext.Provider>
 	);

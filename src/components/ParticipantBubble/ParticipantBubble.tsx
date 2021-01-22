@@ -25,14 +25,22 @@ export default function ParticipantBubble({
 
 	// Attach to the video ref after the video is rendered to the screen
 	useLayoutEffect(() => {
-		if (videoTrack) {
-			videoTrack.track!.attach(videoRef.current!);
+		if (videoTrack?.track) {
+			videoTrack.track.attach(videoRef.current!);
+			videoRef.current!.play();
 		}
 	}, [videoTrack]);
 
 	return (
-		<div className="participant-bubble" style={{ left: offsetX, top: offsetY }}>
-			{videoTrack ? <video ref={videoRef} /> : photoUrl ? <img src={photoUrl} alt={name} /> : <h1>{initials}</h1>}
+		<div className="participant-bubble">
+			{/*style={{ left: offsetX, top: offsetY }}>*/}
+			{videoTrack && videoTrack.isTrackEnabled ? (
+				<video ref={videoRef} />
+			) : photoUrl ? (
+				<img src={photoUrl} alt={name} />
+			) : (
+				<h1>{initials}</h1>
+			)}
 		</div>
 	);
 }
