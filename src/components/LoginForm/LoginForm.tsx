@@ -12,6 +12,12 @@ export default function LoginForm() {
 			<h2>
 				<a href={getIonAuthorizationUrl()}>Ion</a>
 			</h2>
+			<span className="font-size-sm color-light-1">
+				By logging in, you agree to the{' '}
+				<a href="/terms" className="underline">
+					terms
+				</a>
+			</span>
 		</Box>
 	);
 }

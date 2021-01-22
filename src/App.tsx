@@ -17,6 +17,7 @@ import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import ClusterExplorerPage from './pages/ClusterExplorerPage/ClusterExplorerPage';
 import AuthContextManager from './components/AuthContextManager/AuthContextManager';
+import TermsPage from './pages/TermsPage/TermsPage';
 
 function App() {
 	return (
@@ -31,6 +32,7 @@ function App() {
 						<Route path="/logout" exact component={Logout} />
 						<Route path="/home" exact component={HomePage} />
 						<Route path="/explore" exact component={ClusterExplorerPage} />
+						<Route path="/terms" exact component={TermsPage} />
 						<Route path="/" exact component={DefaultPage} />
 					</Switch>
 				</BrowserRouter>
