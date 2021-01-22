@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
-import { LocalParticipant } from 'twilio-video';
-import useTracks from '../../hooks/useTracks';
+import { LocalParticipant, VideoTrackPublication } from 'twilio-video';
+import usePublications from '../../hooks/usePublications';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import ParticipantBubble from '../ParticipantBubble/ParticipantBubble';
 import SpaceAudioContext from '../SpaceAudioContext/SpaceAudioContext';
@@ -21,7 +21,11 @@ export default function SpaceParticipantLocal({
 	const {
 		position: { location, rotation }
 	} = spacesParticipant;
-	const { videoTrack } = useTracks(twilioParticipant);
+
+	const publications = usePublications(twilioParticipant);
+	const videoTrackPublications = publications.filter(
+		(publication) => publication.kind === 'video'
+	) as VideoTrackPublication[];
 
 	useEffect(() => {
 		listener.positionX.value = location.x;
@@ -32,6 +36,11 @@ export default function SpaceParticipantLocal({
 	}, [listener, location, rotation]);
 
 	return (
-		<ParticipantBubble offsetX="50%" offsetY="50%" name={spacesParticipant.displayName} videoTrack={videoTrack} />
+		<ParticipantBubble
+			offsetX="50%"
+			offsetY="50%"
+			name={spacesParticipant.displayName}
+			videoTrackPublication={videoTrackPublications[0]}
+		/>
 	);
 }

@@ -1,10 +1,8 @@
-import { useContext, useEffect, useRef } from 'react';
 import * as twilio from 'twilio-video';
-import useTracks from '../../hooks/useTracks';
+import usePublications from '../../hooks/usePublications';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
-import SpaceAudioContext from '../SpaceAudioContext/SpaceAudioContext';
-import { defaultPannerNodeSettings } from '../../lib/defaultPannerNodeSettings';
 import ParticipantBubble from '../ParticipantBubble/ParticipantBubble';
+import SpatialAudioTrack from '../SpatialAudioTrack/SpatialAudioTrack';
 
 export default function SpaceParticipantRemote({
 	twilioParticipant,
@@ -13,54 +11,30 @@ export default function SpaceParticipantRemote({
 	twilioParticipant: twilio.Participant;
 	spacesParticipant: ISpaceParticipant;
 }) {
-	const { audioTrack, videoTrack } = useTracks(twilioParticipant);
-	const audioContext = useContext(SpaceAudioContext);
-	const pannerNode = useRef<PannerNode>();
+	const publications = usePublications(twilioParticipant);
 	const {
 		position: { location, rotation }
 	} = spacesParticipant;
 
-	// [audioContext, audioTrack]
-	useEffect(() => {
-		console.log(
-			'audioCtx is',
-			audioContext,
-			'CreateMediaStreamTrackSource is',
-			audioContext.createMediaStreamTrackSource
-		);
+	const audioTrackPublications = publications.filter(
+		(publication) => publication.kind === 'audio'
+	) as twilio.AudioTrackPublication[];
 
-		if (audioTrack?.track) {
-			let audioSource = audioContext.createMediaStreamSource(
-				new MediaStream([audioTrack.track.mediaStreamTrack])
-			);
-			pannerNode.current = new PannerNode(audioContext, defaultPannerNodeSettings);
-			audioSource.connect(pannerNode.current).connect(audioContext.destination);
-
-			return () => {
-				audioSource.disconnect();
-				pannerNode.current = undefined;
-			};
-		}
-	}, [audioContext, audioTrack]);
-
-	// [location, rotation]
-	useEffect(() => {
-		if (pannerNode.current) {
-			pannerNode.current.positionX.value = location.x;
-			pannerNode.current.positionY.value = location.y;
-
-			pannerNode.current.orientationX.value = Math.sin(rotation);
-			pannerNode.current.orientationZ.value = Math.cos(rotation);
-		}
-	}, [location, rotation]);
-
-	const audioRef = useRef<HTMLAudioElement>(null);
-
-	if (audioTrack?.track) {
-		audioTrack.track.attach(audioRef.current!);
-	}
+	const videoTrackPublications = publications.filter(
+		(publication) => publication.kind === 'video'
+	) as twilio.VideoTrackPublication[];
 
 	return (
-		<ParticipantBubble offsetX="50%" offsetY="50%" name={spacesParticipant.displayName} videoTrack={videoTrack} />
+		<>
+			{audioTrackPublications.map((publication) => (
+				<SpatialAudioTrack location={location} rotation={rotation} publication={publication} />
+			))}
+			<ParticipantBubble
+				offsetX="50%"
+				offsetY="50%"
+				name={spacesParticipant.displayName}
+				videoTrackPublication={videoTrackPublications[0]}
+			/>
+		</>
 	);
 }
