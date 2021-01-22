@@ -1,14 +1,26 @@
+@import "../../styles/theme"
+
 .participant-bubble
 	border-radius: 100%
-	width: 4rem
-	height: 4rem
+	width: 8rem
+	height: 8rem
+
+	// To center the bubble
+	margin-left: -4rem
+	margin-top: -4rem
 
 	display: flex
 	justify-content: center
 	align-items: center
-	background-color: $spaces-color-dark-1
+	background-color: $spaces-color-dark-3
 
 	text-decoration: none
 	color: $spaces-color-light-0
 
 	position: relative
+
+	overflow: hidden
+
+	video
+		max-height: 100%
+		object-fit: cover

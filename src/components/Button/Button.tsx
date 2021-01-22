@@ -8,22 +8,31 @@ type ButtonProps = (
 	/* Link styled like a button */
 	| {
 			to: string;
+			style?: CSSProperties;
+			className?: string;
 	  }
 ) & {
 	variant?: 'small' | 'medium' | 'large';
-	style?: CSSProperties;
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
 	const { variant = 'medium' } = props;
 	if ('to' in props) {
+		const { to, className, style } = props;
 		return (
-			<Link to={props.to} className={'button button-' + variant} style={props.style}>
+			<Link to={to} className={'button button-' + variant + (className ? ' ' + className : '')} style={style}>
 				{props.children}
 			</Link>
 		);
 	} else {
-		return <button ref={ref} className={'button button-' + variant} {...props} />;
+		const { className, ...otherProps } = props;
+		return (
+			<button
+				ref={ref}
+				className={'button button-' + variant + (className ? ' ' + className : '')}
+				{...otherProps}
+			/>
+		);
 	}
 });
 

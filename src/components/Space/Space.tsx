@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import * as io from 'socket.io-client';
 import * as twilio from 'twilio-video';
 import useSpace from '../../hooks/useSpace';
@@ -21,6 +21,8 @@ export default function Space({ id }: { id: string }) {
 	const [localTwilioParticipant, setLocalTwilioParticipant] = useState<twilio.LocalParticipant>();
 	const [twilioToken, setTwilioToken] = useState<string>();
 	const [twilioRoom, setTwilioRoom] = useState<twilio.Room>();
+	const [muted, setMuted_DO_NOT_USE_DIRECTLY] = useState<boolean>(false);
+	const [cameraEnabled, setCameraEnabled_DO_NOT_USE_DIRECTLY] = useState<boolean>(true);
 	const audioContext = useRef(new AudioContext());
 	const { user } = useContext(AuthContext);
 
@@ -116,11 +118,51 @@ export default function Space({ id }: { id: string }) {
 		}
 	}, [twilioRoom]);
 
+	const muteSelf = useCallback(() => {
+		if (localTwilioParticipant) {
+			localTwilioParticipant.audioTracks.forEach((localAudioTrack) => {
+				localAudioTrack.track.disable();
+			});
+
+			setMuted_DO_NOT_USE_DIRECTLY(true);
+		}
+	}, [localTwilioParticipant]);
+
+	const unmuteSelf = useCallback(() => {
+		if (localTwilioParticipant) {
+			localTwilioParticipant.audioTracks.forEach((localAudioTrack) => {
+				localAudioTrack.track.enable();
+			});
+
+			setMuted_DO_NOT_USE_DIRECTLY(false);
+		}
+	}, [localTwilioParticipant]);
+
+	const enableCamera = useCallback(() => {
+		if (localTwilioParticipant) {
+			localTwilioParticipant.videoTracks.forEach((localVideoTrack) => {
+				localVideoTrack.track.enable();
+			});
+
+			setCameraEnabled_DO_NOT_USE_DIRECTLY(true);
+		}
+	}, [localTwilioParticipant]);
+
+	const disableCamera = useCallback(() => {
+		if (localTwilioParticipant) {
+			localTwilioParticipant.videoTracks.forEach((localVideoTrack) => {
+				localVideoTrack.track.disable();
+			});
+
+			setCameraEnabled_DO_NOT_USE_DIRECTLY(false);
+		}
+	}, [localTwilioParticipant]);
+
 	return (
 		<CurrentSpaceContext.Provider value={id}>
 			<SpaceAudioContext.Provider value={audioContext.current}>
 				{space ? (
-					<div style={{ height: '100vh' }} className="flex-column padding-2">
+					<div style={{ height: '100vh' }} className="flex-column padding-2 position-relative">
 						<Typography type="title" alignment="center">
 							{space.name}
 						</Typography>
@@ -133,7 +175,10 @@ export default function Space({ id }: { id: string }) {
 							))}
 						</div>
 
-						<div>
+						<div
+							className="position-absolute"
+							style={{ left: '0px', top: '0px', width: '100%', height: '100%', zIndex: -1 }}
+						>
 							{participants.size && (
 								<>
 									<SpaceParticipantLocal
@@ -151,7 +196,29 @@ export default function Space({ id }: { id: string }) {
 						</div>
 
 						<div className="flex-row">
-							<Button to="..">Leave</Button>
+							<Button to=".." className="row-item">
+								Leave
+							</Button>
+
+							{muted ? (
+								<Button onClick={() => unmuteSelf()} className="row-item">
+									<i className="fas fa-microphone-slash"></i>
+								</Button>
+							) : (
+								<Button onClick={() => muteSelf()} className="row-item">
+									<i className="fas fa-microphone"></i>
+								</Button>
+							)}
+
+							{cameraEnabled ? (
+								<Button onClick={() => disableCamera()} className="row-item">
+									<i className="fas fa-video"></i>
+								</Button>
+							) : (
+								<Button onClick={() => enableCamera()} className="row-item">
+									<i className="fas fa-video-slash"></i>
+								</Button>
+							)}
 						</div>
 					</div>
 				) : (

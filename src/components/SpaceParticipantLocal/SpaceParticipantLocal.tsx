@@ -1,6 +1,8 @@
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { LocalParticipant } from 'twilio-video';
+import useTracks from '../../hooks/useTracks';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
+import ParticipantBubble from '../ParticipantBubble/ParticipantBubble';
 import SpaceAudioContext from '../SpaceAudioContext/SpaceAudioContext';
 
 /**
@@ -19,6 +21,7 @@ export default function SpaceParticipantLocal({
 	const {
 		position: { location, rotation }
 	} = spacesParticipant;
+	const { videoTrack } = useTracks(twilioParticipant);
 
 	useEffect(() => {
 		listener.positionX.value = location.x;
@@ -28,5 +31,7 @@ export default function SpaceParticipantLocal({
 		listener.forwardX.value = Math.cos(rotation);
 	}, [listener, location, rotation]);
 
-	return null;
+	return (
+		<ParticipantBubble offsetX="50%" offsetY="50%" name={spacesParticipant.displayName} videoTrack={videoTrack} />
+	);
 }

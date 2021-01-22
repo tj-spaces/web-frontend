@@ -4,6 +4,7 @@ import useTracks from '../../hooks/useTracks';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import SpaceAudioContext from '../SpaceAudioContext/SpaceAudioContext';
 import { defaultPannerNodeSettings } from '../../lib/defaultPannerNodeSettings';
+import ParticipantBubble from '../ParticipantBubble/ParticipantBubble';
 
 export default function SpaceParticipantRemote({
 	twilioParticipant,
@@ -12,7 +13,7 @@ export default function SpaceParticipantRemote({
 	twilioParticipant: twilio.Participant;
 	spacesParticipant: ISpaceParticipant;
 }) {
-	const { audioTrack } = useTracks(twilioParticipant);
+	const { audioTrack, videoTrack } = useTracks(twilioParticipant);
 	const audioContext = useContext(SpaceAudioContext);
 	const pannerNode = useRef<PannerNode>();
 	const {
@@ -22,7 +23,7 @@ export default function SpaceParticipantRemote({
 	// [audioContext, audioTrack]
 	useEffect(() => {
 		if (audioTrack) {
-			let audioSource = audioContext.createMediaStreamTrackSource(audioTrack);
+			let audioSource = audioContext.createMediaStreamTrackSource(audioTrack.track?.mediaStreamTrack!);
 			pannerNode.current = new PannerNode(audioContext, defaultPannerNodeSettings);
 			audioSource.connect(pannerNode.current).connect(audioContext.destination);
 
@@ -44,5 +45,13 @@ export default function SpaceParticipantRemote({
 		}
 	}, [location, rotation]);
 
-	return null;
+	const audioRef = useRef<HTMLAudioElement>(null);
+
+	if (audioTrack) {
+		audioTrack.track!.attach(audioRef.current!);
+	}
+
+	return (
+		<ParticipantBubble offsetX="50%" offsetY="50%" name={spacesParticipant.displayName} videoTrack={videoTrack} />
+	);
 }

@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import * as twilio from 'twilio-video';
 
 export default function useTracks(participant: twilio.Participant) {
-	const [audioTrack, setAudioTrack] = useState<MediaStreamTrack>();
-	const [videoTrack, setVideoTrack] = useState<MediaStreamTrack>();
+	const [audioTrack, setAudioTrack] = useState<twilio.AudioTrackPublication>();
+	const [videoTrack, setVideoTrack] = useState<twilio.VideoTrackPublication>();
 
 	useEffect(() => {
 		if (participant) {
@@ -12,16 +12,14 @@ export default function useTracks(participant: twilio.Participant) {
 
 			for (let audioTrack of audioTracks) {
 				if (audioTrack.track) {
-					let { mediaStreamTrack } = audioTrack.track;
-					setAudioTrack(mediaStreamTrack);
+					setAudioTrack(audioTrack);
 					break;
 				}
 			}
 
 			for (let videoTrack of videoTracks) {
 				if (videoTrack.track) {
-					let { mediaStreamTrack } = videoTrack.track;
-					setVideoTrack(mediaStreamTrack);
+					setVideoTrack(videoTrack);
 					break;
 				}
 			}
