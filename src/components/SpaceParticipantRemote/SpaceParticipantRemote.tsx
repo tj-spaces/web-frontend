@@ -13,9 +13,7 @@ export default function SpaceParticipantRemote({
 	spacesParticipant: ISpaceParticipant;
 }) {
 	const publications = usePublications(twilioParticipant);
-	const {
-		position: { location, rotation }
-	} = spacesParticipant;
+	const { position } = spacesParticipant;
 
 	const audioTrackPublications = publications.filter(
 		(publication) => publication.kind === 'audio'
@@ -30,11 +28,10 @@ export default function SpaceParticipantRemote({
 	return (
 		<>
 			{audioTrackPublications.map((publication) => (
-				<SpatialAudioTrack location={location} rotation={rotation} publication={publication} />
+				<SpatialAudioTrack position={position} publication={publication} />
 			))}
 			<ParticipantBubble
-				offsetX={location.x + '%'}
-				offsetY={location.y + '%'}
+				position={spacesParticipant.position}
 				name={spacesParticipant.displayName}
 				videoTrack={videoTrack}
 			/>

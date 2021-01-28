@@ -29,12 +29,9 @@ export default function SpaceParticipantLocal({
 		listener.forwardX.value = Math.cos(rotation);
 	}, [listener, location, rotation]);
 
-	console.log(spacesParticipant.accountId, { location, rotation });
-
 	return (
 		<ParticipantBubble
-			offsetX={location.x + '%'}
-			offsetY={location.y + '%'}
+			position={spacesParticipant.position}
 			name={spacesParticipant.displayName}
 			videoTrack={localVideoTrack}
 		/>

@@ -1,17 +1,18 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useContext, useLayoutEffect, useRef } from 'react';
 import * as twilio from 'twilio-video';
+import getCSSTransform from '../../lib/getCSSTransform';
+import { SpacePositionInfo } from '../../typings/SpaceParticipant';
+import SpacePositionContext from '../SpacePositionContext/SpacePositionContext';
 
 import './ParticipantBubble.sass';
 
 export default function ParticipantBubble({
-	offsetX,
-	offsetY,
+	position,
 	photoUrl,
 	name,
 	videoTrack
 }: {
-	offsetX: string;
-	offsetY: string;
+	position: SpacePositionInfo;
 	photoUrl?: string;
 	name: string;
 	videoTrack: twilio.VideoTrack | null;
@@ -31,10 +32,11 @@ export default function ParticipantBubble({
 		}
 	}, [videoTrack]);
 
-	console.log('Participant:', name, 'Offset:', { offsetX, offsetY });
+	const localPosition = useContext(SpacePositionContext);
+	const cssTransform = getCSSTransform(localPosition!, position);
 
 	return (
-		<div className="participant-bubble" style={{ left: offsetX, top: offsetY }}>
+		<div className="participant-bubble" style={{ transform: cssTransform }}>
 			{videoTrack ? <video ref={videoRef} /> : photoUrl ? <img src={photoUrl} alt={name} /> : <h1>{initials}</h1>}
 		</div>
 	);

@@ -15,6 +15,7 @@ import SpaceParticipantLocal from '../SpaceParticipantLocal/SpaceParticipantLoca
 import SpaceParticipantRemote from '../SpaceParticipantRemote/SpaceParticipantRemote';
 import Typography from '../Typography/Typography';
 import useKeyboardState from '../../hooks/useKeyboardState';
+import SpacePositionContext from '../SpacePositionContext/SpacePositionContext';
 
 export default function Space({ id }: { id: string }) {
 	const space = useSpace(id);
@@ -28,7 +29,8 @@ export default function Space({ id }: { id: string }) {
 	const [localAudioTrack, setLocalAudioTrack] = useState<twilio.LocalAudioTrack | null>(null);
 	const [localVideoTrack, setLocalVideoTrack] = useState<twilio.LocalVideoTrack | null>(null);
 	const audioContext = useRef(new AudioContext());
-	const { user } = useContext(AuthContext);
+	// Guaranteed to have a value
+	const user = useContext(AuthContext).user!;
 	const connectionRef = useRef<SocketIOClient.Socket | null>(null);
 
 	// id
@@ -196,77 +198,86 @@ export default function Space({ id }: { id: string }) {
 	return (
 		<CurrentSpaceContext.Provider value={id}>
 			<SpaceAudioContext.Provider value={audioContext.current}>
-				<TwilioRoomContext.Provider value={twilioRoom ?? null}>
-					{space ? (
-						<div style={{ height: '100vh' }} className="flex-column padding-2 position-relative">
-							<Typography type="title" alignment="center">
-								{space.name}
-							</Typography>
-							<br />
+				{participants[user.id] && (
+					<SpacePositionContext.Provider value={participants[user.id].position}>
+						<TwilioRoomContext.Provider value={twilioRoom ?? null}>
+							{space ? (
+								<div style={{ height: '100vh' }} className="flex-column padding-2 position-relative">
+									<Typography type="title" alignment="center">
+										{space.name}
+									</Typography>
+									<br />
 
-							<div className="text-center flex-column">
-								<h2>Here</h2>
-								{Object.values(participants).map((participant) => (
-									<SpaceParticipantListing participant={participant} key={participant.accountId} />
-								))}
-							</div>
-
-							<div className="flex-row margin-y-1 justify-content-center">
-								{Object.keys(participants).length && (
-									<>
-										{user && (
-											<SpaceParticipantLocal
-												spacesParticipant={participants[user!.id]}
-												localVideoTrack={localVideoTrack}
+									<div className="text-center flex-column">
+										<h2>Here</h2>
+										{Object.values(participants).map((participant) => (
+											<SpaceParticipantListing
+												participant={participant}
+												key={participant.accountId}
 											/>
-										)}
-										{Object.values(participants).map((participant) => {
-											if (participant.accountId !== user!.id) {
-												return (
-													<SpaceParticipantRemote
-														twilioParticipant={twilioParticipants[participant.accountId]!}
-														spacesParticipant={participant}
-														key={id}
+										))}
+									</div>
+
+									<div>
+										{Object.keys(participants).length && (
+											<>
+												{user && (
+													<SpaceParticipantLocal
+														spacesParticipant={participants[user!.id]}
+														localVideoTrack={localVideoTrack}
 													/>
-												);
-											} else {
-												return null;
-											}
-										})}
-									</>
-								)}
-							</div>
+												)}
+												{Object.values(participants).map((participant) => {
+													if (participant.accountId !== user!.id) {
+														return (
+															<SpaceParticipantRemote
+																twilioParticipant={
+																	twilioParticipants[participant.accountId]!
+																}
+																spacesParticipant={participant}
+																key={id}
+															/>
+														);
+													} else {
+														return null;
+													}
+												})}
+											</>
+										)}
+									</div>
 
-							<div className="flex-row justify-content-center">
-								<Button to=".." className="row-item">
-									Leave
-								</Button>
+									<div className="flex-row justify-content-center">
+										<Button to=".." className="row-item">
+											Leave
+										</Button>
 
-								{muted ? (
-									<Button onClick={() => setMuted(false)} className="row-item">
-										<i className="fas fa-microphone-slash"></i>
-									</Button>
-								) : (
-									<Button onClick={() => setMuted(true)} className="row-item">
-										<i className="fas fa-microphone"></i>
-									</Button>
-								)}
+										{muted ? (
+											<Button onClick={() => setMuted(false)} className="row-item">
+												<i className="fas fa-microphone-slash"></i>
+											</Button>
+										) : (
+											<Button onClick={() => setMuted(true)} className="row-item">
+												<i className="fas fa-microphone"></i>
+											</Button>
+										)}
 
-								{cameraEnabled ? (
-									<Button onClick={() => setCameraEnabled(false)} className="row-item">
-										<i className="fas fa-video"></i>
-									</Button>
-								) : (
-									<Button onClick={() => setCameraEnabled(true)} className="row-item">
-										<i className="fas fa-video-slash"></i>
-									</Button>
-								)}
-							</div>
-						</div>
-					) : (
-						<span>Loading...</span>
-					)}
-				</TwilioRoomContext.Provider>
+										{cameraEnabled ? (
+											<Button onClick={() => setCameraEnabled(false)} className="row-item">
+												<i className="fas fa-video"></i>
+											</Button>
+										) : (
+											<Button onClick={() => setCameraEnabled(true)} className="row-item">
+												<i className="fas fa-video-slash"></i>
+											</Button>
+										)}
+									</div>
+								</div>
+							) : (
+								<span>Loading...</span>
+							)}
+						</TwilioRoomContext.Provider>
+					</SpacePositionContext.Provider>
+				)}
 			</SpaceAudioContext.Provider>
 		</CurrentSpaceContext.Provider>
 	);

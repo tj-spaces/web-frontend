@@ -5,6 +5,7 @@
 export interface SpaceLocation {
 	x: number;
 	y: number;
+	z: number;
 }
 
 export interface SpacePositionInfo {
