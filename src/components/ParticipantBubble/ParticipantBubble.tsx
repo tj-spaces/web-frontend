@@ -10,12 +10,14 @@ export default function ParticipantBubble({
 	position,
 	photoUrl,
 	name,
-	videoTrack
+	videoTrack,
+	isLocal = false
 }: {
 	position: SpacePositionInfo;
 	photoUrl?: string;
 	name: string;
 	videoTrack: twilio.VideoTrack | null;
+	isLocal?: boolean;
 }) {
 	const initials = name
 		.split(' ')
@@ -33,10 +35,11 @@ export default function ParticipantBubble({
 	}, [videoTrack]);
 
 	const localPosition = useContext(SpacePositionContext);
-	const cssTransform = getCSSTransform(localPosition!, position);
+	const transform = isLocal ? undefined : getCSSTransform(localPosition!, position);
+	const className = 'participant-bubble'; // + isLocal ? ' participant-bubble-local' : '';
 
 	return (
-		<div className="participant-bubble" style={{ transform: cssTransform }}>
+		<div className={className} style={{ transform }}>
 			{videoTrack ? <video ref={videoRef} /> : photoUrl ? <img src={photoUrl} alt={name} /> : <h1>{initials}</h1>}
 		</div>
 	);

@@ -34,6 +34,7 @@ export default function SpaceParticipantLocal({
 			position={spacesParticipant.position}
 			name={spacesParticipant.displayName}
 			videoTrack={localVideoTrack}
+			isLocal={true}
 		/>
 	);
 }

@@ -4,7 +4,7 @@ import * as twilio from 'twilio-video';
 import useSpace from '../../hooks/useSpace';
 import { API_SERVER_URL } from '../../lib/constants';
 import getSessionId from '../../lib/getSessionId';
-import { ISpaceParticipant } from '../../typings/SpaceParticipant';
+import { ISpaceParticipant, SpacePositionInfo } from '../../typings/SpaceParticipant';
 import AuthContext from '../AuthContext/AuthContext';
 import Button from '../Button/Button';
 import CurrentSpaceContext from '../CurrentSpaceContext/CurrentSpaceContext';
@@ -16,6 +16,8 @@ import SpaceParticipantRemote from '../SpaceParticipantRemote/SpaceParticipantRe
 import Typography from '../Typography/Typography';
 import useKeyboardState from '../../hooks/useKeyboardState';
 import SpacePositionContext from '../SpacePositionContext/SpacePositionContext';
+import getCSSTransform from '../../lib/getCSSTransform';
+import Environment from './Environment';
 
 export default function Space({ id }: { id: string }) {
 	const space = useSpace(id);
@@ -118,17 +120,17 @@ export default function Space({ id }: { id: string }) {
 			return () => {
 				twilioRoom.off('participantConnected', onParticipantConnected);
 				twilioRoom.off('participantDisconnected', onParticipantDisconnected);
-				twilioRoom.disconnect();
-
 				// Turn off all video/audio sending when the user leaves the room
 				twilioRoom.localParticipant.audioTracks.forEach((publication) => {
-					publication.track.disable();
+					publication.track.stop();
 					publication.unpublish();
 				});
 				twilioRoom.localParticipant.videoTracks.forEach((publication) => {
-					publication.track.mediaStreamTrack.stop();
+					publication.track.stop();
 					publication.unpublish();
 				});
+
+				twilioRoom.disconnect();
 			};
 		}
 	}, [twilioRoom]);
@@ -195,6 +197,14 @@ export default function Space({ id }: { id: string }) {
 		connectionRef.current?.emit('set_walk_direction', 0);
 	}
 
+	const userLoaded = participants[user.id] != null;
+
+	let rectPos: SpacePositionInfo = {
+		location: { x: 0, y: 0, z: 10 },
+		rotation: 0
+	};
+	const rectTransform = userLoaded ? getCSSTransform(participants[user.id].position, rectPos) : undefined;
+
 	return (
 		<CurrentSpaceContext.Provider value={id}>
 			<SpaceAudioContext.Provider value={audioContext.current}>
@@ -202,7 +212,7 @@ export default function Space({ id }: { id: string }) {
 					<SpacePositionContext.Provider value={participants[user.id].position}>
 						<TwilioRoomContext.Provider value={twilioRoom ?? null}>
 							{space ? (
-								<div style={{ height: '100vh' }} className="flex-column padding-2 position-relative">
+								<div className="flex-column padding-2">
 									<Typography type="title" alignment="center">
 										{space.name}
 									</Typography>
@@ -218,35 +228,18 @@ export default function Space({ id }: { id: string }) {
 										))}
 									</div>
 
-									<div>
-										{Object.keys(participants).length && (
-											<>
-												{user && (
-													<SpaceParticipantLocal
-														spacesParticipant={participants[user!.id]}
-														localVideoTrack={localVideoTrack}
-													/>
-												)}
-												{Object.values(participants).map((participant) => {
-													if (participant.accountId !== user!.id) {
-														return (
-															<SpaceParticipantRemote
-																twilioParticipant={
-																	twilioParticipants[participant.accountId]!
-																}
-																spacesParticipant={participant}
-																key={id}
-															/>
-														);
-													} else {
-														return null;
-													}
-												})}
-											</>
-										)}
-									</div>
+									<Environment participants={participants} twilioParticipants={twilioParticipants} />
 
-									<div className="flex-row justify-content-center">
+									<div className="flex-row">
+										{user && (
+											<div className="row-item">
+												<SpaceParticipantLocal
+													spacesParticipant={participants[user!.id]}
+													localVideoTrack={localVideoTrack}
+												/>
+											</div>
+										)}
+
 										<Button to=".." className="row-item">
 											Leave
 										</Button>
