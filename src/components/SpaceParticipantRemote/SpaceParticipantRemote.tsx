@@ -1,5 +1,6 @@
 import * as twilio from 'twilio-video';
 import usePublications from '../../hooks/usePublications';
+import useTrack from '../../hooks/useTrack';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import ParticipantBubble from '../ParticipantBubble/ParticipantBubble';
 import SpatialAudioTrack from '../SpatialAudioTrack/SpatialAudioTrack';
@@ -23,6 +24,8 @@ export default function SpaceParticipantRemote({
 		(publication) => publication.kind === 'video'
 	) as twilio.VideoTrackPublication[];
 
+	const videoTrack = useTrack(videoTrackPublications[0]) as twilio.VideoTrack;
+
 	return (
 		<>
 			{audioTrackPublications.map((publication) => (
@@ -32,7 +35,7 @@ export default function SpaceParticipantRemote({
 				offsetX="50%"
 				offsetY="50%"
 				name={spacesParticipant.displayName}
-				videoTrackPublication={videoTrackPublications[0]}
+				videoTrack={videoTrack}
 			/>
 		</>
 	);

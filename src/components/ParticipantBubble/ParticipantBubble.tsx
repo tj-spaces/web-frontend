@@ -1,6 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
 import * as twilio from 'twilio-video';
-import useTrack from '../../hooks/useTrack';
 
 import './ParticipantBubble.sass';
 
@@ -9,13 +8,13 @@ export default function ParticipantBubble({
 	offsetY,
 	photoUrl,
 	name,
-	videoTrackPublication
+	videoTrack
 }: {
 	offsetX: string;
 	offsetY: string;
 	photoUrl?: string;
 	name: string;
-	videoTrackPublication?: twilio.VideoTrackPublication;
+	videoTrack: twilio.VideoTrack | null;
 }) {
 	const initials = name
 		.split(' ')
@@ -23,7 +22,6 @@ export default function ParticipantBubble({
 		.map((word) => word.slice(0, 1).toUpperCase());
 
 	const videoRef = useRef<HTMLVideoElement>(null);
-	const videoTrack = useTrack(videoTrackPublication) as twilio.VideoTrack;
 
 	// Attach to the video ref after the video is rendered to the screen
 	useLayoutEffect(() => {
@@ -36,13 +34,7 @@ export default function ParticipantBubble({
 	return (
 		<div className="participant-bubble">
 			{/*style={{ left: offsetX, top: offsetY }}>*/}
-			{videoTrackPublication && videoTrackPublication.isTrackEnabled ? (
-				<video ref={videoRef} />
-			) : photoUrl ? (
-				<img src={photoUrl} alt={name} />
-			) : (
-				<h1>{initials}</h1>
-			)}
+			{videoTrack ? <video ref={videoRef} /> : photoUrl ? <img src={photoUrl} alt={name} /> : <h1>{initials}</h1>}
 		</div>
 	);
 }

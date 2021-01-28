@@ -24,7 +24,8 @@ export default function Space({ id }: { id: string }) {
 	const [twilioRoom, setTwilioRoom] = useState<twilio.Room | null>(null);
 	const [muted, setMuted_DO_NOT_USE_DIRECTLY] = useState<boolean>(false);
 	const [cameraEnabled, setCameraEnabled_DO_NOT_USE_DIRECTLY] = useState<boolean>(true);
-	const lastCameraDeviceId = useRef<string>();
+	const [localAudioTrack, setLocalAudioTrack] = useState<twilio.LocalAudioTrack | null>(null);
+	const [localVideoTrack, setLocalVideoTrack] = useState<twilio.LocalVideoTrack | null>(null);
 	const audioContext = useRef(new AudioContext());
 	const { user } = useContext(AuthContext);
 
@@ -67,9 +68,22 @@ export default function Space({ id }: { id: string }) {
 	// twilioToken
 	useEffect(() => {
 		if (twilioToken) {
-			twilio.connect(twilioToken, { audio: true, video: { width: 640 } }).then((room) => {
-				setTwilioRoom(room);
-			});
+			(async () => {
+				const audioTrack = await twilio.createLocalAudioTrack();
+				const videoTrack = await twilio.createLocalVideoTrack({ width: 640 });
+
+				setLocalAudioTrack(audioTrack);
+				setLocalVideoTrack(videoTrack);
+
+				twilio
+					.connect(twilioToken, {
+						tracks: [audioTrack, videoTrack],
+						region: 'us1'
+					})
+					.then((room) => {
+						setTwilioRoom(room);
+					});
+			})();
 		}
 	}, [twilioToken]);
 
@@ -124,48 +138,49 @@ export default function Space({ id }: { id: string }) {
 	}, [twilioRoom]);
 
 	const muteSelf = useCallback(() => {
-		if (localTwilioParticipant) {
-			localTwilioParticipant.audioTracks.forEach(({ track }) => {
-				track.disable();
-			});
+		if (localAudioTrack) {
+			localAudioTrack.disable();
 
 			setMuted_DO_NOT_USE_DIRECTLY(true);
 		}
-	}, [localTwilioParticipant]);
+	}, [localAudioTrack]);
 
 	const unmuteSelf = useCallback(() => {
-		if (localTwilioParticipant) {
-			localTwilioParticipant.audioTracks.forEach(({ track }) => {
-				track.enable();
-			});
+		if (localAudioTrack) {
+			localAudioTrack.enable();
 
 			setMuted_DO_NOT_USE_DIRECTLY(false);
 		}
-	}, [localTwilioParticipant]);
+	}, [localAudioTrack]);
 
 	const enableCamera = useCallback(() => {
 		if (localTwilioParticipant) {
-			// When enabling the camera, we must get the camera feed again
-			twilio.createLocalVideoTrack({ deviceId: { exact: lastCameraDeviceId.current } }).then((track) => {
-				localTwilioParticipant.publishTrack(track, { priority: 'low' });
-				setCameraEnabled_DO_NOT_USE_DIRECTLY(true);
-			});
+			if (!localVideoTrack) {
+				(async () => {
+					// When enabling the camera, we must get the camera feed again
+					let newLocalVideoTrack = await twilio.createLocalVideoTrack({ width: 640 });
+					setLocalVideoTrack(newLocalVideoTrack);
+					localTwilioParticipant.publishTrack(newLocalVideoTrack);
+					setCameraEnabled_DO_NOT_USE_DIRECTLY(true);
+				})();
+			}
 		}
-	}, [localTwilioParticipant]);
+	}, [localTwilioParticipant, localVideoTrack]);
 
 	const disableCamera = useCallback(() => {
 		if (localTwilioParticipant) {
 			// When disabling the camera, the VideoTrack must be unpublished
-			localTwilioParticipant.videoTracks.forEach(({ track }) => {
-				lastCameraDeviceId.current = track.mediaStreamTrack.getSettings().deviceId;
-				track.stop();
-				localTwilioParticipant.emit('trackUnpublished', track);
-				localTwilioParticipant.unpublishTrack(track);
-			});
+			if (localVideoTrack) {
+				localVideoTrack.disable();
+				setLocalVideoTrack(null);
+				localTwilioParticipant.videoTracks.forEach((publication) => {
+					publication.unpublish();
+				});
+			}
 
 			setCameraEnabled_DO_NOT_USE_DIRECTLY(false);
 		}
-	}, [localTwilioParticipant]);
+	}, [localTwilioParticipant, localVideoTrack]);
 
 	return (
 		<CurrentSpaceContext.Provider value={id}>
@@ -190,7 +205,7 @@ export default function Space({ id }: { id: string }) {
 									<>
 										<SpaceParticipantLocal
 											spacesParticipant={participants[user?.id!]}
-											twilioParticipant={localTwilioParticipant!}
+											localVideoTrack={localVideoTrack}
 										/>
 										{Object.values(participants).map((participant) => {
 											if (participant.accountId !== user?.id) {
