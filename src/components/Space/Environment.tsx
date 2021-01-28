@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Participant } from 'twilio-video';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import AuthContext from '../AuthContext/AuthContext';
-import SpaceParticipantRemote from '../SpaceParticipantRemote/SpaceParticipantRemote';
+import SpaceParticipantRemote from './SpaceParticipantRemote/SpaceParticipantRemote';
 
 export default function Environment({
 	participants,

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { ISpace } from '../../typings/Space';
-import CurrentClusterContext from '../CurrentClusterContext/CurrentClusterContext';
+import CurrentClusterContext from '../Cluster/CurrentClusterContext/CurrentClusterContext';
 
 import './SpaceList.sass';
 import '../../styles/box.sass';

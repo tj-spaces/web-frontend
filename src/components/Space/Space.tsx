@@ -10,12 +10,11 @@ import Button from '../Button/Button';
 import CurrentSpaceContext from '../CurrentSpaceContext/CurrentSpaceContext';
 import TwilioRoomContext from '../TwilioRoomContext/TwilioRoomContext';
 import SpaceAudioContext from '../SpaceAudioContext/SpaceAudioContext';
-import SpaceParticipantListing from '../SpaceParticipantListing/SpaceParticipantListing';
-import SpaceParticipantLocal from '../SpaceParticipantLocal/SpaceParticipantLocal';
-import SpaceParticipantRemote from '../SpaceParticipantRemote/SpaceParticipantRemote';
+import SpaceParticipantListing from './SpaceParticipantListing/SpaceParticipantListing';
+import SpaceParticipantLocal from './SpaceParticipantLocal/SpaceParticipantLocal';
 import Typography from '../Typography/Typography';
 import useKeyboardState from '../../hooks/useKeyboardState';
-import SpacePositionContext from '../SpacePositionContext/SpacePositionContext';
+import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
 import getCSSTransform from '../../lib/getCSSTransform';
 import Environment from './Environment';
 

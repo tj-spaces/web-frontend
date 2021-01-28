@@ -1,7 +1,7 @@
 import { useContext, useLayoutEffect, useRef } from 'react';
 import * as twilio from 'twilio-video';
-import getCSSTransform from '../../lib/getCSSTransform';
-import { SpacePositionInfo } from '../../typings/SpaceParticipant';
+import getCSSTransform from '../../../lib/getCSSTransform';
+import { SpacePositionInfo } from '../../../typings/SpaceParticipant';
 import SpacePositionContext from '../SpacePositionContext/SpacePositionContext';
 
 import './ParticipantBubble.sass';

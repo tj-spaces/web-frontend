@@ -1,9 +1,9 @@
 import * as twilio from 'twilio-video';
-import usePublications from '../../hooks/usePublications';
-import useTrack from '../../hooks/useTrack';
-import { ISpaceParticipant } from '../../typings/SpaceParticipant';
+import usePublications from '../../../hooks/usePublications';
+import useTrack from '../../../hooks/useTrack';
+import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
 import ParticipantBubble from '../ParticipantBubble/ParticipantBubble';
-import SpatialAudioTrack from '../SpatialAudioTrack/SpatialAudioTrack';
+import SpatialAudioTrack from '../../SpatialAudioTrack/SpatialAudioTrack';
 
 export default function SpaceParticipantRemote({
 	twilioParticipant,

@@ -1,11 +1,11 @@
 import React from 'react';
 import { createRef, useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import { createCluster } from '../../api/api';
-import Box from '../Box/Box';
-import Button from '../Button/Button';
-import Modal from '../Modal/Modal';
-import '../SidebarIcon/SidebarIcon.sass';
+import { createCluster } from '../../../api/api';
+import Box from '../../Box/Box';
+import Button from '../../Button/Button';
+import Modal from '../../Modal/Modal';
+import '../../SidebarIcon/SidebarIcon.sass';
 
 export default function ClusterCreateButton() {
 	const clusterNameRef = createRef<HTMLInputElement>();

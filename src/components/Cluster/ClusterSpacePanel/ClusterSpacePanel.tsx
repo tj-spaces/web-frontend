@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import CurrentSpaceContext from '../SpaceCurrentSpaceContext/SpaceCurrentSpaceContext';
+import CurrentSpaceContext from '../../SpaceCurrentSpaceContext/SpaceCurrentSpaceContext';
 
 export default function ClusterSpacePanel() {
 	const spaceId = useContext(CurrentSpaceContext);

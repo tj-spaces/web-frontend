@@ -1,8 +1,8 @@
-import Box from '../Box/Box';
-import Button from '../Button/Button';
-import Modal from '../Modal/Modal';
+import Box from '../../Box/Box';
+import Button from '../../Button/Button';
+import Modal from '../../Modal/Modal';
 
-import { deleteCluster } from '../../api/api';
+import { deleteCluster } from '../../../api/api';
 import { useContext } from 'react';
 import CurrentClusterContext from '../CurrentClusterContext/CurrentClusterContext';
 
