@@ -18,5 +18,5 @@ export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositi
 	let rotatedRelativeZ = magnitudeRelative * angleBetweenCos;
 	let rotatedRelativeX = magnitudeRelative * angleBetweenSin;
 
-	return `translate3d(${rotatedRelativeX}rem, 0, ${rotatedRelativeZ}rem)`;
+	return `perspective(100px) translate3d(${rotatedRelativeX}rem, 0, ${-rotatedRelativeZ}rem)`;
 }

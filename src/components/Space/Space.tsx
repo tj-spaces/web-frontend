@@ -4,7 +4,7 @@ import * as twilio from 'twilio-video';
 import useSpace from '../../hooks/useSpace';
 import { API_SERVER_URL } from '../../lib/constants';
 import getSessionId from '../../lib/getSessionId';
-import { ISpaceParticipant, SpacePositionInfo } from '../../typings/SpaceParticipant';
+import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import AuthContext from '../AuthContext/AuthContext';
 import Button from '../Button/Button';
 import CurrentSpaceContext from '../CurrentSpaceContext/CurrentSpaceContext';
@@ -15,7 +15,6 @@ import SpaceParticipantLocal from './SpaceParticipantLocal/SpaceParticipantLocal
 import Typography from '../Typography/Typography';
 import useKeyboardState from '../../hooks/useKeyboardState';
 import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
-import getCSSTransform from '../../lib/getCSSTransform';
 import Environment from './Environment';
 
 export default function Space({ id }: { id: string }) {
@@ -44,6 +43,7 @@ export default function Space({ id }: { id: string }) {
 		connectionRef.current.emit('join_space', id);
 
 		connectionRef.current.on('twilio_grant', (grant: string) => {
+			return;
 			twilio.connect(grant, { region: 'us1' }).then((room) => {
 				setTwilioRoom(room);
 			});
@@ -180,96 +180,94 @@ export default function Space({ id }: { id: string }) {
 
 	const keyboardState = useKeyboardState();
 
-	if (keyboardState.a) {
-		connectionRef.current?.emit('set_rotate_direction', 1);
-	} else if (keyboardState.d) {
-		connectionRef.current?.emit('set_rotate_direction', -1);
-	} else {
-		connectionRef.current?.emit('set_rotate_direction', 0);
-	}
+	useEffect(() => {
+		if (keyboardState.a) {
+			connectionRef.current?.emit('set_rotate_direction', 1);
+		} else if (keyboardState.d) {
+			connectionRef.current?.emit('set_rotate_direction', -1);
+		} else {
+			connectionRef.current?.emit('set_rotate_direction', 0);
+		}
 
-	if (keyboardState.w) {
-		connectionRef.current?.emit('set_walk_direction', 1);
-	} else if (keyboardState.s) {
-		connectionRef.current?.emit('set_walk_direction', -1);
-	} else {
-		connectionRef.current?.emit('set_walk_direction', 0);
-	}
+		if (keyboardState.w) {
+			connectionRef.current?.emit('set_walk_direction', 1);
+		} else if (keyboardState.s) {
+			connectionRef.current?.emit('set_walk_direction', -1);
+		} else {
+			connectionRef.current?.emit('set_walk_direction', 0);
+		}
+	}, [keyboardState]);
 
 	const userLoaded = participants[user.id] != null;
 
-	let rectPos: SpacePositionInfo = {
-		location: { x: 0, y: 0, z: 10 },
-		rotation: 0
-	};
-	const rectTransform = userLoaded ? getCSSTransform(participants[user.id].position, rectPos) : undefined;
+	if (!userLoaded) {
+		return <h1>Waiting for connection</h1>;
+	}
 
 	return (
 		<CurrentSpaceContext.Provider value={id}>
 			<SpaceAudioContext.Provider value={audioContext.current}>
-				{participants[user.id] && (
-					<SpacePositionContext.Provider value={participants[user.id].position}>
-						<TwilioRoomContext.Provider value={twilioRoom ?? null}>
-							{space ? (
-								<div className="flex-column padding-2">
-									<Typography type="title" alignment="center">
-										{space.name}
-									</Typography>
-									<br />
+				<SpacePositionContext.Provider value={participants[user.id].position}>
+					<TwilioRoomContext.Provider value={twilioRoom ?? null}>
+						{space ? (
+							<div className="flex-column padding-2">
+								<Typography type="title" alignment="center">
+									{space.name}
+								</Typography>
+								<br />
 
-									<div className="text-center flex-column">
-										<h2>Here</h2>
-										{Object.values(participants).map((participant) => (
-											<SpaceParticipantListing
-												participant={participant}
-												key={participant.accountId}
-											/>
-										))}
-									</div>
-
-									<Environment participants={participants} twilioParticipants={twilioParticipants} />
-
-									<div className="flex-row">
-										{user && (
-											<div className="row-item">
-												<SpaceParticipantLocal
-													spacesParticipant={participants[user!.id]}
-													localVideoTrack={localVideoTrack}
-												/>
-											</div>
-										)}
-
-										<Button to=".." className="row-item">
-											Leave
-										</Button>
-
-										{muted ? (
-											<Button onClick={() => setMuted(false)} className="row-item">
-												<i className="fas fa-microphone-slash"></i>
-											</Button>
-										) : (
-											<Button onClick={() => setMuted(true)} className="row-item">
-												<i className="fas fa-microphone"></i>
-											</Button>
-										)}
-
-										{cameraEnabled ? (
-											<Button onClick={() => setCameraEnabled(false)} className="row-item">
-												<i className="fas fa-video"></i>
-											</Button>
-										) : (
-											<Button onClick={() => setCameraEnabled(true)} className="row-item">
-												<i className="fas fa-video-slash"></i>
-											</Button>
-										)}
-									</div>
+								<div className="text-center flex-column">
+									<h2>Here</h2>
+									{Object.values(participants).map((participant) => (
+										<SpaceParticipantListing
+											participant={participant}
+											key={participant.accountId}
+										/>
+									))}
 								</div>
-							) : (
-								<span>Loading...</span>
-							)}
-						</TwilioRoomContext.Provider>
-					</SpacePositionContext.Provider>
-				)}
+
+								<Environment participants={participants} twilioParticipants={twilioParticipants} />
+
+								<div className="flex-row">
+									{user && (
+										<div className="row-item">
+											<SpaceParticipantLocal
+												spacesParticipant={participants[user!.id]}
+												localVideoTrack={localVideoTrack}
+											/>
+										</div>
+									)}
+
+									<Button to=".." className="row-item">
+										Leave
+									</Button>
+
+									{muted ? (
+										<Button onClick={() => setMuted(false)} className="row-item">
+											<i className="fas fa-microphone-slash"></i>
+										</Button>
+									) : (
+										<Button onClick={() => setMuted(true)} className="row-item">
+											<i className="fas fa-microphone"></i>
+										</Button>
+									)}
+
+									{cameraEnabled ? (
+										<Button onClick={() => setCameraEnabled(false)} className="row-item">
+											<i className="fas fa-video"></i>
+										</Button>
+									) : (
+										<Button onClick={() => setCameraEnabled(true)} className="row-item">
+											<i className="fas fa-video-slash"></i>
+										</Button>
+									)}
+								</div>
+							</div>
+						) : (
+							<span>Loading...</span>
+						)}
+					</TwilioRoomContext.Provider>
+				</SpacePositionContext.Provider>
 			</SpaceAudioContext.Provider>
 		</CurrentSpaceContext.Provider>
 	);
