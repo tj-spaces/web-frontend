@@ -178,16 +178,19 @@ export default function Space({ id }: { id: string }) {
 	const keyboardState = useKeyboardState();
 
 	if (keyboardState.a) {
-		connectionRef.current?.emit('rotate', 0.5);
+		connectionRef.current?.emit('set_rotate_direction', 1);
+	} else if (keyboardState.d) {
+		connectionRef.current?.emit('set_rotate_direction', -1);
+	} else {
+		connectionRef.current?.emit('set_rotate_direction', 0);
 	}
-	if (keyboardState.d) {
-		connectionRef.current?.emit('rotate', -0.5);
-	}
+
 	if (keyboardState.w) {
-		connectionRef.current?.emit('walk', 0.5);
-	}
-	if (keyboardState.s) {
-		connectionRef.current?.emit('walk', -0.5);
+		connectionRef.current?.emit('set_walk_direction', 1);
+	} else if (keyboardState.s) {
+		connectionRef.current?.emit('set_walk_direction', -1);
+	} else {
+		connectionRef.current?.emit('set_walk_direction', 0);
 	}
 
 	return (
@@ -213,12 +216,12 @@ export default function Space({ id }: { id: string }) {
 									<>
 										{user && (
 											<SpaceParticipantLocal
-												spacesParticipant={participants[user.id]}
+												spacesParticipant={participants[user!.id]}
 												localVideoTrack={localVideoTrack}
 											/>
 										)}
 										{Object.values(participants).map((participant) => {
-											if (participant.accountId !== user?.id) {
+											if (participant.accountId !== user!.id) {
 												return (
 													<SpaceParticipantRemote
 														twilioParticipant={twilioParticipants[participant.accountId]!}

@@ -5,7 +5,7 @@ import AuthContext, { AuthState } from '../AuthContext/AuthContext';
 export default function AuthContextManager({ children }: { children: React.ReactNode }) {
 	const sessionId = localStorage.getItem('session_id');
 	// Prevent race conditions
-	const [authState, setAuthState] = useState<AuthState>({ isLoggedIn: null });
+	const [authState, setAuthState] = useState<AuthState>({ isLoggedIn: null, user: null });
 
 	useEffect(() => {
 		if (sessionId) {
@@ -14,10 +14,10 @@ export default function AuthContextManager({ children }: { children: React.React
 					setAuthState({ isLoggedIn: true, user });
 				})
 				.catch(() => {
-					setAuthState({ isLoggedIn: false });
+					setAuthState({ isLoggedIn: false, user: null });
 				});
 		} else {
-			setAuthState({ isLoggedIn: false });
+			setAuthState({ isLoggedIn: false, user: null });
 		}
 	}, [sessionId]);
 

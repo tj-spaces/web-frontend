@@ -31,6 +31,8 @@ export default function ParticipantBubble({
 		}
 	}, [videoTrack]);
 
+	console.log('Participant:', name, 'Offset:', { offsetX, offsetY });
+
 	return (
 		<div className="participant-bubble" style={{ left: offsetX, top: offsetY }}>
 			{videoTrack ? <video ref={videoRef} /> : photoUrl ? <img src={photoUrl} alt={name} /> : <h1>{initials}</h1>}

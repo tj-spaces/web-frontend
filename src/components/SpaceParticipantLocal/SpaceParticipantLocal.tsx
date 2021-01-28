@@ -29,7 +29,7 @@ export default function SpaceParticipantLocal({
 		listener.forwardX.value = Math.cos(rotation);
 	}, [listener, location, rotation]);
 
-	console.log(location);
+	console.log(spacesParticipant.accountId, { location, rotation });
 
 	return (
 		<ParticipantBubble

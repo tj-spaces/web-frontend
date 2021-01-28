@@ -33,8 +33,8 @@ export default function SpaceParticipantRemote({
 				<SpatialAudioTrack location={location} rotation={rotation} publication={publication} />
 			))}
 			<ParticipantBubble
-				offsetX="50%"
-				offsetY="50%"
+				offsetX={location.x + '%'}
+				offsetY={location.y + '%'}
 				name={spacesParticipant.displayName}
 				videoTrack={videoTrack}
 			/>

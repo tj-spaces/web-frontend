@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useCluster from '../../hooks/useCluster';
 import useSpacesInCluster from '../../hooks/useSpacesInCluster';
+import AuthContext from '../AuthContext/AuthContext';
 import Box from '../Box/Box';
 import ClusterSettingsModal from '../ClusterSettingsModal/ClusterSettingsModal';
 import ClusterIdContext from '../CurrentClusterContext/CurrentClusterContext';
@@ -16,6 +17,7 @@ export default function Cluster({ id }: { id: string }) {
 	const spaces = useSpacesInCluster(id) ?? [];
 	const { spaceId } = useParams<{ spaceId?: string }>();
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+	const { isLoggedIn } = useContext(AuthContext);
 
 	return (
 		<Box display="flex-column" className="overflow-y-auto" height="100%" width="100%">
@@ -28,7 +30,7 @@ export default function Cluster({ id }: { id: string }) {
 						<i className="fas fa-cog pressable"></i>
 					</span>
 				</h1>
-				{spaceId && <Space id={spaceId} />}
+				{spaceId && (isLoggedIn ? <Space id={spaceId} /> : <h1>Authenticating...</h1>)}
 				<div className="background-color-light-1 padding-y-2 flex-row" style={{ height: '100%' }}>
 					<div style={{ flex: 1 }} className="padding-x-2">
 						<h1 className="color-dark-1">Spaces</h1>
