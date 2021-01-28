@@ -8,7 +8,7 @@ import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import AuthContext from '../AuthContext/AuthContext';
 import Button from '../Button/Button';
 import CurrentSpaceContext from '../CurrentSpaceContext/CurrentSpaceContext';
-import LocalParticipantContext from '../LocalParticipantContext/LocalParticipantContext';
+import TwilioRoomContext from '../TwilioRoomContext/TwilioRoomContext';
 import SpaceAudioContext from '../SpaceAudioContext/SpaceAudioContext';
 import SpaceParticipantListing from '../SpaceParticipantListing/SpaceParticipantListing';
 import SpaceParticipantLocal from '../SpaceParticipantLocal/SpaceParticipantLocal';
@@ -21,7 +21,7 @@ export default function Space({ id }: { id: string }) {
 	const [twilioParticipants, setTwilioParticipants] = useState(new Map<string, twilio.RemoteParticipant>());
 	const [localTwilioParticipant, setLocalTwilioParticipant] = useState<twilio.LocalParticipant>();
 	const [twilioToken, setTwilioToken] = useState<string>();
-	const [twilioRoom, setTwilioRoom] = useState<twilio.Room>();
+	const [twilioRoom, setTwilioRoom] = useState<twilio.Room | null>(null);
 	const [muted, setMuted_DO_NOT_USE_DIRECTLY] = useState<boolean>(false);
 	const [cameraEnabled, setCameraEnabled_DO_NOT_USE_DIRECTLY] = useState<boolean>(true);
 	const lastCameraDeviceId = useRef<string>();
@@ -67,7 +67,7 @@ export default function Space({ id }: { id: string }) {
 	// twilioToken
 	useEffect(() => {
 		if (twilioToken) {
-			twilio.connect(twilioToken, { audio: true }).then((room) => {
+			twilio.connect(twilioToken, { audio: true, video: { width: 640 } }).then((room) => {
 				setTwilioRoom(room);
 			});
 		}
@@ -84,14 +84,14 @@ export default function Space({ id }: { id: string }) {
 			 * @param participant The Twilio participant that joined
 			 * @param _alreadyHere Whether the participant was here when we joined the room and we are adding them to the state via this function
 			 */
-			const participantConnected = (participant: twilio.RemoteParticipant, _alreadyHere: boolean = false) => {
+			const onParticipantConnected = (participant: twilio.RemoteParticipant, _alreadyHere: boolean = false) => {
 				let participantId = participant.identity;
 				setTwilioParticipants((participants) => {
 					participants.set(participantId, participant);
 					return participants;
 				});
 			};
-			const participantDisconnected = (participant: twilio.RemoteParticipant) => {
+			const onParticipantDisconnected = (participant: twilio.RemoteParticipant) => {
 				let participantId = participant.identity;
 				setTwilioParticipants((participants) => {
 					participants.delete(participantId);
@@ -99,18 +99,26 @@ export default function Space({ id }: { id: string }) {
 				});
 			};
 
-			twilioRoom.on('participantConnected', participantConnected);
-			twilioRoom.on('participantDisconnected', participantDisconnected);
+			twilioRoom.on('participantConnected', onParticipantConnected);
+			twilioRoom.on('participantDisconnected', onParticipantDisconnected);
 
 			for (let participant of Array.from(twilioRoom.participants.values())) {
-				participantConnected(participant, true);
+				onParticipantConnected(participant, true);
 			}
 
 			// Don't forget to remove the handlers if we leave the room
 			return () => {
-				twilioRoom.off('participantConnected', participantConnected);
-				twilioRoom.off('participantDisconnected', participantDisconnected);
+				twilioRoom.off('participantConnected', onParticipantConnected);
+				twilioRoom.off('participantDisconnected', onParticipantDisconnected);
 				twilioRoom.disconnect();
+
+				// Turn off all video/audio sending when the user leaves the room
+				twilioRoom.localParticipant.audioTracks.forEach((track) => {
+					track.unpublish();
+				});
+				twilioRoom.localParticipant.videoTracks.forEach((track) => {
+					track.unpublish();
+				});
 			};
 		}
 	}, [twilioRoom]);
@@ -162,7 +170,7 @@ export default function Space({ id }: { id: string }) {
 	return (
 		<CurrentSpaceContext.Provider value={id}>
 			<SpaceAudioContext.Provider value={audioContext.current}>
-				<LocalParticipantContext.Provider value={localTwilioParticipant ?? null}>
+				<TwilioRoomContext.Provider value={twilioRoom ?? null}>
 					{space ? (
 						<div style={{ height: '100vh' }} className="flex-column padding-2 position-relative">
 							<Typography type="title" alignment="center">
@@ -232,7 +240,7 @@ export default function Space({ id }: { id: string }) {
 					) : (
 						<span>Loading...</span>
 					)}
-				</LocalParticipantContext.Provider>
+				</TwilioRoomContext.Provider>
 			</SpaceAudioContext.Provider>
 		</CurrentSpaceContext.Provider>
 	);

@@ -12,9 +12,8 @@ export default function SpaceParticipantRemote({
 	spacesParticipant: ISpaceParticipant;
 }) {
 	const publications = usePublications(twilioParticipant);
-	const {
-		position: { location, rotation }
-	} = spacesParticipant;
+	const { position = { location: { x: 0, y: 0 }, rotation: 0 } } = spacesParticipant;
+	const { location, rotation } = position;
 
 	const audioTrackPublications = publications.filter(
 		(publication) => publication.kind === 'audio'

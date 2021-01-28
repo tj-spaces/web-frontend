@@ -38,8 +38,6 @@ export function AuthorizationCallback() {
 		</Box>
 	);
 
-	console.log('Rendered');
-
 	switch (state) {
 		case 'loading':
 			return <Loading />;

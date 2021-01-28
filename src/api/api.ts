@@ -31,6 +31,24 @@ export async function createSession(code: string, provider: string): Promise<str
 	}
 }
 
+export function graphql(query: string, variables?: any) {
+	return new Promise<AxiosResponse>((resolve, reject) => {
+		axios
+			.post('/graphql', { query, variables }, { headers: { Authorization: 'Bearer ' + getSessionId() } })
+			.then((successfulResponse) => {
+				resolve(successfulResponse.data.data);
+			})
+			.catch((error) => {
+				if (error.response.status === 401) {
+					localStorage.removeItem('session_id');
+					window.location.pathname = '/';
+				} else {
+					reject(new APIError('/api/users/@me', error.response.data.error));
+				}
+			});
+	});
+}
+
 export function makeAPIPostCall(url: string, data?: any) {
 	return new Promise<AxiosResponse>((resolve, reject) => {
 		axios
