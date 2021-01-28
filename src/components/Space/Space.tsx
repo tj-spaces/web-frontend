@@ -19,11 +19,9 @@ export default function Space({ id }: { id: string }) {
 	const space = useSpace(id);
 	const [participants, setParticipants] = useState<{ [participantId: string]: ISpaceParticipant }>({});
 	const [twilioParticipants, setTwilioParticipants] = useState(new Map<string, twilio.RemoteParticipant>());
-	const [localTwilioParticipant, setLocalTwilioParticipant] = useState<twilio.LocalParticipant>();
-	const [twilioToken, setTwilioToken] = useState<string>();
 	const [twilioRoom, setTwilioRoom] = useState<twilio.Room | null>(null);
-	const [muted, setMuted_DO_NOT_USE_DIRECTLY] = useState<boolean>(false);
-	const [cameraEnabled, setCameraEnabled_DO_NOT_USE_DIRECTLY] = useState<boolean>(true);
+	const [muted, setMuted] = useState<boolean>(false);
+	const [cameraEnabled, setCameraEnabled] = useState<boolean>(true);
 	const [localAudioTrack, setLocalAudioTrack] = useState<twilio.LocalAudioTrack | null>(null);
 	const [localVideoTrack, setLocalVideoTrack] = useState<twilio.LocalVideoTrack | null>(null);
 	const audioContext = useRef(new AudioContext());
@@ -35,7 +33,9 @@ export default function Space({ id }: { id: string }) {
 		connection.emit('join_space', id);
 
 		connection.on('twilio_grant', (grant: string) => {
-			setTwilioToken(grant);
+			twilio.connect(grant, { region: 'us1' }).then((room) => {
+				setTwilioRoom(room);
+			});
 		});
 
 		connection.on('peers', (peers: { [id: string]: ISpaceParticipant }) => {
@@ -65,34 +65,10 @@ export default function Space({ id }: { id: string }) {
 		};
 	}, [id]);
 
-	// twilioToken
-	useEffect(() => {
-		if (twilioToken) {
-			(async () => {
-				const audioTrack = await twilio.createLocalAudioTrack();
-				const videoTrack = await twilio.createLocalVideoTrack({ width: 640 });
-
-				setLocalAudioTrack(audioTrack);
-				setLocalVideoTrack(videoTrack);
-
-				twilio
-					.connect(twilioToken, {
-						tracks: [audioTrack, videoTrack],
-						region: 'us1'
-					})
-					.then((room) => {
-						setTwilioRoom(room);
-					});
-			})();
-		}
-	}, [twilioToken]);
-
 	// twilioRoom
 	useEffect(() => {
 		// We have a Twilio room
 		if (twilioRoom) {
-			setLocalTwilioParticipant(twilioRoom.localParticipant);
-
 			// Add handlers for twilio connections
 			/**
 			 * @param participant The Twilio participant that joined
@@ -127,60 +103,61 @@ export default function Space({ id }: { id: string }) {
 				twilioRoom.disconnect();
 
 				// Turn off all video/audio sending when the user leaves the room
-				twilioRoom.localParticipant.audioTracks.forEach((track) => {
-					track.unpublish();
+				twilioRoom.localParticipant.audioTracks.forEach((publication) => {
+					publication.track.disable();
+					publication.unpublish();
 				});
-				twilioRoom.localParticipant.videoTracks.forEach((track) => {
-					track.unpublish();
+				twilioRoom.localParticipant.videoTracks.forEach((publication) => {
+					publication.track.mediaStreamTrack.stop();
+					publication.unpublish();
 				});
 			};
 		}
 	}, [twilioRoom]);
 
-	const muteSelf = useCallback(() => {
-		if (localAudioTrack) {
-			localAudioTrack.disable();
+	const disableAllVideoTracks = useCallback(() => {
+		if (twilioRoom) {
+			twilioRoom.localParticipant.videoTracks.forEach((publication) => {
+				publication.track.stop();
+				publication.unpublish();
+			});
 
-			setMuted_DO_NOT_USE_DIRECTLY(true);
+			setLocalVideoTrack(null);
 		}
-	}, [localAudioTrack]);
+	}, [twilioRoom]);
 
-	const unmuteSelf = useCallback(() => {
-		if (localAudioTrack) {
-			localAudioTrack.enable();
-
-			setMuted_DO_NOT_USE_DIRECTLY(false);
-		}
-	}, [localAudioTrack]);
-
-	const enableCamera = useCallback(() => {
-		if (localTwilioParticipant) {
-			if (!localVideoTrack) {
-				(async () => {
-					// When enabling the camera, we must get the camera feed again
-					let newLocalVideoTrack = await twilio.createLocalVideoTrack({ width: 640 });
+	// cameraEnabled
+	useEffect(() => {
+		if (cameraEnabled) {
+			if (twilioRoom) {
+				// When enabling the camera, we must get the camera feed again
+				twilio.createLocalVideoTrack({ width: 640 }).then((newLocalVideoTrack) => {
+					twilioRoom.localParticipant.publishTrack(newLocalVideoTrack);
 					setLocalVideoTrack(newLocalVideoTrack);
-					localTwilioParticipant.publishTrack(newLocalVideoTrack);
-					setCameraEnabled_DO_NOT_USE_DIRECTLY(true);
-				})();
-			}
-		}
-	}, [localTwilioParticipant, localVideoTrack]);
-
-	const disableCamera = useCallback(() => {
-		if (localTwilioParticipant) {
-			// When disabling the camera, the VideoTrack must be unpublished
-			if (localVideoTrack) {
-				localVideoTrack.disable();
-				setLocalVideoTrack(null);
-				localTwilioParticipant.videoTracks.forEach((publication) => {
-					publication.unpublish();
 				});
-			}
 
-			setCameraEnabled_DO_NOT_USE_DIRECTLY(false);
+				// Whenever this changes, disable all video tracks
+				return () => disableAllVideoTracks();
+			}
 		}
-	}, [localTwilioParticipant, localVideoTrack]);
+	}, [cameraEnabled, disableAllVideoTracks, twilioRoom]);
+
+	// muted
+	useEffect(() => {
+		if (muted) {
+			if (localAudioTrack) {
+				localAudioTrack.disable();
+			}
+		} else {
+			if (localAudioTrack == null) {
+				twilio.createLocalAudioTrack().then((audioTrack) => {
+					setLocalAudioTrack(audioTrack);
+				});
+			} else {
+				localAudioTrack.enable();
+			}
+		}
+	}, [localAudioTrack, muted]);
 
 	return (
 		<CurrentSpaceContext.Provider value={id}>
@@ -232,21 +209,21 @@ export default function Space({ id }: { id: string }) {
 								</Button>
 
 								{muted ? (
-									<Button onClick={() => unmuteSelf()} className="row-item">
+									<Button onClick={() => setMuted(false)} className="row-item">
 										<i className="fas fa-microphone-slash"></i>
 									</Button>
 								) : (
-									<Button onClick={() => muteSelf()} className="row-item">
+									<Button onClick={() => setMuted(true)} className="row-item">
 										<i className="fas fa-microphone"></i>
 									</Button>
 								)}
 
 								{cameraEnabled ? (
-									<Button onClick={() => disableCamera()} className="row-item">
+									<Button onClick={() => setCameraEnabled(false)} className="row-item">
 										<i className="fas fa-video"></i>
 									</Button>
 								) : (
-									<Button onClick={() => enableCamera()} className="row-item">
+									<Button onClick={() => setCameraEnabled(true)} className="row-item">
 										<i className="fas fa-video-slash"></i>
 									</Button>
 								)}
