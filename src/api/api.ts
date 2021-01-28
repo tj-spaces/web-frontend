@@ -57,6 +57,7 @@ export function makeAPIPostCall(url: string, data?: any) {
 			.catch((error) => {
 				if (error.response.status === 401) {
 					localStorage.removeItem('session_id');
+					window.location.pathname = '/';
 				} else {
 					reject(new APIError('/api/users/@me', error.response.data.error));
 				}
@@ -74,6 +75,7 @@ export function makeAPIGetCall(url: string) {
 			.catch((error) => {
 				if (error.response.status === 401) {
 					localStorage.removeItem('session_id');
+					window.location.pathname = '/';
 				} else {
 					reject(new APIError(url, error.response.data.error));
 				}

@@ -14,11 +14,14 @@ import SpaceParticipantListing from '../SpaceParticipantListing/SpaceParticipant
 import SpaceParticipantLocal from '../SpaceParticipantLocal/SpaceParticipantLocal';
 import SpaceParticipantRemote from '../SpaceParticipantRemote/SpaceParticipantRemote';
 import Typography from '../Typography/Typography';
+import useKeyboardState from '../../hooks/useKeyboardState';
 
 export default function Space({ id }: { id: string }) {
 	const space = useSpace(id);
 	const [participants, setParticipants] = useState<{ [participantId: string]: ISpaceParticipant }>({});
-	const [twilioParticipants, setTwilioParticipants] = useState(new Map<string, twilio.RemoteParticipant>());
+	const [twilioParticipants, setTwilioParticipants] = useState<{ [participantId: string]: twilio.RemoteParticipant }>(
+		{}
+	);
 	const [twilioRoom, setTwilioRoom] = useState<twilio.Room | null>(null);
 	const [muted, setMuted] = useState<boolean>(false);
 	const [cameraEnabled, setCameraEnabled] = useState<boolean>(true);
@@ -26,30 +29,35 @@ export default function Space({ id }: { id: string }) {
 	const [localVideoTrack, setLocalVideoTrack] = useState<twilio.LocalVideoTrack | null>(null);
 	const audioContext = useRef(new AudioContext());
 	const { user } = useContext(AuthContext);
+	const connectionRef = useRef<SocketIOClient.Socket | null>(null);
 
 	// id
+	// this sets up the socket.io connection and twilio grant
 	useEffect(() => {
-		const connection = io.connect(API_SERVER_URL + '?sessionId=' + getSessionId());
-		connection.emit('join_space', id);
+		if (!connectionRef.current) {
+			connectionRef.current = io.connect(API_SERVER_URL + '?sessionId=' + getSessionId());
+		}
 
-		connection.on('twilio_grant', (grant: string) => {
+		connectionRef.current.emit('join_space', id);
+
+		connectionRef.current.on('twilio_grant', (grant: string) => {
 			twilio.connect(grant, { region: 'us1' }).then((room) => {
 				setTwilioRoom(room);
 			});
 		});
 
-		connection.on('peers', (peers: { [id: string]: ISpaceParticipant }) => {
+		connectionRef.current.on('peers', (peers: { [id: string]: ISpaceParticipant }) => {
 			setParticipants(peers);
 		});
 
-		connection.on('peer_joined', (peer: ISpaceParticipant) => {
+		connectionRef.current.on('peer_joined', (peer: ISpaceParticipant) => {
 			setParticipants((participants) => ({
 				...participants,
 				[peer.accountId]: peer
 			}));
 		});
 
-		connection.on('peer_left', (peerId: string) => {
+		connectionRef.current.on('peer_left', (peerId: string) => {
 			setParticipants((participants) => {
 				let newParticipants = { ...participants };
 				delete newParticipants[peerId];
@@ -57,11 +65,19 @@ export default function Space({ id }: { id: string }) {
 			});
 		});
 
+		connectionRef.current.on('peer_update', (peerId: string, peer: ISpaceParticipant) => {
+			setParticipants((participants) => ({
+				...participants,
+				[peerId]: peer
+			}));
+		});
+
 		return () => {
-			connection.emit('leave_space');
-			connection.off('peer_joined');
-			connection.off('peer_left');
-			connection.off('peers');
+			if (connectionRef.current) {
+				connectionRef.current.emit('leave_space');
+				connectionRef.current.disconnect();
+				connectionRef.current = null;
+			}
 		};
 	}, [id]);
 
@@ -77,15 +93,15 @@ export default function Space({ id }: { id: string }) {
 			const onParticipantConnected = (participant: twilio.RemoteParticipant, _alreadyHere: boolean = false) => {
 				let participantId = participant.identity;
 				setTwilioParticipants((participants) => {
-					participants.set(participantId, participant);
-					return participants;
+					return { ...participants, [participantId]: participant };
 				});
 			};
 			const onParticipantDisconnected = (participant: twilio.RemoteParticipant) => {
 				let participantId = participant.identity;
 				setTwilioParticipants((participants) => {
-					participants.delete(participantId);
-					return participants;
+					let newParticipants = { ...participants };
+					delete newParticipants[participantId];
+					return newParticipants;
 				});
 			};
 
@@ -159,6 +175,21 @@ export default function Space({ id }: { id: string }) {
 		}
 	}, [localAudioTrack, muted]);
 
+	const keyboardState = useKeyboardState();
+
+	if (keyboardState.a) {
+		connectionRef.current?.emit('rotate', 0.5);
+	}
+	if (keyboardState.d) {
+		connectionRef.current?.emit('rotate', -0.5);
+	}
+	if (keyboardState.w) {
+		connectionRef.current?.emit('walk', 0.5);
+	}
+	if (keyboardState.s) {
+		connectionRef.current?.emit('walk', -0.5);
+	}
+
 	return (
 		<CurrentSpaceContext.Provider value={id}>
 			<SpaceAudioContext.Provider value={audioContext.current}>
@@ -180,17 +211,17 @@ export default function Space({ id }: { id: string }) {
 							<div className="flex-row margin-y-1 justify-content-center">
 								{Object.keys(participants).length && (
 									<>
-										<SpaceParticipantLocal
-											spacesParticipant={participants[user?.id!]}
-											localVideoTrack={localVideoTrack}
-										/>
+										{user && (
+											<SpaceParticipantLocal
+												spacesParticipant={participants[user.id]}
+												localVideoTrack={localVideoTrack}
+											/>
+										)}
 										{Object.values(participants).map((participant) => {
 											if (participant.accountId !== user?.id) {
 												return (
 													<SpaceParticipantRemote
-														twilioParticipant={
-															twilioParticipants.get(participant.accountId)!
-														}
+														twilioParticipant={twilioParticipants[participant.accountId]!}
 														spacesParticipant={participant}
 														key={id}
 													/>
@@ -203,7 +234,7 @@ export default function Space({ id }: { id: string }) {
 								)}
 							</div>
 
-							<div className="flex-row">
+							<div className="flex-row justify-content-center">
 								<Button to=".." className="row-item">
 									Leave
 								</Button>
