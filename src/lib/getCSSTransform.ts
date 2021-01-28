@@ -15,8 +15,14 @@ export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositi
 	let angleBetweenCos = (gazeX * toXRelative + gazeZ * toZRelative) / magnitudeRelative;
 	let angleBetweenSin = Math.sqrt(1 - angleBetweenCos ** 2);
 
+	if (angleBetweenCos < 0) {
+		// This should be hidden!!!
+	}
+
 	let rotatedRelativeZ = magnitudeRelative * angleBetweenCos;
 	let rotatedRelativeX = magnitudeRelative * angleBetweenSin;
 
-	return `perspective(100px) translate3d(${rotatedRelativeX}rem, 0, ${-rotatedRelativeZ}rem)`;
+	console.log({ toXRelative, toZRelative, gazeX, gazeZ });
+
+	return `perspective(1rem) translate3d(${rotatedRelativeX / 2}rem, 0, ${-rotatedRelativeZ / 2 - 1}rem)`;
 }
