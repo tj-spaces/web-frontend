@@ -11,7 +11,7 @@ export default function Sidebar() {
 
 	return (
 		<div className="background-color-dark-0 box-shadow overflow-y-auto">
-			<Box display="flex-column" className="align-items-center padding-1">
+			<Box variant="paddedColumn">
 				{myClusters.map((cluster) => (
 					<SpaceSidebarIcon key={cluster.id} title={cluster.name} to={`/clusters/${cluster.id}`} />
 				))}

@@ -40,11 +40,11 @@ export default function SpaceCreateButton() {
 			{isOpen && (
 				<Modal>
 					<h1>Create Space</h1>
-					<Box display="flex-row" alignItems="center" className="font-size-h2 margin-bottom-2">
+					<Box variant="buttonRow">
 						<span className="margin-right-2">Name</span>{' '}
 						<input ref={spaceNameRef} type="text" style={{ flex: 3 }} />
 					</Box>
-					<Box display="flex-row">
+					<Box variant="buttonRow">
 						{!isSpaceCreating ? (
 							<>
 								<Button

@@ -2,7 +2,6 @@ import { Link, Redirect, useLocation, useParams } from 'react-router-dom';
 import { createSession } from '../../api/api';
 import * as qs from 'query-string';
 import React, { useEffect } from 'react';
-import Box from '../../components/Box/Box';
 import Fullscreen from '../../components/Fullscreen/Fullscreen';
 
 export function AuthorizationCallback() {
@@ -26,16 +25,16 @@ export function AuthorizationCallback() {
 	}, [code, provider]);
 
 	const LoginError = () => (
-		<Box>
+		<div>
 			<h1>Login Error</h1>
 			Something happened during the log in. <Link to="/login">Try again?</Link>
-		</Box>
+		</div>
 	);
 
 	const Loading = () => (
-		<Box>
+		<div>
 			<h1>Loading</h1>
-		</Box>
+		</div>
 	);
 
 	switch (state) {

@@ -5,7 +5,16 @@ import AuthContext from '../AuthContext/AuthContext';
 import PositionalDiv from './PositionalDiv';
 import SpaceParticipantRemote from './SpaceParticipantRemote/SpaceParticipantRemote';
 import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
-import './Environment.sass';
+import { createStylesheet } from '../../styles/createStylesheet';
+
+export const styles = createStylesheet({
+	environment: {
+		position: 'relative',
+		minHeight: '100vh',
+		minWidth: '100%',
+		overflow: 'hidden'
+	}
+});
 
 export default function Environment({
 	participants,
@@ -26,7 +35,7 @@ export default function Environment({
 	}
 
 	return (
-		<div className="environment" style={{ backgroundColor: '#333380' }}>
+		<div className={styles.environment} style={{ backgroundColor: '#333380' }}>
 			<PositionalDiv perspective={perspective} position={rectPos} className="white-square">
 				Hello!
 			</PositionalDiv>

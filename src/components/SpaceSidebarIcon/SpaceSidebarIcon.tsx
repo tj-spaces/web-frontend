@@ -1,6 +1,5 @@
 import React from 'react';
 import SidebarIcon from '../SidebarIcon/SidebarIcon';
-import '../SidebarIcon/SidebarIcon';
 import { Link } from 'react-router-dom';
 import Typography from '../Typography/Typography';
 

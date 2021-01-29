@@ -4,11 +4,6 @@ import './App.sass';
 import './styles/alignment.sass';
 import './styles/box-shadow.sass';
 import './styles/border-radius.sass';
-import './styles/cursor.sass';
-import './styles/display.sass';
-import './styles/position.sass';
-import './styles/overflow.sass';
-import './styles/spacing.sass';
 import './styles/typography.sass';
 
 import Logout from './components/Logout/Logout';

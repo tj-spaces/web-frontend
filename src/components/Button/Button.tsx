@@ -1,10 +1,9 @@
 import { ButtonHTMLAttributes, CSSProperties, DetailedHTMLProps, forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 import { createStylesheet } from '../../styles/createStylesheet';
-import { BorderRadiusBubble } from '../../styles/borderRadius';
-import './Button.sass';
+import { BorderRadiusBubble, BorderRadiusCrisp } from '../../styles/borderRadius';
 
-const ButtonStyles = createStylesheet({
+const styles = createStylesheet({
 	button: {
 		border: '0px',
 		padding: '0.25em',
@@ -14,9 +13,19 @@ const ButtonStyles = createStylesheet({
 		display: 'flex',
 		alignItems: 'center'
 	},
-	buttonMedium: {
+	small: {
+		padding: '0.5em',
+		fontSize: '1.25rem',
+		borderRadius: BorderRadiusCrisp
+	},
+	medium: {
 		padding: '0.5em',
 		fontSize: '1.5rem',
+		borderRadius: BorderRadiusBubble
+	},
+	large: {
+		padding: '0.75em',
+		fontSize: '2rem',
 		borderRadius: BorderRadiusBubble
 	}
 });
@@ -37,9 +46,9 @@ type ButtonProps = (
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
 	const { variant = 'medium' } = props;
 	if ('to' in props) {
-		const { to, className, style } = props;
+		const { to, className } = props;
 		return (
-			<Link to={to} className={'button button-' + variant + (className ? ' ' + className : '')} style={style}>
+			<Link to={to} className={[styles.button, styles[variant], className].join(' ')}>
 				{props.children}
 			</Link>
 		);

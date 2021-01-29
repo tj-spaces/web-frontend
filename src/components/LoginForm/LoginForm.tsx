@@ -1,10 +1,9 @@
 import React from 'react';
 import { getGoogleAuthorizationUrl, getIonAuthorizationUrl } from '../../lib/getAuthorizationUrl';
-import Box from '../Box/Box';
 
 export default function LoginForm() {
 	return (
-		<Box>
+		<div>
 			<h1 className="text-center">Log In</h1>
 			<h2>
 				<a href={getGoogleAuthorizationUrl()}>Google</a>
@@ -18,6 +17,6 @@ export default function LoginForm() {
 					terms
 				</a>
 			</span>
-		</Box>
+		</div>
 	);
 }

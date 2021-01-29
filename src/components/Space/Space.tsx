@@ -17,6 +17,8 @@ import useKeyboardState from '../../hooks/useKeyboardState';
 import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
 import Environment from './Environment';
 
+let useTwilio = false;
+
 export default function Space({ id }: { id: string }) {
 	const space = useSpace(id);
 	const [participants, setParticipants] = useState<{ [participantId: string]: ISpaceParticipant }>({});
@@ -43,10 +45,11 @@ export default function Space({ id }: { id: string }) {
 		connectionRef.current.emit('join_space', id);
 
 		connectionRef.current.on('twilio_grant', (grant: string) => {
-			return;
-			twilio.connect(grant, { region: 'us1' }).then((room) => {
-				setTwilioRoom(room);
-			});
+			if (useTwilio) {
+				twilio.connect(grant, { region: 'us1' }).then((room) => {
+					setTwilioRoom(room);
+				});
+			}
 		});
 
 		connectionRef.current.on('peers', (peers: { [id: string]: ISpaceParticipant }) => {

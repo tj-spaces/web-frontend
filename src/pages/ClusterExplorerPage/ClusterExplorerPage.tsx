@@ -1,15 +1,24 @@
 import React from 'react';
-import Box from '../../components/Box/Box';
 import ClusterExplorer from '../../components/ClusterExplorer/ClusterExplorer';
 import Sidebar from '../../components/Sidebar/Sidebar';
+import { createStylesheet } from '../../styles/createStylesheet';
+
+export const styles = createStylesheet({
+	clusterExplorerPage: {
+		display: 'flex',
+		flexDirection: 'row',
+		width: '100vw',
+		height: '100vh'
+	}
+});
 
 export default function HomePage() {
 	document.title = 'Home';
 
 	return (
-		<Box display="flex-row" width="100vw" height="100vh">
+		<div className={styles.clusterExplorerPage}>
 			<Sidebar />
 			<ClusterExplorer />
-		</Box>
+		</div>
 	);
 }

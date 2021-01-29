@@ -2,8 +2,6 @@ import React, { useContext } from 'react';
 import { ISpace } from '../../typings/Space';
 import CurrentClusterContext from '../Cluster/CurrentClusterContext/CurrentClusterContext';
 
-import './SpaceList.sass';
-import '../../styles/box.sass';
 import SpaceListItem from '../SpaceListItem/SpaceListItem';
 import { classes, createStylesheet } from '../../styles/createStylesheet';
 

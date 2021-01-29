@@ -21,13 +21,13 @@ export default function ClusterSettingsModal({ onClose }: { onClose: () => void 
 	return (
 		<Modal>
 			<h1>Settings</h1>
-			<Box display="flex-row" alignItems="center" className="margin-y-1">
+			<Box variant="buttonRow">
 				<Button onClick={() => deleteCluster_()} className="button button-small background-color-warn">
 					Delete Cluster
 				</Button>
 			</Box>
 
-			<Box display="flex-row" alignItems="center" className="margin-y-1">
+			<Box variant="buttonRow">
 				<Button onClick={() => save_()} className="button button-small margin-right-1">
 					Save
 				</Button>
