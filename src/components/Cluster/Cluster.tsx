@@ -9,8 +9,19 @@ import ClusterIdContext from './CurrentClusterContext/CurrentClusterContext';
 import Space from '../Space/Space';
 import SpaceCreateButton from '../SpaceCreateButton/SpaceCreateButton';
 import SpaceList from '../SpaceList/SpaceList';
+import { classes, createStylesheet } from '../../styles/createStylesheet';
 
 export type SelectedPanelType = 'spaces' | 'posts';
+
+const Styles = createStylesheet({
+	clusterBox: {
+		display: 'flex',
+		flexDirection: 'column',
+		overflowY: 'auto',
+		height: '100%',
+		width: '100%'
+	}
+});
 
 export default function Cluster({ id }: { id: string }) {
 	const cluster = useCluster(id);
@@ -20,7 +31,7 @@ export default function Cluster({ id }: { id: string }) {
 	const { isLoggedIn } = useContext(AuthContext);
 
 	return (
-		<Box display="flex-column" className="overflow-y-auto" height="100%" width="100%">
+		<Box className={classes(Styles.clusterBox)}>
 			<ClusterIdContext.Provider value={{ id, spaces }}>
 				{isSettingsOpen && <ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />}
 

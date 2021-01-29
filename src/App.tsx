@@ -19,8 +19,11 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import ClusterExplorerPage from './pages/ClusterExplorerPage/ClusterExplorerPage';
 import AuthContextManager from './components/AuthContextManager/AuthContextManager';
 import TermsPage from './pages/TermsPage/TermsPage';
+import { DarkTheme } from './styles/theme';
+import injectTheme from './styles/injectTheme';
 
 function App() {
+	injectTheme(DarkTheme);
 	return (
 		<div className="App">
 			<AuthContextManager>

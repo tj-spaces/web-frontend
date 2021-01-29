@@ -1,10 +1,22 @@
 import { ISpace } from '../../typings/Space';
 import { Link } from 'react-router-dom';
+import { classes, createStylesheet } from '../../styles/createStylesheet';
+import hoverableLightBox from '../../styles/hoverableLightBox';
+import spacing from '../../styles/spacing';
+
+const Styles = createStylesheet({
+	spaceOnlineCount: {
+		fontSize: '0.75rem',
+		textTransform: 'uppercase',
+		color: 'var(--spaces-color-light-1)'
+	}
+});
 
 export default function SpaceListItem({ clusterId, space }: { clusterId: string; space: ISpace }) {
+	console.log(spacing);
 	return (
 		<div
-			className="hoverable-light-box foreground-color-muted column-item"
+			className={classes(hoverableLightBox.hoverableLightBox, spacing.columnItem)}
 			style={{ height: '5em', fontSize: '1.25em' }}
 		>
 			<b>
@@ -13,9 +25,7 @@ export default function SpaceListItem({ clusterId, space }: { clusterId: string;
 				</Link>
 			</b>
 			<br />
-			<b className="color-light-1" style={{ fontSize: '0.75rem', textTransform: 'uppercase' }}>
-				Online: {space.online_count}
-			</b>
+			<b className={classes(Styles.spaceOnlineCount)}>Online: {space.online_count}</b>
 		</div>
 	);
 }
