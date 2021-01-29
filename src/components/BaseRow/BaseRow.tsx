@@ -19,8 +19,8 @@ export default function BaseRow({
 	children
 }: {
 	direction?: 'row' | 'column';
-	spacing?: 0 | 1;
-	rails?: 0 | 1;
+	spacing?: 0 | 1 | 2;
+	rails?: 0 | 1 | 2;
 	alignment?: 'center' | 'left' | 'right';
 	children: React.ReactNode;
 }) {
@@ -48,6 +48,10 @@ export const rowRails = createStylesheet({
 	1: {
 		marginTop: '0.5em',
 		marginBottom: '0.5em'
+	},
+	2: {
+		marginTop: '1em',
+		marginBottom: '1em'
 	}
 });
 
@@ -56,45 +60,55 @@ export const colRails = createStylesheet({
 	1: {
 		marginLeft: '0.5em',
 		marginRight: '0.5em'
+	},
+	2: {
+		marginLeft: '1em',
+		marginRight: '1em'
+	}
+});
+
+export const rowSpacing = (amt: string) => ({
+	marginLeft: amt,
+	marginRight: amt,
+	pseudoSelectors: {
+		'>*': {
+			pseudoSelectors: {
+				':not(:first-child)': {
+					marginLeft: amt
+				},
+				':not(:last-child)': {
+					marginRight: amt
+				}
+			}
+		}
+	}
+});
+
+export const colSpacing = (amt: string) => ({
+	marginTop: amt,
+	marginBottom: amt,
+	pseudoSelectors: {
+		'>*': {
+			pseudoSelectors: {
+				':not(:first-child)': {
+					marginTop: amt
+				},
+				':not(:last-child)': {
+					marginBottom: amt
+				}
+			}
+		}
 	}
 });
 
 export const rowSpacings = createStylesheet({
-	0: {},
-	1: {
-		marginLeft: '0.5em',
-		marginRight: '0.5em',
-		pseudoSelectors: {
-			'>*': {
-				pseudoSelectors: {
-					':not(:first-child)': {
-						marginLeft: '0.5em'
-					},
-					':not(:last-child)': {
-						marginRight: '0.5em'
-					}
-				}
-			}
-		}
-	}
+	0: rowSpacing('0rem'),
+	1: rowSpacing('0.5rem'),
+	2: rowSpacing('1rem')
 });
 
 export const colSpacings = createStylesheet({
-	0: {},
-	1: {
-		marginTop: '0.5em',
-		marginBottom: '0.5em',
-		pseudoSelectors: {
-			'>*': {
-				pseudoSelectors: {
-					':not(:first-child)': {
-						marginTop: '0.5em'
-					},
-					':not(:last-child)': {
-						marginBottom: '0.5em'
-					}
-				}
-			}
-		}
-	}
+	0: colSpacing('0rem'),
+	1: colSpacing('0.5rem'),
+	2: colSpacing('1rem')
 });

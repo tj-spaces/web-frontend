@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import useMyClusters from '../../hooks/useMyClusters';
 import { createStylesheet } from '../../styles/createStylesheet';
 import Box from '../Box/Box';
-import ClusterCreateButton from '../Cluster/ClusterCreateButton/ClusterCreateButton';
-import SidebarIcon from '../SidebarIcon/SidebarIcon';
-import SpaceSidebarIcon from '../SpaceSidebarIcon/SpaceSidebarIcon';
+import ClusterCreateButton from '../Cluster/ClusterCreate/ClusterCreateButton';
+import SidebarIcon from './SidebarIcon';
+import ClusterSidebarIcon from './ClusterSidebarIcon';
 
 export const styles = createStylesheet({
 	sidebar: {
@@ -21,7 +21,7 @@ export default function Sidebar() {
 		<div className={styles.sidebar}>
 			<Box variant="paddedColumn">
 				{myClusters.map((cluster) => (
-					<SpaceSidebarIcon key={cluster.id} title={cluster.name} to={`/clusters/${cluster.id}`} />
+					<ClusterSidebarIcon key={cluster.id} title={cluster.name} to={`/clusters/${cluster.id}`} />
 				))}
 
 				<SidebarIcon>

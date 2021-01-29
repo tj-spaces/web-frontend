@@ -4,7 +4,7 @@ import useMediaStreamTrack from '../../hooks/useMediaStreamTrack';
 import useTrack from '../../hooks/useTrack';
 import { defaultPannerNodeSettings } from '../../lib/defaultPannerNodeSettings';
 import { SpacePositionInfo } from '../../typings/SpaceParticipant';
-import SpaceAudioContext from '../SpaceAudioContext/SpaceAudioContext';
+import SpaceAudioContext from '../Space/SpaceAudioContext/SpaceAudioContext';
 
 export default function SpatialAudioTrack({
 	position,

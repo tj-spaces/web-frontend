@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+import boxShadow from '../../styles/boxShadow';
 import { classes, createStylesheet } from '../../styles/createStylesheet';
 import BackgroundColorContext from '../BackgroundColorContext/BackgroundColorContext';
 
@@ -17,7 +19,8 @@ export const styles = createStylesheet({
 	modalForeground: {
 		backgroundColor: '#303030',
 		borderRadius: '0.5em',
-		transition: 'height 800ms ease'
+		transition: 'height 800ms ease',
+		extends: [boxShadow.boxShadow]
 		// padding: '2em'
 	}
 });
@@ -37,13 +40,22 @@ export default function Modal({
 	variant?: 'wide';
 	onClickOutside: () => void;
 }) {
+	const fgRef = useRef<HTMLDivElement>(null);
+	useEffect(() => {
+		const checkForOutsideClick = (ev: MouseEvent) => {
+			if (!fgRef.current?.contains(ev.target as HTMLDivElement)) {
+				onClickOutside();
+			}
+		};
+		document.addEventListener('click', checkForOutsideClick);
+		return () => {
+			document.removeEventListener('click', checkForOutsideClick);
+		};
+	}, [onClickOutside]);
 	return (
 		<div className={classes(styles.modalBackground)}>
 			<BackgroundColorContext.Provider value="dark">
-				<div
-					onBlur={() => onClickOutside()}
-					className={classes(styles.modalForeground, variantStyles[variant])}
-				>
+				<div ref={fgRef} className={classes(styles.modalForeground, variantStyles[variant])}>
 					{children}
 				</div>
 			</BackgroundColorContext.Provider>

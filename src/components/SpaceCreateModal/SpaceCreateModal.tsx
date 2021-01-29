@@ -35,25 +35,25 @@ export default function SpaceCreateModal({ onClose }: { onClose: () => void }) {
 
 	return (
 		<Modal onClickOutside={() => onClose()}>
-			<div style={{ padding: '1em' }}>
+			<BaseRow direction="column" spacing={2} rails={2}>
 				<Typography variant="heading" fontSize="large" alignment="center">
 					Create a Space
 				</Typography>
-				<Typography variant="base" fontSize="small">
-					Name
-				</Typography>
-				<br />
-				<BaseTextInput ref={spaceNameRef} style={{ flex: 3 }} />
-				<BaseRow direction="row" spacing={1} rails={1}>
-					{!isSpaceCreating ? (
-						<Button size="small" onClick={() => create()} style={{ flex: 1 }}>
-							Create
-						</Button>
-					) : (
-						'Creating...'
-					)}
-				</BaseRow>
-			</div>
+				<div>
+					<Typography variant="caption" fontSize="small">
+						Name
+					</Typography>
+					<br />
+					<BaseTextInput ref={spaceNameRef} fontSize="xxl" style={{ width: '100%' }} />
+				</div>
+				{!isSpaceCreating ? (
+					<Button size="small" onClick={() => create()}>
+						Create
+					</Button>
+				) : (
+					'Creating...'
+				)}
+			</BaseRow>
 		</Modal>
 	);
 }

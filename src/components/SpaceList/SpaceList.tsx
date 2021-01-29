@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { ISpace } from '../../typings/Space';
 import CurrentClusterContext from '../Cluster/CurrentClusterContext/CurrentClusterContext';
 
-import SpaceListItem from '../SpaceListItem/SpaceListItem';
+import SpaceListItem from './SpaceListItem';
 import SpaceCreateButton from '../SpaceCreateButton/SpaceCreateButton';
 import BaseRow from '../BaseRow/BaseRow';
 

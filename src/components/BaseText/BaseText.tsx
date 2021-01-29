@@ -21,6 +21,9 @@ const variantStyles = createStylesheet({
 		marginBlockStart: '0.5em',
 		marginBlockEnd: '0.5em',
 		display: 'block'
+	},
+	caption: {
+		textTransform: 'uppercase'
 	}
 });
 
@@ -47,7 +50,7 @@ export default function Typography({
 	alignment?: 'start' | 'end' | 'center';
 	fontSize?: FontSize;
 	fontWeight?: FontWeight;
-	variant?: 'base' | 'heading';
+	variant?: 'base' | 'heading' | 'caption';
 	children: React.ReactNode;
 	onClick?: () => void;
 }) {

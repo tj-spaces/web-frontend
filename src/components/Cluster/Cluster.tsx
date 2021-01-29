@@ -34,12 +34,12 @@ export default function Cluster({ id }: { id: string }) {
 			<ClusterIdContext.Provider value={{ id, spaces }}>
 				{isSettingsOpen && <ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />}
 
-				<h1 className="padding-comfortable">
+				<Typography variant="heading" fontSize="xl">
 					{cluster?.name ?? 'Loading...'}{' '}
 					<span onClick={() => setIsSettingsOpen(true)}>
 						<i className="fas fa-cog pressable"></i>
 					</span>
-				</h1>
+				</Typography>
 				{spaceId && (isLoggedIn ? <Space id={spaceId} /> : <h1>Authenticating...</h1>)}
 				<div className={styles.clusterLayout}>
 					<BackgroundColorContext.Provider value="light">

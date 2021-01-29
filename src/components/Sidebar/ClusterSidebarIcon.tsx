@@ -1,9 +1,9 @@
 import React from 'react';
-import SidebarIcon from '../SidebarIcon/SidebarIcon';
+import SidebarIcon from './SidebarIcon';
 import { Link } from 'react-router-dom';
 import Typography from '../BaseText/BaseText';
 
-export default function SpaceSidebarIcon({ photoUrl, title, to }: { photoUrl?: string; title: string; to: string }) {
+export default function ClusterSidebarIcon({ photoUrl, title, to }: { photoUrl?: string; title: string; to: string }) {
 	const titleInitials = title
 		.split(' ')
 		.filter(Boolean)
