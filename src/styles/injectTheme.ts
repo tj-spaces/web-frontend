@@ -12,9 +12,9 @@ function createStyleTag() {
 
 export default function injectTheme(theme: Theme) {
 	const tag = createStyleTag();
-	let css = '#root{';
+	let css = 'html{';
 	for (let [name, value] of Object.entries(theme)) {
-		css += `--${name}: ${value};`;
+		css += `--${name}:${value};`;
 	}
 	css += '}';
 	tag.innerHTML = css;

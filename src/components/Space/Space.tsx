@@ -6,16 +6,17 @@ import { API_SERVER_URL } from '../../lib/constants';
 import getSessionId from '../../lib/getSessionId';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import AuthContext from '../AuthContext/AuthContext';
-import Button from '../Button/Button';
+import Button from '../BaseButton/BaseButton';
 import CurrentSpaceContext from '../CurrentSpaceContext/CurrentSpaceContext';
 import TwilioRoomContext from '../TwilioRoomContext/TwilioRoomContext';
 import SpaceAudioContext from '../SpaceAudioContext/SpaceAudioContext';
 import SpaceParticipantListing from './SpaceParticipantListing/SpaceParticipantListing';
 import SpaceParticipantLocal from './SpaceParticipantLocal/SpaceParticipantLocal';
-import Typography from '../Typography/Typography';
+import Typography from '../BaseText/BaseText';
 import useKeyboardState from '../../hooks/useKeyboardState';
 import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
 import Environment from './Environment';
+import BaseRow from '../BaseRow/BaseRow';
 
 let useTwilio = false;
 
@@ -213,13 +214,13 @@ export default function Space({ id }: { id: string }) {
 				<SpacePositionContext.Provider value={participants[user.id].position}>
 					<TwilioRoomContext.Provider value={twilioRoom ?? null}>
 						{space ? (
-							<div className="flex-column padding-2">
-								<Typography type="title" alignment="center">
+							<BaseRow direction="column">
+								<Typography fontSize="large" alignment="center">
 									{space.name}
 								</Typography>
 								<br />
 
-								<div className="text-center flex-column">
+								<BaseRow direction="column">
 									<h2>Here</h2>
 									{Object.values(participants).map((participant) => (
 										<SpaceParticipantListing
@@ -227,45 +228,41 @@ export default function Space({ id }: { id: string }) {
 											key={participant.accountId}
 										/>
 									))}
-								</div>
+								</BaseRow>
 
 								<Environment participants={participants} twilioParticipants={twilioParticipants} />
 
-								<div className="flex-row">
+								<BaseRow direction="row">
 									{user && (
-										<div className="row-item">
-											<SpaceParticipantLocal
-												spacesParticipant={participants[user!.id]}
-												localVideoTrack={localVideoTrack}
-											/>
-										</div>
+										<SpaceParticipantLocal
+											spacesParticipant={participants[user!.id]}
+											localVideoTrack={localVideoTrack}
+										/>
 									)}
 
-									<Button to=".." className="row-item">
-										Leave
-									</Button>
+									<Button to="..">Leave</Button>
 
 									{muted ? (
-										<Button onClick={() => setMuted(false)} className="row-item">
+										<Button onClick={() => setMuted(false)}>
 											<i className="fas fa-microphone-slash"></i>
 										</Button>
 									) : (
-										<Button onClick={() => setMuted(true)} className="row-item">
+										<Button onClick={() => setMuted(true)}>
 											<i className="fas fa-microphone"></i>
 										</Button>
 									)}
 
 									{cameraEnabled ? (
-										<Button onClick={() => setCameraEnabled(false)} className="row-item">
+										<Button onClick={() => setCameraEnabled(false)}>
 											<i className="fas fa-video"></i>
 										</Button>
 									) : (
-										<Button onClick={() => setCameraEnabled(true)} className="row-item">
+										<Button onClick={() => setCameraEnabled(true)}>
 											<i className="fas fa-video-slash"></i>
 										</Button>
 									)}
-								</div>
-							</div>
+								</BaseRow>
+							</BaseRow>
 						) : (
 							<span>Loading...</span>
 						)}

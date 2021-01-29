@@ -1,5 +1,6 @@
-import classnames from 'classnames';
-import { createStylesheet } from '../../styles/createStylesheet';
+import { BorderRadiusBubble } from '../../styles/borderRadius';
+import { classes, createStylesheet } from '../../styles/createStylesheet';
+import { DivProps } from '../Space/PositionalDiv';
 
 export const styles = createStylesheet({
 	buttonRow: {
@@ -7,13 +8,6 @@ export const styles = createStylesheet({
 		flexDirection: 'row',
 		alignItems: 'center',
 		margin: '0.5em 0em'
-	},
-	clusterBox: {
-		display: 'flex',
-		flexDirection: 'column',
-		overflowY: 'auto',
-		height: '100%',
-		width: '100%'
 	},
 	paddedColumn: {
 		display: 'flex',
@@ -26,15 +20,27 @@ export const styles = createStylesheet({
 		flexDirection: 'row',
 		width: '100vw',
 		height: '100vh'
+	},
+	card: {
+		borderRadius: BorderRadiusBubble,
+		backgroundColor: 'var(--spaces-color-dark-2)',
+		padding: '2em'
 	}
 });
 
 export default function Box({
 	children,
-	variant
+	variant,
+	className,
+	...props
 }: {
 	children: React.ReactNode;
-	variant: 'buttonRow' | 'clusterBox' | 'paddedColumn' | 'container';
-}) {
-	return <div className={classnames(styles[variant])}>{children}</div>;
+	variant: 'buttonRow' | 'paddedColumn' | 'container' | 'card';
+	className?: string;
+} & DivProps) {
+	return (
+		<div {...props} className={classes(styles[variant], className)}>
+			{children}
+		</div>
+	);
 }

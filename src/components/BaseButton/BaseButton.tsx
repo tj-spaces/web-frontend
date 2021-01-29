@@ -11,8 +11,12 @@ const styles = createStylesheet({
 		color: 'var(--spaces-color-light-0)',
 		transition: 'box-shadow 0.5s ease',
 		display: 'flex',
-		alignItems: 'center'
-	},
+		alignItems: 'center',
+		justifyContent: 'center'
+	}
+});
+
+const sizeStyles = createStylesheet({
 	small: {
 		padding: '0.5em',
 		fontSize: '1.25rem',
@@ -30,6 +34,18 @@ const styles = createStylesheet({
 	}
 });
 
+const variantStyles = createStylesheet({
+	primary: {
+		backgroundColor: 'var(--spaces-color-dark-0)'
+	},
+	positive: {
+		backgroundColor: 'var(--spaces-color-positive)'
+	},
+	negative: {
+		backgroundColor: 'var(--spaces-color-negative)'
+	}
+});
+
 type ButtonProps = (
 	| /* Button */
 	DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
@@ -40,15 +56,16 @@ type ButtonProps = (
 			className?: string;
 	  }
 ) & {
-	variant?: 'small' | 'medium' | 'large';
+	size?: 'small' | 'medium' | 'large';
+	variant?: 'primary' | 'positive' | 'negative';
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-	const { variant = 'medium' } = props;
+	const { size = 'medium', variant = 'primary' } = props;
 	if ('to' in props) {
 		const { to, className } = props;
 		return (
-			<Link to={to} className={[styles.button, styles[variant], className].join(' ')}>
+			<Link to={to} className={[styles.button, sizeStyles[size], variantStyles[variant], className].join(' ')}>
 				{props.children}
 			</Link>
 		);
@@ -57,7 +74,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
 		return (
 			<button
 				ref={ref}
-				className={'button button-' + variant + (className ? ' ' + className : '')}
+				className={[styles.button, sizeStyles[size], variantStyles[variant], className].join(' ')}
 				{...otherProps}
 			/>
 		);

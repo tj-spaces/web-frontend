@@ -9,6 +9,6 @@ export const DarkTheme: Theme = {
 	'spaces-color-light-1': '#dddddd',
 	'spaces-color-light-2': '#cccccc',
 	'spaces-color-light-3': '#bbbbbb',
-	'spaces-color-green': '#60cc60',
-	'spaces-color-warn': '#ff6060'
+	'spaces-color-positive': '#60cc60',
+	'spaces-color-negative': '#ff6060'
 };

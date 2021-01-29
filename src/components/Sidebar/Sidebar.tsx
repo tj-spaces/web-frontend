@@ -1,16 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import useMyClusters from '../../hooks/useMyClusters';
+import { createStylesheet } from '../../styles/createStylesheet';
 import Box from '../Box/Box';
 import ClusterCreateButton from '../Cluster/ClusterCreateButton/ClusterCreateButton';
 import SidebarIcon from '../SidebarIcon/SidebarIcon';
 import SpaceSidebarIcon from '../SpaceSidebarIcon/SpaceSidebarIcon';
 
+export const styles = createStylesheet({
+	sidebar: {
+		backgroundColor: 'var(--spaces-color-dark-0)',
+		overflowY: 'auto'
+	}
+});
+
 export default function Sidebar() {
 	const myClusters = useMyClusters() ?? [];
 
 	return (
-		<div className="background-color-dark-0 box-shadow overflow-y-auto">
+		<div className={styles.sidebar}>
 			<Box variant="paddedColumn">
 				{myClusters.map((cluster) => (
 					<SpaceSidebarIcon key={cluster.id} title={cluster.name} to={`/clusters/${cluster.id}`} />

@@ -1,8 +1,17 @@
 import { Link } from 'react-router-dom';
+import { createStylesheet } from '../../styles/createStylesheet';
+
+export const styles = createStylesheet({
+	termsPage: {
+		maxWidth: '1000px',
+		margin: '0px auto',
+		padding: '1rem 0rem'
+	}
+});
 
 export default function TermsPage() {
 	return (
-		<div style={{ maxWidth: '1000px' }} className="margin-x-auto padding-y-2">
+		<div className={styles.termsPage}>
 			<Link to="/" className="underline">
 				Home
 			</Link>

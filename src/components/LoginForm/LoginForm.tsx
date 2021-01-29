@@ -1,22 +1,27 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { getGoogleAuthorizationUrl, getIonAuthorizationUrl } from '../../lib/getAuthorizationUrl';
+import BaseRow from '../BaseRow/BaseRow';
+import Typography from '../BaseText/BaseText';
 
 export default function LoginForm() {
 	return (
-		<div>
-			<h1 className="text-center">Log In</h1>
-			<h2>
+		<BaseRow direction="column" alignment="center">
+			<Typography fontSize="xl" fontWeight="bold">
+				Log In
+			</Typography>
+			<Typography fontSize="large">
 				<a href={getGoogleAuthorizationUrl()}>Google</a>
-			</h2>
-			<h2>
+			</Typography>
+			<Typography fontSize="large">
 				<a href={getIonAuthorizationUrl()}>Ion</a>
-			</h2>
-			<span className="font-size-sm color-light-1">
+			</Typography>
+			<Typography fontSize="medium">
 				By logging in, you agree to the{' '}
-				<a href="/terms" className="underline">
-					terms
-				</a>
-			</span>
-		</div>
+				<Link to="/terms" className="underline">
+					<b>terms</b>
+				</Link>
+			</Typography>
+		</BaseRow>
 	);
 }

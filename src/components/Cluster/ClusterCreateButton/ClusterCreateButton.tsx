@@ -2,9 +2,9 @@ import React from 'react';
 import { createRef, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { createCluster } from '../../../api/api';
-import Box from '../../Box/Box';
-import Button from '../../Button/Button';
+import Button from '../../BaseButton/BaseButton';
 import Modal from '../../Modal/Modal';
+import BaseRow from '../../BaseRow/BaseRow';
 
 export default function ClusterCreateButton() {
 	const clusterNameRef = createRef<HTMLInputElement>();
@@ -41,41 +41,33 @@ export default function ClusterCreateButton() {
 		<>
 			<h1 onClick={() => setIsOpen(true)}>+</h1>
 			{isOpen && (
-				<Modal>
+				<Modal onClickOutside={() => setIsOpen(false)}>
 					<h1>Create Cluster</h1>
-					<Box variant="buttonRow">
+					<BaseRow direction="row" spacing={1} rails={1}>
 						<span className="margin-right-2">Name</span>{' '}
 						<input ref={clusterNameRef} type="text" style={{ flex: 3 }} />
-					</Box>
-					<Box variant="buttonRow">
+					</BaseRow>
+					<BaseRow direction="row" spacing={1} rails={1}>
 						<span className="margin-right-2">Visibility</span>{' '}
 						<select ref={visibilityRef} style={{ flex: 1 }}>
 							<option value="public">Public</option>
 							<option value="unlisted">Unlisted</option>
 						</select>
-					</Box>
-					<Box variant="buttonRow">
+					</BaseRow>
+					<BaseRow direction="row" spacing={1} rails={1}>
 						{!isClusterCreating ? (
 							<>
-								<Button
-									onClick={() => create()}
-									className="button button-medium margin-right-2"
-									style={{ flex: 1 }}
-								>
+								<Button onClick={() => create()} size="medium" style={{ flex: 1 }}>
 									Create
 								</Button>
-								<Button
-									onClick={() => setIsOpen(false)}
-									className="button button-medium margin-left-2"
-									style={{ flex: 1 }}
-								>
+								<Button onClick={() => setIsOpen(false)} size="medium" style={{ flex: 1 }}>
 									Cancel
 								</Button>
 							</>
 						) : (
 							<>Creating...</>
 						)}
-					</Box>
+					</BaseRow>
 				</Modal>
 			)}
 		</>

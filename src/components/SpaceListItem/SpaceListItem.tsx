@@ -18,7 +18,6 @@ const styles = createStylesheet({
 });
 
 export default function SpaceListItem({ clusterId, space }: { clusterId: string; space: ISpace }) {
-	console.log(spacing);
 	return (
 		<div className={styles.spaceListItem}>
 			<b>

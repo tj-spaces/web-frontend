@@ -1,7 +1,7 @@
 import React from 'react';
 import SidebarIcon from '../SidebarIcon/SidebarIcon';
 import { Link } from 'react-router-dom';
-import Typography from '../Typography/Typography';
+import Typography from '../BaseText/BaseText';
 
 export default function SpaceSidebarIcon({ photoUrl, title, to }: { photoUrl?: string; title: string; to: string }) {
 	const titleInitials = title
@@ -12,7 +12,11 @@ export default function SpaceSidebarIcon({ photoUrl, title, to }: { photoUrl?: s
 	return (
 		<SidebarIcon>
 			<Link to={to}>
-				{photoUrl ? <img src={photoUrl} alt={title} /> : <Typography type="h1">{titleInitials}</Typography>}
+				{photoUrl ? (
+					<img src={photoUrl} alt={title} />
+				) : (
+					<Typography fontSize="large">{titleInitials}</Typography>
+				)}
 			</Link>
 		</SidebarIcon>
 	);

@@ -66,7 +66,7 @@ export function createClasses(properties: StylesheetProperties, pseudoSelector: 
 				classes = classes.concat(result.classes);
 			}
 		}
-		if (typeof propValue === 'string') {
+		if (typeof propValue === 'string' || typeof propValue === 'number') {
 			const key = propName + pseudoSelector + '|' + propValue;
 			let className;
 			if (key in classCache) {
@@ -83,6 +83,9 @@ export function createClasses(properties: StylesheetProperties, pseudoSelector: 
 	return { innerHTML, classes };
 }
 
+let buildTimeoutHandle: NodeJS.Timeout | null = null;
+let queuedHTML = '';
+
 export function createStylesheet<T extends Stylesheet>(styles: T) {
 	let innerHTML = '';
 	// @ts-ignore
@@ -93,20 +96,31 @@ export function createStylesheet<T extends Stylesheet>(styles: T) {
 		// @ts-ignore
 		newStyles[cls] = classes.join(' ');
 	}
-	if (innerHTML.trim()) {
-		const tag = createStyleTag();
-		tag.innerHTML = innerHTML;
+	queuedHTML += innerHTML;
+	if (buildTimeoutHandle == null) {
+		buildTimeoutHandle = setTimeout(() => {
+			if (queuedHTML.trim()) {
+				const tag = createStyleTag();
+				tag.innerHTML = queuedHTML;
+				queuedHTML = '';
+			}
+			buildTimeoutHandle = null;
+		}, 50);
 	}
 	return newStyles;
 }
 
-type ClassProvider = { [prop: string]: string | undefined } | string;
+type ClassProvider = { [prop: string]: string | undefined } | string | boolean | undefined;
 
 export function classes(...props: ClassProvider[]) {
 	return props
 		.map((props) => {
 			if (typeof props === 'string') {
 				return props;
+			} else if (props == null) {
+				return '';
+			} else if (props === false) {
+				return '';
 			} else {
 				return Object.values(props)
 					.filter((a) => Boolean(a))

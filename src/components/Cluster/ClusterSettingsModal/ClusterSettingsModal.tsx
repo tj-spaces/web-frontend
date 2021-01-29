@@ -1,5 +1,5 @@
 import Box from '../../Box/Box';
-import Button from '../../Button/Button';
+import Button from '../../BaseButton/BaseButton';
 import Modal from '../../Modal/Modal';
 
 import { deleteCluster } from '../../../api/api';
@@ -19,20 +19,20 @@ export default function ClusterSettingsModal({ onClose }: { onClose: () => void 
 	};
 
 	return (
-		<Modal>
+		<Modal onClickOutside={() => onClose()}>
 			<h1>Settings</h1>
 			<Box variant="buttonRow">
-				<Button onClick={() => deleteCluster_()} className="button button-small background-color-warn">
+				<Button onClick={() => deleteCluster_()} size="small" variant="negative">
 					Delete Cluster
 				</Button>
 			</Box>
 
 			<Box variant="buttonRow">
-				<Button onClick={() => save_()} className="button button-small margin-right-1">
+				<Button onClick={() => save_()} size="small">
 					Save
 				</Button>
 
-				<Button onClick={() => onClose()} className="button button-small">
+				<Button onClick={() => onClose()} size="small">
 					Cancel
 				</Button>
 			</Box>

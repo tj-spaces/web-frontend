@@ -1,18 +1,8 @@
+import { Link } from 'react-router-dom';
 import { joinCluster } from '../../api/api';
-import { BorderRadiusBubble } from '../../styles/borderRadius';
-import { createStylesheet } from '../../styles/createStylesheet';
-import spacing from '../../styles/spacing';
 import { ICluster } from '../../typings/Cluster';
-import Button from '../Button/Button';
-
-export const styles = createStylesheet({
-	clusterPreview: {
-		borderRadius: BorderRadiusBubble,
-		backgroundColor: 'var(--spaces-color-dark-2)',
-		padding: '2em',
-		extends: [spacing.columnItem]
-	}
-});
+import Box from '../Box/Box';
+import Button from '../BaseButton/BaseButton';
 
 export default function ClusterPreview({ cluster }: { cluster: ICluster }) {
 	const joinThisCluster = () => {
@@ -22,14 +12,14 @@ export default function ClusterPreview({ cluster }: { cluster: ICluster }) {
 	};
 
 	return (
-		<div className={styles.clusterPreview}>
-			<a href={'/clusters/' + cluster.id}>
+		<Box variant="card">
+			<Link to={'/clusters/' + cluster.id}>
 				<h1>{cluster.name}</h1>
-			</a>
+			</Link>
 
-			<Button className="button button-small background-color-green" onClick={() => joinThisCluster()}>
+			<Button size="small" variant="positive" onClick={() => joinThisCluster()}>
 				JOIN
 			</Button>
-		</div>
+		</Box>
 	);
 }
