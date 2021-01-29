@@ -1,10 +1,10 @@
-import Box from '../../Box/Box';
 import Button from '../../BaseButton/BaseButton';
 import Modal from '../../Modal/Modal';
 
 import { deleteCluster } from '../../../api/api';
 import { useContext } from 'react';
 import CurrentClusterContext from '../CurrentClusterContext/CurrentClusterContext';
+import BaseRow from '../../BaseRow/BaseRow';
 
 export default function ClusterSettingsModal({ onClose }: { onClose: () => void }) {
 	const currentCluster = useContext(CurrentClusterContext);
@@ -20,22 +20,29 @@ export default function ClusterSettingsModal({ onClose }: { onClose: () => void 
 
 	return (
 		<Modal onClickOutside={() => onClose()}>
-			<h1>Settings</h1>
-			<Box variant="buttonRow">
-				<Button onClick={() => deleteCluster_()} size="small" variant="negative">
-					Delete Cluster
-				</Button>
-			</Box>
+			<BaseRow direction="column" alignment="center" spacing={1}>
+				<h1>Settings</h1>
+				<table>
+					<tr>
+						<td>
+							<Button onClick={() => deleteCluster_()} size="small" variant="negative">
+								Delete Cluster
+							</Button>
+						</td>
+						<td>Deletes this cluster.</td>
+					</tr>
+				</table>
 
-			<Box variant="buttonRow">
-				<Button onClick={() => save_()} size="small">
-					Save
-				</Button>
+				<BaseRow direction="row" alignment="center" spacing={1}>
+					<Button onClick={() => save_()} size="small" style={{ flex: 1 }}>
+						Save
+					</Button>
 
-				<Button onClick={() => onClose()} size="small">
-					Cancel
-				</Button>
-			</Box>
+					<Button onClick={() => onClose()} size="small" style={{ flex: 1 }}>
+						Cancel
+					</Button>
+				</BaseRow>
+			</BaseRow>
 		</Modal>
 	);
 }

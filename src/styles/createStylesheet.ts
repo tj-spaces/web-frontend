@@ -72,7 +72,7 @@ export function createClasses(properties: StylesheetProperties, pseudoSelector: 
 			if (key in classCache) {
 				className = classCache[key];
 			} else {
-				className = generateClassName(4);
+				className = generateClassName(2);
 				const styleText = kebabize(propName) + ':' + propValue;
 				innerHTML += `.${className}${pseudoSelector}{${styleText};}`;
 				classCache[key] = className;

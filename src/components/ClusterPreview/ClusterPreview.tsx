@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { joinCluster } from '../../api/api';
 import { ICluster } from '../../typings/Cluster';
-import Box from '../Box/Box';
 import Button from '../BaseButton/BaseButton';
+import BaseCard from '../BaseCard/BaseCard';
 
 export default function ClusterPreview({ cluster }: { cluster: ICluster }) {
 	const joinThisCluster = () => {
@@ -12,7 +12,7 @@ export default function ClusterPreview({ cluster }: { cluster: ICluster }) {
 	};
 
 	return (
-		<Box variant="card">
+		<BaseCard backgroundColor="dark">
 			<Link to={'/clusters/' + cluster.id}>
 				<h1>{cluster.name}</h1>
 			</Link>
@@ -20,6 +20,6 @@ export default function ClusterPreview({ cluster }: { cluster: ICluster }) {
 			<Button size="small" variant="positive" onClick={() => joinThisCluster()}>
 				JOIN
 			</Button>
-		</Box>
+		</BaseCard>
 	);
 }
