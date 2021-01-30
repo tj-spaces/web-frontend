@@ -1,25 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getMe } from '../../api/api';
 import AuthContext, { AuthState } from '../AuthContext/AuthContext';
 
 export default function AuthContextManager({ children }: { children: React.ReactNode }) {
 	const sessionId = localStorage.getItem('session_id');
 	// Prevent race conditions
-	const [authState, setAuthState] = useState<AuthState>({ isLoggedIn: null, user: null });
+	const [authState, setAuthState] = useState<AuthState>({ isLoggedIn: null, user: null, refreshAuthState: null });
 
-	useEffect(() => {
+	const refreshAuthState = useCallback(() => {
 		if (sessionId) {
 			getMe()
 				.then((user) => {
-					setAuthState({ isLoggedIn: true, user });
+					setAuthState({ isLoggedIn: true, user, refreshAuthState });
 				})
 				.catch(() => {
-					setAuthState({ isLoggedIn: false, user: null });
+					setAuthState({ isLoggedIn: false, user: null, refreshAuthState });
 				});
 		} else {
-			setAuthState({ isLoggedIn: false, user: null });
+			setAuthState({ isLoggedIn: false, user: null, refreshAuthState });
 		}
 	}, [sessionId]);
+
+	useEffect(() => {
+		refreshAuthState();
+	}, [refreshAuthState]);
 
 	if (authState?.isLoggedIn == null) {
 		return null;

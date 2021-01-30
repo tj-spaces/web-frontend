@@ -1,15 +1,17 @@
 import { Link, Redirect, useLocation, useParams } from 'react-router-dom';
 import { createSession } from '../../api/api';
 import * as qs from 'query-string';
-import React, { useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Fullscreen from '../../components/Fullscreen/Fullscreen';
+import AuthContext from '../../components/AuthContext/AuthContext';
 
 export function AuthorizationCallback() {
 	document.title = 'Logging In';
 
 	const { provider } = useParams<{ provider: string }>();
 	const { code } = qs.parse(useLocation().search);
-	const [state, setState] = React.useState<'loading' | 'error' | 'loaded'>('loading');
+	const { refreshAuthState } = useContext(AuthContext);
+	const [state, setState] = useState<'loading' | 'error' | 'loaded'>('loading');
 
 	useEffect(() => {
 		if (typeof code !== 'string') {
@@ -18,11 +20,12 @@ export function AuthorizationCallback() {
 			createSession(code, provider)
 				.then((sessionId) => {
 					localStorage.setItem('session_id', sessionId);
+					refreshAuthState?.();
 					setState('loaded');
 				})
 				.catch((err) => setState('error'));
 		}
-	}, [code, provider]);
+	}, [code, provider, refreshAuthState]);
 
 	const LoginError = () => (
 		<div>
@@ -40,8 +43,9 @@ export function AuthorizationCallback() {
 	switch (state) {
 		case 'loading':
 			return <Loading />;
-		case 'loaded':
+		case 'loaded': {
 			return <Redirect to="/" />;
+		}
 		case 'error':
 			return <LoginError />;
 	}

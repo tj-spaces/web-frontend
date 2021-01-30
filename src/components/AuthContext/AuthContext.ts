@@ -1,8 +1,16 @@
 import { createContext } from 'react';
 import { IUser } from '../../typings/User';
 
-export type AuthState = { isLoggedIn: boolean | null; user: IUser | null };
+export type AuthState = {
+	isLoggedIn: boolean | null;
+	user: IUser | null;
 
-const UserContext = createContext<AuthState>({ isLoggedIn: false, user: null });
+	/**
+	 * Function that can be used to trigger an auth state refresh.
+	 */
+	refreshAuthState: (() => void) | null;
+};
+
+const UserContext = createContext<AuthState>({ isLoggedIn: false, user: null, refreshAuthState: null });
 
 export default UserContext;
