@@ -2,8 +2,6 @@ import { CSSProperties } from 'react';
 import { SpacePositionInfo } from '../typings/SpaceParticipant';
 
 const FOV = (Math.PI * 5) / 6;
-const LEFT_ANGLE = FOV / 2;
-const RIGHT_ANGLE = -FOV / 2;
 
 /**
  * Returns the CSS transform needed to render an item in 3D space from a given perspective
@@ -20,28 +18,35 @@ export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositi
 	let xRelativeRotated = cos * xRelative - sin * zRelative;
 	let zRelativeRotated = sin * xRelative + cos * zRelative;
 
-	let distance = Math.sqrt(xRelative ** 2 + zRelative ** 2);
+	let horizontalAngleToObject = Math.atan2(zRelativeRotated, xRelativeRotated) - Math.PI / 2;
+	// This ranges from -1 to 1 and needs to be mapped to 100% --> 0%
+	// Add one, divide by 2, multiply by 100, subtract from 100.
+	let projectedLocationX = horizontalAngleToObject / (FOV / 2);
+	let projectedLocationXPercent = (1 - (projectedLocationX + 1) / 2) * 100;
 
+	let distance = Math.sqrt(xRelative ** 2 + zRelative ** 2);
+	// If it's out of view...
+	if (zRelativeRotated < 0) {
+		return {
+			// transform: `scale(100)`,
+			transformOrigin: 'center',
+			position: 'absolute',
+			left: `${projectedLocationXPercent}%`,
+			opacity: 0
+		};
+	}
 	if (distance < 0.01 || distance > 10000 || zRelativeRotated < 0) {
-		return { display: 'none' };
+		return {
+			display: 'none'
+		};
 	}
 
-	// Scale at 0 should be infinity
-	// Scale at infinity should be 0
-	// This looks like an inverse relationship to me
-
 	let scale = 1 / distance;
-	let xOffset = xRelativeRotated;
-	// The X and Z are flipped intentionally to make "straight ahead" = 0 rad
-	let horizontalAngleToObject = Math.atan2(zRelativeRotated, xRelativeRotated) - Math.PI / 2;
-	let projectedLocationX = horizontalAngleToObject / (FOV / 2);
-
-	console.log({ xRelativeRotated, zRelativeRotated }, horizontalAngleToObject);
 
 	return {
 		transform: `scale(${scale})`,
 		transformOrigin: 'center',
 		position: 'absolute',
-		left: `${projectedLocationX * 100 + 50}%`
+		left: `${projectedLocationXPercent}%`
 	};
 }

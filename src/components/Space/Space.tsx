@@ -184,9 +184,9 @@ export default function Space({ id }: { id: string }) {
 
 	useEffect(() => {
 		if (keyboardState.a) {
-			connectionRef.current?.emit('set_rotate_direction', 1);
-		} else if (keyboardState.d) {
 			connectionRef.current?.emit('set_rotate_direction', -1);
+		} else if (keyboardState.d) {
+			connectionRef.current?.emit('set_rotate_direction', 1);
 		} else {
 			connectionRef.current?.emit('set_rotate_direction', 0);
 		}

@@ -1,7 +1,6 @@
 import getCSSTransform from '../../lib/getCSSTransform';
 import { classes, createStylesheet } from '../../styles/createStylesheet';
 import { SpacePositionInfo } from '../../typings/SpaceParticipant';
-import './PositionalDiv.sass';
 
 export type DivProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
