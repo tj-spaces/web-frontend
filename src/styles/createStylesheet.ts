@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react';
+import spacesLog from '../lib/spacesLog';
 
 function createStyleTag() {
 	const tag = document.createElement('style');
@@ -39,6 +40,8 @@ function generateClassName(length: number = 8) {
 			result += chars[Math.floor(Math.random() * 52)];
 		}
 	} while (generatedClassNames.has(result));
+
+	generatedClassNames.add(result);
 
 	return result;
 }
@@ -85,6 +88,7 @@ export function createClasses(properties: StylesheetProperties, pseudoSelector: 
 
 let buildTimeoutHandle: NodeJS.Timeout | null = null;
 let queuedHTML = '';
+let queuedClassesCount = 0;
 
 export function createStylesheet<T extends Stylesheet>(styles: T) {
 	let innerHTML = '';
@@ -95,14 +99,17 @@ export function createStylesheet<T extends Stylesheet>(styles: T) {
 		innerHTML += newInnerHTML;
 		// @ts-ignore
 		newStyles[cls] = classes.join(' ');
+		queuedClassesCount += classes.length;
 	}
 	queuedHTML += innerHTML;
 	if (buildTimeoutHandle == null) {
 		buildTimeoutHandle = setTimeout(() => {
 			if (queuedHTML.trim()) {
+				spacesLog('stylesheet', `Injecting ${queuedClassesCount} classes`);
 				const tag = createStyleTag();
 				tag.innerHTML = queuedHTML;
 				queuedHTML = '';
+				queuedClassesCount = 0;
 			}
 			buildTimeoutHandle = null;
 		}, 50);

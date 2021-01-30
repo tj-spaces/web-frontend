@@ -16,19 +16,26 @@ export default function BaseRow({
 	spacing = 0,
 	rails = 0,
 	alignment = 'left',
+	justifyContent = 'start',
 	children
 }: {
 	direction?: 'row' | 'column';
 	spacing?: 0 | 1 | 2;
 	rails?: 0 | 1 | 2;
 	alignment?: 'center' | 'left' | 'right';
+	justifyContent?: 'center' | 'start' | 'end';
 	children: React.ReactNode;
 }) {
 	const baseStyle = direction === 'row' ? styles.baseRow : styles.baseCol;
 	const spacingStyle = (direction === 'row' ? rowSpacings : colSpacings)[spacing];
 	const railsStyle = (direction === 'row' ? rowRails : colRails)[rails];
 	const alignmentStyle = alignments[alignment];
-	return <div className={classes(baseStyle, spacingStyle, railsStyle, alignmentStyle)}>{children}</div>;
+	const justifyContentStyle = justifyContents[justifyContent];
+	return (
+		<div className={classes(baseStyle, spacingStyle, railsStyle, alignmentStyle, justifyContentStyle)}>
+			{children}
+		</div>
+	);
 }
 
 export const alignments = createStylesheet({
@@ -40,6 +47,21 @@ export const alignments = createStylesheet({
 	},
 	right: {
 		alignItems: 'right'
+	}
+});
+
+export const justifyContents = createStylesheet({
+	center: {
+		justifyContent: 'center'
+	},
+	start: {
+		justifyContent: 'start'
+	},
+	end: {
+		justifyContent: 'center'
+	},
+	spaceBetween: {
+		justifyContent: 'space-between'
 	}
 });
 

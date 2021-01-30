@@ -12,7 +12,7 @@ export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositi
 	// use dot product
 	// A dot B = cos(theta)|A||B|
 	// because the gaze vector is from sin/cos it has magnitude=1
-	let angleBetweenCos = (gazeX * toXRelative + gazeZ * toZRelative) / magnitudeRelative;
+	let angleBetweenCos = magnitudeRelative !== 0 ? (gazeX * toXRelative + gazeZ * toZRelative) / magnitudeRelative : 1;
 	let angleBetweenSin = Math.sqrt(1 - angleBetweenCos ** 2);
 
 	if (angleBetweenCos < 0) {
@@ -22,7 +22,5 @@ export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositi
 	let rotatedRelativeZ = magnitudeRelative * angleBetweenCos;
 	let rotatedRelativeX = magnitudeRelative * angleBetweenSin;
 
-	console.log({ toXRelative, toZRelative, gazeX, gazeZ });
-
-	return `perspective(1rem) translate3d(${rotatedRelativeX / 2}rem, 0, ${-rotatedRelativeZ / 2 - 1}rem)`;
+	return `perspective(1rem) translate3d(${rotatedRelativeX / 2}rem, 0, ${-rotatedRelativeZ / 2}rem)`;
 }

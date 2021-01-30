@@ -60,7 +60,7 @@ export default function ClusterCreateModal({ onClose }: { onClose: () => void })
 						</Button>
 					</>
 				) : (
-					<>Creating...</>
+					'Creating...'
 				)}
 			</BaseRow>
 		</Modal>

@@ -29,7 +29,6 @@ export default function Space({ id }: { id: string }) {
 	const [twilioRoom, setTwilioRoom] = useState<twilio.Room | null>(null);
 	const [muted, setMuted] = useState<boolean>(false);
 	const [cameraEnabled, setCameraEnabled] = useState<boolean>(true);
-	const [localAudioTrack, setLocalAudioTrack] = useState<twilio.LocalAudioTrack | null>(null);
 	const [localVideoTrack, setLocalVideoTrack] = useState<twilio.LocalVideoTrack | null>(null);
 	const audioContext = useRef(new AudioContext());
 	// Guaranteed to have a value
@@ -167,20 +166,18 @@ export default function Space({ id }: { id: string }) {
 
 	// muted
 	useEffect(() => {
-		if (muted) {
-			if (localAudioTrack) {
-				localAudioTrack.disable();
-			}
-		} else {
-			if (localAudioTrack == null) {
-				twilio.createLocalAudioTrack().then((audioTrack) => {
-					setLocalAudioTrack(audioTrack);
+		if (twilioRoom) {
+			if (muted) {
+				twilioRoom.localParticipant.audioTracks.forEach((audioTrack) => {
+					audioTrack.track.disable();
 				});
 			} else {
-				localAudioTrack.enable();
+				twilioRoom.localParticipant.audioTracks.forEach((audioTrack) => {
+					audioTrack.track.enable();
+				});
 			}
 		}
-	}, [localAudioTrack, muted]);
+	}, [muted, twilioRoom]);
 
 	const keyboardState = useKeyboardState();
 
@@ -232,14 +229,13 @@ export default function Space({ id }: { id: string }) {
 
 								<Environment participants={participants} twilioParticipants={twilioParticipants} />
 
-								<BaseRow direction="row">
-									{user && (
-										<SpaceParticipantLocal
-											spacesParticipant={participants[user!.id]}
-											localVideoTrack={localVideoTrack}
-										/>
-									)}
-
+								{user && (
+									<SpaceParticipantLocal
+										spacesParticipant={participants[user!.id]}
+										localVideoTrack={localVideoTrack}
+									/>
+								)}
+								<BaseRow direction="row" spacing={1} rails={1} justifyContent="center">
 									<Button to="..">Leave</Button>
 
 									{muted ? (

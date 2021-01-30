@@ -19,6 +19,10 @@ export default function PositionalDiv({
 	return (
 		<div className={customClassName} style={{ transform, ...(style ?? {}) }} {...props}>
 			Hello!
+			<br />
+			Transform: {transform}
+			<br />
+			Perspective: {JSON.stringify(perspective)}
 		</div>
 	);
 }
