@@ -39,7 +39,7 @@ const colorStylesLightBackground = createStylesheet({
 	}
 });
 
-export default function Typography({
+export default function BaseText({
 	fontWeight = 'normal',
 	fontSize = 'medium',
 	alignment = 'start',

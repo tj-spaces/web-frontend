@@ -4,7 +4,7 @@ import { createCluster } from '../../../api/api';
 import Button from '../../BaseButton/BaseButton';
 import BaseRow from '../../BaseRow/BaseRow';
 import BaseTextInput from '../../BaseTextInput/BaseTextInput';
-import Modal from '../../Modal/Modal';
+import BaseModal from '../../BaseModal/BaseModal';
 
 export default function ClusterCreateModal({ onClose }: { onClose: () => void }) {
 	const clusterNameRef = createRef<HTMLInputElement>();
@@ -37,7 +37,7 @@ export default function ClusterCreateModal({ onClose }: { onClose: () => void })
 	}
 
 	return (
-		<Modal onClickOutside={onClose}>
+		<BaseModal onClickOutside={onClose}>
 			<h1>Create Cluster</h1>
 			<BaseRow direction="row" spacing={1} rails={1} alignment="center">
 				<span className="margin-right-2">Name</span> <BaseTextInput ref={clusterNameRef} style={{ flex: 3 }} />
@@ -63,6 +63,6 @@ export default function ClusterCreateModal({ onClose }: { onClose: () => void })
 					'Creating...'
 				)}
 			</BaseRow>
-		</Modal>
+		</BaseModal>
 	);
 }

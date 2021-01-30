@@ -31,7 +31,7 @@ export const variantStyles = createStylesheet({
 	}
 });
 
-export default function Modal({
+export default function BaseModal({
 	children,
 	variant = 'wide',
 	onClickOutside

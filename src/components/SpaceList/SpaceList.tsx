@@ -3,7 +3,7 @@ import { ISpace } from '../../typings/Space';
 import CurrentClusterContext from '../Cluster/CurrentClusterContext/CurrentClusterContext';
 
 import SpaceListItem from './SpaceListItem';
-import SpaceCreateButton from '../SpaceCreateButton/SpaceCreateButton';
+import SpaceCreateButton from '../SpaceCreate/SpaceCreateButton';
 import BaseRow from '../BaseRow/BaseRow';
 
 export default function SpaceList({ spaces = [] }: { spaces?: ISpace[] }) {

@@ -3,10 +3,10 @@ import { Redirect } from 'react-router-dom';
 import { createSpace } from '../../api/api';
 import Button from '../BaseButton/BaseButton';
 import BaseRow from '../BaseRow/BaseRow';
-import Typography from '../BaseText/BaseText';
+import BaseText from '../BaseText/BaseText';
 import BaseTextInput from '../BaseTextInput/BaseTextInput';
 import CurrentClusterContext from '../Cluster/CurrentClusterContext/CurrentClusterContext';
-import Modal from '../Modal/Modal';
+import BaseModal from '../BaseModal/BaseModal';
 
 export default function SpaceCreateModal({ onClose }: { onClose: () => void }) {
 	const spaceNameRef = createRef<HTMLInputElement>();
@@ -34,15 +34,15 @@ export default function SpaceCreateModal({ onClose }: { onClose: () => void }) {
 	}
 
 	return (
-		<Modal onClickOutside={() => onClose()}>
+		<BaseModal onClickOutside={() => onClose()}>
 			<BaseRow direction="column" spacing={2} rails={2}>
-				<Typography variant="heading" fontSize="large" alignment="center">
+				<BaseText variant="heading" fontSize="large" alignment="center">
 					Create a Space
-				</Typography>
+				</BaseText>
 				<div>
-					<Typography variant="caption" fontSize="small">
+					<BaseText variant="caption" fontSize="small">
 						Name
-					</Typography>
+					</BaseText>
 					<br />
 					<BaseTextInput ref={spaceNameRef} fontSize="xxl" style={{ width: '100%' }} />
 				</div>
@@ -54,6 +54,6 @@ export default function SpaceCreateModal({ onClose }: { onClose: () => void }) {
 					'Creating...'
 				)}
 			</BaseRow>
-		</Modal>
+		</BaseModal>
 	);
 }

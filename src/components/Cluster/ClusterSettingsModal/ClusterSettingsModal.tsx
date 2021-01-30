@@ -1,5 +1,5 @@
 import Button from '../../BaseButton/BaseButton';
-import Modal from '../../Modal/Modal';
+import BaseModal from '../../BaseModal/BaseModal';
 
 import { deleteCluster } from '../../../api/api';
 import { useContext } from 'react';
@@ -19,7 +19,7 @@ export default function ClusterSettingsModal({ onClose }: { onClose: () => void 
 	};
 
 	return (
-		<Modal onClickOutside={() => onClose()}>
+		<BaseModal onClickOutside={() => onClose()}>
 			<BaseRow direction="column" alignment="center" spacing={1}>
 				<h1>Settings</h1>
 				<table>
@@ -43,6 +43,6 @@ export default function ClusterSettingsModal({ onClose }: { onClose: () => void 
 					</Button>
 				</BaseRow>
 			</BaseRow>
-		</Modal>
+		</BaseModal>
 	);
 }

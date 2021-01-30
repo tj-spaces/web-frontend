@@ -1,5 +1,19 @@
-import './Fullscreen.sass';
-import classnames from 'classnames';
+import { classes, createStylesheet } from '../../styles/createStylesheet';
+
+export const styles = createStylesheet({
+	fullscreen: {
+		minWidth: '100vw',
+		minHeight: '100vh',
+		display: 'flex',
+		flexDirection: 'column'
+	},
+	centerVertical: {
+		justifyContent: 'center'
+	},
+	centerHorizontal: {
+		alignItems: 'center'
+	}
+});
 
 export default function Fullscreen({
 	children,
@@ -12,10 +26,11 @@ export default function Fullscreen({
 }) {
 	return (
 		<div
-			className={classnames('fullscreen', {
-				'fs-center-vertical': centerVertical,
-				'fs-center-horizontal': centerHorizontal
-			})}
+			className={classes(
+				styles.fullscreen,
+				centerVertical && styles.centerVertical,
+				centerHorizontal && styles.centerHorizontal
+			)}
 		>
 			{children}
 		</div>

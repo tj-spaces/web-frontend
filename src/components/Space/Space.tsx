@@ -12,7 +12,7 @@ import TwilioRoomContext from '../TwilioRoomContext/TwilioRoomContext';
 import SpaceAudioContext from './SpaceAudioContext/SpaceAudioContext';
 import SpaceParticipantListing from './SpaceParticipantListing/SpaceParticipantListing';
 import SpaceParticipantLocal from './SpaceParticipantLocal/SpaceParticipantLocal';
-import Typography from '../BaseText/BaseText';
+import BaseText from '../BaseText/BaseText';
 import useKeyboardState from '../../hooks/useKeyboardState';
 import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
 import Environment from './Environment';
@@ -216,9 +216,9 @@ export default function Space({ id }: { id: string }) {
 					<TwilioRoomContext.Provider value={twilioRoom ?? null}>
 						{space ? (
 							<BaseRow direction="column">
-								<Typography fontSize="large" alignment="center">
+								<BaseText fontSize="large" alignment="center">
 									{space.name}
-								</Typography>
+								</BaseText>
 								<br />
 
 								<BaseRow direction="column">

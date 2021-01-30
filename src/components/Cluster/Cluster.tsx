@@ -9,7 +9,7 @@ import Space from '../Space/Space';
 import SpaceList from '../SpaceList/SpaceList';
 import { createStylesheet } from '../../styles/createStylesheet';
 import BackgroundColorContext from '../BackgroundColorContext/BackgroundColorContext';
-import Typography from '../BaseText/BaseText';
+import BaseText from '../BaseText/BaseText';
 import ScrollableArea from '../ScrollableArea/ScrollableArea';
 
 export const styles = createStylesheet({
@@ -34,25 +34,25 @@ export default function Cluster({ id }: { id: string }) {
 			<ClusterIdContext.Provider value={{ id, spaces }}>
 				{isSettingsOpen && <ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />}
 
-				<Typography variant="heading" fontSize="xl">
+				<BaseText variant="heading" fontSize="xl">
 					{cluster?.name ?? 'Loading...'}{' '}
 					<span onClick={() => setIsSettingsOpen(true)}>
 						<i className="fas fa-cog pressable"></i>
 					</span>
-				</Typography>
+				</BaseText>
 				{spaceId && (isLoggedIn ? <Space id={spaceId} /> : <h1>Authenticating...</h1>)}
 				<div className={styles.clusterLayout}>
 					<BackgroundColorContext.Provider value="light">
 						<ScrollableArea railPadding="railPadding" style={{ flex: 1 }}>
-							<Typography fontSize="xl" fontWeight="bold">
+							<BaseText fontSize="xl" fontWeight="bold">
 								Spaces
-							</Typography>
+							</BaseText>
 							<SpaceList spaces={spaces} />
 						</ScrollableArea>
 						<ScrollableArea railPadding="railPadding" style={{ flex: 2 }}>
-							<Typography fontSize="xl" fontWeight="bold">
+							<BaseText fontSize="xl" fontWeight="bold">
 								Posts
-							</Typography>
+							</BaseText>
 						</ScrollableArea>
 					</BackgroundColorContext.Provider>
 				</div>

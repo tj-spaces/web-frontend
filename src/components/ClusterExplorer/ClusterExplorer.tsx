@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { getDiscoverableClusters } from '../../api/api';
 import { createStylesheet } from '../../styles/createStylesheet';
 import { ICluster } from '../../typings/Cluster';
-import ClusterPreview from '../ClusterPreview/ClusterPreview';
-import Typography from '../BaseText/BaseText';
+import ClusterPreview from './ClusterPreview';
+import BaseText from '../BaseText/BaseText';
 
 export const styles = createStylesheet({
 	clusterExplorer: {
@@ -25,7 +25,7 @@ export default function ClusterExplorer() {
 
 	return (
 		<div className={styles.clusterExplorer}>
-			<Typography fontSize="large">Explore</Typography>
+			<BaseText fontSize="large">Explore</BaseText>
 
 			{clusters != null ? (
 				clusters.map((cluster) => <ClusterPreview cluster={cluster} />)

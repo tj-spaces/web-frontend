@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Button from '../BaseButton/BaseButton';
-import SpaceCreateModal from '../SpaceCreateModal/SpaceCreateModal';
+import SpaceCreateModal from './SpaceCreateModal';
 
 export default function SpaceCreateButton() {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
