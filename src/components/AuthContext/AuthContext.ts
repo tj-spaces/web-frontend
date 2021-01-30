@@ -11,6 +11,6 @@ export type AuthState = {
 	refreshAuthState: (() => void) | null;
 };
 
-const UserContext = createContext<AuthState>({ isLoggedIn: false, user: null, refreshAuthState: null });
+const AuthContext = createContext<AuthState>({ isLoggedIn: false, user: null, refreshAuthState: null });
 
-export default UserContext;
+export default AuthContext;

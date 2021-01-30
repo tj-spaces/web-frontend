@@ -5,6 +5,8 @@ export type ISpaceContext = {
 	participants: { [participantId: string]: ISpaceParticipant };
 };
 
-const SpaceContext = createContext<ISpaceContext | null>(null);
+const SpaceContext = createContext<ISpaceContext>({
+	participants: {}
+});
 
 export default SpaceContext;

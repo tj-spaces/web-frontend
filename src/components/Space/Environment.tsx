@@ -1,11 +1,10 @@
 import React, { useContext } from 'react';
-import { Participant } from 'twilio-video';
+import useLocalParticipant from '../../hooks/useLocalParticipant';
 import { createStylesheet } from '../../styles/createStylesheet';
-import { ISpaceParticipant } from '../../typings/SpaceParticipant';
-import AuthContext from '../AuthContext/AuthContext';
 import Minimap from './Minimap';
+import SpaceContext from './SpaceContext';
+import SpaceMediaContext from './SpaceMediaContext';
 import SpaceParticipantRemote from './SpaceParticipantRemote/SpaceParticipantRemote';
-import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
 
 export const styles = createStylesheet({
 	environment: {
@@ -16,15 +15,16 @@ export const styles = createStylesheet({
 	}
 });
 
-export default function Environment({
-	participants,
-	twilioParticipants
-}: {
-	participants: Record<string, ISpaceParticipant>;
-	twilioParticipants?: Record<string, Participant>;
-}) {
-	const { user } = useContext(AuthContext);
-	const perspective = useContext(SpacePositionContext);
+export default function Environment() {
+	const me = useLocalParticipant();
+	const { participants } = useContext(SpaceContext);
+	const { twilioParticipants } = useContext(SpaceMediaContext) ?? {};
+
+	if (me == null) {
+		return <h1>Joining Space</h1>;
+	}
+
+	const perspective = me.position;
 
 	if (perspective == null) {
 		return <h1>Waiting to load perspective</h1>;
@@ -33,16 +33,14 @@ export default function Environment({
 	return (
 		<div className={styles.environment} style={{ backgroundColor: '#333380' }}>
 			<Minimap
-				elements={Object.values(participants).map((participant) => {
-					return {
-						color: participant.accountId === user!.id ? 'blue' : 'red',
-						position: participant.position
-					};
-				})}
+				elements={Object.values(participants).map((participant) => ({
+					color: participant.accountId === me?.accountId ? 'blue' : 'red',
+					position: participant.position
+				}))}
 				center={perspective}
 			/>
 			{Object.values(participants).map((participant) => {
-				if (participant.accountId !== user!.id) {
+				if (participant.accountId !== me.accountId) {
 					const twilioParticipant = twilioParticipants?.[participant.accountId];
 					return (
 						<SpaceParticipantRemote

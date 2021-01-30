@@ -42,10 +42,7 @@ export default function SpaceFrame() {
 				))}
 			</BaseRow>
 
-			<Environment
-				participants={spaceContext.participants}
-				twilioParticipants={mediaContext?.twilioParticipants ?? {}}
-			/>
+			<Environment />
 
 			{userLoaded && <SpaceParticipantLocal spacesParticipant={spaceContext.participants[user.id]} />}
 			<BaseRow direction="row" spacing={1} rails={1} justifyContent="center">

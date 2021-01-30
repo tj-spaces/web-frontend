@@ -232,7 +232,7 @@ export default function Space({ id }: { id: string }) {
 									))}
 								</BaseRow>
 
-								<Environment participants={participants} twilioParticipants={twilioParticipants} />
+								<Environment />
 
 								{user && (
 									<SpaceParticipantLocal
