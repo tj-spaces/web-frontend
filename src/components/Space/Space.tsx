@@ -17,7 +17,7 @@ import useKeyboardState from '../../hooks/useKeyboardState';
 import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
 import Environment from './Environment';
 import BaseRow from '../BaseRow/BaseRow';
-import Minimap from './Minimap';
+import spacesLog from '../../lib/spacesLog';
 
 let useTwilio = false;
 
@@ -54,10 +54,12 @@ export default function Space({ id }: { id: string }) {
 		});
 
 		connectionRef.current.on('peers', (peers: { [id: string]: ISpaceParticipant }) => {
+			spacesLog('space-rt', `Received peer list: ${Object.keys(peers).length} peers`);
 			setParticipants(peers);
 		});
 
 		connectionRef.current.on('peer_joined', (peer: ISpaceParticipant) => {
+			spacesLog('space-rt', `Peer joined: ${peer.accountId}`);
 			setParticipants((participants) => ({
 				...participants,
 				[peer.accountId]: peer
@@ -65,6 +67,7 @@ export default function Space({ id }: { id: string }) {
 		});
 
 		connectionRef.current.on('peer_left', (peerId: string) => {
+			spacesLog('space-rt', `Peer left: ${peerId}`);
 			setParticipants((participants) => {
 				let newParticipants = { ...participants };
 				delete newParticipants[peerId];
@@ -227,19 +230,6 @@ export default function Space({ id }: { id: string }) {
 										/>
 									))}
 								</BaseRow>
-
-								<Minimap
-									items={[
-										{
-											position: participants[user.id].position,
-											color: 'red'
-										},
-										{
-											position: { location: { x: 0, y: 0, z: 0.1 }, rotation: 0 },
-											color: 'blue'
-										}
-									]}
-								/>
 
 								<Environment participants={participants} twilioParticipants={twilioParticipants} />
 

@@ -26,6 +26,7 @@ export default function PositionalDiv({
 	position,
 	style,
 	className,
+	children,
 	...props
 }: {
 	perspective: SpacePositionInfo;
@@ -33,16 +34,8 @@ export default function PositionalDiv({
 } & DivProps) {
 	const css = perspective ? getCSSTransform(perspective, position) : undefined;
 	return (
-		<div
-			className={classes(styles.positionalDiv, styles.whiteSquare, className)}
-			style={{ ...css, ...(style ?? {}) }}
-			{...props}
-		>
-			Hello!
-			<br />
-			CSS: {JSON.stringify(css)}
-			<br />
-			Perspective: {JSON.stringify(perspective)}
+		<div className={classes(styles.positionalDiv, className)} style={{ ...css, ...(style ?? {}) }} {...props}>
+			{children}
 		</div>
 	);
 }

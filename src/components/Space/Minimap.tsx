@@ -1,24 +1,40 @@
+import { createStylesheet } from '../../styles/createStylesheet';
 import { SpacePositionInfo } from '../../typings/SpaceParticipant';
 
-export interface MinimapItem {
+export interface MinimapElement {
 	color: 'red' | 'blue';
 	position: SpacePositionInfo;
 }
 
-export function MinimapItemComponent({ item }: { item: MinimapItem }) {
+export const styles = createStylesheet({
+	element: {
+		color: 'white',
+		transformOrigin: 'center',
+		width: '1em',
+		height: '1em',
+		textAlign: 'center',
+		position: 'absolute'
+	},
+	minimap: {
+		position: 'absolute',
+		width: '25%',
+		height: '25%',
+		backgroundColor: 'white'
+	}
+});
+
+export function MinimapElementComponent({ item, relativeTo }: { item: MinimapElement; relativeTo: SpacePositionInfo }) {
+	const relativeX = item.position.location.x - relativeTo.location.x;
+	const relativeZ = relativeTo.location.z - item.position.location.z;
+
 	return (
 		<div
+			className={styles.element}
 			style={{
 				backgroundColor: item.color,
-				color: 'white',
 				transform: `rotateZ(${item.position.rotation}rad)`,
-				transformOrigin: 'center',
-				width: '1em',
-				height: '1em',
-				textAlign: 'center',
-				left: `${item.position.location.x}em`,
-				top: `${-item.position.location.z}em`,
-				position: 'absolute'
+				left: `${relativeX + 50}%`,
+				top: `${relativeZ + 50}%`
 			}}
 		>
 			i
@@ -26,11 +42,11 @@ export function MinimapItemComponent({ item }: { item: MinimapItem }) {
 	);
 }
 
-export default function Minimap({ items }: { items: MinimapItem[] }) {
+export default function Minimap({ elements, center }: { elements: MinimapElement[]; center: SpacePositionInfo }) {
 	return (
-		<div style={{ position: 'absolute', width: '400px', height: '400px', backgroundColor: 'white' }}>
-			{items.map((item, index) => {
-				return <MinimapItemComponent item={item} key={index} />;
+		<div className={styles.minimap}>
+			{elements.map((element, index) => {
+				return <MinimapElementComponent item={element} key={index} relativeTo={center} />;
 			})}
 		</div>
 	);

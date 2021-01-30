@@ -59,8 +59,8 @@ export default function ParticipantBubble({
 		}
 	}, [videoTrack]);
 
-	const localPosition = useContext(SpacePositionContext);
-	const transform = isLocal ? {} : getCSSTransform(localPosition!, position);
+	const perspective = useContext(SpacePositionContext);
+	const transform = isLocal ? {} : getCSSTransform(perspective!, position);
 
 	return (
 		<div className={styles.participantBubble} style={transform}>

@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { Participant } from 'twilio-video';
-import { ISpaceParticipant, SpacePositionInfo } from '../../typings/SpaceParticipant';
+import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import AuthContext from '../AuthContext/AuthContext';
-import PositionalDiv from './PositionalDiv';
 import SpaceParticipantRemote from './SpaceParticipantRemote/SpaceParticipantRemote';
 import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
 import { createStylesheet } from '../../styles/createStylesheet';
+import Minimap from './Minimap';
 
 export const styles = createStylesheet({
 	environment: {
@@ -25,10 +25,6 @@ export default function Environment({
 }) {
 	const { user } = useContext(AuthContext);
 	const perspective = useContext(SpacePositionContext);
-	let rectPos: SpacePositionInfo = {
-		location: { x: 0, y: 0, z: 0.1 },
-		rotation: 0
-	};
 
 	if (perspective == null) {
 		return <h1>Waiting to load perspective</h1>;
@@ -36,9 +32,15 @@ export default function Environment({
 
 	return (
 		<div className={styles.environment} style={{ backgroundColor: '#333380' }}>
-			<PositionalDiv perspective={perspective} position={rectPos} className="white-square">
-				Hello!
-			</PositionalDiv>
+			<Minimap
+				elements={Object.values(participants).map((participant) => {
+					return {
+						color: participant.accountId === user!.id ? 'blue' : 'red',
+						position: participant.position
+					};
+				})}
+				center={perspective}
+			/>
 			{Object.values(participants).map((participant) => {
 				if (participant.accountId !== user!.id) {
 					return (
