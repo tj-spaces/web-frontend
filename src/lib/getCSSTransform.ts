@@ -33,8 +33,8 @@ export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositi
 	let scale = 1 / distance;
 	let xOffset = xRelativeRotated;
 	// The X and Z are flipped intentionally to make "straight ahead" = 0 rad
-	let horizontalAngleToObject = Math.atan2(xRelativeRotated, zRelativeRotated) - Math.PI / 2;
-	let projectedLocationX = horizontalAngleToObject / (FOV / 2) / 2;
+	let horizontalAngleToObject = Math.atan2(zRelativeRotated, xRelativeRotated) - Math.PI / 2;
+	let projectedLocationX = horizontalAngleToObject / (FOV / 2);
 
 	console.log({ xRelativeRotated, zRelativeRotated }, horizontalAngleToObject);
 

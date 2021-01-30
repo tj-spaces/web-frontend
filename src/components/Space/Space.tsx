@@ -235,7 +235,7 @@ export default function Space({ id }: { id: string }) {
 											color: 'red'
 										},
 										{
-											position: { location: { x: 0, y: 0, z: 0 }, rotation: 0 },
+											position: { location: { x: 0, y: 0, z: 0.1 }, rotation: 0 },
 											color: 'blue'
 										}
 									]}

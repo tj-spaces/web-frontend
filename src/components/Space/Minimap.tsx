@@ -11,7 +11,7 @@ export function MinimapItemComponent({ item }: { item: MinimapItem }) {
 			style={{
 				backgroundColor: item.color,
 				color: 'white',
-				transform: `rotateZ(${item.position.rotation + Math.PI / 2}rad)`,
+				transform: `rotateZ(${item.position.rotation}rad)`,
 				transformOrigin: 'center',
 				width: '1em',
 				height: '1em',
