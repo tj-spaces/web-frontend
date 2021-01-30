@@ -13,7 +13,8 @@ export const styles = createStylesheet({
 		width: '1em',
 		height: '1em',
 		textAlign: 'center',
-		position: 'absolute'
+		position: 'absolute',
+		transition: 'left 500ms ease, right 500ms ease'
 	},
 	minimap: {
 		position: 'absolute',
@@ -33,8 +34,8 @@ export function MinimapElementComponent({ item, relativeTo }: { item: MinimapEle
 			style={{
 				backgroundColor: item.color,
 				transform: `rotateZ(${item.position.rotation}rad)`,
-				left: `${relativeX + 50}%`,
-				top: `${relativeZ + 50}%`
+				left: `${relativeX * 5 + 50}%`,
+				top: `${relativeZ * 5 + 50}%`
 			}}
 		>
 			i

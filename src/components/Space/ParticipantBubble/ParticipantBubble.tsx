@@ -1,8 +1,8 @@
 import { useContext, useLayoutEffect, useRef } from 'react';
 import * as twilio from 'twilio-video';
 import getCSSTransform from '../../../lib/getCSSTransform';
-import { createStylesheet } from '../../../styles/createStylesheet';
-import { SpacePositionInfo } from '../../../typings/SpaceParticipant';
+import { classes, createStylesheet } from '../../../styles/createStylesheet';
+import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
 import SpacePositionContext from '../SpacePositionContext/SpacePositionContext';
 
 export const styles = createStylesheet({
@@ -10,7 +10,6 @@ export const styles = createStylesheet({
 		borderRadius: '100%',
 		width: '8rem',
 		height: '8rem',
-		transition: 'left 0.5s ease, top 0.5s ease',
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -26,25 +25,27 @@ export const styles = createStylesheet({
 			}
 		}
 	},
+	participantBubbleRemote: {
+		top: '50%',
+		transition: 'left 0.5s ease, top 0.5s ease, transform 0.5s ease'
+	},
 	participantBubbleLocal: {
 		transform: 'scaleX(-1)'
 	}
 });
 
 export default function ParticipantBubble({
-	position,
+	participant,
 	photoUrl,
-	name,
 	videoTrack,
 	isLocal = false
 }: {
-	position: SpacePositionInfo;
+	participant: ISpaceParticipant;
 	photoUrl?: string;
-	name: string;
 	videoTrack: twilio.VideoTrack | null;
 	isLocal?: boolean;
 }) {
-	const initials = name
+	const initials = participant.displayName
 		.split(' ')
 		.filter(Boolean)
 		.map((word) => word.slice(0, 1).toUpperCase());
@@ -60,11 +61,23 @@ export default function ParticipantBubble({
 	}, [videoTrack]);
 
 	const perspective = useContext(SpacePositionContext);
-	const transform = isLocal ? {} : getCSSTransform(perspective!, position);
+	const css = isLocal ? {} : getCSSTransform(perspective!, participant.position);
 
 	return (
-		<div className={styles.participantBubble} style={transform}>
-			{videoTrack ? <video ref={videoRef} /> : photoUrl ? <img src={photoUrl} alt={name} /> : <h1>{initials}</h1>}
+		<div
+			className={classes(
+				styles.participantBubble,
+				isLocal ? styles.participantBubbleLocal : styles.participantBubbleRemote
+			)}
+			style={{ ...css, backgroundColor: participant.displayColor }}
+		>
+			{videoTrack ? (
+				<video ref={videoRef} />
+			) : photoUrl ? (
+				<img src={photoUrl} alt={participant.displayName} />
+			) : (
+				<h1>{initials}</h1>
+			)}
 		</div>
 	);
 }

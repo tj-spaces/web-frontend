@@ -29,12 +29,5 @@ export default function SpaceParticipantLocal({
 		listener.forwardX.value = Math.cos(rotation);
 	}, [listener, location, rotation]);
 
-	return (
-		<ParticipantBubble
-			position={spacesParticipant.position}
-			name={spacesParticipant.displayName}
-			videoTrack={localVideoTrack}
-			isLocal={true}
-		/>
-	);
+	return <ParticipantBubble participant={spacesParticipant} videoTrack={localVideoTrack} isLocal={true} />;
 }

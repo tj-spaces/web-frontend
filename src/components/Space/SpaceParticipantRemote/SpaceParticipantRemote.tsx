@@ -4,9 +4,6 @@ import useTrack from '../../../hooks/useTrack';
 import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
 import ParticipantBubble from '../ParticipantBubble/ParticipantBubble';
 import SpatialAudioTrack from '../../SpatialAudioTrack/SpatialAudioTrack';
-import PositionalDiv from '../PositionalDiv';
-import { useContext } from 'react';
-import SpacePositionContext from '../SpacePositionContext/SpacePositionContext';
 
 export default function SpaceParticipantRemote({
 	twilioParticipant,
@@ -33,11 +30,7 @@ export default function SpaceParticipantRemote({
 			{audioTrackPublications.map((publication) => (
 				<SpatialAudioTrack position={position} publication={publication} />
 			))}
-			<ParticipantBubble
-				position={spacesParticipant.position}
-				name={spacesParticipant.displayName}
-				videoTrack={videoTrack}
-			/>
+			<ParticipantBubble participant={spacesParticipant} videoTrack={videoTrack} />
 		</>
 	);
 }

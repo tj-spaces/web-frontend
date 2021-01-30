@@ -19,7 +19,7 @@ import Environment from './Environment';
 import BaseRow from '../BaseRow/BaseRow';
 import spacesLog from '../../lib/spacesLog';
 
-let useTwilio = false;
+let useTwilio = true;
 
 export default function Space({ id }: { id: string }) {
 	const space = useSpace(id);
