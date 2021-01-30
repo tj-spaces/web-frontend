@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import spacesLog from '../lib/spacesLog';
+import { getLogger } from '../lib/spacesLog';
 
 function createStyleTag() {
 	const tag = document.createElement('style');
@@ -90,6 +90,8 @@ let buildTimeoutHandle: NodeJS.Timeout | null = null;
 let queuedHTML = '';
 let queuedClassesCount = 0;
 
+const logger = getLogger('stylesheet');
+
 export function createStylesheet<T extends Stylesheet>(styles: T) {
 	let innerHTML = '';
 	// @ts-ignore
@@ -105,7 +107,7 @@ export function createStylesheet<T extends Stylesheet>(styles: T) {
 	if (buildTimeoutHandle == null) {
 		buildTimeoutHandle = setTimeout(() => {
 			if (queuedHTML.trim()) {
-				spacesLog('stylesheet', `Injecting ${queuedClassesCount} classes`);
+				logger(`Injecting ${queuedClassesCount} classes`);
 				const tag = createStyleTag();
 				tag.innerHTML = queuedHTML;
 				queuedHTML = '';

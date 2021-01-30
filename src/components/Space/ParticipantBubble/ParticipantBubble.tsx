@@ -1,9 +1,10 @@
-import { useContext, useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import * as twilio from 'twilio-video';
+import useLocalParticipant from '../../../hooks/useLocalParticipant';
 import getCSSTransform from '../../../lib/getCSSTransform';
+import { getLogger } from '../../../lib/spacesLog';
 import { classes, createStylesheet } from '../../../styles/createStylesheet';
 import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
-import SpacePositionContext from '../SpacePositionContext/SpacePositionContext';
 
 export const styles = createStylesheet({
 	participantBubble: {
@@ -38,6 +39,8 @@ export const styles = createStylesheet({
 	}
 });
 
+const logger = getLogger('space/participant-bubble');
+
 export default function ParticipantBubble({
 	participant,
 	photoUrl,
@@ -64,8 +67,14 @@ export default function ParticipantBubble({
 		}
 	}, [videoTrack]);
 
-	const perspective = useContext(SpacePositionContext);
-	const css = isLocal ? {} : getCSSTransform(perspective!, participant.position);
+	const me = useLocalParticipant();
+
+	if (!me) {
+		logger('Local Participant is null', 'warn');
+		return null;
+	}
+
+	const css = isLocal ? {} : getCSSTransform(me?.position, participant.position);
 
 	return (
 		<div

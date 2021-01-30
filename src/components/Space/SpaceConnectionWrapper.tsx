@@ -4,14 +4,14 @@ import useKeyboardState from '../../hooks/useKeyboardState';
 import { API_SERVER_URL } from '../../lib/constants';
 import { deepMutateObject, NestedPartial } from '../../lib/deepMutateObject';
 import getSessionId from '../../lib/getSessionId';
-import spacesLog from '../../lib/spacesLog';
+import { getLogger } from '../../lib/spacesLog';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import CurrentSpaceContext from './CurrentSpaceContext';
 import SpaceContext from './SpaceContext';
 
 type ParticipantMap = { [participantId: string]: ISpaceParticipant };
 
-const logger = spacesLog.bind(null, 'spaces-connection');
+const logger = getLogger('space/connection');
 
 export default function SpaceConnectionWrapper({
 	onReceiveTwilioGrant,

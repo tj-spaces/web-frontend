@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as twilio from 'twilio-video';
-import spacesLog from '../../lib/spacesLog';
+import { getLogger } from '../../lib/spacesLog';
 import SpaceAudioContext from './SpaceAudioContext/SpaceAudioContext';
 import SpaceMediaContext from './SpaceMediaContext';
 
-const logger = spacesLog.bind(null, 'space-media');
+const logger = getLogger('space/media');
 
 export default function SpaceMediaWrapper({
 	twilioRoom,

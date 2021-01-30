@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { connect, Room } from 'twilio-video';
-import spacesLog from '../../lib/spacesLog';
+import { getLogger } from '../../lib/spacesLog';
 import CurrentSpaceContext from './CurrentSpaceContext';
 import SpaceConnectionWrapper from './SpaceConnectionWrapper';
 import SpaceFrame from './SpaceFrame';
 import SpaceMediaWrapper from './SpaceMediaWrapper';
 
-const logger = spacesLog.bind(null, 'space');
+const logger = getLogger('space');
 
 export default function Space({ id }: { id: string }) {
 	const [twilioRoom, setTwilioRoom] = useState<Room | null>(null);
