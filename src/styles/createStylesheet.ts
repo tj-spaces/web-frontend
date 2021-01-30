@@ -124,9 +124,7 @@ export function classes(...props: ClassProvider[]) {
 		.map((props) => {
 			if (typeof props === 'string') {
 				return props;
-			} else if (props == null) {
-				return '';
-			} else if (props === false) {
+			} else if (props == null || props === false) {
 				return '';
 			} else {
 				return Object.values(props)
@@ -134,5 +132,6 @@ export function classes(...props: ClassProvider[]) {
 					.join(' ');
 			}
 		})
+		.filter((a) => Boolean(a))
 		.join(' ');
 }

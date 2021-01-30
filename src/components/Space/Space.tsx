@@ -17,6 +17,7 @@ import useKeyboardState from '../../hooks/useKeyboardState';
 import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
 import Environment from './Environment';
 import BaseRow from '../BaseRow/BaseRow';
+import Minimap from './Minimap';
 
 let useTwilio = false;
 
@@ -226,6 +227,19 @@ export default function Space({ id }: { id: string }) {
 										/>
 									))}
 								</BaseRow>
+
+								<Minimap
+									items={[
+										{
+											position: participants[user.id].position,
+											color: 'red'
+										},
+										{
+											position: { location: { x: 0, y: 0, z: 0 }, rotation: 0 },
+											color: 'blue'
+										}
+									]}
+								/>
 
 								<Environment participants={participants} twilioParticipants={twilioParticipants} />
 

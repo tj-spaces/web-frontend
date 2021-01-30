@@ -26,7 +26,7 @@ export default function Environment({
 	const { user } = useContext(AuthContext);
 	const perspective = useContext(SpacePositionContext);
 	let rectPos: SpacePositionInfo = {
-		location: { x: 0, y: 0, z: 0 },
+		location: { x: 0.2, y: 0, z: 0 },
 		rotation: 0
 	};
 

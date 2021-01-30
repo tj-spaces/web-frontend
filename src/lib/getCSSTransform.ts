@@ -1,26 +1,47 @@
+import { CSSProperties } from 'react';
 import { SpacePositionInfo } from '../typings/SpaceParticipant';
 
-export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositionInfo) {
+const FOV = (Math.PI * 5) / 6;
+const LEFT_ANGLE = FOV / 2;
+const RIGHT_ANGLE = -FOV / 2;
+
+/**
+ * Returns the CSS transform needed to render an item in 3D space from a given perspective
+ */
+export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositionInfo): CSSProperties {
 	// For now, assumes a constant Y value
-	let toXRelative = to.location.x - from.location.x;
-	let toZRelative = to.location.z - from.location.z;
-	let magnitudeRelative = Math.sqrt(toXRelative ** 2 + toZRelative ** 2);
+	let xRelative = to.location.x - from.location.x;
+	let zRelative = to.location.z - from.location.z;
 
-	let gazeX = Math.cos(from.rotation);
-	let gazeZ = Math.sin(from.rotation);
+	// We rotate to find out where the relative value is, with a ~rotation matrix~
+	let cos = Math.cos(from.rotation);
+	let sin = Math.sin(from.rotation);
 
-	// use dot product
-	// A dot B = cos(theta)|A||B|
-	// because the gaze vector is from sin/cos it has magnitude=1
-	let angleBetweenCos = magnitudeRelative !== 0 ? (gazeX * toXRelative + gazeZ * toZRelative) / magnitudeRelative : 1;
-	let angleBetweenSin = Math.sqrt(1 - angleBetweenCos ** 2);
+	let xRelativeRotated = cos * xRelative - sin * zRelative;
+	let zRelativeRotated = sin * xRelative + cos * zRelative;
 
-	if (angleBetweenCos < 0) {
-		// This should be hidden!!!
+	let distance = Math.sqrt(xRelative ** 2 + zRelative ** 2);
+
+	if (distance < 0.01 || distance > 10000 || zRelativeRotated < 0) {
+		return { display: 'none' };
 	}
 
-	let rotatedRelativeZ = magnitudeRelative * angleBetweenCos;
-	let rotatedRelativeX = magnitudeRelative * angleBetweenSin;
+	// Scale at 0 should be infinity
+	// Scale at infinity should be 0
+	// This looks like an inverse relationship to me
 
-	return `perspective(1rem) translate3d(${rotatedRelativeX / 2}rem, 0, ${-rotatedRelativeZ / 2}rem)`;
+	let scale = 1 / distance;
+	let xOffset = xRelativeRotated;
+	// The X and Z are flipped intentionally to make "straight ahead" = 0 rad
+	let horizontalAngleToObject = Math.atan2(xRelativeRotated, zRelativeRotated) - Math.PI / 2;
+	let projectedLocationX = horizontalAngleToObject / (FOV / 2) / 2;
+
+	console.log({ xRelativeRotated, zRelativeRotated }, horizontalAngleToObject);
+
+	return {
+		transform: `scale(${scale})`,
+		transformOrigin: 'center',
+		position: 'absolute',
+		left: `${projectedLocationX * 100 + 50}%`
+	};
 }

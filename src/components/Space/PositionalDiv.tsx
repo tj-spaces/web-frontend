@@ -1,8 +1,26 @@
 import getCSSTransform from '../../lib/getCSSTransform';
+import { classes, createStylesheet } from '../../styles/createStylesheet';
 import { SpacePositionInfo } from '../../typings/SpaceParticipant';
 import './PositionalDiv.sass';
 
 export type DivProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+
+export const styles = createStylesheet({
+	positionalDiv: {
+		position: 'absolute',
+		transition: 'all 500ms ease',
+		top: '50%',
+		overflowY: 'scroll'
+	},
+	whiteSquare: {
+		width: '100px',
+		height: '100px',
+		marginLeft: '-50px',
+		marginTop: '-50px',
+		backgroundColor: 'white',
+		color: 'black'
+	}
+});
 
 export default function PositionalDiv({
 	perspective,
@@ -14,13 +32,16 @@ export default function PositionalDiv({
 	perspective: SpacePositionInfo;
 	position: SpacePositionInfo;
 } & DivProps) {
-	const transform = perspective ? getCSSTransform(perspective, position) : undefined;
-	const customClassName = 'positional-div' + (className ? ' ' + className : '');
+	const css = perspective ? getCSSTransform(perspective, position) : undefined;
 	return (
-		<div className={customClassName} style={{ transform, ...(style ?? {}) }} {...props}>
+		<div
+			className={classes(styles.positionalDiv, styles.whiteSquare, className)}
+			style={{ ...css, ...(style ?? {}) }}
+			{...props}
+		>
 			Hello!
 			<br />
-			Transform: {transform}
+			CSS: {JSON.stringify(css)}
 			<br />
 			Perspective: {JSON.stringify(perspective)}
 		</div>
