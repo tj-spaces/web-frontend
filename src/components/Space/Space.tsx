@@ -18,6 +18,7 @@ import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
 import Environment from './Environment';
 import BaseRow from '../BaseRow/BaseRow';
 import spacesLog from '../../lib/spacesLog';
+import { deepMutateObject, NestedPartial } from '../../lib/deepMutateObject';
 
 let useTwilio = true;
 
@@ -75,10 +76,10 @@ export default function Space({ id }: { id: string }) {
 			});
 		});
 
-		connectionRef.current.on('peer_update', (peerId: string, peer: ISpaceParticipant) => {
+		connectionRef.current.on('peer_update', (peerId: string, updates: NestedPartial<ISpaceParticipant>) => {
 			setParticipants((participants) => ({
 				...participants,
-				[peerId]: peer
+				[peerId]: deepMutateObject(participants[peerId], updates)
 			}));
 		});
 

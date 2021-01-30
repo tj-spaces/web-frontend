@@ -30,7 +30,11 @@ export const styles = createStylesheet({
 		transition: 'left 0.5s ease, top 0.5s ease, transform 0.5s ease'
 	},
 	participantBubbleLocal: {
-		transform: 'scaleX(-1)'
+		pseudoSelectors: {
+			' video': {
+				transform: 'scaleX(-1)'
+			}
+		}
 	}
 });
 
