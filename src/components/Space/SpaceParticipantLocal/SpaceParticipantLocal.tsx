@@ -1,25 +1,22 @@
 import React, { useContext, useEffect } from 'react';
-import { LocalVideoTrack } from 'twilio-video';
 import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
 import ParticipantBubble from '../ParticipantBubble/ParticipantBubble';
 import SpaceAudioContext from '../SpaceAudioContext/SpaceAudioContext';
+import SpaceMediaContext from '../SpaceMediaContext';
 
 /**
  * A /local/ Spaces participant. Updates the AudioContext listener position when it moves.
  * @param twilioParticipant The twilio-video library participant (includes MediaStreamTracks)
  * @param spacesParticipant The Spaces participant (includes location, displayName, etc)
  */
-export default function SpaceParticipantLocal({
-	localVideoTrack,
-	spacesParticipant
-}: {
-	localVideoTrack: LocalVideoTrack | null;
-	spacesParticipant: ISpaceParticipant;
-}) {
+export default function SpaceParticipantLocal({ spacesParticipant }: { spacesParticipant: ISpaceParticipant }) {
 	const { listener } = useContext(SpaceAudioContext);
 	const {
 		position: { location, rotation }
 	} = spacesParticipant;
+
+	const mediaContext = useContext(SpaceMediaContext);
+	const localVideoTrack = mediaContext?.localVideoTrack ?? null;
 
 	useEffect(() => {
 		listener.positionX.value = location.x;

@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react';
 import { getSpace } from '../api/api';
 import { ISpace } from '../typings/Space';
 
-export default function useSpace(spaceId: string) {
+export default function useSpace(spaceID: string | null) {
 	const [space, setSpace] = useState<ISpace>();
 
 	useEffect(() => {
-		getSpace(spaceId).then((space) => {
-			setSpace(space);
-		});
-	}, [spaceId]);
+		if (spaceID) {
+			getSpace(spaceID).then((space) => {
+				setSpace(space);
+			});
+		}
+	}, [spaceID]);
 
 	return space;
 }

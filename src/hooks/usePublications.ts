@@ -3,7 +3,7 @@ import { LocalTrackPublication, Participant, RemoteTrackPublication } from 'twil
 
 type TrackPublication = LocalTrackPublication | RemoteTrackPublication;
 
-export default function usePublications(participant: Participant) {
+export default function usePublications(participant: Participant | null) {
 	const [publications, setPublications] = useState<TrackPublication[]>([]);
 
 	useEffect(() => {

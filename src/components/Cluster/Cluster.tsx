@@ -2,15 +2,15 @@ import { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useCluster from '../../hooks/useCluster';
 import useSpacesInCluster from '../../hooks/useSpacesInCluster';
-import AuthContext from '../AuthContext/AuthContext';
-import ClusterSettingsModal from './ClusterSettingsModal/ClusterSettingsModal';
-import ClusterIdContext from './CurrentClusterContext/CurrentClusterContext';
-import Space from '../Space/Space';
-import SpaceList from '../SpaceList/SpaceList';
 import { createStylesheet } from '../../styles/createStylesheet';
+import AuthContext from '../AuthContext/AuthContext';
 import BackgroundColorContext from '../BackgroundColorContext/BackgroundColorContext';
 import BaseText from '../BaseText/BaseText';
 import ScrollableArea from '../ScrollableArea/ScrollableArea';
+import Space from '../Space/Space';
+import SpaceList from '../SpaceList/SpaceList';
+import ClusterSettingsModal from './ClusterSettingsModal/ClusterSettingsModal';
+import ClusterIdContext from './CurrentClusterContext/CurrentClusterContext';
 
 export const styles = createStylesheet({
 	clusterLayout: {

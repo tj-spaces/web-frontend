@@ -9,7 +9,7 @@ export default function SpaceParticipantRemote({
 	twilioParticipant,
 	spacesParticipant
 }: {
-	twilioParticipant: twilio.Participant;
+	twilioParticipant: twilio.Participant | null;
 	spacesParticipant: ISpaceParticipant;
 }) {
 	const publications = usePublications(twilioParticipant);

@@ -46,7 +46,7 @@ export default function ParticipantBubble({
 }: {
 	participant: ISpaceParticipant;
 	photoUrl?: string;
-	videoTrack: twilio.VideoTrack | null;
+	videoTrack?: twilio.VideoTrack | null;
 	isLocal?: boolean;
 }) {
 	const initials = participant.displayName

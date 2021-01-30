@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { Participant } from 'twilio-video';
+import { createStylesheet } from '../../styles/createStylesheet';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import AuthContext from '../AuthContext/AuthContext';
+import Minimap from './Minimap';
 import SpaceParticipantRemote from './SpaceParticipantRemote/SpaceParticipantRemote';
 import SpacePositionContext from './SpacePositionContext/SpacePositionContext';
-import { createStylesheet } from '../../styles/createStylesheet';
-import Minimap from './Minimap';
 
 export const styles = createStylesheet({
 	environment: {
@@ -20,8 +20,8 @@ export default function Environment({
 	participants,
 	twilioParticipants
 }: {
-	participants: { [id: string]: ISpaceParticipant };
-	twilioParticipants: { [id: string]: Participant };
+	participants: Record<string, ISpaceParticipant>;
+	twilioParticipants?: Record<string, Participant>;
 }) {
 	const { user } = useContext(AuthContext);
 	const perspective = useContext(SpacePositionContext);
@@ -43,9 +43,10 @@ export default function Environment({
 			/>
 			{Object.values(participants).map((participant) => {
 				if (participant.accountId !== user!.id) {
+					const twilioParticipant = twilioParticipants?.[participant.accountId];
 					return (
 						<SpaceParticipantRemote
-							twilioParticipant={twilioParticipants[participant.accountId]!}
+							twilioParticipant={twilioParticipant ?? null}
 							spacesParticipant={participant}
 							key={participant.accountId}
 						/>
