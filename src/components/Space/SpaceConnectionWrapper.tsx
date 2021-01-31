@@ -4,7 +4,7 @@ import useKeyboardState from '../../hooks/useKeyboardState';
 import { API_SERVER_URL } from '../../lib/constants';
 import { deepMutateObject, NestedPartial } from '../../lib/deepMutateObject';
 import getSessionId from '../../lib/getSessionId';
-import { getLogger } from '../../lib/spacesLog';
+import { getLogger } from '../../lib/ClusterLogger';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import CurrentSpaceContext from './CurrentSpaceContext';
 import SpaceContext from './SpaceContext';

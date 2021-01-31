@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from 'react';
 import * as twilio from 'twilio-video';
 import useLocalParticipant from '../../../hooks/useLocalParticipant';
 import getCSSTransform from '../../../lib/getCSSTransform';
-import { getLogger } from '../../../lib/spacesLog';
+import { getLogger } from '../../../lib/ClusterLogger';
 import { classes, createStylesheet } from '../../../styles/createStylesheet';
 import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
 

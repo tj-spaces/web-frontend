@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { getLogger } from '../lib/spacesLog';
+import { getLogger } from '../lib/ClusterLogger';
 
 function createStyleTag() {
 	const tag = document.createElement('style');

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { connect, Room } from 'twilio-video';
-import { getLogger } from '../../lib/spacesLog';
+import { getLogger } from '../../lib/ClusterLogger';
 import CurrentSpaceContext from './CurrentSpaceContext';
 import SpaceConnectionWrapper from './SpaceConnectionWrapper';
 import SpaceFrame from './SpaceFrame';

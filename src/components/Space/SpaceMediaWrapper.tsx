@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as twilio from 'twilio-video';
-import { getLogger } from '../../lib/spacesLog';
+import { getLogger } from '../../lib/ClusterLogger';
 import SpaceAudioContext from './SpaceAudioContext/SpaceAudioContext';
 import SpaceMediaContext from './SpaceMediaContext';
 
