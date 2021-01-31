@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { connect, Room } from 'twilio-video';
 import { getLogger } from '../../lib/ClusterLogger';
-import CurrentSpaceContext from './CurrentSpaceContext';
+import SpaceIDContext from './SpaceIDContext';
 import SpaceConnectionWrapper from './SpaceConnectionWrapper';
 import SpaceFrame from './SpaceFrame';
 import SpaceMediaWrapper from './SpaceMediaWrapper';
@@ -25,12 +25,12 @@ export default function Space({ id }: { id: string }) {
 	);
 
 	return (
-		<CurrentSpaceContext.Provider value={id}>
+		<SpaceIDContext.Provider value={id}>
 			<SpaceConnectionWrapper onReceiveTwilioGrant={onReceiveTwilioGrant}>
 				<SpaceMediaWrapper twilioRoom={twilioRoom}>
 					<SpaceFrame />
 				</SpaceMediaWrapper>
 			</SpaceConnectionWrapper>
-		</CurrentSpaceContext.Provider>
+		</SpaceIDContext.Provider>
 	);
 }

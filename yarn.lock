@@ -9850,6 +9850,11 @@ query-string@^4.1.0:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
 
+queryshift@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/queryshift/-/queryshift-1.0.2.tgz#8cdc421899ede42aa3d64059951c72d94eab592d"
+  integrity sha512-idv28hvHx7WQXZAXsBB9eTEZ9Ol98TbE5CLCJOZWAEeyJo0dIsTemoEW48BJPDZyRKh0x7QmjNQalmJweCUVMQ==
+
 querystring-es3@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/querystring-es3/-/querystring-es3-0.2.1.tgz#9ec61f79049875707d69414596fd907a4d711e73"

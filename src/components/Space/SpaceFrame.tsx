@@ -1,18 +1,17 @@
 import React, { useContext } from 'react';
 import useSpace from '../../hooks/useSpace';
-import AuthContext from '../AuthContext/AuthContext';
-import Button from '../BaseButton/BaseButton';
-import BaseRow from '../BaseRow/BaseRow';
-import BaseText from '../BaseText/BaseText';
-import CurrentSpaceContext from './CurrentSpaceContext';
-import Environment from './Environment';
+import AuthContext from '../AuthContext';
+import Button from '../Base/BaseButton';
+import BaseRow from '../Base/BaseRow';
+import BaseText from '../Base/BaseText';
+import SpaceIDContext from './SpaceIDContext';
 import SpaceContext from './SpaceContext';
 import SpaceMediaContext from './SpaceMediaContext';
-import SpaceParticipantListing from './SpaceParticipantListing/SpaceParticipantListing';
-import SpaceParticipantLocal from './SpaceParticipantLocal/SpaceParticipantLocal';
+import SpaceParticipantLocal3D from './SpaceParticipantLocal3D';
+import SpaceView3D from './SpaceView3D';
 
 export default function SpaceFrame() {
-	const spaceID = useContext(CurrentSpaceContext);
+	const spaceID = useContext(SpaceIDContext);
 	const space = useSpace(spaceID);
 	const mediaContext = useContext(SpaceMediaContext);
 	const spaceContext = useContext(SpaceContext);
@@ -38,13 +37,13 @@ export default function SpaceFrame() {
 			<BaseRow direction="column">
 				<h2>Here</h2>
 				{Object.values(spaceContext.participants).map((participant) => (
-					<SpaceParticipantListing participant={participant} key={participant.accountId} />
+					<span key={participant.accountId}>{participant.displayName}</span>
 				))}
 			</BaseRow>
 
-			<Environment />
+			<SpaceView3D />
 
-			{userLoaded && <SpaceParticipantLocal spacesParticipant={spaceContext.participants[user.id]} />}
+			{userLoaded && <SpaceParticipantLocal3D spacesParticipant={spaceContext.participants[user.id]} />}
 			<BaseRow direction="row" spacing={1} rails={1} justifyContent="center">
 				<Button to="..">Leave</Button>
 

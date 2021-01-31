@@ -2,16 +2,16 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import './App.sass';
 
-import Logout from './components/Logout/Logout';
-import AuthorizationCallback from './pages/AuthorizationCallback/AuthorizationCallback';
+import AuthContextManager from './components/AuthenticationWrapper';
+import AuthorizationCallback from './pages/AuthenticationCallback/AuthenticationCallback';
+import ClusterExplorerPage from './pages/ClusterExplorerPage/ClusterExplorerPage';
 import DefaultPage from './pages/DefaultPage/DefaultPage';
 import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
-import ClusterExplorerPage from './pages/ClusterExplorerPage/ClusterExplorerPage';
-import AuthContextManager from './components/AuthContextManager/AuthContextManager';
+import Logout from './pages/LogoutPage/LogoutPage';
 import TermsPage from './pages/TermsPage/TermsPage';
-import { DarkTheme } from './styles/theme';
 import injectTheme from './styles/injectTheme';
+import { DarkTheme } from './styles/theme';
 
 function App() {
 	injectTheme(DarkTheme);

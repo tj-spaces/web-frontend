@@ -2,11 +2,11 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import * as io from 'socket.io-client';
 import useKeyboardState from '../../hooks/useKeyboardState';
 import { API_SERVER_URL } from '../../lib/constants';
-import { deepMutateObject, NestedPartial } from '../../lib/deepMutateObject';
+import { mutate, Updater } from 'queryshift';
 import getSessionId from '../../lib/getSessionId';
 import { getLogger } from '../../lib/ClusterLogger';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
-import CurrentSpaceContext from './CurrentSpaceContext';
+import SpaceIDContext from './SpaceIDContext';
 import SpaceContext from './SpaceContext';
 
 type ParticipantMap = { [participantId: string]: ISpaceParticipant };
@@ -22,7 +22,7 @@ export default function SpaceConnectionWrapper({
 }) {
 	const [participants, setParticipants] = useState<ParticipantMap>({});
 	const connectionRef = useRef<SocketIOClient.Socket | null>(null);
-	const id = useContext(CurrentSpaceContext);
+	const id = useContext(SpaceIDContext);
 
 	// id
 	// this sets up the socket.io connection and twilio grant
@@ -55,10 +55,10 @@ export default function SpaceConnectionWrapper({
 			});
 		});
 
-		connectionRef.current.on('peer_update', (peerId: string, updates: NestedPartial<ISpaceParticipant>) => {
+		connectionRef.current.on('peer_update', (peerId: string, updates: Updater<ISpaceParticipant>) => {
 			setParticipants((participants) => ({
 				...participants,
-				[peerId]: deepMutateObject(participants[peerId], updates)
+				[peerId]: mutate(participants[peerId], updates)
 			}));
 		});
 

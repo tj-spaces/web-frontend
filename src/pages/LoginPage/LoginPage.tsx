@@ -1,6 +1,6 @@
-import Fullscreen from '../../components/Fullscreen/Fullscreen';
-import LoginForm from '../../components/LoginForm/LoginForm';
-import BaseText from '../../components/BaseText/BaseText';
+import Fullscreen from '../../components/Base/BaseFullscreen';
+import LoginForm from './LoginForm';
+import BaseText from '../../components/Base/BaseText';
 
 export default function LoginPage() {
 	return (

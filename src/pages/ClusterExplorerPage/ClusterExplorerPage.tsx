@@ -1,5 +1,5 @@
 import React from 'react';
-import ClusterExplorer from '../../components/ClusterExplorer/ClusterExplorer';
+import ClusterExplorer from './ClusterExplorer';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { createStylesheet } from '../../styles/createStylesheet';
 

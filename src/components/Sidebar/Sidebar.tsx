@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import useMyClusters from '../../hooks/useMyClusters';
 import { createStylesheet } from '../../styles/createStylesheet';
-import ClusterCreateButton from '../Cluster/ClusterCreate/ClusterCreateButton';
-import SidebarIcon from './SidebarIcon';
+import ClusterCreateButton from '../Cluster/ClusterCreateButton';
 import ClusterSidebarIcon from './ClusterSidebarIcon';
+import SidebarIcon from './SidebarIcon';
 
 export const styles = createStylesheet({
 	sidebar: {

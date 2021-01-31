@@ -3,14 +3,14 @@ import { useParams } from 'react-router-dom';
 import useCluster from '../../hooks/useCluster';
 import useSpacesInCluster from '../../hooks/useSpacesInCluster';
 import { createStylesheet } from '../../styles/createStylesheet';
-import AuthContext from '../AuthContext/AuthContext';
-import BackgroundColorContext from '../BackgroundColorContext/BackgroundColorContext';
-import BaseText from '../BaseText/BaseText';
-import ScrollableArea from '../ScrollableArea/ScrollableArea';
+import AuthContext from '../AuthContext';
+import BackgroundColorContext from '../BackgroundColorContext';
+import BaseText from '../Base/BaseText';
+import ScrollableArea from '../Base/BaseScrollableArea';
 import Space from '../Space/Space';
-import SpaceList from '../SpaceList/SpaceList';
-import ClusterSettingsModal from './ClusterSettingsModal/ClusterSettingsModal';
-import ClusterIdContext from './CurrentClusterContext/CurrentClusterContext';
+import SpaceList from './ClusterSpaceList';
+import ClusterSettingsModal from './ClusterSettingsModal';
+import ClusterIdContext from './CurrentClusterContext';
 
 export const styles = createStylesheet({
 	clusterLayout: {

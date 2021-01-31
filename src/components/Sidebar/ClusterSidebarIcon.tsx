@@ -1,7 +1,7 @@
 import React from 'react';
 import SidebarIcon from './SidebarIcon';
 import { Link } from 'react-router-dom';
-import BaseText from '../BaseText/BaseText';
+import BaseText from '../Base/BaseText';
 
 export default function ClusterSidebarIcon({ photoUrl, title, to }: { photoUrl?: string; title: string; to: string }) {
 	const titleInitials = title

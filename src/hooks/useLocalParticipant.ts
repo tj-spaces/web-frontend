@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import AuthContext from '../components/AuthContext/AuthContext';
+import AuthContext from '../components/AuthContext';
 import SpaceContext from '../components/Space/SpaceContext';
 import { ISpaceParticipant } from '../typings/SpaceParticipant';
 
