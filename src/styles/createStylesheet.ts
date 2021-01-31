@@ -80,7 +80,7 @@ export function createClasses(properties: StylesheetProperties, subSelectors: st
 			if (key in classCache) {
 				className = classCache[key];
 			} else {
-				className = safeClassname(key); // generateClassName(2);
+				className = generateClassName(2);
 				const styleText = kebabize(propName) + ':' + propValue;
 				let selector = `.${className} ${subSelectors}`;
 				// const pseudoSelectorParts = subSelectors.split(',');
