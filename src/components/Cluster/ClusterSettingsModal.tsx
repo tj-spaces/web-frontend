@@ -22,14 +22,16 @@ export default function ClusterSettingsModal({ onClose }: { onClose: () => void 
 			<BaseRow direction="column" alignment="center" spacing={1}>
 				<h1>Settings</h1>
 				<table>
-					<tr>
-						<td>
-							<Button onClick={() => deleteCluster_()} size="small" variant="negative">
-								Delete Cluster
-							</Button>
-						</td>
-						<td>Deletes this cluster.</td>
-					</tr>
+					<tbody>
+						<tr>
+							<td>
+								<Button onClick={() => deleteCluster_()} size="small" variant="negative">
+									Delete Cluster
+								</Button>
+							</td>
+							<td>Deletes this cluster.</td>
+						</tr>
+					</tbody>
 				</table>
 
 				<BaseRow direction="row" alignment="center" spacing={1}>

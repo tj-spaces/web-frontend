@@ -40,12 +40,14 @@ const railPaddingStyles = createStylesheet({
 	}
 });
 
-export default function ScrollableArea({
+export default function BaseScrollableArea({
 	hideScrollbar = false,
+	horizontal = false,
 	railPadding = 'none',
 	...props
 }: {
 	hideScrollbar?: boolean;
+	horizontal?: boolean;
 	railPadding?: 'none' | 'railPadding';
 } & DivProps) {
 	return (
@@ -54,6 +56,7 @@ export default function ScrollableArea({
 			className={classes(
 				variantStyles.baseScroller,
 				hideScrollbar && variantStyles.hideScrollbar,
+				horizontal && variantStyles.baseScrollerHorizontal,
 				railPaddingStyles[railPadding]
 			)}
 		/>

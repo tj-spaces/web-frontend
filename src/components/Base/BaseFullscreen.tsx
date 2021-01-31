@@ -5,7 +5,9 @@ export const styles = createStylesheet({
 		minWidth: '100vw',
 		minHeight: '100vh',
 		display: 'flex',
-		flexDirection: 'column'
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'center'
 	}
 });
 

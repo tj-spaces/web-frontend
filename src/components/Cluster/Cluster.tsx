@@ -6,7 +6,7 @@ import { createStylesheet } from '../../styles/createStylesheet';
 import AuthContext from '../AuthContext';
 import BackgroundColorContext from '../BackgroundColorContext';
 import BaseText from '../Base/BaseText';
-import ScrollableArea from '../Base/BaseScrollableArea';
+import BaseScrollableArea from '../Base/BaseScrollableArea';
 import Space from '../Space/Space';
 import SpaceList from './ClusterSpaceList';
 import ClusterSettingsModal from './ClusterSettingsModal';
@@ -30,7 +30,7 @@ export default function Cluster({ id }: { id: string }) {
 	const { isLoggedIn } = useContext(AuthContext);
 
 	return (
-		<ScrollableArea>
+		<BaseScrollableArea>
 			<ClusterIdContext.Provider value={{ id, spaces }}>
 				{isSettingsOpen && <ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />}
 
@@ -43,20 +43,20 @@ export default function Cluster({ id }: { id: string }) {
 				{spaceId && (isLoggedIn ? <Space id={spaceId} /> : <h1>Authenticating...</h1>)}
 				<div className={styles.clusterLayout}>
 					<BackgroundColorContext.Provider value="light">
-						<ScrollableArea railPadding="railPadding" style={{ flex: 1 }}>
+						<BaseScrollableArea railPadding="railPadding" style={{ flex: 1 }}>
 							<BaseText fontSize="xl" fontWeight="bold">
 								Spaces
 							</BaseText>
 							<SpaceList spaces={spaces} />
-						</ScrollableArea>
-						<ScrollableArea railPadding="railPadding" style={{ flex: 2 }}>
+						</BaseScrollableArea>
+						<BaseScrollableArea railPadding="railPadding" style={{ flex: 2 }}>
 							<BaseText fontSize="xl" fontWeight="bold">
 								Posts
 							</BaseText>
-						</ScrollableArea>
+						</BaseScrollableArea>
 					</BackgroundColorContext.Provider>
 				</div>
 			</ClusterIdContext.Provider>
-		</ScrollableArea>
+		</BaseScrollableArea>
 	);
 }

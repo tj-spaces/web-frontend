@@ -1,7 +1,8 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
+import Cluster from '../../components/Cluster/Cluster';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { createStylesheet } from '../../styles/createStylesheet';
-import SpaceFeedWrapper from './SpaceFeedWrapper';
 
 export const styles = createStylesheet({
 	container: {
@@ -12,13 +13,15 @@ export const styles = createStylesheet({
 	}
 });
 
-export default function HomePage() {
+export default function ClusterPage() {
 	document.title = 'Home';
+
+	const { clusterId } = useParams<{ clusterId: string }>();
 
 	return (
 		<div className={styles.container}>
 			<Sidebar />
-			<SpaceFeedWrapper />
+			<Cluster id={clusterId} />
 		</div>
 	);
 }

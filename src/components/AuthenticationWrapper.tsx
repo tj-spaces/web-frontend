@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getMe } from '../api/api';
 import AuthContext, { AuthState } from './AuthContext';
 
-export default function AuthContextManager({ children }: { children: React.ReactNode }) {
+export default function AuthenticationWrapper({ children }: { children: React.ReactNode }) {
 	const sessionId = localStorage.getItem('session_id');
 	// Prevent race conditions
 	const [authState, setAuthState] = useState<AuthState>({ isLoggedIn: null, user: null, refreshAuthState: null });

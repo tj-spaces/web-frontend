@@ -15,7 +15,7 @@ export const styles = createStylesheet({
 		color: 'var(--spaces-color-light-0)',
 		transition: 'background-color 0.5s ease',
 		pseudoSelectors: {
-			' a, button, span, h1': {
+			' >a, button, span, h1': {
 				cursor: 'pointer'
 			},
 			' a': {
