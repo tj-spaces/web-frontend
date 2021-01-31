@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import useMyClusters from '../../hooks/useMyClusters';
 import { createStylesheet } from '../../styles/createStylesheet';
+import BaseRow from '../Base/BaseRow';
 import ClusterCreateButton from '../Cluster/ClusterCreateButton';
 import ClusterSidebarIcon from './ClusterSidebarIcon';
 import SidebarIcon from './SidebarIcon';
@@ -21,7 +22,13 @@ export default function Sidebar() {
 	const myClusters = useMyClusters() ?? [];
 
 	return (
-		<div className={styles.sidebar}>
+		<BaseRow
+			direction="column"
+			overflow="auto"
+			alignment="center"
+			spacing={1}
+			style={{ backgroundColor: 'var(--spaces-color-dark-0)', padding: '1em' }}
+		>
 			{myClusters.map((cluster) => (
 				<ClusterSidebarIcon key={cluster.id} title={cluster.name} to={`/clusters/${cluster.id}`} />
 			))}
@@ -41,6 +48,6 @@ export default function Sidebar() {
 					<i className="fas fa-compass"></i>
 				</Link>
 			</SidebarIcon>
-		</div>
+		</BaseRow>
 	);
 }

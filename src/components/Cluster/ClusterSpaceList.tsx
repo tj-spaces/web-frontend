@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { createStylesheet } from '../../styles/createStylesheet';
 import hoverableLightBox from '../../styles/hoverableLightBox';
-import spacing from '../../styles/spacing';
 import { ISpace } from '../../typings/Space';
 import BaseRow from '../Base/BaseRow';
 import SpaceCreateButton from './ClusterSpaceCreateButton';
@@ -15,7 +14,7 @@ const styles = createStylesheet({
 		color: 'var(--spaces-color-light-1)'
 	},
 	spaceListItem: {
-		extends: [hoverableLightBox.hoverableLightBox, spacing.columnItem],
+		extends: [hoverableLightBox.hoverableLightBox],
 		height: '5em',
 		fontSize: '1.25em'
 	}

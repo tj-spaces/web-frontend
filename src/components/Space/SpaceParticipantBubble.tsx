@@ -19,8 +19,8 @@ export const styles = createStylesheet({
 		color: 'var(--spaces-color-light-0)',
 		position: 'relative',
 		overflow: 'hidden',
-		pseudoSelectors: {
-			' video': {
+		subSelectors: {
+			video: {
 				maxHeight: '100%',
 				objectFit: 'cover'
 			}
@@ -31,8 +31,8 @@ export const styles = createStylesheet({
 		transition: 'left 0.5s ease, top 0.5s ease, transform 0.5s ease'
 	},
 	participantBubbleLocal: {
-		pseudoSelectors: {
-			' video': {
+		subSelectors: {
+			video: {
 				transform: 'scaleX(-1)'
 			}
 		}

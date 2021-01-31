@@ -49,35 +49,50 @@ function generateClassName(length: number = 8) {
 export type Stylesheet = { [className: string]: StylesheetProperties };
 export interface StylesheetProperties extends CSSProperties {
 	extends?: string[];
-	pseudoSelectors?: {
+	subSelectors?: {
 		[pseudoSelector: string]: StylesheetProperties;
 	};
 }
 
-export function createClasses(properties: StylesheetProperties, pseudoSelector: string = '') {
+const matchNonSafeCharacters = /[^a-zA-Z0-9-_]/g;
+export function safeClassname(name: string) {
+	return name.replace(matchNonSafeCharacters, '-');
+}
+
+export function createClasses(properties: StylesheetProperties, subSelectors: string = '') {
 	let innerHTML = '';
 	let classes: string[] = [];
 	for (let [propName, propValue] of Object.entries(properties)) {
 		if (propName === 'extends') {
 			let otherClasses = (propValue as unknown) as string[];
 			classes.push(otherClasses.join(' '));
-		} else if (propName === 'pseudoSelectors') {
-			for (let [pseudoSelectorNested, props] of Object.entries(propValue)) {
+		} else if (propName === 'subSelectors') {
+			for (let [nestedSubSelector, props] of Object.entries(propValue)) {
 				// This is a nested StylesheetProperties
-				let result = createClasses(props as StylesheetProperties, pseudoSelector + pseudoSelectorNested);
+				let result = createClasses(props as StylesheetProperties, subSelectors + nestedSubSelector);
 				innerHTML += result.innerHTML;
 				classes = classes.concat(result.classes);
 			}
 		}
 		if (typeof propValue === 'string' || typeof propValue === 'number') {
-			const key = propName + pseudoSelector + '|' + propValue;
+			const key = propName + subSelectors + '|' + propValue;
 			let className;
 			if (key in classCache) {
 				className = classCache[key];
 			} else {
-				className = generateClassName(2);
+				className = safeClassname(key); // generateClassName(2);
 				const styleText = kebabize(propName) + ':' + propValue;
-				innerHTML += `.${className}${pseudoSelector}{${styleText};}`;
+				let selector = `.${className} ${subSelectors}`;
+				// const pseudoSelectorParts = subSelectors.split(',');
+				// for (let i = 0; i < pseudoSelectorParts.length; i++) {
+				// 	const pseudoSelectorPart = pseudoSelectorParts[i];
+				// 	const isNotLast = i + 1 < pseudoSelectorParts.length;
+				// 	selector += `.${className} ${pseudoSelectorPart}`;
+				// 	if (isNotLast) {
+				// 		selector += ',';
+				// 	}
+				// }
+				innerHTML += `${selector}{${styleText};}`;
 				classCache[key] = className;
 			}
 			classes.push(className);

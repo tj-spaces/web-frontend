@@ -1,4 +1,5 @@
-import { classes, createStylesheet } from '../../styles/createStylesheet';
+import { CSSProperties } from 'react';
+import { classes, createStylesheet, Stylesheet } from '../../styles/createStylesheet';
 
 export const styles = createStylesheet({
 	baseRow: {
@@ -20,7 +21,8 @@ export default function BaseRow({
 	overflow = 'visible',
 	children,
 	width,
-	height
+	height,
+	style
 }: {
 	direction?: 'row' | 'column';
 	spacing?: 0 | 1 | 2;
@@ -31,6 +33,7 @@ export default function BaseRow({
 	children: React.ReactNode;
 	width?: string;
 	height?: string;
+	style?: CSSProperties;
 }) {
 	const baseStyle = direction === 'row' ? styles.baseRow : styles.baseCol;
 	const spacingStyle = (direction === 'row' ? rowSpacings : colSpacings)[spacing];
@@ -41,7 +44,7 @@ export default function BaseRow({
 	return (
 		<div
 			className={classes(baseStyle, spacingStyle, railsStyle, alignmentStyle, justifyContentStyle, overflowStyle)}
-			style={{ width, height }}
+			style={{ width, height, ...style }}
 		>
 			{children}
 		</div>
@@ -82,12 +85,12 @@ export const colRails = createStylesheet({
 	auto: { marginLeft: 'auto', marginRight: 'auto' }
 });
 
-export const rowSpacing = (amt: string) => ({
-	marginLeft: amt,
-	marginRight: amt,
-	pseudoSelectors: {
+export const rowSpacing = (amt: string): Stylesheet[''] => ({
+	paddingLeft: amt,
+	paddingRight: amt,
+	subSelectors: {
 		'>*': {
-			pseudoSelectors: {
+			subSelectors: {
 				':not(:first-child)': {
 					marginLeft: amt
 				},
@@ -99,12 +102,12 @@ export const rowSpacing = (amt: string) => ({
 	}
 });
 
-export const colSpacing = (amt: string) => ({
-	marginTop: amt,
-	marginBottom: amt,
-	pseudoSelectors: {
+export const colSpacing = (amt: string): Stylesheet[''] => ({
+	paddingTop: amt,
+	paddingBottom: amt,
+	subSelectors: {
 		'>*': {
-			pseudoSelectors: {
+			subSelectors: {
 				':not(:first-child)': {
 					marginTop: amt
 				},

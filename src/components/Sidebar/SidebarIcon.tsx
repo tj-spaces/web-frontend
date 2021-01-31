@@ -1,9 +1,7 @@
 import { createStylesheet } from '../../styles/createStylesheet';
-import spacing from '../../styles/spacing';
 
 export const styles = createStylesheet({
 	sidebarIcon: {
-		extends: [spacing.columnItem],
 		borderRadius: '1rem',
 		width: '4rem',
 		height: '4rem',
@@ -14,11 +12,11 @@ export const styles = createStylesheet({
 		textDecoration: 'none',
 		color: 'var(--spaces-color-light-0)',
 		transition: 'background-color 0.5s ease',
-		pseudoSelectors: {
-			' >a, button, span, h1': {
+		subSelectors: {
+			'>a, >button, >span, >h1': {
 				cursor: 'pointer'
 			},
-			' a': {
+			a: {
 				textDecoration: 'none',
 				color: 'var(--spaces-color-light-0)'
 			},
