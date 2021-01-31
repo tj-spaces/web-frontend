@@ -1,17 +1,20 @@
+import { lazy } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import './App.sass';
 
 import AuthContextManager from './components/AuthenticationWrapper';
-import AuthorizationCallback from './pages/AuthenticationCallback/AuthenticationCallback';
-import ClusterExplorerPage from './pages/ClusterExplorerPage/ClusterExplorerPage';
-import DefaultPage from './pages/DefaultPage/DefaultPage';
-import HomePage from './pages/HomePage/HomePage';
-import LoginPage from './pages/LoginPage/LoginPage';
-import Logout from './pages/LogoutPage/LogoutPage';
-import TermsPage from './pages/TermsPage/TermsPage';
+
 import injectTheme from './styles/injectTheme';
 import { DarkTheme } from './styles/theme';
+
+const AuthorizationCallback = lazy(() => import('./pages/AuthenticationCallback/AuthenticationCallback'));
+const ClusterExplorerPage = lazy(() => import('./pages/ClusterExplorerPage/ClusterExplorerPage'));
+const DefaultPage = lazy(() => import('./pages/DefaultPage/DefaultPage'));
+const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
+const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'));
+const Logout = lazy(() => import('./pages/LogoutPage/LogoutPage'));
+const TermsPage = lazy(() => import('./pages/TermsPage/TermsPage'));
 
 function App() {
 	injectTheme(DarkTheme);
