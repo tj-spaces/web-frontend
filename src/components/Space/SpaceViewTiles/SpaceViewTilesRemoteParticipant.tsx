@@ -1,9 +1,11 @@
+import React from 'react';
 import * as twilio from 'twilio-video';
 import usePublications from '../../../hooks/usePublications';
 import useTrack from '../../../hooks/useTrack';
 import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
 import AudioTrack from '../../Media/AudioTrack';
-import SpaceParticipantCircle from '../SpaceParticipantCircle';
+import SpaceParticipant from '../SpaceParticipant';
+import SpaceParticipantTile from '../SpaceParticipantTile';
 
 export default function SpaceViewTilesRemoteParticipant({
 	spacesParticipant,
@@ -25,9 +27,9 @@ export default function SpaceViewTilesRemoteParticipant({
 	const videoTrack = useTrack(videoTrackPublications[0]) as twilio.VideoTrack;
 
 	return (
-		<>
+		<SpaceParticipantTile isLocal={false}>
 			<AudioTrack publication={audioTrackPublications[0]} />
-			<SpaceParticipantCircle participant={spacesParticipant} videoTrack={videoTrack} isLocal={false} />
-		</>
+			<SpaceParticipant participant={spacesParticipant} videoTrack={videoTrack} />
+		</SpaceParticipantTile>
 	);
 }

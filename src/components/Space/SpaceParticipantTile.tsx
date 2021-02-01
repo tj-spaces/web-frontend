@@ -3,7 +3,6 @@ import { classes, createStylesheet } from '../../styles/createStylesheet';
 
 export const styles = createStylesheet({
 	participantBubble: {
-		borderRadius: '100%',
 		width: '10rem',
 		height: '10rem',
 		display: 'flex',
@@ -29,12 +28,12 @@ export const styles = createStylesheet({
 		}
 	},
 	participantBubbleRemote: {
-		marginTop: '-4rem',
-		marginRight: '-4rem'
+		marginTop: '-5rem',
+		marginRight: '-5rem'
 	}
 });
 
-export default function SpaceParticipantCircle({ children, isLocal }: { children: React.ReactNode; isLocal: boolean }) {
+export default function SpaceParticipantTile({ children, isLocal }: { children: React.ReactNode; isLocal: boolean }) {
 	return (
 		<div
 			className={classes(

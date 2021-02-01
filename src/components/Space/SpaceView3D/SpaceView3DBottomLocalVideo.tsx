@@ -4,6 +4,7 @@ import { VideoTrack } from 'twilio-video';
 import { spaceViewStyles } from '../SpaceViewStyles';
 import SpaceParticipantCircle from '../SpaceParticipantCircle';
 import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
+import SpaceParticipant from '../SpaceParticipant';
 
 /**
  * A /local/ Spaces participant. Updates the AudioContext listener position when it moves.
@@ -16,7 +17,9 @@ export default function SpaceBottomLocalVideo({ participant }: { participant: IS
 
 	return (
 		<div className={spaceViewStyles.bottomLocalVideo}>
-			<SpaceParticipantCircle participant={participant} videoTrack={localVideoTrack as VideoTrack} isLocal />
+			<SpaceParticipantCircle isLocal>
+				<SpaceParticipant participant={participant} videoTrack={localVideoTrack as VideoTrack} />
+			</SpaceParticipantCircle>
 		</div>
 	);
 }

@@ -44,7 +44,7 @@ export default function SpaceFrame() {
 				</BaseRow>
 			</div>
 
-			{SPACE_VIEW_TYPE === 'tiles' ? <SpaceView3D /> : <SpaceViewTiles />}
+			{SPACE_VIEW_TYPE === '3d' ? <SpaceView3D /> : <SpaceViewTiles />}
 
 			<div className={spaceViewStyles.bottomButtons}>
 				<Button to="..">Leave</Button>

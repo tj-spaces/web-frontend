@@ -8,6 +8,7 @@ import { createStylesheet } from '../../../styles/createStylesheet';
 import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
 import SpaceParticipantCircle from '../SpaceParticipantCircle';
 import SpatialAudioTrack from '../../Media/SpatialAudioTrack';
+import SpaceParticipant from '../SpaceParticipant';
 
 const logger = getLogger('space/participant-bubble');
 
@@ -53,7 +54,9 @@ export default function SpaceParticipantRemote3D({
 				<SpatialAudioTrack position={position} publication={publication} />
 			))}
 			<div style={spatialCSSTransform} className={styles.participantRemote3D}>
-				<SpaceParticipantCircle participant={spacesParticipant} videoTrack={videoTrack} isLocal={false} />
+				<SpaceParticipantCircle isLocal={false}>
+					<SpaceParticipant participant={spacesParticipant} videoTrack={videoTrack} />
+				</SpaceParticipantCircle>
 			</div>
 		</>
 	);
