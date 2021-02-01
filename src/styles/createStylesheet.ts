@@ -82,16 +82,14 @@ export function createClasses(properties: StylesheetProperties, subSelectors: st
 			} else {
 				className = generateClassName(2);
 				const styleText = kebabize(propName) + ':' + propValue;
-				let selector = `.${className} ${subSelectors}`;
-				// const pseudoSelectorParts = subSelectors.split(',');
-				// for (let i = 0; i < pseudoSelectorParts.length; i++) {
-				// 	const pseudoSelectorPart = pseudoSelectorParts[i];
-				// 	const isNotLast = i + 1 < pseudoSelectorParts.length;
-				// 	selector += `.${className} ${pseudoSelectorPart}`;
-				// 	if (isNotLast) {
-				// 		selector += ',';
-				// 	}
-				// }
+
+				let selector = `.${className}`;
+
+				if (subSelectors.startsWith(':')) {
+					selector += subSelectors;
+				} else {
+					selector += ' ' + subSelectors;
+				}
 				innerHTML += `${selector}{${styleText};}`;
 				classCache[key] = className;
 			}
