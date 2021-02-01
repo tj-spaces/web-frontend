@@ -1,13 +1,13 @@
 import * as twilio from 'twilio-video';
-import useLocalParticipant from '../../hooks/useLocalParticipant';
-import usePublications from '../../hooks/usePublications';
-import useTrack from '../../hooks/useTrack';
-import { getLogger } from '../../lib/ClusterLogger';
-import getCSSTransform from '../../lib/getCSSTransform';
-import { createStylesheet } from '../../styles/createStylesheet';
-import { ISpaceParticipant } from '../../typings/SpaceParticipant';
-import SpaceParticipantCircle from './SpaceParticipantCircle';
-import SpatialAudioTrack from '../Media/SpatialAudioTrack';
+import useLocalParticipant from '../../../hooks/useLocalParticipant';
+import usePublications from '../../../hooks/usePublications';
+import useTrack from '../../../hooks/useTrack';
+import { getLogger } from '../../../lib/ClusterLogger';
+import getCSSTransform from '../../../lib/getCSSTransform';
+import { createStylesheet } from '../../../styles/createStylesheet';
+import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
+import SpaceParticipantCircle from '../SpaceParticipantCircle';
+import SpatialAudioTrack from '../../Media/SpatialAudioTrack';
 
 const logger = getLogger('space/participant-bubble');
 

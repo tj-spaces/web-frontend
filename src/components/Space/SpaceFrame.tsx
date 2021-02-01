@@ -7,8 +7,8 @@ import BaseText from '../Base/BaseText';
 import SpaceContext from './SpaceContext';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaContext from './SpaceMediaContext';
-import SpaceView2D from './SpaceView2D';
-import SpaceView3D from './SpaceView3D';
+import SpaceViewTiles from './SpaceViewTiles/SpaceViewTiles';
+import SpaceView3D from './SpaceView3D/SpaceView3D';
 import { spaceViewStyles } from './SpaceViewStyles';
 
 const SPACE_VIEW_TYPE: 'tiles' | '3d' = 'tiles';
@@ -44,7 +44,7 @@ export default function SpaceFrame() {
 				</BaseRow>
 			</div>
 
-			{SPACE_VIEW_TYPE === 'tiles' ? <SpaceView3D /> : <SpaceView2D />}
+			{SPACE_VIEW_TYPE === 'tiles' ? <SpaceView3D /> : <SpaceViewTiles />}
 
 			<div className={spaceViewStyles.bottomButtons}>
 				<Button to="..">Leave</Button>

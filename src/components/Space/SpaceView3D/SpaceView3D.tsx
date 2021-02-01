@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
-import useLocalParticipant from '../../hooks/useLocalParticipant';
-import SpaceContext from './SpaceContext';
-import SpaceKeyboardMovementController from './SpaceKeyboardMovementController';
-import SpaceMediaContext from './SpaceMediaContext';
+import useLocalParticipant from '../../../hooks/useLocalParticipant';
+import SpaceContext from '../SpaceContext';
+import SpaceKeyboardMovementController from '../SpaceKeyboardMovementController';
+import SpaceMediaContext from '../SpaceMediaContext';
 import SpaceBottomLocalVideo from './SpaceView3DBottomLocalVideo';
 import SpaceView3DMinimap from './SpaceView3DMinimap';
 import SpaceParticipantRemote3D from './SpaceView3DRemoteParticipant';
-import SpatialAudioListener from '../Media/SpatialAudioListener';
-import { spaceViewStyles } from './SpaceViewStyles';
+import SpatialAudioListener from '../../Media/SpatialAudioListener';
+import { spaceViewStyles } from '../SpaceViewStyles';
 
 export default function SpaceView3D() {
 	const me = useLocalParticipant();

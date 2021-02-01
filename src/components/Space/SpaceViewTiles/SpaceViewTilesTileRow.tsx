@@ -1,4 +1,4 @@
-import { createStylesheet } from '../../styles/createStylesheet';
+import { createStylesheet } from '../../../styles/createStylesheet';
 
 export const styles = createStylesheet({
 	participantRow: {
@@ -15,6 +15,6 @@ export const styles = createStylesheet({
 	}
 });
 
-export default function SpaceView2DParticipantRow({ participants }: { participants: React.ReactNode }) {
+export default function SpaceViewTilesTileRow({ participants }: { participants: React.ReactNode }) {
 	return <div className={styles.participantRow}>{participants}</div>;
 }

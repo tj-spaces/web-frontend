@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
-import useLocalParticipant from '../../hooks/useLocalParticipant';
-import useWindowSize from '../../hooks/useWindowSize';
-import getRootFontSize from '../../lib/getRootFontSize';
-import colors from '../../styles/colors';
-import { createStylesheet } from '../../styles/createStylesheet';
-import SpaceContext from './SpaceContext';
-import SpaceMediaContext from './SpaceMediaContext';
-import SpaceView2DLocalParticipant from './SpaceView2DLocalParticipant';
-import SpaceView2DParticipantRow from './SpaceView2DParticipantRow';
-import SpaceView2DRemoteParticipant from './SpaceView2DRemoteParticipant';
-import { spaceViewStyles } from './SpaceViewStyles';
+import useLocalParticipant from '../../../hooks/useLocalParticipant';
+import useWindowSize from '../../../hooks/useWindowSize';
+import getRootFontSize from '../../../lib/getRootFontSize';
+import colors from '../../../styles/colors';
+import { createStylesheet } from '../../../styles/createStylesheet';
+import SpaceContext from '../SpaceContext';
+import SpaceMediaContext from '../SpaceMediaContext';
+import SpaceViewTilesLocalParticipant from './SpaceViewTilesLocalParticipant';
+import SpaceViewTilesTileRow from './SpaceViewTilesTileRow';
+import SpaceViewTilesRemoteParticipant from './SpaceViewTilesRemoteParticipant';
+import { spaceViewStyles } from '../SpaceViewStyles';
 
 export const styles = createStylesheet({
 	screen: {
@@ -21,7 +21,7 @@ export const styles = createStylesheet({
 	}
 });
 
-export default function SpaceView2D() {
+export default function SpaceViewTiles() {
 	const me = useLocalParticipant();
 	const { participants } = useContext(SpaceContext);
 	const { twilioParticipants } = useContext(SpaceMediaContext) ?? {};
@@ -38,19 +38,19 @@ export default function SpaceView2D() {
 	}
 
 	let participantElements = [
-		<SpaceView2DLocalParticipant />,
-		<SpaceView2DLocalParticipant />,
-		<SpaceView2DLocalParticipant />,
-		<SpaceView2DLocalParticipant />,
-		<SpaceView2DLocalParticipant />,
-		<SpaceView2DLocalParticipant />,
-		<SpaceView2DLocalParticipant />,
+		<SpaceViewTilesLocalParticipant />,
+		<SpaceViewTilesLocalParticipant />,
+		<SpaceViewTilesLocalParticipant />,
+		<SpaceViewTilesLocalParticipant />,
+		<SpaceViewTilesLocalParticipant />,
+		<SpaceViewTilesLocalParticipant />,
+		<SpaceViewTilesLocalParticipant />,
 		...Object.values(participants).map((participant) => {
 			const twilioParticipant = twilioParticipants?.[participant.accountId];
 			const isLocal = participant.accountId === me.accountId;
 			if (!isLocal) {
 				return (
-					<SpaceView2DRemoteParticipant
+					<SpaceViewTilesRemoteParticipant
 						twilioParticipant={twilioParticipant ?? null}
 						spacesParticipant={participant}
 					/>
@@ -70,7 +70,7 @@ export default function SpaceView2D() {
 	return (
 		<div className={styles.screen} style={{ backgroundColor: colors['gray'] }}>
 			{blocks.map((block, idx) => {
-				return <SpaceView2DParticipantRow participants={block} key={idx} />;
+				return <SpaceViewTilesTileRow participants={block} key={idx} />;
 			})}
 		</div>
 	);
