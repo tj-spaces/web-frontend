@@ -1,17 +1,17 @@
 import React, { useContext, useState } from 'react';
 import useSpace from '../../hooks/useSpace';
+import { classes } from '../../styles/createStylesheet';
 import AuthContext from '../AuthContext';
+import BackgroundColorContext from '../BackgroundColorContext';
 import Button from '../Base/BaseButton';
 import BaseText from '../Base/BaseText';
 import SpaceContext from './SpaceContext';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaContext from './SpaceMediaContext';
-import SpaceViewTiles from './SpaceViewTiles/SpaceViewTiles';
 import SpaceView3D from './SpaceView3D/SpaceView3D';
-import { spaceViewStyles } from './SpaceViewStyles';
-import BackgroundColorContext from '../BackgroundColorContext';
-import { classes } from '../../styles/createStylesheet';
 import SpaceViewLayoutContext from './SpaceViewLayoutContext';
+import { spaceViewStyles } from './SpaceViewStyles';
+import SpaceViewTiles from './SpaceViewTiles/SpaceViewTiles';
 
 const SPACE_VIEW_TYPE: 'tiles' | '3d' = 'tiles';
 

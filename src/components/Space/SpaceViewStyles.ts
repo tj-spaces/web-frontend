@@ -33,7 +33,11 @@ export const spaceViewStyles = createStylesheet({
 		extends: [BaseRow.rowSpacings[1]],
 		justifyContent: 'center',
 		width: '100%',
-		// go along the bottom of the container
+		height: '5em',
+		position: 'absolute',
+		bottom: '0px',
+		left: '0px',
+		right: '0px',
 		paddingTop: '1em',
 		paddingBottom: '1em',
 		display: 'flex',
@@ -50,6 +54,7 @@ export const spaceViewStyles = createStylesheet({
 	},
 	mainContent: {
 		paddingTop: '5em',
+		paddingBottom: '5em',
 		height: '100%',
 		maxWidth: '100%'
 	},

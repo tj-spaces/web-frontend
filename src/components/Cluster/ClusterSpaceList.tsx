@@ -20,11 +20,11 @@ const styles = createStylesheet({
 	}
 });
 
-export function SpaceListItem({ clusterId, space }: { clusterId: string; space: ISpace }) {
+export function ClusterSpaceListItem({ clusterId, space }: { clusterId: string; space: ISpace }) {
 	return (
 		<div className={styles.spaceListItem}>
 			<b>
-				<Link to={`/clusters/${clusterId}/spaces/${space.id}`} className="unstyled-link">
+				<Link to={`/spaces/${space.id}`} className="unstyled-link">
 					{space.name}
 				</Link>
 			</b>
@@ -34,13 +34,13 @@ export function SpaceListItem({ clusterId, space }: { clusterId: string; space: 
 	);
 }
 
-export default function SpaceList({ spaces = [] }: { spaces?: ISpace[] }) {
+export default function ClusterSpaceList({ spaces = [] }: { spaces?: ISpace[] }) {
 	const cluster = useContext(ClusterIDContext);
 
 	return (
 		<BaseRow direction="column" spacing={1}>
 			{spaces.map((space) => (
-				<SpaceListItem clusterId={cluster.id!} space={space} key={space.id} />
+				<ClusterSpaceListItem clusterId={cluster.id!} space={space} key={space.id} />
 			))}
 
 			<SpaceCreateButton />

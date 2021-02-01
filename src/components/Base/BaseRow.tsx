@@ -24,20 +24,22 @@ export default function BaseRow({
 	width,
 	height,
 	style,
-	backgroundColor = 'default'
+	backgroundColor = 'default',
+	centerSelf = false
 }: {
-	direction?: 'row' | 'column';
-	spacing?: keyof typeof rowSpacings;
-	rails?: keyof typeof rowRails;
-	borderRadius?: keyof typeof borderRadii;
 	alignment?: keyof typeof alignments;
+	backgroundColor?: keyof typeof backgroundColors;
+	borderRadius?: keyof typeof borderRadii;
+	centerSelf?: boolean;
+	direction?: 'row' | 'column';
+	height?: string;
 	justifyContent?: keyof typeof justifyContents;
 	overflow?: keyof typeof overflows;
-	children: React.ReactNode;
+	rails?: keyof typeof rowRails;
+	spacing?: keyof typeof rowSpacings;
 	width?: string;
-	height?: string;
 	style?: CSSProperties;
-	backgroundColor?: keyof typeof backgroundColors;
+	children: React.ReactNode;
 }) {
 	const baseStyle = direction === 'row' ? styles.baseRow : styles.baseCol;
 	const spacingStyle = (direction === 'row' ? rowSpacings : colSpacings)[spacing];
@@ -47,17 +49,19 @@ export default function BaseRow({
 	const overflowStyle = overflows[overflow];
 	const borderRadiusStyle = borderRadii[borderRadius];
 	const backgroundColorStyle = backgroundColors[backgroundColor];
+	const centerStyle = centerSelf && centerSelfs[direction];
 	return (
 		<div
 			className={classes(
-				baseStyle,
-				spacingStyle,
-				railsStyle,
 				alignmentStyle,
+				backgroundColorStyle,
+				baseStyle,
+				borderRadiusStyle,
+				centerStyle,
 				justifyContentStyle,
 				overflowStyle,
-				borderRadiusStyle,
-				backgroundColorStyle
+				railsStyle,
+				spacingStyle
 			)}
 			style={{ width, height, ...style }}
 		>
@@ -74,6 +78,17 @@ export const backgroundColors = createStylesheet({
 	dark0: { backgroundColor: 'var(--spaces-color-dark-0)' },
 	dark1: { backgroundColor: 'var(--spaces-color-dark-1)' },
 	dark2: { backgroundColor: 'var(--spaces-color-dark-2)' }
+});
+
+export const centerSelfs = createStylesheet({
+	row: {
+		marginTop: 'auto',
+		marginBottom: 'auto'
+	},
+	column: {
+		marginLeft: 'auto',
+		marginRight: 'auto'
+	}
 });
 
 export const borderRadii = createStylesheet({

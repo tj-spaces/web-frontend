@@ -1,7 +1,7 @@
-import { ISpace } from '../../typings/Space';
-import SpaceFeedItem from './SpaceFeedItem';
 import BaseRow from '../../components/Base/BaseRow';
 import BaseText from '../../components/Base/BaseText';
+import { ISpace } from '../../typings/Space';
+import SpaceFeedItem from './SpaceFeedItem';
 
 export default function SpaceFeed({ spaces }: { spaces: ISpace[] }) {
 	return (

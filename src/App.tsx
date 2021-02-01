@@ -14,6 +14,7 @@ const ClusterExplorerPage = lazy(() => import('./pages/ClusterExplorerPage/Clust
 const DefaultPage = lazy(() => import('./pages/DefaultPage/DefaultPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'));
 const Logout = lazy(() => import('./pages/LogoutPage/LogoutPage'));
+const SpacePage = lazy(() => import('./pages/SpacePage/SpacePage'));
 const TermsPage = lazy(() => import('./pages/TermsPage/TermsPage'));
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
 					<Suspense fallback={<CenteredLoadingText />}>
 						<Switch>
 							<Route path="/auth/:provider/callback" component={AuthorizationCallback} />
-							<Route path="/clusters/:clusterId/spaces/:spaceId" component={ClusterPage} />
+							<Route path="/space/:spaceId" component={SpacePage} />
 							<Route path="/clusters/:clusterId" component={ClusterPage} />
 							<Route path="/login" exact component={LoginPage} />
 							<Route path="/logout" exact component={Logout} />
