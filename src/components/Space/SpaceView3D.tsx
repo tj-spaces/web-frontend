@@ -1,19 +1,10 @@
 import React, { useContext } from 'react';
 import useLocalParticipant from '../../hooks/useLocalParticipant';
-import { createStylesheet } from '../../styles/createStylesheet';
 import Minimap from './SpaceView3DMinimap';
 import SpaceContext from './SpaceContext';
 import SpaceMediaContext from './SpaceMediaContext';
 import SpaceParticipantRemote3D from './SpaceParticipantRemote3D';
-
-export const styles = createStylesheet({
-	environment: {
-		position: 'relative',
-		minHeight: '100vh',
-		minWidth: '100%',
-		overflow: 'hidden'
-	}
-});
+import { spaceViewStyles } from './SpaceViewStyles';
 
 export default function SpaceView3D() {
 	const me = useLocalParticipant();
@@ -31,7 +22,7 @@ export default function SpaceView3D() {
 	}
 
 	return (
-		<div className={styles.environment} style={{ backgroundColor: '#333380' }}>
+		<div style={{ backgroundColor: '#333380' }} className={spaceViewStyles.spaceView}>
 			<Minimap
 				elements={Object.values(participants).map((participant) => ({
 					color: participant.accountId === me?.accountId ? 'blue' : 'red',

@@ -1,10 +1,8 @@
-import { useLayoutEffect, useRef } from 'react';
-import * as twilio from 'twilio-video';
-import useLocalParticipant from '../../hooks/useLocalParticipant';
-import getCSSTransform from '../../lib/getCSSTransform';
-import { getLogger } from '../../lib/ClusterLogger';
+import React from 'react';
+import { VideoTrack } from 'twilio-video';
 import { classes, createStylesheet } from '../../styles/createStylesheet';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
+import TwilioVideoElement from '../TwilioVideoElement';
 
 export const styles = createStylesheet({
 	participantBubble: {
@@ -39,9 +37,7 @@ export const styles = createStylesheet({
 	}
 });
 
-const logger = getLogger('space/participant-bubble');
-
-export default function SpaceParticipantBubble({
+export default function SpaceParticipant({
 	participant,
 	photoUrl,
 	videoTrack,
@@ -49,7 +45,7 @@ export default function SpaceParticipantBubble({
 }: {
 	participant: ISpaceParticipant;
 	photoUrl?: string;
-	videoTrack?: twilio.VideoTrack | null;
+	videoTrack?: VideoTrack | null;
 	isLocal?: boolean;
 }) {
 	const initials = participant.displayName
@@ -57,35 +53,16 @@ export default function SpaceParticipantBubble({
 		.filter(Boolean)
 		.map((word) => word.slice(0, 1).toUpperCase());
 
-	const videoRef = useRef<HTMLVideoElement>(null);
-
-	// Attach to the video ref after the video is rendered to the screen
-	useLayoutEffect(() => {
-		if (videoTrack) {
-			videoTrack.attach(videoRef.current!);
-			videoRef.current!.play();
-		}
-	}, [videoTrack]);
-
-	const me = useLocalParticipant();
-
-	if (!me) {
-		logger('Local Participant is null', 'warn');
-		return null;
-	}
-
-	const css = isLocal ? {} : getCSSTransform(me?.position, participant.position);
-
 	return (
 		<div
 			className={classes(
 				styles.participantBubble,
 				isLocal ? styles.participantBubbleLocal : styles.participantBubbleRemote
 			)}
-			style={{ ...css, backgroundColor: participant.displayColor }}
+			style={{ backgroundColor: participant.displayColor }}
 		>
 			{videoTrack ? (
-				<video ref={videoRef} />
+				<TwilioVideoElement track={videoTrack} />
 			) : photoUrl ? (
 				<img src={photoUrl} alt={participant.displayName} />
 			) : (

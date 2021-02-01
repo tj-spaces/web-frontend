@@ -7,8 +7,10 @@ import BaseText from '../Base/BaseText';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceContext from './SpaceContext';
 import SpaceMediaContext from './SpaceMediaContext';
-import SpaceParticipantLocal3D from './SpaceParticipantLocal3D';
+import SpaceBottomLocalVideo from './SpaceBottomLocalVideo';
 import SpaceView3D from './SpaceView3D';
+import { spaceViewStyles } from './SpaceViewStyles';
+import SpatialAudioListener from './SpatialAudioListener';
 
 export default function SpaceFrame() {
 	const spaceID = useContext(SpaceIDContext);
@@ -25,10 +27,12 @@ export default function SpaceFrame() {
 		return <h1>Joining Space</h1>;
 	}
 
-	const userLoaded = spaceContext.participants[user.id] != null;
+	const localParticipant = spaceContext.participants[user.id];
 
 	return (
-		<BaseRow direction="column">
+		<div className={spaceViewStyles.frame}>
+			{localParticipant && <SpatialAudioListener position={localParticipant.position} />}
+
 			<BaseText fontSize="large" alignment="center">
 				{space ? space.name : 'Loading Space'}
 			</BaseText>
@@ -43,8 +47,9 @@ export default function SpaceFrame() {
 
 			<SpaceView3D />
 
-			{userLoaded && <SpaceParticipantLocal3D spacesParticipant={spaceContext.participants[user.id]} />}
-			<BaseRow direction="row" spacing={1} rails={1} justifyContent="center">
+			{localParticipant && <SpaceBottomLocalVideo participant={localParticipant} />}
+
+			<div className={spaceViewStyles.bottomButtons}>
 				<Button to="..">Leave</Button>
 
 				{mediaContext && (
@@ -70,7 +75,7 @@ export default function SpaceFrame() {
 						)}
 					</>
 				)}
-			</BaseRow>
-		</BaseRow>
+			</div>
+		</div>
 	);
 }
