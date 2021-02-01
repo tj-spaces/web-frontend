@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import useLocalParticipant from '../../hooks/useLocalParticipant';
-import Minimap from './SpaceView3DMinimap';
+import SpaceView3DMinimap from './SpaceView3DMinimap';
 import SpaceContext from './SpaceContext';
 import SpaceMediaContext from './SpaceMediaContext';
 import SpaceParticipantRemote3D from './SpaceParticipantRemote3D';
@@ -23,7 +23,7 @@ export default function SpaceView3D() {
 
 	return (
 		<div style={{ backgroundColor: '#333380' }} className={spaceViewStyles.spaceView}>
-			<Minimap
+			<SpaceView3DMinimap
 				elements={Object.values(participants).map((participant) => ({
 					color: participant.accountId === me?.accountId ? 'blue' : 'red',
 					position: participant.position

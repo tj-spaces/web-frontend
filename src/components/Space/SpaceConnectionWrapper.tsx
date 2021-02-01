@@ -88,21 +88,14 @@ export default function SpaceConnectionWrapper({
 	const keyboardState = useKeyboardState();
 
 	useEffect(() => {
-		if (keyboardState.a) {
-			connectionRef.current?.emit('set_rotate_direction', -1);
-		} else if (keyboardState.d) {
-			connectionRef.current?.emit('set_rotate_direction', 1);
-		} else {
-			connectionRef.current?.emit('set_rotate_direction', 0);
-		}
+		let updater: Updater<ISpaceParticipant> = {
+			$set: {
+				rotatingDirection: keyboardState.a ? -1 : keyboardState.d ? 1 : 0,
+				movingDirection: keyboardState.w ? 1 : keyboardState.s ? -1 : 0
+			}
+		};
 
-		if (keyboardState.w) {
-			connectionRef.current?.emit('set_walk_direction', 1);
-		} else if (keyboardState.s) {
-			connectionRef.current?.emit('set_walk_direction', -1);
-		} else {
-			connectionRef.current?.emit('set_walk_direction', 0);
-		}
+		connectionRef.current?.emit('update', updater);
 	}, [keyboardState]);
 
 	return <SpaceContext.Provider value={{ participants }}>{children}</SpaceContext.Provider>;

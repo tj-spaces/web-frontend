@@ -43,7 +43,13 @@ export function MinimapElementComponent({ item, relativeTo }: { item: MinimapEle
 	);
 }
 
-export default function Minimap({ elements, center }: { elements: MinimapElement[]; center: SpacePositionInfo }) {
+export default function SpaceView3DMinimap({
+	elements,
+	center
+}: {
+	elements: MinimapElement[];
+	center: SpacePositionInfo;
+}) {
 	return (
 		<div className={styles.minimap}>
 			{elements.map((element, index) => {
