@@ -4,11 +4,19 @@ import usePublications from '../../hooks/usePublications';
 import useTrack from '../../hooks/useTrack';
 import { getLogger } from '../../lib/ClusterLogger';
 import getCSSTransform from '../../lib/getCSSTransform';
+import { createStylesheet } from '../../styles/createStylesheet';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
-import SpaceParticipant from './SpaceParticipant';
+import SpaceParticipantCircle from './SpaceParticipantCircle';
 import SpatialAudioTrack from './SpatialAudioTrack';
 
 const logger = getLogger('space/participant-bubble');
+
+const styles = createStylesheet({
+	participantRemote3D: {
+		top: '50%',
+		transition: 'left 0.5s ease, top 0.5s ease, transform 0.5s ease'
+	}
+});
 
 export default function SpaceParticipantRemote3D({
 	twilioParticipant,
@@ -44,8 +52,8 @@ export default function SpaceParticipantRemote3D({
 			{audioTrackPublications.map((publication) => (
 				<SpatialAudioTrack position={position} publication={publication} />
 			))}
-			<div style={spatialCSSTransform}>
-				<SpaceParticipant participant={spacesParticipant} videoTrack={videoTrack} isLocal={false} />
+			<div style={spatialCSSTransform} className={styles.participantRemote3D}>
+				<SpaceParticipantCircle participant={spacesParticipant} videoTrack={videoTrack} isLocal={false} />
 			</div>
 		</>
 	);

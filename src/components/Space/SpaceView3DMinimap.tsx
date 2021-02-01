@@ -14,7 +14,7 @@ export const styles = createStylesheet({
 		height: '1em',
 		textAlign: 'center',
 		position: 'absolute',
-		transition: 'left 500ms ease, right 500ms ease'
+		transition: 'left 500ms ease, top 500ms ease, transform 500ms ease'
 	},
 	minimap: {
 		position: 'absolute',

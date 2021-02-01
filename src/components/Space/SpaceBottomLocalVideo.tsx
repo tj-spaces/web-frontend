@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import SpaceMediaContext from './SpaceMediaContext';
 import { VideoTrack } from 'twilio-video';
 import { spaceViewStyles } from './SpaceViewStyles';
-import SpaceParticipant from './SpaceParticipant';
+import SpaceParticipantCircle from './SpaceParticipantCircle';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 
 /**
@@ -16,7 +16,7 @@ export default function SpaceBottomLocalVideo({ participant }: { participant: IS
 
 	return (
 		<div className={spaceViewStyles.bottomLocalVideo}>
-			<SpaceParticipant participant={participant} videoTrack={localVideoTrack as VideoTrack} />
+			<SpaceParticipantCircle participant={participant} videoTrack={localVideoTrack as VideoTrack} isLocal />
 		</div>
 	);
 }

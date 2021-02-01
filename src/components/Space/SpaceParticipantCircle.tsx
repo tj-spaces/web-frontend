@@ -24,29 +24,29 @@ export const styles = createStylesheet({
 			}
 		}
 	},
-	participantBubbleRemote: {
-		top: '50%',
-		transition: 'left 0.5s ease, top 0.5s ease, transform 0.5s ease'
-	},
 	participantBubbleLocal: {
 		subSelectors: {
 			video: {
 				transform: 'scaleX(-1)'
 			}
 		}
+	},
+	participantBubbleRemote: {
+		marginTop: '-4rem',
+		marginRight: '-4rem'
 	}
 });
 
-export default function SpaceParticipant({
+export default function SpaceParticipantCircle({
 	participant,
 	photoUrl,
 	videoTrack,
-	isLocal = false
+	isLocal
 }: {
 	participant: ISpaceParticipant;
 	photoUrl?: string;
 	videoTrack?: VideoTrack | null;
-	isLocal?: boolean;
+	isLocal: boolean;
 }) {
 	const initials = participant.displayName
 		.split(' ')
