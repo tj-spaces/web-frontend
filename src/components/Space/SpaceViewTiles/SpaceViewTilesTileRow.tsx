@@ -1,15 +1,18 @@
 import { createStylesheet } from '../../../styles/createStylesheet';
 
+const gap = '1rem';
+
 export const styles = createStylesheet({
 	participantRow: {
 		display: 'flex',
 		flexDirection: 'row',
-		padding: '2rem',
+		padding: gap,
 		justifyContent: 'center',
 		subSelectors: {
 			'*': {
-				marginLeft: '2rem',
-				marginRight: '2rem'
+				marginLeft: gap,
+				marginRight: gap,
+				borderRadius: '4rem'
 			}
 		}
 	}

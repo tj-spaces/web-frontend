@@ -2,17 +2,28 @@ import { createStylesheet } from '../../styles/createStylesheet';
 import * as BaseRow from '../Base/BaseRow';
 
 export const spaceViewStyles = createStylesheet({
+	// The white container with rounded borders
 	frame: {
-		// Position is relative so that children can be made "absolute"
-		position: 'relative',
-		minHeight: '100vh',
+		position: 'absolute',
 		minWidth: '100%',
-		overflow: 'hidden'
+		backgroundColor: 'white',
+		borderTopLeftRadius: '2rem',
+		borderTopRightRadius: '2rem',
+		bottom: '0px',
+		left: '0px',
+		right: '0px',
+		zIndex: 1,
+		transition: 'all 500ms ease'
 	},
-	spaceView: {
+	frameExpanded: {
+		minHeight: '100vh'
+	},
+	frameCondensed: {
+		maxHeight: '40vh'
+	},
+	view: {
 		width: '100%',
 		height: '100%',
-		position: 'absolute',
 		zIndex: -1
 	},
 	/**
@@ -23,9 +34,8 @@ export const spaceViewStyles = createStylesheet({
 		justifyContent: 'center',
 		width: '100%',
 		// go along the bottom of the container
-		position: 'absolute',
-		bottom: '0px',
-		padding: '1em 0em',
+		paddingTop: '1em',
+		paddingBottom: '1em',
 		display: 'flex',
 		flexDirection: 'row'
 	},
@@ -38,17 +48,28 @@ export const spaceViewStyles = createStylesheet({
 		bottom: '0px',
 		padding: '1em'
 	},
+	mainContent: {
+		paddingTop: '5em',
+		height: '100%',
+		maxWidth: '100%'
+	},
 	topHeading: {
 		position: 'absolute',
 		top: '0px',
-		paddingTop: '2em',
+		height: '5em',
 		width: '100%',
+		paddingTop: '2em',
+		textAlign: 'center',
+		color: 'black',
 		display: 'flex',
-		flexDirection: 'column',
+		flexDirection: 'row',
+		justifyContent: 'center',
 		alignItems: 'center',
 		subSelectors: {
-			'*': {
-				textShadow: '0.1rem 0.1rem 0.5rem var(--spaces-color-dark-0)'
+			i: {
+				cursor: 'pointer',
+				fontSize: '3rem',
+				marginRight: '1.5rem'
 			}
 		}
 	}

@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { classes, createStylesheet } from '../../styles/createStylesheet';
+import SpaceViewLayoutContext from './SpaceViewLayoutContext';
 
 export const styles = createStylesheet({
-	participantBubble: {
-		width: '10rem',
-		height: '10rem',
+	participantTile: {
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -20,25 +19,36 @@ export const styles = createStylesheet({
 			}
 		}
 	},
-	participantBubbleLocal: {
+	participantTileLocal: {
 		subSelectors: {
 			video: {
 				transform: 'scaleX(-1)'
 			}
 		}
 	},
-	participantBubbleRemote: {
-		marginTop: '-5rem',
-		marginRight: '-5rem'
+	participantTileRemote: {
+		marginTop: '-50%',
+		marginRight: '-50%'
+	},
+	participantTileCondensed: {
+		width: '7.5rem',
+		height: '7.5rem'
+	},
+	participantTileExpanded: {
+		width: '10rem',
+		height: '10rem'
 	}
 });
 
 export default function SpaceParticipantTile({ children, isLocal }: { children: React.ReactNode; isLocal: boolean }) {
+	const layout = useContext(SpaceViewLayoutContext);
+
 	return (
 		<div
 			className={classes(
-				styles.participantBubble,
-				isLocal ? styles.participantBubbleLocal : styles.participantBubbleRemote
+				styles.participantTile,
+				isLocal ? styles.participantTileLocal : styles.participantTileRemote,
+				layout.expanded ? styles.participantTileExpanded : styles.participantTileCondensed
 			)}
 		>
 			{children}

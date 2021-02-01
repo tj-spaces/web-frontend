@@ -7,7 +7,8 @@ const colors = {
 	blue: '#52a0ff',
 	violet: '#a769ff',
 	pink: '#ff80ec',
-	white: '#dddddd',
+	white: '#ffffff',
+	lightgray: '#dddddd',
 	gray: '#cccccc'
 };
 
