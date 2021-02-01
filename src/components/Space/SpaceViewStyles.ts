@@ -37,5 +37,19 @@ export const spaceViewStyles = createStylesheet({
 		left: '0px',
 		bottom: '0px',
 		padding: '1em'
+	},
+	topHeading: {
+		position: 'absolute',
+		top: '0px',
+		paddingTop: '2em',
+		width: '100%',
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		subSelectors: {
+			'*': {
+				textShadow: '0.1rem 0.1rem 0.5rem var(--spaces-color-dark-0)'
+			}
+		}
 	}
 });

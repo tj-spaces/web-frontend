@@ -2,26 +2,22 @@ import React, { useContext } from 'react';
 import useLocalParticipant from '../../hooks/useLocalParticipant';
 import useWindowSize from '../../hooks/useWindowSize';
 import getRootFontSize from '../../lib/getRootFontSize';
+import colors from '../../styles/colors';
 import { createStylesheet } from '../../styles/createStylesheet';
-import BaseRow from '../Base/BaseRow';
 import SpaceContext from './SpaceContext';
 import SpaceMediaContext from './SpaceMediaContext';
 import SpaceView2DLocalParticipant from './SpaceView2DLocalParticipant';
 import SpaceView2DParticipantRow from './SpaceView2DParticipantRow';
 import SpaceView2DRemoteParticipant from './SpaceView2DRemoteParticipant';
+import { spaceViewStyles } from './SpaceViewStyles';
 
 export const styles = createStylesheet({
 	screen: {
-		position: 'relative',
-		minHeight: '100vh',
-		minWidth: '100%',
+		extends: [spaceViewStyles.spaceView],
 		overflow: 'auto',
-		display: 'grid',
-		columnGap: '2rem',
-		rowGap: '2rem',
-		gridTemplateColumns: 'repeat(auto-fit, minmax(11em, 1fr))',
-		alignItems: 'center',
-		justifyItems: 'center'
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center'
 	}
 });
 
@@ -72,12 +68,10 @@ export default function SpaceView2D() {
 	}
 
 	return (
-		<div className={styles.screen} style={{ backgroundColor: 'gray' }}>
-			<BaseRow direction="column">
-				{blocks.map((block, idx) => {
-					return <SpaceView2DParticipantRow participants={block} key={idx} />;
-				})}
-			</BaseRow>
+		<div className={styles.screen} style={{ backgroundColor: colors['gray'] }}>
+			{blocks.map((block, idx) => {
+				return <SpaceView2DParticipantRow participants={block} key={idx} />;
+			})}
 		</div>
 	);
 }

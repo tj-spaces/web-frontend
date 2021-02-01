@@ -6,7 +6,9 @@ const colors = {
 	cyan: '#63ffdd',
 	blue: '#52a0ff',
 	violet: '#a769ff',
-	pink: '#ff80ec'
+	pink: '#ff80ec',
+	white: '#dddddd',
+	gray: '#cccccc'
 };
 
 export default colors;

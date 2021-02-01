@@ -5,13 +5,12 @@ import useSpacesInCluster from '../../hooks/useSpacesInCluster';
 import { createStylesheet } from '../../styles/createStylesheet';
 import AuthContext from '../AuthContext';
 import BackgroundColorContext from '../BackgroundColorContext';
-import BaseText from '../Base/BaseText';
 import BaseScrollableArea from '../Base/BaseScrollableArea';
+import BaseText from '../Base/BaseText';
 import Space from '../Space/Space';
-import SpaceList from './ClusterSpaceList';
 import ClusterSettingsModal from './ClusterSettingsModal';
+import SpaceList from './ClusterSpaceList';
 import ClusterIdContext from './CurrentClusterContext';
-import ColorTest from '../ColorTest';
 
 export const styles = createStylesheet({
 	clusterLayout: {
@@ -42,7 +41,6 @@ export default function Cluster({ id }: { id: string }) {
 					</span>
 				</BaseText>
 				{spaceId && (isLoggedIn ? <Space id={spaceId} /> : <h1>Authenticating...</h1>)}
-				<ColorTest />
 				<div className={styles.clusterLayout}>
 					<BackgroundColorContext.Provider value="light">
 						<BaseScrollableArea railPadding="railPadding" style={{ flex: 1 }}>

@@ -44,7 +44,7 @@ export interface ISpaceParticipant {
 	/**
 	 * Color of the user's avatar
 	 */
-	displayColor: string;
+	displayColor: 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'violet' | 'pink';
 
 	/**
 	 * Anything from 'agree' to 'disagree' to 'go faster'

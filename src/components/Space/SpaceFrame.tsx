@@ -30,17 +30,19 @@ export default function SpaceFrame() {
 
 	return (
 		<div className={spaceViewStyles.frame}>
-			<BaseText fontSize="large" alignment="center">
-				{space ? space.name : 'Loading Space'}
-			</BaseText>
-			<br />
+			<div className={spaceViewStyles.topHeading}>
+				<BaseText fontSize="large" alignment="center">
+					{space ? space.name : 'Loading Space'}
+				</BaseText>
+				<br />
 
-			<BaseRow direction="column">
-				<h2>Here</h2>
-				{Object.values(spaceContext.participants).map((participant) => (
-					<span key={participant.accountId}>{participant.displayName}</span>
-				))}
-			</BaseRow>
+				<BaseRow direction="column">
+					<h2>Here</h2>
+					{Object.values(spaceContext.participants).map((participant) => (
+						<span key={participant.accountId}>{participant.displayName}</span>
+					))}
+				</BaseRow>
+			</div>
 
 			{SPACE_VIEW_TYPE === '3d' ? <SpaceView3D /> : <SpaceView2D />}
 

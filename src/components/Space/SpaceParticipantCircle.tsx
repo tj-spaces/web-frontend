@@ -1,5 +1,6 @@
 import React from 'react';
 import { VideoTrack } from 'twilio-video';
+import colors from '../../styles/colors';
 import { classes, createStylesheet } from '../../styles/createStylesheet';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import TwilioVideoElement from '../TwilioVideoElement';
@@ -59,7 +60,7 @@ export default function SpaceParticipantCircle({
 				styles.participantBubble,
 				isLocal ? styles.participantBubbleLocal : styles.participantBubbleRemote
 			)}
-			style={{ backgroundColor: participant.displayColor }}
+			style={{ backgroundColor: colors[participant.displayColor] }}
 		>
 			{videoTrack ? (
 				<TwilioVideoElement track={videoTrack} />
