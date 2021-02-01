@@ -22,8 +22,8 @@ function App() {
 		<div className="App">
 			<AuthenticationWrapper>
 				<BrowserRouter>
-					<Switch>
-						<Suspense fallback={<CenteredLoadingText />}>
+					<Suspense fallback={<CenteredLoadingText />}>
+						<Switch>
 							<Route path="/auth/:provider/callback" component={AuthorizationCallback} />
 							<Route path="/clusters/:clusterId/spaces/:spaceId" component={ClusterPage} />
 							<Route path="/clusters/:clusterId" component={ClusterPage} />
@@ -32,8 +32,8 @@ function App() {
 							<Route path="/explore" exact component={ClusterExplorerPage} />
 							<Route path="/terms" exact component={TermsPage} />
 							<Route path="/" exact component={DefaultPage} />
-						</Suspense>
-					</Switch>
+						</Switch>
+					</Suspense>
 				</BrowserRouter>
 			</AuthenticationWrapper>
 		</div>

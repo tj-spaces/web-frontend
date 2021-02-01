@@ -1,6 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import * as io from 'socket.io-client';
-import useKeyboardState from '../../hooks/useKeyboardState';
 import { API_SERVER_URL } from '../../lib/constants';
 import { mutate, Updater } from 'queryshift';
 import getSessionId from '../../lib/getSessionId';
@@ -8,6 +7,7 @@ import { getLogger } from '../../lib/ClusterLogger';
 import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceContext from './SpaceContext';
+import SpaceConnectionContext from './SpaceConnectionContext';
 
 type ParticipantMap = { [participantId: string]: ISpaceParticipant };
 
@@ -85,18 +85,9 @@ export default function SpaceConnectionWrapper({
 		}
 	}, [id, onReceiveTwilioGrant]);
 
-	const keyboardState = useKeyboardState();
-
-	useEffect(() => {
-		let updater: Updater<ISpaceParticipant> = {
-			$set: {
-				rotatingDirection: keyboardState.a ? -1 : keyboardState.d ? 1 : 0,
-				movingDirection: keyboardState.w ? 1 : keyboardState.s ? -1 : 0
-			}
-		};
-
-		connectionRef.current?.emit('update', updater);
-	}, [keyboardState]);
-
-	return <SpaceContext.Provider value={{ participants }}>{children}</SpaceContext.Provider>;
+	return (
+		<SpaceContext.Provider value={{ participants }}>
+			<SpaceConnectionContext.Provider value={connectionRef.current}>{children}</SpaceConnectionContext.Provider>
+		</SpaceContext.Provider>
+	);
 }

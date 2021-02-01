@@ -7,8 +7,8 @@ import TwilioVideoElement from '../TwilioVideoElement';
 export const styles = createStylesheet({
 	participantBubble: {
 		borderRadius: '100%',
-		width: '8rem',
-		height: '8rem',
+		width: '10rem',
+		height: '10rem',
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',

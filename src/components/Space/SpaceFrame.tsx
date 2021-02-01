@@ -4,13 +4,14 @@ import AuthContext from '../AuthContext';
 import Button from '../Base/BaseButton';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
-import SpaceIDContext from './SpaceIDContext';
 import SpaceContext from './SpaceContext';
+import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaContext from './SpaceMediaContext';
-import SpaceBottomLocalVideo from './SpaceBottomLocalVideo';
+import SpaceView2D from './SpaceView2D';
 import SpaceView3D from './SpaceView3D';
 import { spaceViewStyles } from './SpaceViewStyles';
-import SpatialAudioListener from './SpatialAudioListener';
+
+const SPACE_VIEW_TYPE: '2d' | '3d' = '2d';
 
 export default function SpaceFrame() {
 	const spaceID = useContext(SpaceIDContext);
@@ -27,12 +28,8 @@ export default function SpaceFrame() {
 		return <h1>Joining Space</h1>;
 	}
 
-	const localParticipant = spaceContext.participants[user.id];
-
 	return (
 		<div className={spaceViewStyles.frame}>
-			{localParticipant && <SpatialAudioListener position={localParticipant.position} />}
-
 			<BaseText fontSize="large" alignment="center">
 				{space ? space.name : 'Loading Space'}
 			</BaseText>
@@ -45,9 +42,7 @@ export default function SpaceFrame() {
 				))}
 			</BaseRow>
 
-			<SpaceView3D />
-
-			{localParticipant && <SpaceBottomLocalVideo participant={localParticipant} />}
+			{SPACE_VIEW_TYPE === '3d' ? <SpaceView3D /> : <SpaceView2D />}
 
 			<div className={spaceViewStyles.bottomButtons}>
 				<Button to="..">Leave</Button>

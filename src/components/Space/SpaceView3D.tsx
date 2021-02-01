@@ -1,15 +1,19 @@
 import React, { useContext } from 'react';
 import useLocalParticipant from '../../hooks/useLocalParticipant';
-import SpaceView3DMinimap from './SpaceView3DMinimap';
 import SpaceContext from './SpaceContext';
+import SpaceKeyboardMovementController from './SpaceKeyboardMovementController';
 import SpaceMediaContext from './SpaceMediaContext';
-import SpaceParticipantRemote3D from './SpaceParticipantRemote3D';
+import SpaceBottomLocalVideo from './SpaceView3DBottomLocalVideo';
+import SpaceView3DMinimap from './SpaceView3DMinimap';
+import SpaceParticipantRemote3D from './SpaceView3DRemoteParticipant';
+import SpatialAudioListener from './SpaceView3DSpatialAudioListener';
 import { spaceViewStyles } from './SpaceViewStyles';
 
 export default function SpaceView3D() {
 	const me = useLocalParticipant();
 	const { participants } = useContext(SpaceContext);
 	const { twilioParticipants } = useContext(SpaceMediaContext) ?? {};
+	const localParticipant = useLocalParticipant();
 
 	if (me == null) {
 		return <h1>Joining Space</h1>;
@@ -23,6 +27,8 @@ export default function SpaceView3D() {
 
 	return (
 		<div style={{ backgroundColor: '#333380' }} className={spaceViewStyles.spaceView}>
+			<SpaceKeyboardMovementController />
+			{localParticipant && <SpatialAudioListener position={localParticipant.position} />}
 			<SpaceView3DMinimap
 				elements={Object.values(participants).map((participant) => ({
 					color: participant.accountId === me?.accountId ? 'blue' : 'red',
@@ -44,6 +50,7 @@ export default function SpaceView3D() {
 					return null;
 				}
 			})}
+			{localParticipant && <SpaceBottomLocalVideo participant={localParticipant} />}
 		</div>
 	);
 }
