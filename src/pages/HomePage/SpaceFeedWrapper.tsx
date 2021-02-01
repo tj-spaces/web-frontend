@@ -7,6 +7,7 @@ import SpaceFeed from './SpaceFeed';
 
 export const styles = createStylesheet({
 	feedWrapper: {
+		width: '100%',
 		maxHeight: '100vh',
 		overflowY: 'scroll'
 	}

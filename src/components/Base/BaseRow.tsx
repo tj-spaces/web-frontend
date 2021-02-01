@@ -19,21 +19,25 @@ export default function BaseRow({
 	alignment = 'left',
 	justifyContent = 'start',
 	overflow = 'visible',
+	borderRadius = 0,
 	children,
 	width,
 	height,
-	style
+	style,
+	backgroundColor = 'default'
 }: {
 	direction?: 'row' | 'column';
-	spacing?: 0 | 1 | 2;
-	rails?: 0 | 1 | 2 | 'auto';
-	alignment?: 'center' | 'left' | 'right';
-	justifyContent?: 'center' | 'start' | 'end';
-	overflow?: 'auto' | 'scroll' | 'hidden' | 'visible';
+	spacing?: keyof typeof rowSpacings;
+	rails?: keyof typeof rowRails;
+	borderRadius?: keyof typeof borderRadii;
+	alignment?: keyof typeof alignments;
+	justifyContent?: keyof typeof justifyContents;
+	overflow?: keyof typeof overflows;
 	children: React.ReactNode;
 	width?: string;
 	height?: string;
 	style?: CSSProperties;
+	backgroundColor?: keyof typeof backgroundColors;
 }) {
 	const baseStyle = direction === 'row' ? styles.baseRow : styles.baseCol;
 	const spacingStyle = (direction === 'row' ? rowSpacings : colSpacings)[spacing];
@@ -41,15 +45,42 @@ export default function BaseRow({
 	const alignmentStyle = alignments[alignment];
 	const justifyContentStyle = justifyContents[justifyContent];
 	const overflowStyle = overflows[overflow];
+	const borderRadiusStyle = borderRadii[borderRadius];
+	const backgroundColorStyle = backgroundColors[backgroundColor];
 	return (
 		<div
-			className={classes(baseStyle, spacingStyle, railsStyle, alignmentStyle, justifyContentStyle, overflowStyle)}
+			className={classes(
+				baseStyle,
+				spacingStyle,
+				railsStyle,
+				alignmentStyle,
+				justifyContentStyle,
+				overflowStyle,
+				borderRadiusStyle,
+				backgroundColorStyle
+			)}
 			style={{ width, height, ...style }}
 		>
 			{children}
 		</div>
 	);
 }
+
+export const backgroundColors = createStylesheet({
+	default: {},
+	light0: { backgroundColor: 'var(--spaces-color-light-0)' },
+	light1: { backgroundColor: 'var(--spaces-color-light-1)' },
+	light2: { backgroundColor: 'var(--spaces-color-light-2)' },
+	dark0: { backgroundColor: 'var(--spaces-color-dark-0)' },
+	dark1: { backgroundColor: 'var(--spaces-color-dark-1)' },
+	dark2: { backgroundColor: 'var(--spaces-color-dark-2)' }
+});
+
+export const borderRadii = createStylesheet({
+	0: {},
+	1: { borderRadius: '1rem' },
+	2: { borderRadius: '2rem' }
+});
 
 export const overflows = createStylesheet({
 	auto: { overflow: 'auto' },
@@ -72,17 +103,17 @@ export const justifyContents = createStylesheet({
 });
 
 export const rowRails = createStylesheet({
-	0: { marginTop: '0em', marginBottom: '0em' },
-	1: { marginTop: '0.5em', marginBottom: '0.5em' },
-	2: { marginTop: '1em', marginBottom: '1em' },
-	auto: { marginTop: 'auto', marginBottom: 'auto' }
+	0: { paddingTop: '0em', paddingBottom: '0em' },
+	1: { paddingTop: '0.5em', paddingBottom: '0.5em' },
+	2: { paddingTop: '1em', paddingBottom: '1em' },
+	auto: { paddingTop: 'auto', paddingBottom: 'auto' }
 });
 
 export const colRails = createStylesheet({
-	0: { marginLeft: '0em', marginRight: '0em' },
-	1: { marginLeft: '0.5em', marginRight: '0.5em' },
-	2: { marginLeft: '1em', marginRight: '1em' },
-	auto: { marginLeft: 'auto', marginRight: 'auto' }
+	0: { paddingLeft: '0em', paddingRight: '0em' },
+	1: { paddingLeft: '0.5em', paddingRight: '0.5em' },
+	2: { paddingLeft: '1em', paddingRight: '1em' },
+	auto: { paddingLeft: 'auto', paddingRight: 'auto' }
 });
 
 export const rowSpacing = (amt: string): Stylesheet[''] => ({

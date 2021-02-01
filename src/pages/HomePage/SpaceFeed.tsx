@@ -5,9 +5,9 @@ import BaseText from '../../components/Base/BaseText';
 
 export default function SpaceFeed({ spaces }: { spaces: ISpace[] }) {
 	return (
-		<BaseRow direction="column" spacing={1} rails="auto" width="100%">
+		<BaseRow direction="column" spacing={1} rails="auto" style={{ padding: '1rem 5rem' }}>
 			<BaseText variant="heading" fontWeight="bold" fontSize="xl" alignment="center">
-				Cluster
+				Explore
 			</BaseText>
 			{spaces.map((space) => (
 				<SpaceFeedItem space={space} key={space.id} />

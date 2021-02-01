@@ -21,6 +21,7 @@ export default function SpaceFrame() {
 	const mediaContext = useContext(SpaceMediaContext);
 	const spaceContext = useContext(SpaceContext);
 	const { user } = useContext(AuthContext);
+	// eslint-disable-next-line
 	const [expanded, setExpanded] = useState(true);
 
 	if (user == null) {
@@ -37,15 +38,16 @@ export default function SpaceFrame() {
 				id="frame-container"
 				className={classes(
 					spaceViewStyles.frame,
-					expanded ? spaceViewStyles.frameExpanded : spaceViewStyles.frameCondensed
+					spaceViewStyles.frameExpanded
+					// expanded ? spaceViewStyles.frameExpanded : spaceViewStyles.frameCondensed
 				)}
 			>
 				<div className={spaceViewStyles.topHeading} id="top-heading">
-					{expanded ? (
-						<i className="fas fa-angle-down" onClick={() => setExpanded(false)}></i>
-					) : (
-						<i className="fas fa-angle-up" onClick={() => setExpanded(true)}></i>
-					)}
+					{/* {expanded ? ( */}
+					{/* <i className="fas fa-angle-down" onClick={() => setExpanded(false)}></i> */}
+					{/* ) : ( */}
+					{/* <i className="fas fa-angle-up" onClick={() => setExpanded(true)}></i> */}
+					{/* )} */}
 
 					<BackgroundColorContext.Provider value="light">
 						<BaseText fontSize="xl" fontWeight="bold" alignment="center">

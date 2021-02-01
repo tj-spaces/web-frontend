@@ -36,8 +36,6 @@ export default function SpaceViewTiles() {
 		const width = screenRef.current?.clientWidth ?? window.innerWidth * 0.5;
 		const maxParticipantsPerRow = Math.floor(width / (spaceParticipantCircleSize + columnGap));
 
-		console.log(maxParticipantsPerRow);
-
 		setMaxParticipantsPerRow(maxParticipantsPerRow);
 		return () => {};
 	}, [layout.expanded, participants]);
