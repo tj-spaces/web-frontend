@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { deleteCluster } from '../../api/api';
-import Button from '../Base/BaseButton';
+import BaseButton from '../Base/BaseButton';
 import BaseModal from '../Base/BaseModal';
 import BaseRow from '../Base/BaseRow';
 import ClusterIDContext from './CurrentClusterContext';
@@ -25,9 +25,9 @@ export default function ClusterSettingsModal({ onClose }: { onClose: () => void 
 					<tbody>
 						<tr>
 							<td>
-								<Button onClick={() => deleteCluster_()} size="small" variant="negative">
+								<BaseButton onClick={() => deleteCluster_()} size="small" variant="negative">
 									Delete Cluster
-								</Button>
+								</BaseButton>
 							</td>
 							<td>Deletes this cluster.</td>
 						</tr>
@@ -35,13 +35,13 @@ export default function ClusterSettingsModal({ onClose }: { onClose: () => void 
 				</table>
 
 				<BaseRow direction="row" alignment="center" spacing={1}>
-					<Button onClick={() => save_()} size="small" style={{ flex: 1 }}>
+					<BaseButton onClick={() => save_()} size="small" style={{ flex: 1 }}>
 						Save
-					</Button>
+					</BaseButton>
 
-					<Button onClick={() => onClose()} size="small" style={{ flex: 1 }}>
+					<BaseButton onClick={() => onClose()} size="small" style={{ flex: 1 }}>
 						Cancel
-					</Button>
+					</BaseButton>
 				</BaseRow>
 			</BaseRow>
 		</BaseModal>

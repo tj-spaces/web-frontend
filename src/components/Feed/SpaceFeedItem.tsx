@@ -1,13 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import BaseRow from '../../components/Base/BaseRow';
-import BaseText from '../../components/Base/BaseText';
+import BaseRow from '../Base/BaseRow';
+import BaseText from '../Base/BaseText';
 import { createStylesheet } from '../../styles/createStylesheet';
 import { ISpace } from '../../typings/Space';
 
 const styles = createStylesheet({
 	spaceFeedItemIcon: {
 		flex: 1,
+		marginRight: '1em',
 		subSelectors: {
 			i: {
 				fontSize: '3rem'
@@ -30,7 +31,8 @@ export default function SpaceFeedItem({ space }: { space: ISpace }) {
 			width="20rem"
 			rails={2}
 			spacing={1}
-			centerSelf
+			edges={1}
+			boxShadow
 		>
 			<BaseText fontSize="medium" fontWeight="bold">
 				<Link to={'/space/' + space.id}>{space.name}</Link>

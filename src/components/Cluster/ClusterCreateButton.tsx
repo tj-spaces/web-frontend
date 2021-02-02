@@ -6,7 +6,9 @@ export default function ClusterCreateButton() {
 
 	return (
 		<>
-			<h1 onClick={() => setIsOpen(true)}>+</h1>
+			<h1 onClick={() => setIsOpen(true)} style={{ cursor: 'pointer' }}>
+				+
+			</h1>
 			{isOpen && <ClusterCreateModal onClose={() => setIsOpen(false)} />}
 		</>
 	);

@@ -1,12 +1,12 @@
 import React from 'react';
-import Sidebar from '../../components/Sidebar/Sidebar';
+import Navbar from '../../components/Navbar/Navbar';
 import { createStylesheet } from '../../styles/createStylesheet';
-import SpaceFeedWrapper from './SpaceFeedWrapper';
+import SpaceFeedWrapper from '../../components/Feed/SpaceFeedWrapper';
 
-export const styles = createStylesheet({
+const styles = createStylesheet({
 	container: {
 		display: 'flex',
-		flexDirection: 'row',
+		flexDirection: 'column',
 		width: '100vw',
 		height: '100vh'
 	}
@@ -17,7 +17,7 @@ export default function HomePage() {
 
 	return (
 		<div className={styles.container}>
-			<Sidebar />
+			<Navbar />
 			<SpaceFeedWrapper />
 		</div>
 	);

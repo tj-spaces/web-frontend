@@ -31,6 +31,6 @@ export const styles = createStylesheet({
  * Sidebar icon: a circular icon displayed on the sidebar with either a photo or the first letter of the title.
  * The width is 2.5rem.
  */
-export default function SidebarIcon({ children }: { children: React.ReactNode }) {
+export default function NavbarIcon({ children }: { children: React.ReactNode }) {
 	return <div className={styles.sidebarIcon}>{children}</div>;
 }

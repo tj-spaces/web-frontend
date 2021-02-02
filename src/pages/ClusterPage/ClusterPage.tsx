@@ -1,13 +1,13 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Cluster from '../../components/Cluster/Cluster';
-import Sidebar from '../../components/Sidebar/Sidebar';
+import Navbar from '../../components/Navbar/Navbar';
 import { createStylesheet } from '../../styles/createStylesheet';
 
-export const styles = createStylesheet({
+const styles = createStylesheet({
 	container: {
 		display: 'flex',
-		flexDirection: 'row',
+		flexDirection: 'column',
 		width: '100vw',
 		height: '100vh'
 	}
@@ -20,7 +20,7 @@ export default function ClusterPage() {
 
 	return (
 		<div className={styles.container}>
-			<Sidebar />
+			<Navbar />
 			<Cluster id={clusterId} />
 		</div>
 	);

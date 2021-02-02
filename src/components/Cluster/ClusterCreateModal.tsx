@@ -1,10 +1,36 @@
 import { createRef, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { createCluster } from '../../api/api';
-import Button from '../Base/BaseButton';
+import colors from '../../styles/colors';
+import { classes, createStylesheet } from '../../styles/createStylesheet';
+import rectangleInput from '../../styles/rectangleInput';
+import BaseButton from '../Base/BaseButton';
 import BaseModal from '../Base/BaseModal';
 import BaseRow from '../Base/BaseRow';
-import BaseTextInput from '../Base/BaseTextInput';
+import BaseText from '../Base/BaseText';
+
+const visibilityOptionStyles = createStylesheet({
+	base: {
+		flex: 1,
+		backgroundColor: '#404040',
+		padding: '1rem',
+		textAlign: 'center',
+		cursor: 'pointer',
+		subSelectors: {
+			':first-child': {
+				borderTopLeftRadius: '0.5em',
+				borderBottomLeftRadius: '0.5em'
+			},
+			':last-child': {
+				borderTopRightRadius: '0.5em',
+				borderBottomRightRadius: '0.5em'
+			}
+		}
+	},
+	selected: {
+		backgroundColor: colors.red
+	}
+});
 
 export default function ClusterCreateModal({ onClose }: { onClose: () => void }) {
 	const clusterNameRef = createRef<HTMLInputElement>();
@@ -13,6 +39,7 @@ export default function ClusterCreateModal({ onClose }: { onClose: () => void })
 	const [isClusterCreating, setIsClusterCreating] = useState<boolean>(false);
 	const [isClusterCreated, setIsClusterCreated] = useState<boolean>(false);
 	const [newlyCreatedClusterId, setNewlyCreatedClusterId] = useState<string | null>(null);
+	const [visibility, setVisibility] = useState<'public' | 'unlisted'>('public');
 
 	function create() {
 		if (clusterNameRef.current && visibilityRef.current) {
@@ -38,30 +65,54 @@ export default function ClusterCreateModal({ onClose }: { onClose: () => void })
 
 	return (
 		<BaseModal onClickOutside={onClose}>
-			<h1>Create Cluster</h1>
-			<BaseRow direction="row" spacing={1} rails={1} alignment="center">
-				<span className="margin-right-2">Name</span> <BaseTextInput ref={clusterNameRef} style={{ flex: 3 }} />
-			</BaseRow>
-			<BaseRow direction="row" spacing={1} rails={1} alignment="center">
-				<span className="margin-right-2">Visibility</span>{' '}
-				<select ref={visibilityRef} style={{ flex: 1 }}>
-					<option value="public">Public</option>
-					<option value="unlisted">Unlisted</option>
-				</select>
-			</BaseRow>
-			<BaseRow direction="row" spacing={1} rails={1} alignment="center">
-				{!isClusterCreating ? (
-					<>
-						<Button onClick={() => create()} size="small" style={{ flex: 1 }}>
-							Create
-						</Button>
-						<Button onClick={onClose} size="small" style={{ flex: 1 }}>
-							Cancel
-						</Button>
-					</>
-				) : (
-					'Creating...'
-				)}
+			<BaseRow direction="column" spacing={1}>
+				<h1>Create Cluster</h1>
+				<BaseRow direction="column" alignment="start">
+					<BaseText variant="caption">Name</BaseText>
+					<input
+						className={rectangleInput.rectangleInput}
+						style={{ fontSize: '2rem', width: '100%' }}
+						type="text"
+						ref={clusterNameRef}
+					/>
+				</BaseRow>
+				<BaseRow direction="column" alignment="start" width="100%">
+					<BaseText variant="caption">Visibility</BaseText>
+					<BaseRow direction="row" width="100%">
+						<div
+							className={classes(
+								visibilityOptionStyles.base,
+								visibility === 'public' && visibilityOptionStyles.selected
+							)}
+							onClick={() => setVisibility('public')}
+						>
+							Public
+						</div>
+						<div
+							className={classes(
+								visibilityOptionStyles.base,
+								visibility === 'unlisted' && visibilityOptionStyles.selected
+							)}
+							onClick={() => setVisibility('unlisted')}
+						>
+							Unlisted
+						</div>
+					</BaseRow>
+				</BaseRow>
+				<BaseRow direction="row" spacing={1} rails={1} alignment="center">
+					{!isClusterCreating ? (
+						<>
+							<BaseButton onClick={() => create()} size="small" style={{ flex: 1 }}>
+								Create
+							</BaseButton>
+							<BaseButton onClick={onClose} size="small" style={{ flex: 1 }}>
+								Cancel
+							</BaseButton>
+						</>
+					) : (
+						'Creating...'
+					)}
+				</BaseRow>
 			</BaseRow>
 		</BaseModal>
 	);

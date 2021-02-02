@@ -1,18 +1,21 @@
 import { ButtonHTMLAttributes, CSSProperties, DetailedHTMLProps, forwardRef } from 'react';
 import { Link } from 'react-router-dom';
+import boxShadow from '../../styles/boxShadow';
+import colors from '../../styles/colors';
 import { createStylesheet } from '../../styles/createStylesheet';
-import { BorderRadiusBubble, BorderRadiusCrisp } from '../../styles/borderRadius';
 
 const styles = createStylesheet({
 	button: {
+		extends: [boxShadow.boxShadow],
+
 		border: '0px',
 		padding: '0.25em',
-		backgroundColor: 'var(--spaces-color-dark-3)',
 		color: 'var(--spaces-color-light-0)',
 		transition: 'box-shadow 0.5s ease',
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
+		cursor: 'pointer'
 	}
 });
 
@@ -20,17 +23,19 @@ const sizeStyles = createStylesheet({
 	small: {
 		padding: '0.5em',
 		fontSize: '1.25rem',
-		borderRadius: BorderRadiusCrisp
+		fontWeight: 'bold',
+		textTransform: 'uppercase',
+		borderRadius: '0.5em'
 	},
 	medium: {
 		padding: '0.5em',
 		fontSize: '1.5rem',
-		borderRadius: BorderRadiusBubble
+		borderRadius: '0.5em'
 	},
 	large: {
 		padding: '0.75em',
 		fontSize: '2rem',
-		borderRadius: BorderRadiusBubble
+		borderRadius: '0.5em'
 	}
 });
 
@@ -43,6 +48,9 @@ const variantStyles = createStylesheet({
 	},
 	negative: {
 		backgroundColor: 'var(--spaces-color-negative)'
+	},
+	theme: {
+		backgroundColor: colors.red
 	}
 });
 
@@ -56,11 +64,11 @@ type ButtonProps = (
 			className?: string;
 	  }
 ) & {
-	size?: 'small' | 'medium' | 'large';
-	variant?: 'primary' | 'positive' | 'negative';
+	size?: keyof typeof sizeStyles;
+	variant?: keyof typeof variantStyles;
 };
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+const BaseButton = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
 	const { size = 'medium', variant = 'primary' } = props;
 	if ('to' in props) {
 		const { to, className } = props;
@@ -81,4 +89,4 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
 	}
 });
 
-export default Button;
+export default BaseButton;

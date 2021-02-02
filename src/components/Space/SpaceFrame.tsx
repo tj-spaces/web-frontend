@@ -3,7 +3,7 @@ import useSpace from '../../hooks/useSpace';
 import { classes } from '../../styles/createStylesheet';
 import AuthContext from '../AuthContext';
 import BackgroundColorContext from '../BackgroundColorContext';
-import Button from '../Base/BaseButton';
+import BaseButton from '../Base/BaseButton';
 import BaseText from '../Base/BaseText';
 import SpaceContext from './SpaceContext';
 import SpaceIDContext from './SpaceIDContext';
@@ -61,28 +61,28 @@ export default function SpaceFrame() {
 				</div>
 
 				<div className={spaceViewStyles.bottomButtons} id="bottom-buttons">
-					<Button to="..">Leave</Button>
+					<BaseButton to="..">Leave</BaseButton>
 
 					{mediaContext && (
 						<>
 							{mediaContext.muted ? (
-								<Button onClick={() => mediaContext.setMuted(false)}>
+								<BaseButton onClick={() => mediaContext.setMuted(false)}>
 									<i className="fas fa-microphone-slash"></i>
-								</Button>
+								</BaseButton>
 							) : (
-								<Button onClick={() => mediaContext.setMuted(true)}>
+								<BaseButton onClick={() => mediaContext.setMuted(true)}>
 									<i className="fas fa-microphone"></i>
-								</Button>
+								</BaseButton>
 							)}
 
 							{mediaContext.cameraEnabled ? (
-								<Button onClick={() => mediaContext.setCameraEnabled(false)}>
+								<BaseButton onClick={() => mediaContext.setCameraEnabled(false)}>
 									<i className="fas fa-video"></i>
-								</Button>
+								</BaseButton>
 							) : (
-								<Button onClick={() => mediaContext.setCameraEnabled(true)}>
+								<BaseButton onClick={() => mediaContext.setCameraEnabled(true)}>
 									<i className="fas fa-video-slash"></i>
-								</Button>
+								</BaseButton>
 							)}
 						</>
 					)}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getMyClusters, getSpacesInCluster } from '../../api/api';
-import CenteredLoadingText from '../../components/CenteredLoadingText';
+import CenteredLoadingText from '../CenteredLoadingText';
 import { createStylesheet } from '../../styles/createStylesheet';
 import { ISpace } from '../../typings/Space';
 import SpaceFeed from './SpaceFeed';

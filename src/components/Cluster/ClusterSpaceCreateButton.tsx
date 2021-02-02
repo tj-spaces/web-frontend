@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Button from '../Base/BaseButton';
+import BaseButton from '../Base/BaseButton';
 import SpaceCreateModal from './ClusterSpaceCreateModal';
 
 export default function SpaceCreateButton() {
@@ -7,9 +7,9 @@ export default function SpaceCreateButton() {
 
 	return (
 		<>
-			<Button onClick={() => setIsOpen(true)} size="small">
+			<BaseButton onClick={() => setIsOpen(true)} size="small">
 				Create Space
-			</Button>
+			</BaseButton>
 			{isOpen && <SpaceCreateModal onClose={() => setIsOpen(false)} />}
 		</>
 	);

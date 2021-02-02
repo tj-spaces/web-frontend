@@ -20,6 +20,8 @@ export const styles = createStylesheet({
 		backgroundColor: '#303030',
 		borderRadius: '0.5em',
 		transition: 'height 800ms ease',
+		padding: '1em',
+		textTransform: 'none',
 		extends: [boxShadow.boxShadow]
 		// padding: '2em'
 	}

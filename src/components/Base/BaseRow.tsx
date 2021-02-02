@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react';
+import boxShadowStyles from '../../styles/boxShadow';
 import { classes, createStylesheet, Stylesheet } from '../../styles/createStylesheet';
 
 export const styles = createStylesheet({
@@ -13,25 +14,29 @@ export const styles = createStylesheet({
 });
 
 export default function BaseRow({
+	alignment = 'start',
+	backgroundColor = 'default',
+	borderRadius = 0,
+	boxShadow = false,
+	centerSelf = false,
 	direction = 'row',
-	spacing = 0,
-	rails = 0,
-	alignment = 'left',
+	edges = 0,
+	height,
 	justifyContent = 'start',
 	overflow = 'visible',
-	borderRadius = 0,
-	children,
+	rails = 0,
+	spacing = 0,
 	width,
-	height,
 	style,
-	backgroundColor = 'default',
-	centerSelf = false
+	children
 }: {
 	alignment?: keyof typeof alignments;
 	backgroundColor?: keyof typeof backgroundColors;
 	borderRadius?: keyof typeof borderRadii;
+	boxShadow?: boolean;
 	centerSelf?: boolean;
 	direction?: 'row' | 'column';
+	edges?: keyof typeof rowEdges;
 	height?: string;
 	justifyContent?: keyof typeof justifyContents;
 	overflow?: keyof typeof overflows;
@@ -42,8 +47,10 @@ export default function BaseRow({
 	children: React.ReactNode;
 }) {
 	const baseStyle = direction === 'row' ? styles.baseRow : styles.baseCol;
+	const boxShadowStyle = boxShadow && boxShadowStyles.boxShadow;
 	const spacingStyle = (direction === 'row' ? rowSpacings : colSpacings)[spacing];
 	const railsStyle = (direction === 'row' ? rowRails : colRails)[rails];
+	const edgesStyle = (direction === 'row' ? rowEdges : colEdges)[edges];
 	const alignmentStyle = alignments[alignment];
 	const justifyContentStyle = justifyContents[justifyContent];
 	const overflowStyle = overflows[overflow];
@@ -58,10 +65,12 @@ export default function BaseRow({
 				baseStyle,
 				borderRadiusStyle,
 				centerStyle,
+				edgesStyle,
 				justifyContentStyle,
 				overflowStyle,
 				railsStyle,
-				spacingStyle
+				spacingStyle,
+				boxShadowStyle
 			)}
 			style={{ width, height, ...style }}
 		>
@@ -91,6 +100,18 @@ export const centerSelfs = createStylesheet({
 	}
 });
 
+export const rowEdges = createStylesheet({
+	0: {},
+	1: { paddingLeft: '0.5em', paddingRight: '0.5em' },
+	2: { paddingLeft: '1em', paddingRight: '1em' }
+});
+
+export const colEdges = createStylesheet({
+	0: {},
+	1: { paddingTop: '0.5em', paddingBottom: '0.5em' },
+	2: { paddingTop: '1em', paddingBottom: '1em' }
+});
+
 export const borderRadii = createStylesheet({
 	0: {},
 	1: { borderRadius: '1rem' },
@@ -106,8 +127,8 @@ export const overflows = createStylesheet({
 
 export const alignments = createStylesheet({
 	center: { alignItems: 'center' },
-	left: { alignItems: 'left' },
-	right: { alignItems: 'right' }
+	end: { alignItems: 'end' },
+	start: { alignItems: 'start' }
 });
 
 export const justifyContents = createStylesheet({
@@ -120,20 +141,16 @@ export const justifyContents = createStylesheet({
 export const rowRails = createStylesheet({
 	0: { paddingTop: '0em', paddingBottom: '0em' },
 	1: { paddingTop: '0.5em', paddingBottom: '0.5em' },
-	2: { paddingTop: '1em', paddingBottom: '1em' },
-	auto: { paddingTop: 'auto', paddingBottom: 'auto' }
+	2: { paddingTop: '1em', paddingBottom: '1em' }
 });
 
 export const colRails = createStylesheet({
 	0: { paddingLeft: '0em', paddingRight: '0em' },
 	1: { paddingLeft: '0.5em', paddingRight: '0.5em' },
-	2: { paddingLeft: '1em', paddingRight: '1em' },
-	auto: { paddingLeft: 'auto', paddingRight: 'auto' }
+	2: { paddingLeft: '1em', paddingRight: '1em' }
 });
 
 export const rowSpacing = (amt: string): Stylesheet[''] => ({
-	paddingLeft: amt,
-	paddingRight: amt,
 	subSelectors: {
 		'>*': {
 			subSelectors: {
@@ -149,8 +166,6 @@ export const rowSpacing = (amt: string): Stylesheet[''] => ({
 });
 
 export const colSpacing = (amt: string): Stylesheet[''] => ({
-	paddingTop: amt,
-	paddingBottom: amt,
 	subSelectors: {
 		'>*': {
 			subSelectors: {
@@ -166,13 +181,13 @@ export const colSpacing = (amt: string): Stylesheet[''] => ({
 });
 
 export const rowSpacings = createStylesheet({
-	0: rowSpacing('0rem'),
+	0: {},
 	1: rowSpacing('0.5rem'),
 	2: rowSpacing('1rem')
 });
 
 export const colSpacings = createStylesheet({
-	0: colSpacing('0rem'),
+	0: {},
 	1: colSpacing('0.5rem'),
 	2: colSpacing('1rem')
 });

@@ -1,7 +1,7 @@
 import React, { createRef, useContext, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { createSpace } from '../../api/api';
-import Button from '../Base/BaseButton';
+import BaseButton from '../Base/BaseButton';
 import BaseModal from '../Base/BaseModal';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
@@ -47,9 +47,9 @@ export default function SpaceCreateModal({ onClose }: { onClose: () => void }) {
 					<BaseTextInput ref={spaceNameRef} fontSize="xxl" style={{ width: '100%' }} />
 				</div>
 				{!isSpaceCreating ? (
-					<Button size="small" onClick={() => create()}>
+					<BaseButton size="small" onClick={() => create()}>
 						Create
-					</Button>
+					</BaseButton>
 				) : (
 					'Creating...'
 				)}
