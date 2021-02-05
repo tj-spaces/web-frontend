@@ -28,7 +28,7 @@ export default function SpaceConnectionWrapper({
 	// this sets up the socket.io connection and twilio grant
 	useEffect(() => {
 		if (!connectionRef.current) {
-			connectionRef.current = io.connect(API_SERVER_URL + '?sessionId=' + getSessionId());
+			connectionRef.current = io.connect(API_SERVER_URL + '?sessionID=' + getSessionId());
 		}
 
 		connectionRef.current.emit('join_space', id);

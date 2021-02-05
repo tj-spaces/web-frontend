@@ -28,7 +28,7 @@ export default function SpaceFrame() {
 	}
 
 	if (spaceContext == null) {
-		return <h1>Joining Space</h1>;
+		return <h1>Joining Space [SC]</h1>;
 	}
 
 	return (

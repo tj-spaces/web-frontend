@@ -41,7 +41,7 @@ export default function SpaceViewTiles() {
 	}, [layout.expanded, participants]);
 
 	if (me == null) {
-		return <h1>Joining Space</h1>;
+		return <h1>Joining Space [ME]</h1>;
 	}
 
 	let participantElements = [
