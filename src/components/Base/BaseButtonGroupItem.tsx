@@ -19,7 +19,7 @@ const baseButtonGroupItem = createStylesheet({
 				borderBottomRightRadius: '0.5em'
 			}
 		},
-		transition: 'background-color 500ms ease'
+		transition: 'background-color 200ms ease'
 	},
 	selected: {
 		backgroundColor: colors.red

@@ -96,6 +96,10 @@ const BaseButton = forwardRef<HTMLButtonElement, ButtonProps>(
 						xstyle
 					)}
 					{...props}
+					onClick={(ev) => {
+						ev.stopPropagation();
+						props.onClick?.(ev);
+					}}
 				/>
 			);
 		}

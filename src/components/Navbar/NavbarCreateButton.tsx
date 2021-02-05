@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import BaseButton from '../Base/BaseButton';
-import NavbarCreateModal from './NavbarCreateModal';
+import CreateModal from '../CreateModal/CreateModal';
 
 export default function NavbarCreateButton() {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
 		<>
+			{isOpen && <CreateModal onClose={() => setIsOpen(false)} />}
 			<BaseButton variant="theme" size="small" onClick={() => setIsOpen(true)}>
 				Create
-				{isOpen && <NavbarCreateModal close={() => setIsOpen(false)} />}
 			</BaseButton>
 		</>
 	);

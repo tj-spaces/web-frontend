@@ -6,9 +6,9 @@ export default function ClusterCreateButton() {
 
 	return (
 		<>
-			<h1 onClick={() => setIsOpen(true)} style={{ cursor: 'pointer' }}>
+			<div aria-label="Create Cluster" onClick={() => setIsOpen(true)} style={{ cursor: 'pointer' }}>
 				+
-			</h1>
+			</div>
 			{isOpen && <ClusterCreateModal onClose={() => setIsOpen(false)} />}
 		</>
 	);

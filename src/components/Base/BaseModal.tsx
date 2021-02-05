@@ -19,7 +19,7 @@ export const styles = createStylesheet({
 	modalForeground: {
 		backgroundColor: '#303030',
 		borderRadius: '0.5em',
-		transition: 'height 800ms ease',
+		transition: 'all 800ms ease',
 		padding: '1em',
 		textTransform: 'none',
 		extends: [boxShadow.boxShadow]
@@ -45,7 +45,8 @@ export default function BaseModal({
 	const fgRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
 		const checkForOutsideClick = (ev: MouseEvent) => {
-			if (!fgRef.current?.contains(ev.target as HTMLDivElement)) {
+			let target = ev.target as HTMLDivElement;
+			if (!fgRef.current?.contains(target)) {
 				onClickOutside();
 			}
 		};

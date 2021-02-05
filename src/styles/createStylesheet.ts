@@ -127,7 +127,7 @@ export function createStylesheet<T extends StylesheetDefinition>(styles: T): Fun
 				queuedClassesCount = 0;
 			}
 			buildTimeoutHandle = null;
-		}, 50);
+		}, 5);
 	}
 
 	return (() => {
