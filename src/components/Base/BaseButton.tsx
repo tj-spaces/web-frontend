@@ -1,12 +1,12 @@
-import { ButtonHTMLAttributes, CSSProperties, DetailedHTMLProps, forwardRef } from 'react';
+import { ButtonHTMLAttributes, DetailedHTMLProps, forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 import boxShadow from '../../styles/boxShadow';
 import colors from '../../styles/colors';
-import { createStylesheet } from '../../styles/createStylesheet';
+import { stylex, ClassProvider as CompiledClasses, createStylesheet } from '../../styles/createStylesheet';
 
 const styles = createStylesheet({
 	button: {
-		extends: [boxShadow.boxShadow],
+		// extends: [boxShadow.boxShadow],
 
 		border: '0px',
 		padding: '0.25em',
@@ -58,35 +58,48 @@ type ButtonProps = (
 	| /* Button */
 	DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 	/* Link styled like a button */
-	| {
-			to: string;
-			style?: CSSProperties;
-			className?: string;
-	  }
+	| { to: string }
 ) & {
 	size?: keyof typeof sizeStyles;
 	variant?: keyof typeof variantStyles;
+	boxShadow?: boolean;
+	xstyle?: CompiledClasses;
 };
 
-const BaseButton = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-	const { size = 'medium', variant = 'primary' } = props;
-	if ('to' in props) {
-		const { to, className } = props;
-		return (
-			<Link to={to} className={[styles.button, sizeStyles[size], variantStyles[variant], className].join(' ')}>
-				{props.children}
-			</Link>
-		);
-	} else {
-		const { className, ...otherProps } = props;
-		return (
-			<button
-				ref={ref}
-				className={[styles.button, sizeStyles[size], variantStyles[variant], className].join(' ')}
-				{...otherProps}
-			/>
-		);
+const BaseButton = forwardRef<HTMLButtonElement, ButtonProps>(
+	({ size = 'medium', variant = 'primary', boxShadow: useBoxShadow = false, xstyle, ...props }, ref) => {
+		if ('to' in props) {
+			const { to } = props;
+			return (
+				<Link
+					to={to}
+					className={stylex(
+						styles.button,
+						sizeStyles[size],
+						variantStyles[variant],
+						useBoxShadow && boxShadow.boxShadow,
+						xstyle
+					)}
+				>
+					{props.children}
+				</Link>
+			);
+		} else {
+			return (
+				<button
+					ref={ref}
+					className={stylex(
+						styles.button,
+						sizeStyles[size],
+						variantStyles[variant],
+						useBoxShadow && boxShadow.boxShadow,
+						xstyle
+					)}
+					{...props}
+				/>
+			);
+		}
 	}
-});
+);
 
 export default BaseButton;

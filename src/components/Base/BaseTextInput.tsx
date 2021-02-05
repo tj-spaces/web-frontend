@@ -19,7 +19,7 @@ function BaseTextInput(
 	{ fontSize = 'medium', fontWeight = 'normal', ...props }: BaseTextInputProps,
 	ref: ForwardedRef<HTMLInputElement>
 ) {
-	return <input {...props} ref={ref} className={styles.base} />;
+	return <input {...props} ref={ref} className={styles('base')} />;
 }
 
 export default forwardRef<HTMLInputElement, BaseTextInputProps>(BaseTextInput);

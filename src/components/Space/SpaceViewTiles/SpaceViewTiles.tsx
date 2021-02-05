@@ -79,7 +79,7 @@ export default function SpaceViewTiles() {
 	}
 
 	return (
-		<div className={styles.screen} style={{ backgroundColor: colors.white }} ref={screenRef}>
+		<div className={styles('screen')} style={{ backgroundColor: colors.white }} ref={screenRef}>
 			{blocks.map((block, idx) => {
 				return <SpaceViewTilesTileRow participants={block} key={idx} />;
 			})}

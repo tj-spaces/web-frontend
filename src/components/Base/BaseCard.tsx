@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react';
 import { BorderRadiusBubble } from '../../styles/borderRadius';
-import { classes, createStylesheet } from '../../styles/createStylesheet';
+import { stylex, createStylesheet } from '../../styles/createStylesheet';
 import BackgroundColorContext from '../BackgroundColorContext';
 
 const styles = createStylesheet({
@@ -12,7 +12,7 @@ const styles = createStylesheet({
 	}
 });
 
-const bgcolorStyles = createStylesheet({
+const backgroundColorStyles = createStylesheet({
 	dark: {
 		backgroundColor: 'var(--spaces-color-dark-2)'
 	},
@@ -31,7 +31,7 @@ export default function BaseCard({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className={classes(styles.base, bgcolorStyles[backgroundColor])} style={style}>
+		<div className={stylex(styles.base, backgroundColorStyles[backgroundColor])} style={style}>
 			<BackgroundColorContext.Provider value={backgroundColor}>{children}</BackgroundColorContext.Provider>
 		</div>
 	);

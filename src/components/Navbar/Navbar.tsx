@@ -25,7 +25,7 @@ export const styles = createStylesheet({
 
 export default function Navbar() {
 	return (
-		<div className={styles.navbar}>
+		<div className={styles('navbar')}>
 			<NavbarIcon>
 				<ClusterCreateButton />
 			</NavbarIcon>

@@ -34,7 +34,7 @@ export default function SpaceFeedWrapper() {
 		return <CenteredLoadingText />;
 	} else {
 		return (
-			<div className={styles.feedWrapper}>
+			<div className={styles('feedWrapper')}>
 				<SpaceFeed spaces={spaces} />
 			</div>
 		);

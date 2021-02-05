@@ -26,7 +26,7 @@ export default function SpaceView3D() {
 	}
 
 	return (
-		<div style={{ backgroundColor: '#333380' }} className={spaceViewStyles.view}>
+		<div style={{ backgroundColor: '#333380' }} className={spaceViewStyles('view')}>
 			<SpaceKeyboardMovementController />
 			{localParticipant && <SpatialAudioListener position={localParticipant.position} />}
 			<SpaceView3DMinimap

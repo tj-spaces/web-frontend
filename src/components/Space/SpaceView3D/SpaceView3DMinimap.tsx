@@ -30,7 +30,7 @@ export function MinimapElementComponent({ item, relativeTo }: { item: MinimapEle
 
 	return (
 		<div
-			className={styles.element}
+			className={styles('element')}
 			style={{
 				backgroundColor: item.color,
 				transform: `rotateZ(${item.position.rotation}rad)`,
@@ -51,7 +51,7 @@ export default function SpaceView3DMinimap({
 	center: SpacePositionInfo;
 }) {
 	return (
-		<div className={styles.minimap}>
+		<div className={styles('minimap')}>
 			{elements.map((element, index) => {
 				return <MinimapElementComponent item={element} key={index} relativeTo={center} />;
 			})}

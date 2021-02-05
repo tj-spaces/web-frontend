@@ -1,17 +1,6 @@
 import { CSSProperties } from 'react';
 import boxShadowStyles from '../../styles/boxShadow';
-import { classes, createStylesheet, Stylesheet } from '../../styles/createStylesheet';
-
-export const styles = createStylesheet({
-	baseRow: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	baseCol: {
-		display: 'flex',
-		flexDirection: 'column'
-	}
-});
+import { stylex, createStylesheet, StylesheetDefinition } from '../../styles/createStylesheet';
 
 export default function BaseRow({
 	alignment = 'start',
@@ -46,7 +35,7 @@ export default function BaseRow({
 	style?: CSSProperties;
 	children: React.ReactNode;
 }) {
-	const baseStyle = direction === 'row' ? styles.baseRow : styles.baseCol;
+	const baseStyle = direction === 'row' ? baseStyles.baseRow : baseStyles.baseCol;
 	const boxShadowStyle = boxShadow && boxShadowStyles.boxShadow;
 	const spacingStyle = (direction === 'row' ? rowSpacings : colSpacings)[spacing];
 	const railsStyle = (direction === 'row' ? rowRails : colRails)[rails];
@@ -59,7 +48,7 @@ export default function BaseRow({
 	const centerStyle = centerSelf && centerSelfs[direction];
 	return (
 		<div
-			className={classes(
+			className={stylex(
 				alignmentStyle,
 				backgroundColorStyle,
 				baseStyle,
@@ -78,6 +67,17 @@ export default function BaseRow({
 		</div>
 	);
 }
+
+export const baseStyles = createStylesheet({
+	baseRow: {
+		display: 'flex',
+		flexDirection: 'row'
+	},
+	baseCol: {
+		display: 'flex',
+		flexDirection: 'column'
+	}
+});
 
 export const backgroundColors = createStylesheet({
 	default: {},
@@ -150,7 +150,7 @@ export const colRails = createStylesheet({
 	2: { paddingLeft: '1em', paddingRight: '1em' }
 });
 
-export const rowSpacing = (amt: string): Stylesheet[''] => ({
+export const rowSpacing = (amt: string): StylesheetDefinition[''] => ({
 	subSelectors: {
 		'>*': {
 			subSelectors: {
@@ -165,7 +165,7 @@ export const rowSpacing = (amt: string): Stylesheet[''] => ({
 	}
 });
 
-export const colSpacing = (amt: string): Stylesheet[''] => ({
+export const colSpacing = (amt: string): StylesheetDefinition[''] => ({
 	subSelectors: {
 		'>*': {
 			subSelectors: {

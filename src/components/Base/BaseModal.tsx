@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import boxShadow from '../../styles/boxShadow';
-import { classes, createStylesheet } from '../../styles/createStylesheet';
+import { stylex, createStylesheet } from '../../styles/createStylesheet';
 import BackgroundColorContext from '../BackgroundColorContext';
 
 export const styles = createStylesheet({
@@ -55,9 +55,9 @@ export default function BaseModal({
 		};
 	}, [onClickOutside]);
 	return (
-		<div className={classes(styles.modalBackground)}>
+		<div className={styles('modalBackground')}>
 			<BackgroundColorContext.Provider value="dark">
-				<div ref={fgRef} className={classes(styles.modalForeground, variantStyles[variant])}>
+				<div ref={fgRef} className={stylex(styles.modalForeground, variantStyles[variant])}>
 					{children}
 				</div>
 			</BackgroundColorContext.Provider>

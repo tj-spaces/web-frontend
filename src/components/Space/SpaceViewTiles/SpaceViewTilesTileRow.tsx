@@ -19,5 +19,5 @@ export const styles = createStylesheet({
 });
 
 export default function SpaceViewTilesTileRow({ participants }: { participants: React.ReactNode }) {
-	return <div className={styles.participantRow}>{participants}</div>;
+	return <div className={styles('participantRow')}>{participants}</div>;
 }

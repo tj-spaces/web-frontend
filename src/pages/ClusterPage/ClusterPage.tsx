@@ -19,7 +19,7 @@ export default function ClusterPage() {
 	const { clusterId } = useParams<{ clusterId: string }>();
 
 	return (
-		<div className={styles.container}>
+		<div className={styles('container')}>
 			<Navbar />
 			<Cluster id={clusterId} />
 		</div>

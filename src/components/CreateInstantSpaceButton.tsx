@@ -22,7 +22,7 @@ const styles = createStylesheet({
 export default function CreateInstantSpaceButton() {
 	return (
 		<button
-			className={styles.createInstantSpaceButton}
+			className={styles('createInstantSpaceButton')}
 			onClick={() => {
 				alert('Creating a space');
 			}}

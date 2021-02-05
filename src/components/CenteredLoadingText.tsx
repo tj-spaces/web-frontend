@@ -13,7 +13,7 @@ const styles = createStylesheet({
 
 export default function CenteredLoadingText() {
 	return (
-		<div className={styles.centeredLoadingText}>
+		<div className={styles('centeredLoadingText')}>
 			<h1>Loading...</h1>
 		</div>
 	);

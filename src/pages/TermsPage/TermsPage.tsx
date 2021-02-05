@@ -11,7 +11,7 @@ export const styles = createStylesheet({
 
 export default function TermsPage() {
 	return (
-		<div className={styles.termsPage}>
+		<div className={styles('termsPage')}>
 			<Link to="/" className="underline">
 				Home
 			</Link>

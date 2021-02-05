@@ -32,5 +32,5 @@ export const styles = createStylesheet({
  * The width is 2.5rem.
  */
 export default function NavbarIcon({ children }: { children: React.ReactNode }) {
-	return <div className={styles.sidebarIcon}>{children}</div>;
+	return <div className={styles('sidebarIcon')}>{children}</div>;
 }

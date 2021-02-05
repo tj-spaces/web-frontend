@@ -1,4 +1,4 @@
-export type ClusterVisibility = 'public' | 'unlisted';
+export type ClusterVisibility = 'discoverable' | 'unlisted' | 'secret';
 
 export interface ICluster {
 	id: string;

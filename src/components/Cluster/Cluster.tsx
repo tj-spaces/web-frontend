@@ -35,7 +35,7 @@ export default function Cluster({ id }: { id: string }) {
 						<i className="fas fa-cog pressable"></i>
 					</span>
 				</BaseText>
-				<div className={styles.clusterLayout}>
+				<div className={styles('clusterLayout')}>
 					<BackgroundColorContext.Provider value="light">
 						<BaseScrollableArea railPadding="railPadding" style={{ flex: 1 }}>
 							<BaseText fontSize="xl" fontWeight="bold">

@@ -38,10 +38,10 @@ export default function SpaceFeedItem({ space }: { space: ISpace }) {
 				<Link to={'/space/' + space.id}>{space.name}</Link>
 			</BaseText>
 			<BaseRow direction="row">
-				<div className={styles.spaceFeedItemIcon}>
+				<div className={styles('spaceFeedItemIcon')}>
 					<i className="fas fa-server"></i>
 				</div>
-				<div className={styles.spaceFeedItemContent}>Online: {space.online_count}</div>
+				<div className={styles('spaceFeedItemContent')}>Online: {space.online_count}</div>
 			</BaseRow>
 		</BaseRow>
 	);

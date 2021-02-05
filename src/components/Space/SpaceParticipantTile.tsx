@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { classes, createStylesheet } from '../../styles/createStylesheet';
+import { createStylesheet } from '../../styles/createStylesheet';
 import SpaceViewLayoutContext from './SpaceViewLayoutContext';
 
 export const styles = createStylesheet({
@@ -45,10 +45,10 @@ export default function SpaceParticipantTile({ children, isLocal }: { children: 
 
 	return (
 		<div
-			className={classes(
-				styles.participantTile,
-				isLocal ? styles.participantTileLocal : styles.participantTileRemote,
-				layout.expanded ? styles.participantTileExpanded : styles.participantTileCondensed
+			className={styles(
+				'participantTile',
+				isLocal ? 'participantTileLocal' : 'participantTileRemote',
+				layout.expanded ? 'participantTileExpanded' : 'participantTileCondensed'
 			)}
 		>
 			{children}

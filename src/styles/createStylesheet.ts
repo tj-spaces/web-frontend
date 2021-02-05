@@ -13,7 +13,7 @@ function createStyleTag() {
 const classCache: { [key: string]: string } = {};
 const generatedClassNames = new Set<string>();
 
-const kebabize = (str: string) => {
+const hyphenate = (str: string) => {
 	return str
 		.split('')
 		.map((letter, idx) => {
@@ -46,42 +46,39 @@ function generateClassName(length: number = 8) {
 	return result;
 }
 
-export type Stylesheet = { [className: string]: StylesheetProperties };
+export type StylesheetDefinition = { [className: string]: StylesheetProperties };
 export interface StylesheetProperties extends CSSProperties {
-	extends?: string[];
+	extends?: ClassProvider[];
 	subSelectors?: {
 		[pseudoSelector: string]: StylesheetProperties;
 	};
 }
 
-const matchNonSafeCharacters = /[^a-zA-Z0-9-_]/g;
-export function safeClassname(name: string) {
-	return name.replace(matchNonSafeCharacters, '-');
-}
-
 export function createClasses(properties: StylesheetProperties, subSelectors: string = '') {
 	let innerHTML = '';
-	let classes: string[] = [];
-	for (let [propName, propValue] of Object.entries(properties)) {
-		if (propName === 'extends') {
-			let otherClasses = (propValue as unknown) as string[];
-			classes.push(otherClasses.join(' '));
-		} else if (propName === 'subSelectors') {
-			for (let [nestedSubSelector, props] of Object.entries(propValue)) {
+	// map of property name to property class
+	let classes: Record<string, string | Record<string, string>> = {};
+	for (let [name, value] of Object.entries(properties)) {
+		if (name === 'subSelectors') {
+			for (let [nestedSubSelector, props] of Object.entries(value)) {
 				// This is a nested StylesheetProperties
 				let result = createClasses(props as StylesheetProperties, subSelectors + nestedSubSelector);
 				innerHTML += result.innerHTML;
-				classes = classes.concat(result.classes);
+				classes[nestedSubSelector] = result.classes as Record<string, string>;
 			}
-		}
-		if (typeof propValue === 'string' || typeof propValue === 'number') {
-			const key = propName + subSelectors + '|' + propValue;
+		} else if (name === 'extends') {
+			let reversed = (value as ClassProvider[]).reverse();
+			for (let provider of reversed) {
+				Object.assign(classes, provider);
+			}
+		} else if (typeof value === 'string' || typeof value === 'number') {
+			const key = name + subSelectors + '|' + value;
 			let className;
 			if (key in classCache) {
 				className = classCache[key];
 			} else {
 				className = generateClassName(2);
-				const styleText = kebabize(propName) + ':' + propValue;
+				const styleText = hyphenate(name) + ':' + value;
 
 				let selector = `.${className}`;
 
@@ -93,7 +90,7 @@ export function createClasses(properties: StylesheetProperties, subSelectors: st
 				innerHTML += `${selector}{${styleText};}`;
 				classCache[key] = className;
 			}
-			classes.push(className);
+			classes[name] = className;
 		}
 	}
 	return { innerHTML, classes };
@@ -105,16 +102,19 @@ let queuedClassesCount = 0;
 
 const logger = getLogger('stylesheet');
 
-export function createStylesheet<T extends Stylesheet>(styles: T) {
+export type FunctionalStylesheet<T> = { [key in keyof T]: ClassProvider } &
+	((...classnames: (keyof T | null | undefined | false | { [key in keyof T]: boolean })[]) => string);
+
+export function createStylesheet<T extends StylesheetDefinition>(styles: T): FunctionalStylesheet<T> {
 	let innerHTML = '';
 	// @ts-ignore
-	const newStyles: { [key in keyof T]: string } = {};
+	const newStyles: { [key in keyof T]: ClassProvider } = {};
 	for (let [cls, props] of Object.entries(styles)) {
 		let { classes, innerHTML: newInnerHTML } = createClasses(props);
 		innerHTML += newInnerHTML;
 		// @ts-ignore
-		newStyles[cls] = classes.join(' ');
-		queuedClassesCount += classes.length;
+		newStyles[cls] = classes;
+		queuedClassesCount += Object.keys(classes).length;
 	}
 	queuedHTML += innerHTML;
 	if (buildTimeoutHandle == null) {
@@ -129,24 +129,101 @@ export function createStylesheet<T extends Stylesheet>(styles: T) {
 			buildTimeoutHandle = null;
 		}, 50);
 	}
-	return newStyles;
+
+	return (() => {
+		let cached: Record<string, string> = {};
+
+		// @ts-ignore
+		const styler: FunctionalStylesheet<T> = (...elements) => {
+			let values: ClassProvider[] = [];
+			let classlist = [];
+			for (let element of elements) {
+				if (element == null || element === false) {
+					continue;
+				} else if (typeof element === 'object') {
+					for (let property in element) {
+						if (element[property]) {
+							// @ts-ignore
+							values.push(newStyles[element]);
+							classlist.push(element);
+						}
+					}
+				} else if ((element as string) in newStyles) {
+					values.push(newStyles[element]);
+					classlist.push(element);
+				}
+			}
+
+			let key = classlist.join('|');
+
+			if (!(key in cached)) {
+				cached[key] = stylex.apply(null, values);
+			}
+			return cached[key];
+		};
+
+		Object.assign(styler, newStyles);
+
+		return styler;
+	})();
 }
 
-type ClassProvider = { [prop: string]: string | undefined } | string | boolean | undefined;
+export interface ClassProvider {
+	[key: string]: string | Record<string, string>;
+}
 
-export function classes(...props: ClassProvider[]) {
-	return props
-		.map((props) => {
-			if (typeof props === 'string') {
-				return props;
-			} else if (props == null || props === false) {
-				return '';
-			} else {
-				return Object.values(props)
-					.filter((a) => Boolean(a))
-					.join(' ');
+export function dedupe(providers: (ClassProvider | ClassProvider[] | false | null | undefined)[]) {
+	providers = providers.reverse();
+	const styles: ClassProvider = {};
+
+	while (providers.length) {
+		let provider = providers.pop();
+
+		if (Array.isArray(provider)) {
+			for (let i = provider.length - 1; i >= 0; i--) {
+				providers.push(provider[i]);
 			}
-		})
-		.filter((a) => Boolean(a))
-		.join(' ');
+		} else {
+			if (provider != null && typeof provider === 'object') {
+				for (let propertyName in provider) {
+					let propertyValue = provider[propertyName];
+					if (typeof propertyValue === 'string') {
+						styles[propertyName] = propertyValue;
+					} else if (typeof propertyValue === 'object') {
+						styles[propertyName] = styles[propertyName] ?? {};
+						Object.assign(styles[propertyName], propertyValue);
+					}
+				}
+			}
+		}
+	}
+
+	return styles;
+}
+
+export function stylex(...providers: (ClassProvider | false | null | undefined)[]) {
+	var deduped = dedupe(providers);
+	var classes = '';
+
+	for (let propertyName in deduped) {
+		if (Boolean(deduped[propertyName])) {
+			if (typeof deduped[propertyName] === 'string') {
+				classes += classes ? ' ' + deduped[propertyName] : deduped[propertyName];
+			} else if (typeof deduped[propertyName] === 'object') {
+				let nestedClasses = deduped[propertyName];
+
+				// @ts-ignore
+				for (let propertyName in nestedClasses) {
+					// @ts-ignore
+					let propertyValue = nestedClasses[propertyName];
+					if (typeof propertyValue === 'object') {
+						propertyValue = stylex(propertyValue);
+					}
+					classes += classes ? ' ' + propertyValue : propertyValue;
+				}
+			}
+		}
+	}
+
+	return classes;
 }

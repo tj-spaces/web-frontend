@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import SpaceMediaContext from '../SpaceMediaContext';
 import { VideoTrack } from 'twilio-video';
-import { spaceViewStyles } from '../SpaceViewStyles';
-import SpaceParticipantCircle from '../SpaceParticipantCircle';
 import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
+import SpaceMediaContext from '../SpaceMediaContext';
 import SpaceParticipant from '../SpaceParticipant';
+import SpaceParticipantCircle from '../SpaceParticipantCircle';
+import { spaceViewStyles } from '../SpaceViewStyles';
 
 /**
  * A /local/ Spaces participant. Updates the AudioContext listener position when it moves.
@@ -16,7 +16,7 @@ export default function SpaceBottomLocalVideo({ participant }: { participant: IS
 	const localVideoTrack = mediaContext?.localVideoTrack ?? null;
 
 	return (
-		<div className={spaceViewStyles.bottomLocalVideo}>
+		<div className={spaceViewStyles('bottomLocalVideo')}>
 			<SpaceParticipantCircle isLocal>
 				<SpaceParticipant participant={participant} videoTrack={localVideoTrack as VideoTrack} />
 			</SpaceParticipantCircle>

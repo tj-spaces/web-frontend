@@ -1,3 +1,5 @@
+import { createStylesheet } from './createStylesheet';
+
 const colors = {
 	red: '#ff7361',
 	orange: '#ffb361',
@@ -11,5 +13,9 @@ const colors = {
 	lightgray: '#dddddd',
 	gray: '#cccccc'
 };
+
+export const backgroundColors = createStylesheet({
+	red: { backgroundColor: colors.red }
+});
 
 export default colors;

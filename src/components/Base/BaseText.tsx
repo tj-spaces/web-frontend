@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { createStylesheet } from '../../styles/createStylesheet';
-import { FontSize, fontSizeStyles, FontWeight, fontWeightStyles } from '../../styles/font';
+import { createStylesheet, stylex } from '../../styles/createStylesheet';
+import { fontSizeStyles, fontWeightStyles } from '../../styles/font';
 import BackgroundColorContext from '../BackgroundColorContext';
 
 const alignmentStyles = createStylesheet({
@@ -48,9 +48,9 @@ export default function BaseText({
 	onClick
 }: {
 	alignment?: 'start' | 'end' | 'center';
-	fontSize?: FontSize;
-	fontWeight?: FontWeight;
-	variant?: 'base' | 'heading' | 'caption';
+	fontSize?: keyof typeof fontSizeStyles;
+	fontWeight?: keyof typeof fontWeightStyles;
+	variant?: keyof typeof variantStyles;
 	children: React.ReactNode;
 	onClick?: () => void;
 }) {
@@ -60,13 +60,13 @@ export default function BaseText({
 
 	return (
 		<span
-			className={[
+			className={stylex(
 				fontWeightStyles[fontWeight],
 				fontSizeStyles[fontSize],
 				alignmentStyles[alignment],
 				variantStyles[variant],
 				colorClass
-			].join(' ')}
+			)}
 			onClick={onClick}
 		>
 			{children}

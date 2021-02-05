@@ -1,57 +1,35 @@
 import { createRef, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { createCluster } from '../../api/api';
-import colors from '../../styles/colors';
-import { classes, createStylesheet } from '../../styles/createStylesheet';
-import rectangleInput from '../../styles/rectangleInput';
+import { backgroundColors } from '../../styles/colors';
+import InputStyles from '../../styles/InputStyles';
+import { ClusterVisibility } from '../../typings/Cluster';
 import BaseButton from '../Base/BaseButton';
+import BaseButtonGroupItem from '../Base/BaseButtonGroupItem';
 import BaseModal from '../Base/BaseModal';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
 
-const visibilityOptionStyles = createStylesheet({
-	base: {
-		flex: 1,
-		backgroundColor: '#404040',
-		padding: '1rem',
-		textAlign: 'center',
-		cursor: 'pointer',
-		subSelectors: {
-			':first-child': {
-				borderTopLeftRadius: '0.5em',
-				borderBottomLeftRadius: '0.5em'
-			},
-			':last-child': {
-				borderTopRightRadius: '0.5em',
-				borderBottomRightRadius: '0.5em'
-			}
-		}
-	},
-	selected: {
-		backgroundColor: colors.red
-	}
-});
-
 export default function ClusterCreateModal({ onClose }: { onClose: () => void }) {
-	const clusterNameRef = createRef<HTMLInputElement>();
-	const visibilityRef = createRef<HTMLSelectElement>();
+	const nameRef = createRef<HTMLInputElement>();
 
 	const [isClusterCreating, setIsClusterCreating] = useState<boolean>(false);
 	const [isClusterCreated, setIsClusterCreated] = useState<boolean>(false);
 	const [newlyCreatedClusterId, setNewlyCreatedClusterId] = useState<string | null>(null);
-	const [visibility, setVisibility] = useState<'public' | 'unlisted'>('public');
+	const [visibility, setVisibility] = useState<ClusterVisibility>('discoverable');
 
 	function create() {
-		if (clusterNameRef.current && visibilityRef.current) {
-			const spaceName = clusterNameRef.current.value;
-			const visibility = visibilityRef.current.value;
-			if (!spaceName) {
+		if (nameRef.current) {
+			const name = nameRef.current.value;
+			if (!name) {
+				alert('No space name');
 				return;
-			} else if (visibility !== 'public' && visibility !== 'unlisted') {
+			} else if (visibility !== 'discoverable' && visibility !== 'unlisted') {
+				alert('No visibility');
 				return;
 			} else {
 				setIsClusterCreating(true);
-				createCluster(spaceName, visibility).then((newClusterId) => {
+				createCluster(name, visibility).then((newClusterId) => {
 					setNewlyCreatedClusterId(newClusterId);
 					setIsClusterCreated(true);
 				});
@@ -70,33 +48,33 @@ export default function ClusterCreateModal({ onClose }: { onClose: () => void })
 				<BaseRow direction="column" alignment="start">
 					<BaseText variant="caption">Name</BaseText>
 					<input
-						className={rectangleInput.rectangleInput}
+						className={InputStyles('rectangleInput')}
 						style={{ fontSize: '2rem', width: '100%' }}
 						type="text"
-						ref={clusterNameRef}
+						ref={nameRef}
 					/>
 				</BaseRow>
 				<BaseRow direction="column" alignment="start" width="100%">
 					<BaseText variant="caption">Visibility</BaseText>
 					<BaseRow direction="row" width="100%">
-						<div
-							className={classes(
-								visibilityOptionStyles.base,
-								visibility === 'public' && visibilityOptionStyles.selected
-							)}
-							onClick={() => setVisibility('public')}
+						<BaseButtonGroupItem
+							classes={visibility === 'discoverable' && backgroundColors.red}
+							onClick={() => setVisibility('discoverable')}
 						>
-							Public
-						</div>
-						<div
-							className={classes(
-								visibilityOptionStyles.base,
-								visibility === 'unlisted' && visibilityOptionStyles.selected
-							)}
+							Discoverable
+						</BaseButtonGroupItem>
+						<BaseButtonGroupItem
+							classes={visibility === 'unlisted' && backgroundColors.red}
 							onClick={() => setVisibility('unlisted')}
 						>
 							Unlisted
-						</div>
+						</BaseButtonGroupItem>
+						<BaseButtonGroupItem
+							classes={visibility === 'secret' && backgroundColors.red}
+							onClick={() => setVisibility('secret')}
+						>
+							Secret
+						</BaseButtonGroupItem>
 					</BaseRow>
 				</BaseRow>
 				<BaseRow direction="row" spacing={1} rails={1} alignment="center">
@@ -105,7 +83,7 @@ export default function ClusterCreateModal({ onClose }: { onClose: () => void })
 							<BaseButton onClick={() => create()} size="small" style={{ flex: 1 }}>
 								Create
 							</BaseButton>
-							<BaseButton onClick={onClose} size="small" style={{ flex: 1 }}>
+							<BaseButton onClick={() => onClose()} size="small" style={{ flex: 1 }}>
 								Cancel
 							</BaseButton>
 						</>

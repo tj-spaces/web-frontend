@@ -24,7 +24,7 @@ export default function SpaceFeed({ spaces }: { spaces: ISpace[] }) {
 				<SpaceFeedItem space={space} key={space.id} />
 			))}
 
-			<div className={styles.createInstantSpaceButtonWrapper}></div>
+			<div className={styles('createInstantSpaceButtonWrapper')}></div>
 		</BaseRow>
 	);
 }

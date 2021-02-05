@@ -22,14 +22,14 @@ const styles = createStylesheet({
 
 export function ClusterSpaceListItem({ clusterId, space }: { clusterId: string; space: ISpace }) {
 	return (
-		<div className={styles.spaceListItem}>
+		<div className={styles('spaceListItem')}>
 			<b>
 				<Link to={`/spaces/${space.id}`} className="unstyled-link">
 					{space.name}
 				</Link>
 			</b>
 			<br />
-			<b className={styles.spaceOnlineCount}>Online: {space.online_count}</b>
+			<b className={styles('spaceOnlineCount')}>Online: {space.online_count}</b>
 		</div>
 	);
 }

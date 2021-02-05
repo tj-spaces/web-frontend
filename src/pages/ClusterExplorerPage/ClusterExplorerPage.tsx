@@ -16,7 +16,7 @@ export default function HomePage() {
 	document.title = 'Home';
 
 	return (
-		<div className={styles.container}>
+		<div className={styles('container')}>
 			<Navbar />
 			<ClusterExplorer />
 		</div>

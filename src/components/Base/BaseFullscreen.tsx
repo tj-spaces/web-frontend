@@ -12,5 +12,5 @@ export const styles = createStylesheet({
 });
 
 export default function Fullscreen({ children }: { children?: React.ReactNode }) {
-	return <div className={styles.fullscreen}>{children}</div>;
+	return <div className={styles('fullscreen')}>{children}</div>;
 }

@@ -1,4 +1,4 @@
-import { classes, createStylesheet } from '../../styles/createStylesheet';
+import { stylex, createStylesheet } from '../../styles/createStylesheet';
 
 type DivProps = JSX.IntrinsicElements['div'];
 
@@ -53,7 +53,7 @@ export default function BaseScrollableArea({
 	return (
 		<div
 			{...props}
-			className={classes(
+			className={stylex(
 				variantStyles.baseScroller,
 				hideScrollbar && variantStyles.hideScrollbar,
 				horizontal && variantStyles.baseScrollerHorizontal,

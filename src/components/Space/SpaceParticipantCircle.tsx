@@ -1,5 +1,5 @@
 import React from 'react';
-import { classes, createStylesheet } from '../../styles/createStylesheet';
+import { createStylesheet } from '../../styles/createStylesheet';
 
 export const styles = createStylesheet({
 	participantBubble: {
@@ -36,12 +36,7 @@ export const styles = createStylesheet({
 
 export default function SpaceParticipantCircle({ children, isLocal }: { children: React.ReactNode; isLocal: boolean }) {
 	return (
-		<div
-			className={classes(
-				styles.participantBubble,
-				isLocal ? styles.participantBubbleLocal : styles.participantBubbleRemote
-			)}
-		>
+		<div className={styles('participantBubble', isLocal ? 'participantBubbleLocal' : 'participantBubbleRemote')}>
 			{children}
 		</div>
 	);
