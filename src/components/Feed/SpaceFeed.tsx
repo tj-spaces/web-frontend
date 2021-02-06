@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStylesheet } from '../../styles/createStylesheet';
-import { ISpace } from '../../typings/Space';
+import { SpaceSession } from '../../typings/SpaceSession';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
 import SpaceFeedEmptyFiller from './SpaceFeedEmptyFiller';
@@ -15,7 +15,7 @@ const styles = createStylesheet({
 	}
 });
 
-export default function SpaceFeed({ spaces }: { spaces: ISpace[] }) {
+export default function SpaceFeed({ spaces }: { spaces: SpaceSession[] }) {
 	return (
 		<BaseRow direction="column" spacing={1} width="100%" alignment="center">
 			<BaseText variant="heading" fontWeight="bold" fontSize="xl" alignment="center">

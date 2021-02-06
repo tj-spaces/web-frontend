@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getSpacesInCluster } from '../api/api';
-import { ISpace } from '../typings/Space';
+import { SpaceSession } from '../typings/SpaceSession';
 
 export default function useSpacesInCluster(clusterId: string) {
-	const [spaces, setSpaces] = useState<ISpace[]>();
+	const [spaces, setSpaces] = useState<SpaceSession[]>();
 
 	useEffect(() => {
 		getSpacesInCluster(clusterId).then((spaces) => setSpaces(spaces));

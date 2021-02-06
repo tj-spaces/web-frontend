@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { createStylesheet } from '../../styles/createStylesheet';
 import hoverableLightBox from '../../styles/hoverableLightBox';
-import { ISpace } from '../../typings/Space';
+import { SpaceSession } from '../../typings/SpaceSession';
 import BaseRow from '../Base/BaseRow';
 import SpaceCreateButton from './ClusterSpaceCreateButton';
 import ClusterIDContext from './CurrentClusterContext';
@@ -20,7 +20,7 @@ const styles = createStylesheet({
 	}
 });
 
-export function ClusterSpaceListItem({ clusterId, space }: { clusterId: string; space: ISpace }) {
+export function ClusterSpaceListItem({ clusterId, space }: { clusterId: string; space: SpaceSession }) {
 	return (
 		<div className={styles('spaceListItem')}>
 			<b>
@@ -34,7 +34,7 @@ export function ClusterSpaceListItem({ clusterId, space }: { clusterId: string; 
 	);
 }
 
-export default function ClusterSpaceList({ spaces = [] }: { spaces?: ISpace[] }) {
+export default function ClusterSpaceList({ spaces = [] }: { spaces?: SpaceSession[] }) {
 	const cluster = useContext(ClusterIDContext);
 
 	return (

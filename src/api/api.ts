@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { API_SERVER_URL } from '../lib/constants';
 import getSessionId from '../lib/getSessionId';
 import { ICluster, ClusterVisibility } from '../typings/Cluster';
-import { ISpace } from '../typings/Space';
+import { SpaceSession, SpaceSessionVisibility } from '../typings/SpaceSession';
 import { IUser } from '../typings/User';
 
 axios.defaults.baseURL = API_SERVER_URL;
@@ -132,10 +132,48 @@ export async function getMe(): Promise<IUser> {
 	return (await makeAPIGetCall('/api/users/@me')).data.user;
 }
 
-export async function getSpace(spaceId: string): Promise<ISpace> {
+export async function getSpace(spaceId: string): Promise<SpaceSession> {
 	return (await makeAPIGetCall('/api/spaces/' + spaceId)).data.space;
 }
 
-export async function getSpacesInCluster(id: string): Promise<ISpace[]> {
+export async function getSpacesInCluster(id: string): Promise<SpaceSession[]> {
 	return (await makeAPIGetCall('/api/clusters/' + id + '/spaces')).data.spaces;
+}
+
+export async function startSpaceSessionNoCluster(topic: string, visibility: SpaceSessionVisibility): Promise<string> {
+	return (await makeAPIPostCall('/api/spaces', { topic, visibility })).data.spaceID;
+}
+
+export async function sendFriendRequest(otherUserID: string) {
+	await makeAPIPostCall('/api/friends/send_request', { otherUserID });
+}
+
+export async function getIncomingFriendRequests() {
+	let result = await makeAPIPostCall('/api/friends/incoming_requests');
+	return result.data.data;
+}
+
+export async function getOutgoingFriendRequests() {
+	let result = await makeAPIPostCall('/api/friends/outgoing_requests');
+	return result.data.data;
+}
+
+export async function acceptFriendRequest(otherUserID: string) {
+	let result = await makeAPIPostCall('/api/friends/accept_request', { otherUserID });
+	return result.data.data;
+}
+
+export async function denyFriendRequest(otherUserID: string) {
+	let result = await makeAPIPostCall('/api/friends/deny_request', { otherUserID });
+	return result.data.data;
+}
+
+export async function cancelFriendRequest(otherUserID: string) {
+	let result = await makeAPIPostCall('/api/friends/cancel_request', { otherUserID });
+	return result.data.data;
+}
+
+export async function block(otherUserID: string) {
+	let result = await makeAPIPostCall('/api/friends/block', { otherUserID });
+	return result.data.data;
 }

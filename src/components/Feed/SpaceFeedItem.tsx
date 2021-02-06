@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
 import { createStylesheet } from '../../styles/createStylesheet';
-import { ISpace } from '../../typings/Space';
+import { SpaceSession } from '../../typings/SpaceSession';
 
 const styles = createStylesheet({
 	spaceFeedItemIcon: {
@@ -22,7 +22,7 @@ const styles = createStylesheet({
 	}
 });
 
-export default function SpaceFeedItem({ space }: { space: ISpace }) {
+export default function SpaceFeedItem({ space }: { space: SpaceSession }) {
 	return (
 		<BaseRow
 			direction="column"
