@@ -1,9 +1,9 @@
 import { createContext } from 'react';
-import { IUser } from '../typings/User';
+import { User } from '../typings/User';
 
 export type AuthState = {
 	isLoggedIn: boolean | null;
-	user: IUser | null;
+	user: User | null;
 
 	/**
 	 * Function that can be used to trigger an auth state refresh.

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getMyClusters, getSpacesInCluster } from '../../api/api';
-import CenteredLoadingText from '../CenteredLoadingText';
 import { createStylesheet } from '../../styles/createStylesheet';
 import { SpaceSession } from '../../typings/SpaceSession';
+import CenteredLoadingText from '../CenteredLoadingText';
+import FriendList from '../FriendList/FriendList';
 import SpaceFeed from './SpaceFeed';
 
 export const styles = createStylesheet({
@@ -35,6 +36,7 @@ export default function SpaceFeedWrapper() {
 	} else {
 		return (
 			<div className={styles('feedWrapper')}>
+				<FriendList />
 				<SpaceFeed spaces={spaces} />
 			</div>
 		);

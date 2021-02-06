@@ -8,4 +8,5 @@ export interface SpaceSession {
 	cluster_id?: string;
 	host_id: string;
 	visibility: SpaceSessionVisibility;
+	online_count: number;
 }

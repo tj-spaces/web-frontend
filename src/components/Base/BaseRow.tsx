@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react';
 import boxShadowStyles from '../../styles/boxShadow';
-import { stylex, createStylesheet, StylesheetDefinition } from '../../styles/createStylesheet';
+import { stylex, createStylesheet, StylesheetDefinition, ClassProvider } from '../../styles/createStylesheet';
 
 export default function BaseRow({
 	alignment = 'start',
@@ -16,7 +16,7 @@ export default function BaseRow({
 	rails = 0,
 	spacing = 0,
 	width,
-	style,
+	xstyle,
 	children
 }: {
 	alignment?: keyof typeof alignments;
@@ -32,7 +32,7 @@ export default function BaseRow({
 	rails?: keyof typeof rowRails;
 	spacing?: keyof typeof rowSpacings;
 	width?: string;
-	style?: CSSProperties;
+	xstyle?: ClassProvider;
 	children: React.ReactNode;
 }) {
 	const baseStyle = direction === 'row' ? baseStyles.baseRow : baseStyles.baseCol;
@@ -49,6 +49,7 @@ export default function BaseRow({
 	return (
 		<div
 			className={stylex(
+				xstyle,
 				alignmentStyle,
 				backgroundColorStyle,
 				baseStyle,
@@ -61,7 +62,7 @@ export default function BaseRow({
 				spacingStyle,
 				boxShadowStyle
 			)}
-			style={{ width, height, ...style }}
+			style={{ width, height }}
 		>
 			{children}
 		</div>

@@ -2,8 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 import { API_SERVER_URL } from '../lib/constants';
 import getSessionId from '../lib/getSessionId';
 import { ICluster, ClusterVisibility } from '../typings/Cluster';
+import { Friend } from '../typings/Friend';
 import { SpaceSession, SpaceSessionVisibility } from '../typings/SpaceSession';
-import { IUser } from '../typings/User';
+import { User } from '../typings/User';
 
 axios.defaults.baseURL = API_SERVER_URL;
 
@@ -65,7 +66,19 @@ export function makeAPIPostCall(url: string, data?: any) {
 	});
 }
 
-export function makeAPIGetCall(url: string) {
+export function makeAPIGetCall(url: string, params?: Record<string, string | undefined>) {
+	if (params) {
+		// Stringify the parameters
+		let stringifiedParameters = '';
+		for (let [name, value] of Object.entries(params)) {
+			if (value) {
+				stringifiedParameters += encodeURIComponent(name) + '=' + encodeURIComponent(value);
+			}
+		}
+		if (stringifiedParameters) {
+			url += '?' + stringifiedParameters;
+		}
+	}
 	return new Promise<AxiosResponse>((resolve, reject) => {
 		axios
 			.get(url, {
@@ -77,6 +90,7 @@ export function makeAPIGetCall(url: string) {
 					localStorage.removeItem('session_id');
 					window.location.pathname = '/';
 				} else {
+					console.log(error);
 					reject(new APIError(url, error.response.data.error));
 				}
 			});
@@ -128,7 +142,7 @@ export async function getCluster(id: string): Promise<ICluster> {
 	return (await makeAPIGetCall('/api/clusters/' + id)).data.cluster;
 }
 
-export async function getMe(): Promise<IUser> {
+export async function getMe(): Promise<User> {
 	return (await makeAPIGetCall('/api/users/@me')).data.user;
 }
 
@@ -146,6 +160,17 @@ export async function startSpaceSessionNoCluster(topic: string, visibility: Spac
 
 export async function sendFriendRequest(otherUserID: string) {
 	await makeAPIPostCall('/api/friends/send_request', { otherUserID });
+}
+
+export async function getFriendsList(
+	after?: string
+): Promise<{
+	data: Friend[];
+	paging: { after: string };
+}> {
+	const result = await makeAPIGetCall('/api/users/@me/friends', { after });
+	const { data, paging } = result.data;
+	return { data, paging };
 }
 
 export async function getIncomingFriendRequests() {
