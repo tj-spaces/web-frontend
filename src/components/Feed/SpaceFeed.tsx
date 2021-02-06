@@ -3,6 +3,7 @@ import { createStylesheet } from '../../styles/createStylesheet';
 import { ISpace } from '../../typings/Space';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
+import SpaceFeedEmptyFiller from './SpaceFeedEmptyFiller';
 import SpaceFeedItem from './SpaceFeedItem';
 
 const styles = createStylesheet({
@@ -20,9 +21,12 @@ export default function SpaceFeed({ spaces }: { spaces: ISpace[] }) {
 			<BaseText variant="heading" fontWeight="bold" fontSize="xl" alignment="center">
 				Explore
 			</BaseText>
-			{spaces.map((space) => (
-				<SpaceFeedItem space={space} key={space.id} />
-			))}
+
+			{spaces.length > 0 ? (
+				spaces.map((space) => <SpaceFeedItem space={space} key={space.id} />)
+			) : (
+				<SpaceFeedEmptyFiller />
+			)}
 
 			<div className={styles('createInstantSpaceButtonWrapper')}></div>
 		</BaseRow>

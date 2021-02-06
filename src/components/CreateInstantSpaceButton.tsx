@@ -1,33 +1,16 @@
-import boxShadow from '../styles/boxShadow';
-import colors from '../styles/colors';
-import { createStylesheet } from '../styles/createStylesheet';
-
-const styles = createStylesheet({
-	createInstantSpaceButton: {
-		backgroundColor: colors.red,
-		color: colors.white,
-		padding: '0.5em',
-		border: '0px',
-		fontWeight: 'bold',
-		borderRadius: '0.5em',
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		textTransform: 'uppercase',
-		cursor: 'pointer',
-		extends: [boxShadow.boxShadow]
-	}
-});
+import { useState } from 'react';
+import BaseButton from './Base/BaseButton';
+import CreateInstantSpaceModal from './CreateInstantSpaceModal';
 
 export default function CreateInstantSpaceButton() {
+	const [modalOpen, setModalOpen] = useState(false);
+
 	return (
-		<button
-			className={styles('createInstantSpaceButton')}
-			onClick={() => {
-				alert('Creating a space');
-			}}
-		>
-			Create Instant Space
-		</button>
+		<>
+			{modalOpen && <CreateInstantSpaceModal onClose={() => setModalOpen(false)} />}
+			<BaseButton variant="theme" size="small" onClick={() => setModalOpen(true)}>
+				Start A Space
+			</BaseButton>
+		</>
 	);
 }

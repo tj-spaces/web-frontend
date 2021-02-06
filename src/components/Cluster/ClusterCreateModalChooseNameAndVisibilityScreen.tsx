@@ -42,7 +42,7 @@ export default function ClusterCreateModalChooseNameAndVisibilityScreen({ onBack
 
 	return (
 		<BaseRow direction="column" spacing={1}>
-			<h1>Create Cluster</h1>
+			<BaseText variant="heading">Create Cluster</BaseText>
 			<BaseRow direction="column" alignment="start">
 				<BaseText variant="caption">Name</BaseText>
 				<input
