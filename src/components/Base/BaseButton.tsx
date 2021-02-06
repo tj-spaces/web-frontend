@@ -28,7 +28,7 @@ const sizeStyles = createStylesheet({
 		borderRadius: '0.5em'
 	},
 	medium: {
-		padding: '0.5em',
+		padding: '0.25em',
 		fontSize: '1.5rem',
 		borderRadius: '0.5em'
 	},
@@ -67,7 +67,7 @@ type ButtonProps = (
 };
 
 const BaseButton = forwardRef<HTMLButtonElement, ButtonProps>(
-	({ size = 'medium', variant = 'primary', boxShadow: useBoxShadow = false, xstyle, ...props }, ref) => {
+	({ size = 'small', variant = 'primary', boxShadow: useBoxShadow = false, xstyle, ...props }, ref) => {
 		if ('to' in props) {
 			const { to } = props;
 			return (

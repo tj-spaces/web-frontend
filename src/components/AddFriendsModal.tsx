@@ -1,0 +1,54 @@
+import { useState } from 'react';
+import { createStylesheet, stylex } from '../styles/createStylesheet';
+import InputStyles from '../styles/InputStyles';
+import { Friend } from '../typings/Friend';
+import AddFriendsListRow from './AddFriendsListRow';
+import BaseButton from './Base/BaseButton';
+import BaseModal from './Base/BaseModal';
+import BaseRow from './Base/BaseRow';
+import BaseText from './Base/BaseText';
+
+const styles = createStylesheet({
+	largeFont: {
+		fontSize: '1.25rem'
+	}
+});
+
+export default function AddFriendsModal({ onClose }: { onClose: () => void }) {
+	const [search, setSearch] = useState('');
+	const [searchResults, setSearchResults] = useState<Friend[]>([]);
+	const [requestedFriends, setRequestedFriends] = useState<Record<string, boolean>>({});
+
+	return (
+		<BaseModal onClickOutside={() => onClose()}>
+			<BaseRow direction="column" spacing={1}>
+				<BaseText variant="heading" fontSize="large" fontWeight="medium">
+					Add Friends
+				</BaseText>
+				<input
+					className={stylex(InputStyles.rectangleInput, styles.largeFont)}
+					type="text"
+					onChange={(e) => setSearch(e.target.value)}
+					value={search}
+				/>
+				<BaseRow direction="column" height="16rem">
+					{searchResults.map((friend) => {
+						return (
+							<AddFriendsListRow
+								friend={friend}
+								onClickedAddFriend={() => {
+									setRequestedFriends((requestedFriends) => ({
+										...requestedFriends,
+										[friend.id]: true
+									}));
+								}}
+								requested={requestedFriends[friend.id] === true}
+							/>
+						);
+					})}
+				</BaseRow>
+				<BaseButton onClick={() => onClose()}>Done</BaseButton>
+			</BaseRow>
+		</BaseModal>
+	);
+}
