@@ -158,8 +158,8 @@ export async function startSpaceSessionNoCluster(topic: string, visibility: Spac
 	return (await makeAPIPostCall('/api/spaces', { topic, visibility })).data.spaceID;
 }
 
-export async function sendFriendRequest(otherUserID: string) {
-	await makeAPIPostCall('/api/friends/send_request', { otherUserID });
+export async function sendFriendRequest(user_id: string) {
+	await makeAPIPostCall('/api/friends/send_request', { user_id });
 }
 
 export async function getFriendsList(
@@ -183,22 +183,27 @@ export async function getOutgoingFriendRequests() {
 	return result.data.data;
 }
 
-export async function acceptFriendRequest(otherUserID: string) {
-	let result = await makeAPIPostCall('/api/friends/accept_request', { otherUserID });
+export async function acceptFriendRequest(user_id: string) {
+	let result = await makeAPIPostCall('/api/friends/accept_request', { user_id });
 	return result.data.data;
 }
 
-export async function denyFriendRequest(otherUserID: string) {
-	let result = await makeAPIPostCall('/api/friends/deny_request', { otherUserID });
+export async function denyFriendRequest(user_id: string) {
+	let result = await makeAPIPostCall('/api/friends/deny_request', { user_id });
 	return result.data.data;
 }
 
-export async function cancelFriendRequest(otherUserID: string) {
-	let result = await makeAPIPostCall('/api/friends/cancel_request', { otherUserID });
+export async function cancelFriendRequest(user_id: string) {
+	let result = await makeAPIPostCall('/api/friends/cancel_request', { user_id });
 	return result.data.data;
 }
 
-export async function block(otherUserID: string) {
-	let result = await makeAPIPostCall('/api/friends/block', { otherUserID });
+export async function block(user_id: string) {
+	let result = await makeAPIPostCall('/api/friends/block', { user_id });
+	return result.data.data;
+}
+
+export async function getSuggestedFriends(search: string = ''): Promise<Friend[]> {
+	let result = await makeAPIGetCall('/api/friends/suggested', { search });
 	return result.data.data;
 }

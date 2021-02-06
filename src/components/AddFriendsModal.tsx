@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getSuggestedFriends } from '../api/api';
 import { createStylesheet, stylex } from '../styles/createStylesheet';
 import InputStyles from '../styles/InputStyles';
 import { Friend } from '../typings/Friend';
@@ -14,10 +15,23 @@ const styles = createStylesheet({
 	}
 });
 
+const suggestionCache: Record<string, Friend[]> = {};
+
 export default function AddFriendsModal({ onClose }: { onClose: () => void }) {
 	const [search, setSearch] = useState('');
 	const [searchResults, setSearchResults] = useState<Friend[]>([]);
 	const [requestedFriends, setRequestedFriends] = useState<Record<string, boolean>>({});
+
+	useEffect(() => {
+		if (search in suggestionCache) {
+			setSearchResults(suggestionCache[search]);
+		} else {
+			getSuggestedFriends(search).then((suggested) => {
+				suggestionCache[search] = suggested;
+				setSearchResults(suggested);
+			});
+		}
+	}, [search]);
 
 	return (
 		<BaseModal onClickOutside={() => onClose()}>
