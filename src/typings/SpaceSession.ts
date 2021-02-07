@@ -1,3 +1,5 @@
+import { PublicUserInfo } from './PublicUserInfo';
+
 export type SpaceSessionVisibility = 'discoverable' | 'unlisted' | 'secret';
 
 export interface SpaceSession {
@@ -7,6 +9,7 @@ export interface SpaceSession {
 	stop_time: string;
 	cluster_id?: string;
 	host_id: string;
+	host: PublicUserInfo;
 	visibility: SpaceSessionVisibility;
 	online_count: number;
 }

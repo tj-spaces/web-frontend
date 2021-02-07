@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getFriendsList } from '../../api/api';
-import { Friend } from '../../typings/Friend';
+import { PublicUserInfo } from '../../typings/PublicUserInfo';
 import AddFriendsButton from '../AddFriendsButton';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
@@ -8,7 +8,7 @@ import FriendListRow from './FriendListRow';
 
 export default function FriendList() {
 	let [after, setAfter] = useState<string>('0');
-	let [friends, setFriends] = useState<Friend[]>([]);
+	let [friends, setFriends] = useState<PublicUserInfo[]>([]);
 	useEffect(() => {
 		if (after != null) {
 			getFriendsList(after).then(({ data, paging }) => {

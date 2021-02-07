@@ -1,5 +1,5 @@
 import { createStylesheet } from '../../styles/createStylesheet';
-import { Friend } from '../../typings/Friend';
+import { PublicUserInfo } from '../../typings/PublicUserInfo';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
 
@@ -14,7 +14,7 @@ const styles = createStylesheet({
 	}
 });
 
-export default function FriendListRow({ friend }: { friend: Friend }) {
+export default function FriendListRow({ friend }: { friend: PublicUserInfo }) {
 	return (
 		<BaseRow direction="row" alignment="center" spacing={1}>
 			<img src={friend.picture} className={styles('picture')} alt={friend.name + "'s profile photo"} />

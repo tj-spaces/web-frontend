@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getSuggestedFriends, sendFriendRequest } from '../api/api';
 import { createStylesheet, stylex } from '../styles/createStylesheet';
 import InputStyles from '../styles/InputStyles';
-import { Friend } from '../typings/Friend';
+import { PublicUserInfo } from '../typings/PublicUserInfo';
 import AddFriendsListRow from './AddFriendsListRow';
 import BaseButton from './Base/BaseButton';
 import BaseModal from './Base/BaseModal';
@@ -15,11 +15,11 @@ const styles = createStylesheet({
 	}
 });
 
-const suggestionCache: Record<string, Friend[]> = {};
+const suggestionCache: Record<string, PublicUserInfo[]> = {};
 
 export default function AddFriendsModal({ onClose }: { onClose: () => void }) {
 	const [search, setSearch] = useState('');
-	const [searchResults, setSearchResults] = useState<Friend[]>([]);
+	const [searchResults, setSearchResults] = useState<PublicUserInfo[]>([]);
 	const [requestedFriends, setRequestedFriends] = useState<Record<string, boolean>>({});
 
 	useEffect(() => {

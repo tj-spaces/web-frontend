@@ -1,5 +1,5 @@
 import { createStylesheet } from '../styles/createStylesheet';
-import { Friend } from '../typings/Friend';
+import { PublicUserInfo } from '../typings/PublicUserInfo';
 import BaseRow from './Base/BaseRow';
 import BaseText from './Base/BaseText';
 import BaseButton from './Base/BaseButton';
@@ -20,7 +20,7 @@ export default function AddFriendsListRow({
 	onClickedAddFriend,
 	requested
 }: {
-	friend: Friend;
+	friend: PublicUserInfo;
 	onClickedAddFriend: () => void;
 	requested: boolean;
 }) {

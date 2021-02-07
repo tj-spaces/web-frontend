@@ -8,15 +8,11 @@ import { SpaceSession } from '../../typings/SpaceSession';
 const styles = createStylesheet({
 	spaceFeedItemIcon: {
 		flex: 1,
-		marginRight: '1em',
-		subSelectors: {
-			i: {
-				fontSize: '3rem'
-			}
-		}
+		borderRadius: '100%',
+		maxWidth: '4rem'
 	},
 	spaceFeedItemContent: {
-		flex: 3,
+		flex: 4,
 		display: 'flex',
 		flexDirection: 'column'
 	}
@@ -24,24 +20,22 @@ const styles = createStylesheet({
 
 export default function SpaceFeedItem({ space }: { space: SpaceSession }) {
 	return (
-		<BaseRow
-			direction="column"
-			borderRadius={1}
-			backgroundColor="dark2"
-			width="20rem"
-			rails={2}
-			spacing={1}
-			edges={1}
-			boxShadow
-		>
-			<BaseText fontSize="medium" fontWeight="bold">
-				<Link to={'/space/' + space.id}>{space.topic}</Link>
+		<BaseRow direction="column" borderRadius={1} backgroundColor="dark2" rails={2} spacing={1} edges={1} boxShadow>
+			<BaseText fontSize="large" fontWeight="bold">
+				<Link to={'/spaces/' + space.id}>{space.topic}</Link>
 			</BaseText>
-			<BaseRow direction="row">
-				<div className={styles('spaceFeedItemIcon')}>
-					<i className="fas fa-server"></i>
+			<BaseRow direction="row" width="100%" spacing={1}>
+				<img
+					className={styles('spaceFeedItemIcon')}
+					src={space.host.picture}
+					alt={space.host.name + ' is hosting this space'}
+				/>
+				<div className={styles('spaceFeedItemContent')}>
+					<BaseText>{space.online_count ?? 0} are online</BaseText>
+					<BaseText>
+						Hosted by <BaseText fontWeight="bold">{space.host.name}</BaseText>
+					</BaseText>
 				</div>
-				<div className={styles('spaceFeedItemContent')}>Online: {space.online_count ?? 0}</div>
 			</BaseRow>
 		</BaseRow>
 	);

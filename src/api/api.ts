@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { API_SERVER_URL } from '../lib/constants';
 import getSessionId from '../lib/getSessionId';
 import { Cluster, ClusterVisibility } from '../typings/Cluster';
-import { Friend } from '../typings/Friend';
+import { PublicUserInfo } from '../typings/PublicUserInfo';
 import { SpaceSession, SpaceSessionVisibility } from '../typings/SpaceSession';
 import { User } from '../typings/User';
 
@@ -184,7 +184,7 @@ export async function sendFriendRequest(user_id: string) {
 export async function getFriendsList(
 	after?: string
 ): Promise<{
-	data: Friend[];
+	data: PublicUserInfo[];
 	paging: { after: string };
 }> {
 	const result = await makeAPIGetCall('/api/users/@me/friends', { after });
@@ -222,7 +222,7 @@ export async function block(user_id: string) {
 	return result.data.data;
 }
 
-export async function getSuggestedFriends(search: string = ''): Promise<Friend[]> {
+export async function getSuggestedFriends(search: string = ''): Promise<PublicUserInfo[]> {
 	let result = await makeAPIGetCall('/api/friends/suggested', { search });
 	return result.data.data;
 }
