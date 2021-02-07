@@ -1,3 +1,7 @@
-export const BorderRadiusNone = '0px';
-export const BorderRadiusCrisp = '0.5rem';
-export const BorderRadiusBubble = '1rem';
+import { createStylesheet } from './createStylesheet';
+
+export const borderRadiusStyles = createStylesheet({
+	0: {},
+	1: { borderRadius: '1rem' },
+	2: { borderRadius: '2rem' }
+});

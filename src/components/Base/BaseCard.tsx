@@ -1,38 +1,27 @@
-import { CSSProperties } from 'react';
-import { BorderRadiusBubble } from '../../styles/borderRadius';
-import { stylex, createStylesheet } from '../../styles/createStylesheet';
-import BackgroundColorContext from '../BackgroundColorContext';
+import { borderRadiusStyles } from '../../styles/borderRadius';
+import { backgroundColors } from '../../styles/colors';
+import { stylex, createStylesheet, ClassProvider } from '../../styles/createStylesheet';
 
 const styles = createStylesheet({
 	base: {
-		borderRadius: BorderRadiusBubble,
 		padding: '2em',
 		display: 'flex',
 		flexDirection: 'column'
 	}
 });
 
-const backgroundColorStyles = createStylesheet({
-	dark: {
-		backgroundColor: 'var(--spaces-color-dark-2)'
-	},
-	light: {
-		backgroundColor: 'var(--spaces-color-light-1)'
-	}
-});
-
 export default function BaseCard({
 	backgroundColor,
-	style,
+	xstyle,
 	children
 }: {
-	backgroundColor: 'light' | 'dark';
-	style?: CSSProperties;
+	backgroundColor: keyof typeof backgroundColors;
+	xstyle?: ClassProvider;
 	children: React.ReactNode;
 }) {
 	return (
-		<div className={stylex(styles.base, backgroundColorStyles[backgroundColor])} style={style}>
-			<BackgroundColorContext.Provider value={backgroundColor}>{children}</BackgroundColorContext.Provider>
+		<div className={stylex(styles.base, borderRadiusStyles[2], backgroundColors[backgroundColor], xstyle)}>
+			{children}
 		</div>
 	);
 }

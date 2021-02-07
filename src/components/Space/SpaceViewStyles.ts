@@ -1,5 +1,4 @@
 import { createStylesheet } from '../../styles/createStylesheet';
-import * as BaseRow from '../Base/BaseRow';
 
 export const spaceViewStyles = createStylesheet({
 	// The white container with rounded borders
@@ -30,18 +29,12 @@ export const spaceViewStyles = createStylesheet({
 	 * The mute/unmute, disable/enable camera, and Leave Space buttons container
 	 */
 	bottomButtons: {
-		extends: [BaseRow.rowSpacings[1]],
-		justifyContent: 'center',
 		width: '100%',
 		height: '5em',
 		position: 'absolute',
 		bottom: '0px',
 		left: '0px',
-		right: '0px',
-		paddingTop: '1em',
-		paddingBottom: '1em',
-		display: 'flex',
-		flexDirection: 'row'
+		right: '0px'
 	},
 	/**
 	 * The local user's video

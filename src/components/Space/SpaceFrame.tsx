@@ -3,6 +3,7 @@ import useSpace from '../../hooks/useSpace';
 import AuthContext from '../AuthContext';
 import BackgroundColorContext from '../BackgroundColorContext';
 import BaseButton from '../Base/BaseButton';
+import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
 import SpaceContext from './SpaceContext';
 import SpaceIDContext from './SpaceIDContext';
@@ -34,7 +35,7 @@ export default function SpaceFrame() {
 	return (
 		<SpaceViewLayoutContext.Provider value={{ expanded }}>
 			<div id="frame-container" className={spaceViewStyles('frame', 'frameExpanded')}>
-				<div className={spaceViewStyles('topHeading')} id="top-heading">
+				<div className={spaceViewStyles('topHeading')}>
 					{/* {expanded ? ( */}
 					{/* <i className="fas fa-angle-down" onClick={() => setExpanded(false)}></i> */}
 					{/* ) : ( */}
@@ -48,11 +49,17 @@ export default function SpaceFrame() {
 					</BackgroundColorContext.Provider>
 				</div>
 
-				<div className={spaceViewStyles('mainContent')} id="main-content">
+				<div className={spaceViewStyles('mainContent')}>
 					{SPACE_VIEW_TYPE === '3d' ? <SpaceView3D /> : <SpaceViewTiles />}
 				</div>
 
-				<div className={spaceViewStyles('bottomButtons')} id="bottom-buttons">
+				<BaseRow
+					direction="row"
+					justifyContent="center"
+					spacing={1}
+					rails={2}
+					xstyle={spaceViewStyles.bottomButtons}
+				>
 					<BaseButton to="..">Leave</BaseButton>
 
 					{mediaContext && (
@@ -78,7 +85,7 @@ export default function SpaceFrame() {
 							)}
 						</>
 					)}
-				</div>
+				</BaseRow>
 			</div>
 		</SpaceViewLayoutContext.Provider>
 	);

@@ -1,19 +1,8 @@
 import { useContext } from 'react';
 import { createStylesheet, stylex } from '../../styles/createStylesheet';
 import { fontSizeStyles, fontWeightStyles } from '../../styles/font';
+import { textAlignStyles } from '../../styles/textAlign';
 import BackgroundColorContext from '../BackgroundColorContext';
-
-const alignmentStyles = createStylesheet({
-	center: {
-		textAlign: 'center'
-	},
-	end: {
-		textAlign: 'end'
-	},
-	start: {
-		textAlign: 'start'
-	}
-});
 
 const variantStyles = createStylesheet({
 	base: {},
@@ -63,7 +52,7 @@ export default function BaseText({
 			className={stylex(
 				fontWeightStyles[fontWeight],
 				fontSizeStyles[fontSize],
-				alignmentStyles[alignment],
+				textAlignStyles[alignment],
 				variantStyles[variant],
 				colorClass
 			)}
