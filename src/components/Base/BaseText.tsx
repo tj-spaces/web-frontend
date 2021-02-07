@@ -57,6 +57,7 @@ export default function BaseText({
 				colorClass
 			)}
 			onClick={onClick}
+			style={onClick ? { cursor: 'pointer' } : undefined}
 		>
 			{children}
 		</span>

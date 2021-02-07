@@ -3,7 +3,7 @@ import { getSuggestedSpaces } from '../../api/api';
 import { createStylesheet } from '../../styles/createStylesheet';
 import { SpaceSession } from '../../typings/SpaceSession';
 import CenteredLoadingText from '../CenteredLoadingText';
-import FriendList from '../FriendList/FriendList';
+import FriendList from '../friendList/FriendList';
 import SpaceFeed from './SpaceFeed';
 
 export const styles = createStylesheet({

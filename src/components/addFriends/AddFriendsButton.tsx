@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import AddFriendsModal from './AddFriendsModal';
-import BaseButton from './Base/BaseButton';
+import BaseButton from '../Base/BaseButton';
 
 export default function AddFriendsButton() {
 	const [visible, setVisible] = useState(false);

@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import { createStylesheet } from '../../styles/createStylesheet';
-import SpaceFeedWrapper from '../../components/Feed/SpaceFeedWrapper';
+import SpaceFeedWrapper from '../../components/spaceFeed/SpaceFeedWrapper';
 
 const styles = createStylesheet({
 	container: {

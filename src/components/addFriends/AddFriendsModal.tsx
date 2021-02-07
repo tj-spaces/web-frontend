@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { getSuggestedFriends, sendFriendRequest } from '../api/api';
-import { createStylesheet, stylex } from '../styles/createStylesheet';
-import InputStyles from '../styles/InputStyles';
-import { PublicUserInfo } from '../typings/PublicUserInfo';
-import AddFriendsListRow from './AddFriendsListRow';
-import BaseButton from './Base/BaseButton';
-import BaseModal from './Base/BaseModal';
-import BaseRow from './Base/BaseRow';
-import BaseText from './Base/BaseText';
+import React, { useEffect, useState } from 'react';
+import { getSuggestedFriends } from '../../api/api';
+import { createStylesheet, stylex } from '../../styles/createStylesheet';
+import InputStyles from '../../styles/InputStyles';
+import { PublicUserInfo } from '../../typings/PublicUserInfo';
+import BaseButton from '../Base/BaseButton';
+import BaseModal from '../Base/BaseModal';
+import BaseRow from '../Base/BaseRow';
+import BaseText from '../Base/BaseText';
+import AddFriendsList from './AddFriendsList';
 
 const styles = createStylesheet({
 	largeFont: {
@@ -20,7 +20,6 @@ const suggestionCache: Record<string, PublicUserInfo[]> = {};
 export default function AddFriendsModal({ onClose }: { onClose: () => void }) {
 	const [search, setSearch] = useState('');
 	const [searchResults, setSearchResults] = useState<PublicUserInfo[]>([]);
-	const [requestedFriends, setRequestedFriends] = useState<Record<string, boolean>>({});
 
 	useEffect(() => {
 		if (search in suggestionCache) {
@@ -45,23 +44,7 @@ export default function AddFriendsModal({ onClose }: { onClose: () => void }) {
 					onChange={(e) => setSearch(e.target.value)}
 					value={search}
 				/>
-				<BaseRow direction="column" height="16rem">
-					{searchResults.map((friend) => {
-						return (
-							<AddFriendsListRow
-								friend={friend}
-								onClickedAddFriend={() => {
-									sendFriendRequest(friend.id);
-									setRequestedFriends((requestedFriends) => ({
-										...requestedFriends,
-										[friend.id]: true
-									}));
-								}}
-								requested={requestedFriends[friend.id] === true}
-							/>
-						);
-					})}
-				</BaseRow>
+				<AddFriendsList suggestedFriends={searchResults} />
 				<BaseButton onClick={() => onClose()}>Done</BaseButton>
 			</BaseRow>
 		</BaseModal>

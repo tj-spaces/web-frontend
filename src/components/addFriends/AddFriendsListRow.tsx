@@ -1,8 +1,8 @@
-import { createStylesheet } from '../styles/createStylesheet';
-import { PublicUserInfo } from '../typings/PublicUserInfo';
-import BaseRow from './Base/BaseRow';
-import BaseText from './Base/BaseText';
-import BaseButton from './Base/BaseButton';
+import { createStylesheet } from '../../styles/createStylesheet';
+import { PublicUserInfo } from '../../typings/PublicUserInfo';
+import BaseRow from '../Base/BaseRow';
+import BaseText from '../Base/BaseText';
+import BaseButton from '../Base/BaseButton';
 
 const styles = createStylesheet({
 	picture: {

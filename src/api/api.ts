@@ -192,13 +192,13 @@ export async function getFriendsList(
 	return { data, paging };
 }
 
-export async function getIncomingFriendRequests() {
-	let result = await makeAPIPostCall('/api/friends/incoming_requests');
+export async function getIncomingFriendRequests(): Promise<PublicUserInfo[]> {
+	let result = await makeAPIGetCall('/api/friends/incoming_requests');
 	return result.data.data;
 }
 
-export async function getOutgoingFriendRequests() {
-	let result = await makeAPIPostCall('/api/friends/outgoing_requests');
+export async function getOutgoingFriendRequests(): Promise<PublicUserInfo[]> {
+	let result = await makeAPIGetCall('/api/friends/outgoing_requests');
 	return result.data.data;
 }
 
