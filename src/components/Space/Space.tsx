@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import * as io from 'socket.io-client';
-import { connect, Room } from 'twilio-video';
+import {connect, Room} from 'twilio-video';
 import useSocketEventListener from '../../hooks/useSocketEventListener';
-import { getLogger } from '../../lib/ClusterLogger';
-import { API_SERVER_URL } from '../../lib/constants';
+import {getLogger} from '../../lib/ClusterLogger';
+import {API_SERVER_URL} from '../../lib/constants';
 import getSessionId from '../../lib/getSessionId';
 import SpaceConnectionContext from './SpaceConnectionContext';
 import SpaceContainer from './SpaceContainer';
@@ -17,12 +17,12 @@ import useSpaceQuestions from './useSpaceQuestions';
 const logger = getLogger('space');
 const conn = io.connect(API_SERVER_URL + '?sessionID=' + getSessionId());
 
-export default function Space({ id }: { id: string }) {
+export default function Space({id}: {id: string}) {
 	const [twilioRoom, setTwilioRoom] = useState<Room | null>(null);
 
 	const onReceiveTwilioGrant = useCallback((grant: string) => {
 		logger.debug('Received Twilio grant');
-		connect(grant, { region: 'us1' })
+		connect(grant, {region: 'us1'})
 			.then((room) => {
 				setTwilioRoom(room);
 			})

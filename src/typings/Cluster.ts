@@ -7,4 +7,5 @@ export interface Cluster {
 	created_at: string;
 	updated_at: string;
 	visibility: ClusterVisibility;
+	last_activity: string;
 }

@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import * as twilio from 'twilio-video';
-import { getLogger } from '../../lib/ClusterLogger';
+import {getLogger} from '../../lib/ClusterLogger';
 import SpaceAudioContext from './SpaceAudioContext';
 import SpaceMediaContext from './SpaceMediaContext';
 
@@ -8,15 +8,20 @@ const logger = getLogger('space/media');
 
 export default function SpaceMediaWrapper({
 	twilioRoom,
-	children
+	children,
 }: {
 	twilioRoom: twilio.Room | null;
 	children: React.ReactNode;
 }) {
-	const [twilioParticipants, setTwilioParticipants] = useState<Record<string, twilio.RemoteParticipant>>({});
+	const [twilioParticipants, setTwilioParticipants] = useState<
+		Record<string, twilio.RemoteParticipant>
+	>({});
 	const [muted, setMuted] = useState<boolean>(false);
 	const [cameraEnabled, setCameraEnabled] = useState<boolean>(true);
-	const [localVideoTrack, setLocalVideoTrack] = useState<twilio.LocalVideoTrack | null>(null);
+	const [
+		localVideoTrack,
+		setLocalVideoTrack,
+	] = useState<twilio.LocalVideoTrack | null>(null);
 	const audioContext = useRef(new AudioContext());
 
 	// twilioRoom
@@ -28,18 +33,23 @@ export default function SpaceMediaWrapper({
 			 * @param participant The Twilio participant that joined
 			 * @param _alreadyHere Whether the participant was here when we joined the room and we are adding them to the state via this function
 			 */
-			const onParticipantConnected = (participant: twilio.RemoteParticipant, _alreadyHere: boolean = false) => {
+			const onParticipantConnected = (
+				participant: twilio.RemoteParticipant,
+				_alreadyHere: boolean = false
+			) => {
 				logger.debug('Media Participant Connected: ' + participant.identity);
 				let participantId = participant.identity;
 				setTwilioParticipants((participants) => {
-					return { ...participants, [participantId]: participant };
+					return {...participants, [participantId]: participant};
 				});
 			};
-			const onParticipantDisconnected = (participant: twilio.RemoteParticipant) => {
+			const onParticipantDisconnected = (
+				participant: twilio.RemoteParticipant
+			) => {
 				logger.debug('Media Participant disconnected: ' + participant.identity);
 				let participantId = participant.identity;
 				setTwilioParticipants((participants) => {
-					let newParticipants = { ...participants };
+					let newParticipants = {...participants};
 					delete newParticipants[participantId];
 					return newParticipants;
 				});
@@ -87,10 +97,12 @@ export default function SpaceMediaWrapper({
 		if (cameraEnabled) {
 			if (twilioRoom) {
 				// When enabling the camera, we must get the camera feed again
-				twilio.createLocalVideoTrack({ width: 640 }).then((newLocalVideoTrack) => {
-					twilioRoom.localParticipant.publishTrack(newLocalVideoTrack);
-					setLocalVideoTrack(newLocalVideoTrack);
-				});
+				twilio
+					.createLocalVideoTrack({width: 640})
+					.then((newLocalVideoTrack) => {
+						twilioRoom.localParticipant.publishTrack(newLocalVideoTrack);
+						setLocalVideoTrack(newLocalVideoTrack);
+					});
 
 				// Whenever this changes, disable all video tracks
 				return () => disableAllVideoTracks();
@@ -121,10 +133,12 @@ export default function SpaceMediaWrapper({
 				setCameraEnabled,
 				muted,
 				cameraEnabled,
-				twilioParticipants
+				twilioParticipants,
 			}}
 		>
-			<SpaceAudioContext.Provider value={audioContext.current}>{children}</SpaceAudioContext.Provider>
+			<SpaceAudioContext.Provider value={audioContext.current}>
+				{children}
+			</SpaceAudioContext.Provider>
 		</SpaceMediaContext.Provider>
 	);
 }

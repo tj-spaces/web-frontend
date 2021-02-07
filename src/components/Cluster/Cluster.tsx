@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import useCluster from '../../hooks/useCluster';
 import useSpacesInCluster from '../../hooks/useSpacesInCluster';
-import { createStylesheet } from '../../styles/createStylesheet';
+import {createStylesheet} from '../../styles/createStylesheet';
 import BackgroundColorContext from '../BackgroundColorContext';
 import BaseScrollableArea from '../Base/BaseScrollableArea';
 import BaseText from '../Base/BaseText';
@@ -15,19 +15,25 @@ export const styles = createStylesheet({
 		padding: '0.5em 0em',
 		display: 'flex',
 		flexDirection: 'row',
-		height: '100%'
-	}
+		height: '100%',
+	},
 });
 
-export default function Cluster({ id }: { id: string }) {
+/**
+ * Renders the main page for a cluster. This includes the list of Spaces and list of Posts in the cluster.
+ * It also holds the button for displaying or hiding the settings.
+ */
+export default function Cluster({id}: {id: string}) {
 	const cluster = useCluster(id);
 	const spaces = useSpacesInCluster(id) ?? [];
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
 	return (
 		<BaseScrollableArea>
-			<ClusterIdContext.Provider value={{ id, spaces }}>
-				{isSettingsOpen && <ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />}
+			<ClusterIdContext.Provider value={{id, spaces}}>
+				{isSettingsOpen && (
+					<ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />
+				)}
 
 				<BaseText variant="heading" fontSize="xl">
 					{cluster?.name ?? 'Loading...'}{' '}
@@ -37,13 +43,13 @@ export default function Cluster({ id }: { id: string }) {
 				</BaseText>
 				<div className={styles('clusterLayout')}>
 					<BackgroundColorContext.Provider value="light">
-						<BaseScrollableArea railPadding="railPadding" style={{ flex: 1 }}>
+						<BaseScrollableArea railPadding="railPadding" style={{flex: 1}}>
 							<BaseText fontSize="xl" fontWeight="bold">
 								Spaces
 							</BaseText>
 							<ClusterSpaceList spaces={spaces} />
 						</BaseScrollableArea>
-						<BaseScrollableArea railPadding="railPadding" style={{ flex: 2 }}>
+						<BaseScrollableArea railPadding="railPadding" style={{flex: 2}}>
 							<BaseText fontSize="xl" fontWeight="bold">
 								Posts
 							</BaseText>

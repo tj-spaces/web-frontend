@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { getFriendsList, getIncomingFriendRequests } from '../../api/api';
-import { PublicUserInfo } from '../../typings/PublicUserInfo';
+import {useEffect, useState} from 'react';
+import {getFriendsList, getIncomingFriendRequests} from '../../api/api';
+import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import AddFriendsPressableText from '../addFriends/AddFriendsPressableText';
 import BaseModal from '../Base/BaseModal';
 import BaseRow from '../Base/BaseRow';
@@ -11,12 +11,17 @@ import FriendListRow from './FriendListRow';
 export default function FriendList() {
 	let [friendsPagingAfter, setFriendPagingAfter] = useState<string>('0');
 	let [friends, setFriends] = useState<PublicUserInfo[]>([]);
-	let [incomingFriendRequests, setIncomingFriendRequests] = useState<PublicUserInfo[]>([]);
-	let [incomingFriendRequestsModalOpen, setIncomingFriendRequestsModalOpen] = useState(false);
+	let [incomingFriendRequests, setIncomingFriendRequests] = useState<
+		PublicUserInfo[]
+	>([]);
+	let [
+		incomingFriendRequestsModalOpen,
+		setIncomingFriendRequestsModalOpen,
+	] = useState(false);
 
 	useEffect(() => {
 		if (friendsPagingAfter != null) {
-			getFriendsList(friendsPagingAfter).then(({ data, paging }) => {
+			getFriendsList(friendsPagingAfter).then(({data, paging}) => {
 				setFriends((friends) => friends.concat(data));
 				setFriendPagingAfter(paging.after);
 			});
@@ -49,7 +54,9 @@ export default function FriendList() {
 						Open them
 					</BaseText>
 					{incomingFriendRequestsModalOpen && (
-						<BaseModal onClickOutside={() => setIncomingFriendRequestsModalOpen(false)}>
+						<BaseModal
+							onClickOutside={() => setIncomingFriendRequestsModalOpen(false)}
+						>
 							<BaseText variant="heading" fontSize="large" fontWeight="bold">
 								Friend Requests
 							</BaseText>

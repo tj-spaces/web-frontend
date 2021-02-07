@@ -1,26 +1,39 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
-import { createStylesheet } from '../../styles/createStylesheet';
-import { SpaceSession } from '../../typings/SpaceSession';
+import {createStylesheet} from '../../styles/createStylesheet';
+import {SpaceSession} from '../../typings/SpaceSession';
 
 const styles = createStylesheet({
 	spaceFeedItemIcon: {
 		flex: 1,
 		borderRadius: '100%',
-		maxWidth: '4rem'
+		maxWidth: '4rem',
 	},
 	spaceFeedItemContent: {
 		flex: 4,
 		display: 'flex',
-		flexDirection: 'column'
-	}
+		flexDirection: 'column',
+	},
 });
 
-export default function SpaceFeedItem({ space }: { space: SpaceSession }) {
+/**
+ * Renders a feed item for a Space. Includes the profile photo of the host of the space,
+ * a display for how many people are online, and the name of the host of the space. When
+ * you click on the name of the space (which is in larger font), you are taken to the space.
+ */
+export default function SpaceFeedItem({space}: {space: SpaceSession}) {
 	return (
-		<BaseRow direction="column" borderRadius={1} backgroundColor="dark2" rails={2} spacing={1} edges={1} boxShadow>
+		<BaseRow
+			direction="column"
+			borderRadius={1}
+			backgroundColor="dark2"
+			rails={2}
+			spacing={1}
+			edges={1}
+			boxShadow
+		>
 			<BaseText fontSize="large" fontWeight="bold">
 				<Link to={'/spaces/' + space.id}>{space.topic}</Link>
 			</BaseText>

@@ -1,21 +1,24 @@
-import { useContext } from 'react';
-import { deleteCluster } from '../../api/api';
+import {useCallback, useContext} from 'react';
+import {deleteCluster} from '../../api/api';
 import BaseButton from '../Base/BaseButton';
 import BaseModal from '../Base/BaseModal';
 import BaseRow from '../Base/BaseRow';
 import ClusterIDContext from './CurrentClusterContext';
 
-export default function ClusterSettingsModal({ onClose }: { onClose: () => void }) {
+/**
+ * Renders a modal where a user can configure a cluster or delete it.
+ */
+export default function ClusterSettingsModal({onClose}: {onClose: () => void}) {
 	const currentCluster = useContext(ClusterIDContext);
 
-	const deleteCluster_ = () => {
+	const deleteCluster_ = useCallback(() => {
 		deleteCluster(currentCluster.id!);
-	};
+	}, [currentCluster.id]);
 
-	const save_ = () => {
+	const save_ = useCallback(() => {
 		// Saving code goes here
 		onClose();
-	};
+	}, [onClose]);
 
 	return (
 		<BaseModal onClickOutside={() => onClose()}>
@@ -25,7 +28,11 @@ export default function ClusterSettingsModal({ onClose }: { onClose: () => void 
 					<tbody>
 						<tr>
 							<td>
-								<BaseButton onClick={() => deleteCluster_()} size="small" variant="negative">
+								<BaseButton
+									onClick={() => deleteCluster_()}
+									size="small"
+									variant="negative"
+								>
 									Delete Cluster
 								</BaseButton>
 							</td>
@@ -35,11 +42,11 @@ export default function ClusterSettingsModal({ onClose }: { onClose: () => void 
 				</table>
 
 				<BaseRow direction="row" alignment="center" spacing={1}>
-					<BaseButton onClick={() => save_()} size="small" style={{ flex: 1 }}>
+					<BaseButton onClick={() => save_()} size="small" style={{flex: 1}}>
 						Save
 					</BaseButton>
 
-					<BaseButton onClick={() => onClose()} size="small" style={{ flex: 1 }}>
+					<BaseButton onClick={() => onClose()} size="small" style={{flex: 1}}>
 						Cancel
 					</BaseButton>
 				</BaseRow>
