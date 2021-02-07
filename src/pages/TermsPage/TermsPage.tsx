@@ -17,6 +17,18 @@ export default function TermsPage() {
 			</Link>
 
 			<h1>Terms of Service</h1>
+
+			<h3>TLDR</h3>
+			<ul>
+				<li>Be at least 13 years old</li>
+				<li>Don't do anything illegal</li>
+				<li>Don't pretend to be someone else</li>
+				<li>Don't collect data about other people</li>
+				<li>Don't copy our code</li>
+			</ul>
+
+			<hr />
+
 			<p>Welcome to Spaces!</p>
 			<p>
 				These Terms of Use (or "Terms") govern your use of Spaces, except where we expressly state that separate
@@ -70,7 +82,7 @@ export default function TermsPage() {
 						copyright infringement, trademark infringement, counterfeit, or pirated goods).
 					</li>
 					<li>
-						You can’t modify, translate, create derivative works of, or reverse engineer our products or
+						You can't modify, translate, create derivative works of, or reverse engineer our products or
 						their components.
 					</li>
 				</ul>
