@@ -26,7 +26,7 @@ function App() {
 					<Suspense fallback={<CenteredLoadingText />}>
 						<Switch>
 							<Route path="/auth/:provider/callback" component={AuthorizationCallback} />
-							<Route path="/space/:spaceId" component={SpacePage} />
+							<Route path="/spaces/:spaceId" component={SpacePage} />
 							<Route path="/clusters/:clusterId" component={ClusterPage} />
 							<Route path="/login" exact component={LoginPage} />
 							<Route path="/logout" exact component={Logout} />
