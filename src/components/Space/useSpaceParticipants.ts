@@ -10,12 +10,12 @@ export default function useSpaceParticipants(conn: SocketIOClient.Socket) {
 	const [participants, setParticipants] = useState<Record<string, SpaceParticipant>>({});
 
 	useSocketEventListener(conn, 'peers', (peers: Record<string, SpaceParticipant>) => {
-		logger(`Received peer list: ${Object.keys(peers).length} peers`);
+		logger.debug(`Received peer list: ${Object.keys(peers).length} peers`);
 		setParticipants(peers);
 	});
 
 	useSocketEventListener(conn, 'peer_joined', (peer: SpaceParticipant) => {
-		logger(`Peer joined: ${peer.accountId}`);
+		logger.debug(`Peer joined: ${peer.accountId}`);
 		setParticipants((participants) => ({
 			...participants,
 			[peer.accountId]: peer
@@ -23,7 +23,7 @@ export default function useSpaceParticipants(conn: SocketIOClient.Socket) {
 	});
 
 	useSocketEventListener(conn, 'peer_left', (peerId: string) => {
-		logger(`Peer left: ${peerId}`);
+		logger.debug(`Peer left: ${peerId}`);
 		setParticipants((participants) => {
 			let newParticipants = { ...participants };
 			delete newParticipants[peerId];

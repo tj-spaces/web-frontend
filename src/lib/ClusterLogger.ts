@@ -18,5 +18,18 @@ function base(category: string, message: any, severity: LogSeverity = 'info') {
 }
 
 export function getLogger(category: LogCategory) {
-	return base.bind(null, category);
+	return {
+		info(message: any) {
+			base(category, message, 'info');
+		},
+		debug(message: any) {
+			base(category, message, 'debug');
+		},
+		error(message: any) {
+			base(category, message, 'error');
+		},
+		warn(message: any) {
+			base(category, message, 'warn');
+		}
+	};
 }

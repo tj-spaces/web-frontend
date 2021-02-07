@@ -8,7 +8,6 @@ import BaseText from '../Base/BaseText';
 import QuestionsModal from './QuestionModal/QuestionModal';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaContext from './SpaceMediaContext';
-import SpaceParticipantsContext from './SpaceParticipantsContext';
 import SpaceView3D from './SpaceView3D/SpaceView3D';
 import SpaceViewLayoutContext from './SpaceViewLayoutContext';
 import { spaceViewStyles } from './SpaceViewStyles';
@@ -19,8 +18,7 @@ const SPACE_VIEW_TYPE: 'tiles' | '3d' = '3d';
 export default function SpaceContainer() {
 	const spaceID = useContext(SpaceIDContext);
 	const space = useSpace(spaceID);
-	const mediaContext = useContext(SpaceMediaContext);
-	const spaceContext = useContext(SpaceParticipantsContext);
+	const media = useContext(SpaceMediaContext);
 	const { user } = useContext(AuthContext);
 	// eslint-disable-next-line
 	const [expanded, setExpanded] = useState(true);
@@ -28,10 +26,6 @@ export default function SpaceContainer() {
 
 	if (user == null) {
 		return <h1>Authenticating</h1>;
-	}
-
-	if (spaceContext == null) {
-		return <h1>Joining Space [SC]</h1>;
 	}
 
 	return (
@@ -63,24 +57,24 @@ export default function SpaceContainer() {
 
 					<BaseButton to="..">Leave</BaseButton>
 
-					{mediaContext && (
+					{media && (
 						<>
-							{mediaContext.muted ? (
-								<BaseButton onClick={() => mediaContext.setMuted(false)}>
+							{media.muted ? (
+								<BaseButton onClick={() => media.setMuted(false)}>
 									<i className="fas fa-microphone-slash"></i>
 								</BaseButton>
 							) : (
-								<BaseButton onClick={() => mediaContext.setMuted(true)}>
+								<BaseButton onClick={() => media.setMuted(true)}>
 									<i className="fas fa-microphone"></i>
 								</BaseButton>
 							)}
 
-							{mediaContext.cameraEnabled ? (
-								<BaseButton onClick={() => mediaContext.setCameraEnabled(false)}>
+							{media.cameraEnabled ? (
+								<BaseButton onClick={() => media.setCameraEnabled(false)}>
 									<i className="fas fa-video"></i>
 								</BaseButton>
 							) : (
-								<BaseButton onClick={() => mediaContext.setCameraEnabled(true)}>
+								<BaseButton onClick={() => media.setCameraEnabled(true)}>
 									<i className="fas fa-video-slash"></i>
 								</BaseButton>
 							)}

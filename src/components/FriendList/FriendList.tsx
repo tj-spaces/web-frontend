@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getFriendsList, getIncomingFriendRequests } from '../../api/api';
 import { PublicUserInfo } from '../../typings/PublicUserInfo';
-import AddFriendsButton from '../addFriends/AddFriendsButton';
+import AddFriendsPressableText from '../addFriends/AddFriendsPressableText';
 import BaseModal from '../Base/BaseModal';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
@@ -30,10 +30,13 @@ export default function FriendList() {
 	}, []);
 
 	return (
-		<BaseRow direction="column" alignment="center" spacing={1}>
-			<BaseText variant="heading" fontSize="xl" fontWeight="bold">
-				Friends
-			</BaseText>
+		<BaseRow direction="column" alignment="center" spacing={1} edges={1}>
+			<BaseRow direction="row" alignment="center" spacing={1}>
+				<BaseText fontSize="xl" fontWeight="bold">
+					Friends
+				</BaseText>
+				<AddFriendsPressableText />
+			</BaseRow>
 			{incomingFriendRequests.length > 0 ? (
 				<>
 					<BaseText>People sent you friend requests!</BaseText>
@@ -55,7 +58,6 @@ export default function FriendList() {
 					)}
 				</>
 			) : null}
-			<AddFriendsButton />
 			{friends.map((friend) => (
 				<FriendListRow friend={friend} key={friend.id} />
 			))}

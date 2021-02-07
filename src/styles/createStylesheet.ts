@@ -120,7 +120,7 @@ export function createStylesheet<T extends StylesheetDefinition>(styles: T): Fun
 	if (buildTimeoutHandle == null) {
 		buildTimeoutHandle = setTimeout(() => {
 			if (queuedHTML.trim()) {
-				logger(`Injecting ${queuedClassesCount} classes`);
+				logger.debug(`Linking ${queuedClassesCount} styles`);
 				const tag = createStyleTag();
 				tag.innerHTML = queuedHTML;
 				queuedHTML = '';

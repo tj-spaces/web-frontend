@@ -13,7 +13,7 @@ export default function SpaceViewTilesLocalParticipant() {
 	const localParticipant = useLocalParticipant();
 
 	if (localParticipant == null) {
-		logger('Local participant is NULL', 'error');
+		logger.error('Local participant is NULL');
 		return null;
 	}
 

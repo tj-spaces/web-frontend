@@ -28,11 +28,18 @@ const colorStylesLightBackground = createStylesheet({
 	}
 });
 
+const textDecorationStyles = createStylesheet({
+	underline: {
+		textDecoration: 'underline'
+	}
+});
+
 export default function BaseText({
 	fontWeight = 'normal',
 	fontSize = 'medium',
 	alignment = 'start',
 	variant = 'base',
+	underline = false,
 	children,
 	onClick
 }: {
@@ -40,6 +47,7 @@ export default function BaseText({
 	fontSize?: keyof typeof fontSizeStyles;
 	fontWeight?: keyof typeof fontWeightStyles;
 	variant?: keyof typeof variantStyles;
+	underline?: boolean;
 	children: React.ReactNode;
 	onClick?: () => void;
 }) {
@@ -54,6 +62,7 @@ export default function BaseText({
 				fontSizeStyles[fontSize],
 				textAlignStyles[alignment],
 				variantStyles[variant],
+				underline ? textDecorationStyles.underline : undefined,
 				colorClass
 			)}
 			onClick={onClick}

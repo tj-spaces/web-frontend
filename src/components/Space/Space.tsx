@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import * as io from 'socket.io-client';
 import { connect, Room } from 'twilio-video';
 import useSocketEventListener from '../../hooks/useSocketEventListener';
@@ -21,13 +21,13 @@ export default function Space({ id }: { id: string }) {
 	const [twilioRoom, setTwilioRoom] = useState<Room | null>(null);
 
 	const onReceiveTwilioGrant = useCallback((grant: string) => {
-		logger('Received Twilio grant');
+		logger.debug('Received Twilio grant');
 		connect(grant, { region: 'us1' })
 			.then((room) => {
 				setTwilioRoom(room);
 			})
 			.catch((err) => {
-				logger('Error when receiving Twilio grant: ' + err, 'error');
+				logger.error('Error when receiving Twilio grant: ' + err);
 			});
 	}, []);
 

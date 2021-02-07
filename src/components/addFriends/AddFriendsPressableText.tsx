@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import AddFriendsModal from './AddFriendsModal';
-import BaseButton from '../Base/BaseButton';
+import BaseText from '../Base/BaseText';
 
-export default function AddFriendsButton() {
+export default function AddFriendsPressableText() {
 	const [visible, setVisible] = useState(false);
 
 	return (
 		<>
 			{visible && <AddFriendsModal onClose={() => setVisible(false)} />}
-			<BaseButton variant="theme" size="small" onClick={() => setVisible(true)}>
+			<BaseText onClick={() => setVisible(true)} underline>
 				Add Friends
-			</BaseButton>
+			</BaseText>
 		</>
 	);
 }

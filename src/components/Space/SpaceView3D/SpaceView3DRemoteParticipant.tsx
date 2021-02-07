@@ -42,7 +42,7 @@ export default function SpaceParticipantRemote3D({
 	const me = useLocalParticipant();
 
 	if (!me) {
-		logger('Local Participant is null', 'warn');
+		logger.warn('Local Participant is null');
 		return null;
 	}
 

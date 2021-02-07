@@ -29,14 +29,14 @@ export default function SpaceMediaWrapper({
 			 * @param _alreadyHere Whether the participant was here when we joined the room and we are adding them to the state via this function
 			 */
 			const onParticipantConnected = (participant: twilio.RemoteParticipant, _alreadyHere: boolean = false) => {
-				logger('Media Participant Connected: ' + participant.identity);
+				logger.debug('Media Participant Connected: ' + participant.identity);
 				let participantId = participant.identity;
 				setTwilioParticipants((participants) => {
 					return { ...participants, [participantId]: participant };
 				});
 			};
 			const onParticipantDisconnected = (participant: twilio.RemoteParticipant) => {
-				logger('Media Participant disconnected: ' + participant.identity);
+				logger.debug('Media Participant disconnected: ' + participant.identity);
 				let participantId = participant.identity;
 				setTwilioParticipants((participants) => {
 					let newParticipants = { ...participants };
