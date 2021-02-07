@@ -5,6 +5,20 @@ import App from './App';
 import { getLogger } from './lib/ClusterLogger';
 import reportWebVitals from './reportWebVitals';
 
+console.log(`
+If you don't know what you're doing, be careful!
+
+If you DO know what you're doing, then please reach out to me!
+
+We need more React/React Native developers and backend engineers.
+
+Or, if you just want to provide feedback, that's welcome too!
+
+Best,
+  Michael
+  myfatemi04@gmail.com
+`);
+
 ReactDOM.render(
 	<React.StrictMode>
 		<App />
