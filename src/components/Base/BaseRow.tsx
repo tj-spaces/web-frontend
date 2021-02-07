@@ -1,4 +1,3 @@
-import { CSSProperties } from 'react';
 import boxShadowStyles from '../../styles/boxShadow';
 import { stylex, createStylesheet, StylesheetDefinition, ClassProvider } from '../../styles/createStylesheet';
 

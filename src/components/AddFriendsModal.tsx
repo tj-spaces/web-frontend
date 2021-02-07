@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getSuggestedFriends } from '../api/api';
+import { getSuggestedFriends, sendFriendRequest } from '../api/api';
 import { createStylesheet, stylex } from '../styles/createStylesheet';
 import InputStyles from '../styles/InputStyles';
 import { Friend } from '../typings/Friend';
@@ -51,6 +51,7 @@ export default function AddFriendsModal({ onClose }: { onClose: () => void }) {
 							<AddFriendsListRow
 								friend={friend}
 								onClickedAddFriend={() => {
+									sendFriendRequest(friend.id);
 									setRequestedFriends((requestedFriends) => ({
 										...requestedFriends,
 										[friend.id]: true
