@@ -8,6 +8,8 @@ import { ISpaceParticipant } from '../../typings/SpaceParticipant';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceContext from './SpaceContext';
 import SpaceConnectionContext from './SpaceConnectionContext';
+import { Question } from '../../typings/QuestionAndAnswer';
+import SpaceQuestionsContext from './SpaceQuestionsContext';
 
 type ParticipantMap = { [participantId: string]: ISpaceParticipant };
 
@@ -21,6 +23,7 @@ export default function SpaceConnectionWrapper({
 	children: React.ReactNode;
 }) {
 	const [participants, setParticipants] = useState<ParticipantMap>({});
+	const [questions, setQuestions] = useState<Record<string, Question>>({});
 	const connectionRef = useRef<SocketIOClient.Socket | null>(null);
 	const id = useContext(SpaceIDContext);
 
@@ -62,6 +65,53 @@ export default function SpaceConnectionWrapper({
 			}));
 		});
 
+		connectionRef.current.on('question', (questionID: string, senderID: string, text: string) => {
+			setQuestions((questions) => ({
+				...questions,
+				[questionID]: {
+					senderID,
+					text,
+					id: questionID,
+					answers: [],
+					markedAsAnswered: false
+				}
+			}));
+		});
+
+		connectionRef.current.on('question_answer_added', (questionID: string, senderID: string, text: string) => {
+			setQuestions((questions) => ({
+				...questions,
+				[questionID]: {
+					...questions[questionID],
+					answers: [
+						...questions[questionID].answers,
+						{
+							senderID,
+							text
+						}
+					]
+				}
+			}));
+		});
+
+		connectionRef.current.on('question_answer_accepted', (questionID: string) => {
+			setQuestions((questions) => ({
+				...questions,
+				[questionID]: {
+					...questions[questionID],
+					markedAsAnswered: true
+				}
+			}));
+		});
+
+		connectionRef.current.on('question_list', (questions: Question[]) => {
+			let questionMap: Record<string, Question> = {};
+			for (let question of questions) {
+				questionMap[question.id] = question;
+			}
+			setQuestions(questionMap);
+		});
+
 		return () => {
 			if (connectionRef.current) {
 				connectionRef.current.emit('leave_space');
@@ -87,7 +137,11 @@ export default function SpaceConnectionWrapper({
 
 	return (
 		<SpaceContext.Provider value={{ participants }}>
-			<SpaceConnectionContext.Provider value={connectionRef.current}>{children}</SpaceConnectionContext.Provider>
+			<SpaceQuestionsContext.Provider value={questions}>
+				<SpaceConnectionContext.Provider value={connectionRef.current}>
+					{children}
+				</SpaceConnectionContext.Provider>
+			</SpaceQuestionsContext.Provider>
 		</SpaceContext.Provider>
 	);
 }

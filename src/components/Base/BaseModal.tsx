@@ -5,7 +5,7 @@ import BackgroundColorContext from '../BackgroundColorContext';
 
 export const styles = createStylesheet({
 	modalBackground: {
-		zIndex: 1,
+		zIndex: 2,
 		position: 'fixed',
 		left: '0vw',
 		top: '0vh',
@@ -23,7 +23,6 @@ export const styles = createStylesheet({
 		padding: '1em',
 		textTransform: 'none',
 		extends: [boxShadow.boxShadow]
-		// padding: '2em'
 	}
 });
 

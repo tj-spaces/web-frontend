@@ -5,6 +5,7 @@ import BackgroundColorContext from '../BackgroundColorContext';
 import BaseButton from '../Base/BaseButton';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
+import QuestionsModal from './QuestionsModal/QuestionsModal';
 import SpaceContext from './SpaceContext';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaContext from './SpaceMediaContext';
@@ -23,6 +24,7 @@ export default function SpaceFrame() {
 	const { user } = useContext(AuthContext);
 	// eslint-disable-next-line
 	const [expanded, setExpanded] = useState(true);
+	const [questionsModalOpen, setQuestionsModalOpen] = useState(false);
 
 	if (user == null) {
 		return <h1>Authenticating</h1>;
@@ -36,12 +38,6 @@ export default function SpaceFrame() {
 		<SpaceViewLayoutContext.Provider value={{ expanded }}>
 			<div id="frame-container" className={spaceViewStyles('frame', 'frameExpanded')}>
 				<div className={spaceViewStyles('topHeading')}>
-					{/* {expanded ? ( */}
-					{/* <i className="fas fa-angle-down" onClick={() => setExpanded(false)}></i> */}
-					{/* ) : ( */}
-					{/* <i className="fas fa-angle-up" onClick={() => setExpanded(true)}></i> */}
-					{/* )} */}
-
 					<BackgroundColorContext.Provider value="light">
 						<BaseText fontSize="xl" fontWeight="bold" alignment="center">
 							{space ? space.topic : 'Loading Space'}
@@ -61,6 +57,10 @@ export default function SpaceFrame() {
 					rails={2}
 					xstyle={spaceViewStyles.bottomButtons}
 				>
+					<BaseButton onClick={() => setQuestionsModalOpen(true)}>Questions</BaseButton>
+
+					{questionsModalOpen && <QuestionsModal onClose={() => setQuestionsModalOpen(false)} />}
+
 					<BaseButton to="..">Leave</BaseButton>
 
 					{mediaContext && (
