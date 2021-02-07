@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
-import { getSpaceSessionsInCluster } from '../api/api';
-import { SpaceSession } from '../typings/SpaceSession';
+import {useEffect, useState} from 'react';
+import {getSpaceSessionsInCluster} from '../api/api';
+import {SpaceSession} from '../typings/SpaceSession';
 
-export default function useSpacesInCluster(clusterId: string) {
+export default function useSpacesInCluster(clusterID: string) {
 	const [spaces, setSpaces] = useState<SpaceSession[]>();
 
 	useEffect(() => {
-		getSpaceSessionsInCluster(clusterId).then((spaces) => setSpaces(spaces));
+		getSpaceSessionsInCluster(clusterID).then((spaces) => setSpaces(spaces));
 
 		// Reset to empty array
-		return () => setSpaces([]);
-	}, [clusterId]);
+		return () => setSpaces(undefined);
+	}, [clusterID]);
 
 	return spaces;
 }

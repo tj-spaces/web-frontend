@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
-import { LocalTrackPublication, RemoteTrackPublication } from 'twilio-video';
+import {useEffect, useState} from 'react';
+import {LocalTrackPublication, RemoteTrackPublication} from 'twilio-video';
 
-export default function useTrack(publication: LocalTrackPublication | RemoteTrackPublication | undefined) {
+export default function useTrack(
+	publication: LocalTrackPublication | RemoteTrackPublication | undefined
+) {
 	const [track, setTrack] = useState(publication && publication.track);
 
 	useEffect(() => {
@@ -9,13 +11,13 @@ export default function useTrack(publication: LocalTrackPublication | RemoteTrac
 		setTrack(publication && publication.track);
 
 		if (publication) {
-			const removeTrack = () => setTrack(null);
+			const unsetTrack = () => setTrack(null);
 
 			publication.on('subscribed', setTrack);
-			publication.on('unsubscribed', removeTrack);
+			publication.on('unsubscribed', unsetTrack);
 			return () => {
 				publication.off('subscribed', setTrack);
-				publication.off('unsubscribed', removeTrack);
+				publication.off('unsubscribed', unsetTrack);
 			};
 		}
 	}, [publication]);
