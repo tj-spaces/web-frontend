@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import boxShadow from '../../styles/boxShadow';
 import { createStylesheet } from '../../styles/createStylesheet';
 import { rowSpacings } from '../Base/BaseRow';
-import ClusterCreateButton from '../Cluster/ClusterCreateButton';
 import NavbarCreateButton from './NavbarCreateButton';
-import NavbarIcon from './NavbarIcon';
 
 export const styles = createStylesheet({
 	navbar: {
@@ -13,7 +11,7 @@ export const styles = createStylesheet({
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
-		paddingTop: '0.5rem',
+		paddingTop: '1rem',
 		paddingBottom: '1rem',
 
 		zIndex: 1,
@@ -26,21 +24,9 @@ export const styles = createStylesheet({
 export default function Navbar() {
 	return (
 		<div className={styles('navbar')}>
-			<NavbarIcon>
-				<ClusterCreateButton />
-			</NavbarIcon>
+			<Link to="/logout">Log out</Link>
 
-			<NavbarIcon>
-				<Link to="/logout">
-					<i className="fas fa-sign-out-alt"></i>
-				</Link>
-			</NavbarIcon>
-
-			<NavbarIcon>
-				<Link to="/explore">
-					<i className="fas fa-compass"></i>
-				</Link>
-			</NavbarIcon>
+			<Link to="/explore">Explore</Link>
 
 			<NavbarCreateButton />
 		</div>
