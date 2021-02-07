@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getMyClusters, getSpacesInCluster } from '../../api/api';
+import { getSuggestedSpaces } from '../../api/api';
 import { createStylesheet } from '../../styles/createStylesheet';
 import { SpaceSession } from '../../typings/SpaceSession';
 import CenteredLoadingText from '../CenteredLoadingText';
@@ -20,13 +20,8 @@ export default function SpaceFeedWrapper() {
 
 	useEffect(() => {
 		(async () => {
-			const clusters = await getMyClusters();
-			const combinedSpaces: SpaceSession[] = [];
-			for (let cluster of clusters) {
-				const spaces = await getSpacesInCluster(cluster.id);
-				combinedSpaces.push(...spaces);
-			}
-			setSpaces(combinedSpaces);
+			const spaces = await getSuggestedSpaces();
+			setSpaces(spaces);
 			setLoading(false);
 		})();
 	}, []);

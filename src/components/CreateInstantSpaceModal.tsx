@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { createSpace } from '../api/api';
+import { createSpaceSession } from '../api/api';
 import { backgroundColors } from '../styles/colors';
 import InputStyles from '../styles/InputStyles';
+import { SpaceSessionVisibility } from '../typings/SpaceSession';
 import BaseButton from './Base/BaseButton';
 import BaseButtonGroupItem from './Base/BaseButtonGroupItem';
 import BaseModal from './Base/BaseModal';
 import BaseRow from './Base/BaseRow';
 import BaseText from './Base/BaseText';
 
-export type InstantSpaceVisibilityType = 'discoverable' | 'unlisted';
 export type CreationStatus = 'none' | 'pending' | 'done' | 'error';
 
 export default function CreateInstantSpaceModal({ onClose }: { onClose: () => void }) {
-	let [visibility, setVisibility] = useState<InstantSpaceVisibilityType>('discoverable');
+	let [visibility, setVisibility] = useState<SpaceSessionVisibility>('discoverable');
 	let [topic, setTopic] = useState<string>('');
 	let [creationStatus, setCreationStatus] = useState<CreationStatus>('none');
 	let [newlyCreatedSpaceID, setNewlyCreatedSpaceID] = useState<string>();
@@ -52,7 +52,7 @@ export default function CreateInstantSpaceModal({ onClose }: { onClose: () => vo
 						size="small"
 						onClick={() => {
 							setCreationStatus('pending');
-							createSpace(topic, visibility)
+							createSpaceSession(topic, visibility)
 								.then((id) => {
 									setCreationStatus('done');
 									setNewlyCreatedSpaceID(id);

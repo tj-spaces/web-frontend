@@ -43,7 +43,7 @@ export default function SpaceFrame() {
 
 					<BackgroundColorContext.Provider value="light">
 						<BaseText fontSize="xl" fontWeight="bold" alignment="center">
-							{space ? space.name : 'Loading Space'}
+							{space ? space.topic : 'Loading Space'}
 						</BaseText>
 					</BackgroundColorContext.Provider>
 				</div>

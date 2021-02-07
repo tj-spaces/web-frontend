@@ -2,7 +2,7 @@ export type SpaceSessionVisibility = 'discoverable' | 'unlisted' | 'secret';
 
 export interface SpaceSession {
 	id: string;
-	name: string;
+	topic: string;
 	start_time: string;
 	stop_time: string;
 	cluster_id?: string;

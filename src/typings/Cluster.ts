@@ -1,6 +1,6 @@
 export type ClusterVisibility = 'discoverable' | 'unlisted' | 'secret';
 
-export interface ICluster {
+export interface Cluster {
 	id: string;
 	creator_id: string;
 	name: string;

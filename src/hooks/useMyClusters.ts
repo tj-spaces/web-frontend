@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getMyClusters } from '../api/api';
-import { ICluster } from '../typings/Cluster';
+import { Cluster } from '../typings/Cluster';
 
 export default function useMyClusters() {
-	const [spaces, setClusters] = useState<ICluster[]>();
+	const [spaces, setClusters] = useState<Cluster[]>();
 
 	useEffect(() => {
 		getMyClusters().then((clusters) => setClusters(clusters));

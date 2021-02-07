@@ -35,7 +35,7 @@ export default function SpaceFeedItem({ space }: { space: SpaceSession }) {
 			boxShadow
 		>
 			<BaseText fontSize="medium" fontWeight="bold">
-				<Link to={'/space/' + space.id}>{space.name}</Link>
+				<Link to={'/space/' + space.id}>{space.topic}</Link>
 			</BaseText>
 			<BaseRow direction="row">
 				<div className={styles('spaceFeedItemIcon')}>

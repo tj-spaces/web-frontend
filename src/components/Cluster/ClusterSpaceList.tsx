@@ -25,7 +25,7 @@ export function ClusterSpaceListItem({ clusterId, space }: { clusterId: string; 
 		<div className={styles('spaceListItem')}>
 			<b>
 				<Link to={`/spaces/${space.id}`} className="unstyled-link">
-					{space.name}
+					{space.topic}
 				</Link>
 			</b>
 			<br />

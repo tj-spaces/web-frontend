@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getCluster } from '../api/api';
-import { ICluster } from '../typings/Cluster';
+import { Cluster } from '../typings/Cluster';
 
 export default function useCluster(clusterId: string) {
-	const [cluster, setCluster] = useState<ICluster>();
+	const [cluster, setCluster] = useState<Cluster>();
 
 	useEffect(() => {
 		getCluster(clusterId).then((cluster) => {

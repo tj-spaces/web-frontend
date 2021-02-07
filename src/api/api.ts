@@ -1,8 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
-import { InstantSpaceVisibilityType } from '../components/CreateInstantSpaceModal';
 import { API_SERVER_URL } from '../lib/constants';
 import getSessionId from '../lib/getSessionId';
-import { ICluster, ClusterVisibility } from '../typings/Cluster';
+import { Cluster, ClusterVisibility } from '../typings/Cluster';
 import { Friend } from '../typings/Friend';
 import { SpaceSession, SpaceSessionVisibility } from '../typings/SpaceSession';
 import { User } from '../typings/User';
@@ -119,12 +118,17 @@ export async function deleteCluster(id: string): Promise<void> {
 	await makeAPIDeleteCall('/api/clusters/' + id);
 }
 
-export async function getDiscoverableClusters(): Promise<ICluster[]> {
-	let result = await makeAPIGetCall('/api/discoverable-clusters');
+export async function getSuggestedSpaces(): Promise<SpaceSession[]> {
+	let result = await makeAPIGetCall('/api/spaces/suggested');
 	return result.data.data;
 }
 
-export async function getMyClusters(): Promise<ICluster[]> {
+export async function getDiscoverableClusters(): Promise<Cluster[]> {
+	let result = await makeAPIGetCall('/api/clusters/discoverable');
+	return result.data.data;
+}
+
+export async function getMyClusters(): Promise<Cluster[]> {
 	let result = await makeAPIGetCall('/api/users/@me/clusters');
 	return result.data.data;
 }
@@ -134,12 +138,12 @@ export async function createCluster(name: string, visibility: ClusterVisibility)
 	return result.data.data.cluster_id;
 }
 
-export async function createSpaceInCluster(clusterId: string, topic: string): Promise<string> {
+export async function createSpaceSessionInCluster(clusterId: string, topic: string): Promise<string> {
 	let result = await makeAPIPostCall('/api/clusters/' + clusterId + '/spaces', { topic });
 	return result.data.data.space_id;
 }
 
-export async function createSpace(topic: string, visibility: InstantSpaceVisibilityType): Promise<string> {
+export async function createSpaceSession(topic: string, visibility: SpaceSessionVisibility): Promise<string> {
 	let result = await makeAPIPostCall('/api/spaces/', { topic, visibility });
 	return result.data.data.space_id;
 }
@@ -148,7 +152,7 @@ export async function joinCluster(clusterID: string): Promise<void> {
 	await makeAPIPostCall('/api/clusters/' + clusterID + '/join');
 }
 
-export async function getCluster(id: string): Promise<ICluster> {
+export async function getCluster(id: string): Promise<Cluster> {
 	let result = await makeAPIGetCall('/api/clusters/' + id);
 	return result.data.data;
 }
@@ -158,12 +162,12 @@ export async function getMe(): Promise<User> {
 	return result.data.data;
 }
 
-export async function getSpace(spaceID: string): Promise<SpaceSession> {
+export async function getSpaceSession(spaceID: string): Promise<SpaceSession> {
 	let result = await makeAPIGetCall('/api/spaces/' + spaceID);
 	return result.data.data;
 }
 
-export async function getSpacesInCluster(id: string): Promise<SpaceSession[]> {
+export async function getSpaceSessionsInCluster(id: string): Promise<SpaceSession[]> {
 	let result = await makeAPIGetCall('/api/clusters/' + id + '/spaces');
 	return result.data.data;
 }

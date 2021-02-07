@@ -1,6 +1,6 @@
 import React, { createRef, useContext, useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import { createSpaceInCluster } from '../../api/api';
+import { createSpaceSessionInCluster } from '../../api/api';
 import BaseButton from '../Base/BaseButton';
 import BaseModal from '../Base/BaseModal';
 import BaseRow from '../Base/BaseRow';
@@ -21,7 +21,7 @@ export default function SpaceCreateModal({ onClose }: { onClose: () => void }) {
 			const topic = topicRef.current.value;
 			if (topic) {
 				setIsSpaceCreating(true);
-				createSpaceInCluster(cluster.id!, topic).then((newSpaceId) => {
+				createSpaceSessionInCluster(cluster.id!, topic).then((newSpaceId) => {
 					setNewlyCreatedSpaceId(newSpaceId);
 					setIsSpaceCreated(true);
 				});

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { getDiscoverableClusters } from '../../api/api';
-import { ICluster } from '../../typings/Cluster';
+import { Cluster } from '../../typings/Cluster';
 import ClusterPreview from '../../components/ClusterPreview';
 import BaseText from '../../components/Base/BaseText';
 import BaseRow from '../../components/Base/BaseRow';
 
 export default function ClusterExplorer() {
-	const [clusters, setClusters] = useState<ICluster[]>();
+	const [clusters, setClusters] = useState<Cluster[]>();
 
 	useEffect(() => {
 		getDiscoverableClusters().then((clusters) => {
