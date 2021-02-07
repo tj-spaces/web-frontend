@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { InstantSpaceVisibilityType } from '../components/CreateInstantSpaceModal';
 import { API_SERVER_URL } from '../lib/constants';
 import getSessionId from '../lib/getSessionId';
 import { ICluster, ClusterVisibility } from '../typings/Cluster';
@@ -130,8 +131,12 @@ export async function createCluster(name: string, visibility: ClusterVisibility)
 	return (await makeAPIPostCall('/api/clusters', { name, visibility })).data.cluster_id;
 }
 
-export async function createSpace(clusterId: string, name: string): Promise<string> {
-	return (await makeAPIPostCall('/api/clusters/' + clusterId + '/spaces', { name })).data.space_id;
+export async function createSpaceInCluster(clusterId: string, topic: string): Promise<string> {
+	return (await makeAPIPostCall('/api/clusters/' + clusterId + '/spaces', { topic })).data.data.space_id;
+}
+
+export async function createSpace(topic: string, visibility: InstantSpaceVisibilityType): Promise<string> {
+	return (await makeAPIPostCall('/api/spaces/', { topic, visibility })).data.data.space_id;
 }
 
 export async function joinCluster(clusterId: string): Promise<void> {

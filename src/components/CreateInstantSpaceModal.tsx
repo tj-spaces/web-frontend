@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { createSpace } from '../api/api';
 import { backgroundColors } from '../styles/colors';
 import InputStyles from '../styles/InputStyles';
 import BaseButton from './Base/BaseButton';
@@ -8,10 +10,13 @@ import BaseRow from './Base/BaseRow';
 import BaseText from './Base/BaseText';
 
 export type InstantSpaceVisibilityType = 'discoverable' | 'unlisted';
+export type CreationStatus = 'none' | 'pending' | 'done' | 'error';
 
 export default function CreateInstantSpaceModal({ onClose }: { onClose: () => void }) {
 	let [visibility, setVisibility] = useState<InstantSpaceVisibilityType>('discoverable');
 	let [topic, setTopic] = useState<string>('');
+	let [creationStatus, setCreationStatus] = useState<CreationStatus>('none');
+	let [newlyCreatedSpaceID, setNewlyCreatedSpaceID] = useState<string>();
 
 	return (
 		<BaseModal onClickOutside={onClose}>
@@ -41,9 +46,31 @@ export default function CreateInstantSpaceModal({ onClose }: { onClose: () => vo
 						Unlisted
 					</BaseButtonGroupItem>
 				</BaseRow>
-				<BaseButton variant="theme" size="small">
-					Start
-				</BaseButton>
+				{creationStatus === 'none' ? (
+					<BaseButton
+						variant="theme"
+						size="small"
+						onClick={() => {
+							setCreationStatus('pending');
+							createSpace(topic, visibility)
+								.then((id) => {
+									setCreationStatus('done');
+									setNewlyCreatedSpaceID(id);
+								})
+								.catch((err) => setCreationStatus('error'));
+						}}
+					>
+						Start
+					</BaseButton>
+				) : creationStatus === 'pending' ? (
+					<BaseText>Creating Space</BaseText>
+				) : creationStatus === 'done' ? (
+					<BaseText>
+						Space is made. <Link to={'/spaces/' + newlyCreatedSpaceID}>Click here to join!</Link>
+					</BaseText>
+				) : (
+					<BaseText>Error</BaseText>
+				)}
 			</BaseRow>
 		</BaseModal>
 	);
