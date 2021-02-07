@@ -5,10 +5,10 @@ import BackgroundColorContext from '../BackgroundColorContext';
 import BaseButton from '../Base/BaseButton';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
-import QuestionsModal from './QuestionsModal/QuestionsModal';
-import SpaceContext from './SpaceContext';
+import QuestionsModal from './QuestionModal/QuestionModal';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaContext from './SpaceMediaContext';
+import SpaceParticipantsContext from './SpaceParticipantsContext';
 import SpaceView3D from './SpaceView3D/SpaceView3D';
 import SpaceViewLayoutContext from './SpaceViewLayoutContext';
 import { spaceViewStyles } from './SpaceViewStyles';
@@ -16,11 +16,11 @@ import SpaceViewTiles from './SpaceViewTiles/SpaceViewTiles';
 
 const SPACE_VIEW_TYPE: 'tiles' | '3d' = '3d';
 
-export default function SpaceFrame() {
+export default function SpaceContainer() {
 	const spaceID = useContext(SpaceIDContext);
 	const space = useSpace(spaceID);
 	const mediaContext = useContext(SpaceMediaContext);
-	const spaceContext = useContext(SpaceContext);
+	const spaceContext = useContext(SpaceParticipantsContext);
 	const { user } = useContext(AuthContext);
 	// eslint-disable-next-line
 	const [expanded, setExpanded] = useState(true);
@@ -36,7 +36,7 @@ export default function SpaceFrame() {
 
 	return (
 		<SpaceViewLayoutContext.Provider value={{ expanded }}>
-			<div id="frame-container" className={spaceViewStyles('frame', 'frameExpanded')}>
+			<div className={spaceViewStyles('container')}>
 				<div className={spaceViewStyles('topHeading')}>
 					<BackgroundColorContext.Provider value="light">
 						<BaseText fontSize="xl" fontWeight="bold" alignment="center">

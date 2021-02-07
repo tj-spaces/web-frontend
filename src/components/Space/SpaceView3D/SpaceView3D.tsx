@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import useLocalParticipant from '../../../hooks/useLocalParticipant';
-import SpaceContext from '../SpaceContext';
+import SpaceParticipantsContext from '../SpaceParticipantsContext';
 import SpaceKeyboardMovementController from '../SpaceKeyboardMovementController';
 import SpaceMediaContext from '../SpaceMediaContext';
 import SpaceBottomLocalVideo from './SpaceView3DBottomLocalVideo';
@@ -11,7 +11,7 @@ import { spaceViewStyles } from '../SpaceViewStyles';
 
 export default function SpaceView3D() {
 	const me = useLocalParticipant();
-	const { participants } = useContext(SpaceContext);
+	const participants = useContext(SpaceParticipantsContext);
 	const { twilioParticipants } = useContext(SpaceMediaContext) ?? {};
 	const localParticipant = useLocalParticipant();
 
@@ -26,7 +26,7 @@ export default function SpaceView3D() {
 	}
 
 	return (
-		<div style={{ backgroundColor: '#333380' }} className={spaceViewStyles('view')}>
+		<div style={{ backgroundColor: '#333380' }} className={spaceViewStyles('environment')}>
 			<SpaceKeyboardMovementController />
 			{localParticipant && <SpatialAudioListener position={localParticipant.position} />}
 			<SpaceView3DMinimap

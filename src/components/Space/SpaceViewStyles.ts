@@ -1,10 +1,11 @@
 import { createStylesheet } from '../../styles/createStylesheet';
 
 export const spaceViewStyles = createStylesheet({
-	// The white container with rounded borders
-	frame: {
+	// The background
+	container: {
 		position: 'absolute',
 		minWidth: '100%',
+		height: '100vh',
 		backgroundColor: 'white',
 		bottom: '0px',
 		left: '0px',
@@ -12,13 +13,41 @@ export const spaceViewStyles = createStylesheet({
 		zIndex: 1,
 		transition: 'all 500ms ease'
 	},
-	frameExpanded: {
-		minHeight: '100vh'
+	mainContent: {
+		paddingTop: '5em',
+		paddingBottom: '5em',
+		height: '100%',
+		maxWidth: '100%'
 	},
-	frameCondensed: {
-		maxHeight: '40vh'
+	/**
+	 * The top heading. Currently only stores the space topic.
+	 */
+	topHeading: {
+		position: 'absolute',
+		top: '0px',
+		left: '0px',
+		right: '0px',
+		height: '5em',
+		paddingTop: '1em',
+		paddingBottom: '1em',
+		textAlign: 'center',
+		color: 'black',
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		subSelectors: {
+			i: {
+				cursor: 'pointer',
+				fontSize: '3rem',
+				marginRight: '1.5rem'
+			}
+		}
 	},
-	view: {
+	/**
+	 * The actual Space itself: tiles, 3D view, etc
+	 */
+	environment: {
 		position: 'absolute',
 		bottom: '5rem',
 		top: '5rem',
@@ -45,32 +74,5 @@ export const spaceViewStyles = createStylesheet({
 		left: '0px',
 		bottom: '0px',
 		padding: '1em'
-	},
-	mainContent: {
-		paddingTop: '5em',
-		paddingBottom: '5em',
-		height: '100%',
-		maxWidth: '100%'
-	},
-	topHeading: {
-		position: 'absolute',
-		top: '0px',
-		height: '5em',
-		width: '100%',
-		paddingTop: '1em',
-		paddingBottom: '1em',
-		textAlign: 'center',
-		color: 'black',
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center',
-		subSelectors: {
-			i: {
-				cursor: 'pointer',
-				fontSize: '3rem',
-				marginRight: '1.5rem'
-			}
-		}
 	}
 });

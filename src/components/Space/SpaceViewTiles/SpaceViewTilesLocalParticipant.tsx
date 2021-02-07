@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import useLocalParticipant from '../../../hooks/useLocalParticipant';
 import { getLogger } from '../../../lib/ClusterLogger';
 import SpaceMediaContext from '../SpaceMediaContext';
-import SpaceParticipant from '../SpaceParticipant';
+import SpaceParticipantBackground from '../SpaceParticipant';
 import SpaceParticipantTile from '../SpaceParticipantTile';
 
 const logger = getLogger('space/2d/local-participant');
@@ -19,7 +19,7 @@ export default function SpaceViewTilesLocalParticipant() {
 
 	return (
 		<SpaceParticipantTile isLocal>
-			<SpaceParticipant participant={localParticipant} videoTrack={videoTrack} />
+			<SpaceParticipantBackground participant={localParticipant} videoTrack={videoTrack} />
 		</SpaceParticipantTile>
 	);
 }

@@ -28,7 +28,7 @@ export type DisplayStatus = 'agree' | 'disagree' | 'faster' | 'slower' | 'raised
  * This is not the same as an Account, which holds necessary information such as a user's email, username,
  * birthday, and etc.
  */
-export interface ISpaceParticipant {
+export interface SpaceParticipant {
 	/**
 	 * An ID assigned to somebody when they join the Space
 	 * If a user joins as a guest from the browser, this ID stays with them even if they

@@ -5,10 +5,10 @@ import useTrack from '../../../hooks/useTrack';
 import { getLogger } from '../../../lib/ClusterLogger';
 import getCSSTransform from '../../../lib/getCSSTransform';
 import { createStylesheet } from '../../../styles/createStylesheet';
-import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
+import { SpaceParticipant } from '../../../typings/SpaceParticipant';
 import SpaceParticipantCircle from '../SpaceParticipantCircle';
 import SpatialAudioTrack from '../../../mediautil/SpatialAudioTrack';
-import SpaceParticipant from '../SpaceParticipant';
+import SpaceParticipantBackground from '../SpaceParticipant';
 
 const logger = getLogger('space/participant-bubble');
 
@@ -24,7 +24,7 @@ export default function SpaceParticipantRemote3D({
 	spacesParticipant
 }: {
 	twilioParticipant: twilio.Participant | null;
-	spacesParticipant: ISpaceParticipant;
+	spacesParticipant: SpaceParticipant;
 }) {
 	const publications = usePublications(twilioParticipant);
 	const { position } = spacesParticipant;
@@ -55,7 +55,7 @@ export default function SpaceParticipantRemote3D({
 			))}
 			<div style={spatialCSSTransform} className={styles('participantRemote3D')}>
 				<SpaceParticipantCircle isLocal={false}>
-					<SpaceParticipant participant={spacesParticipant} videoTrack={videoTrack} />
+					<SpaceParticipantBackground participant={spacesParticipant} videoTrack={videoTrack} />
 				</SpaceParticipantCircle>
 			</div>
 		</>

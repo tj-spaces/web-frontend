@@ -2,16 +2,16 @@ import React from 'react';
 import * as twilio from 'twilio-video';
 import usePublications from '../../../hooks/usePublications';
 import useTrack from '../../../hooks/useTrack';
-import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
+import { SpaceParticipant } from '../../../typings/SpaceParticipant';
 import AudioTrack from '../../../mediautil/AudioTrack';
-import SpaceParticipant from '../SpaceParticipant';
+import SpaceParticipantBackground from '../SpaceParticipant';
 import SpaceParticipantTile from '../SpaceParticipantTile';
 
 export default function SpaceViewTilesRemoteParticipant({
 	spacesParticipant,
 	twilioParticipant
 }: {
-	spacesParticipant: ISpaceParticipant;
+	spacesParticipant: SpaceParticipant;
 	twilioParticipant: twilio.Participant | null;
 }) {
 	const publications = usePublications(twilioParticipant);
@@ -29,7 +29,7 @@ export default function SpaceViewTilesRemoteParticipant({
 	return (
 		<SpaceParticipantTile isLocal={false}>
 			<AudioTrack publication={audioTrackPublications[0]} />
-			<SpaceParticipant participant={spacesParticipant} videoTrack={videoTrack} />
+			<SpaceParticipantBackground participant={spacesParticipant} videoTrack={videoTrack} />
 		</SpaceParticipantTile>
 	);
 }

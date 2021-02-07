@@ -2,6 +2,7 @@ export type LogSeverity = 'debug' | 'log' | 'info' | 'warn' | 'error';
 export type LogCategory =
 	| 'performance'
 	| 'space'
+	| 'space/participants'
 	| 'space/connection'
 	| 'space/media'
 	| 'space/participant-bubble'

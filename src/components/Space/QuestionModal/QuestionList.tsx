@@ -6,13 +6,11 @@ export default function QuestionList() {
 	const questions = useContext(SpaceQuestionsContext);
 	return (
 		<BaseRow direction="column">
-			{Object.values(questions).map((q) => {
-				return (
-					<BaseRow direction="row" key={q.id}>
-						{q.text}
-					</BaseRow>
-				);
-			})}
+			{Object.values(questions).map((question) => (
+				<BaseRow direction="row" key={question.id}>
+					{question.text}
+				</BaseRow>
+			))}
 		</BaseRow>
 	);
 }

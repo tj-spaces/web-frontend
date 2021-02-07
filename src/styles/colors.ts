@@ -11,17 +11,23 @@ const colors = {
 	pink: '#ff80ec',
 	white: '#ffffff',
 	lightgray: '#dddddd',
-	gray: '#cccccc'
+	gray: '#cccccc',
+	light0: 'var(--spaces-color-light-0)',
+	light1: 'var(--spaces-color-light-1)',
+	light2: 'var(--spaces-color-light-2)',
+	dark0: 'var(--spaces-color-dark-0)',
+	dark1: 'var(--spaces-color-dark-1)',
+	dark2: 'var(--spaces-color-dark-2)'
 };
 
 export const backgroundColors = createStylesheet({
 	default: {},
-	light0: { backgroundColor: 'var(--spaces-color-light-0)' },
-	light1: { backgroundColor: 'var(--spaces-color-light-1)' },
-	light2: { backgroundColor: 'var(--spaces-color-light-2)' },
-	dark0: { backgroundColor: 'var(--spaces-color-dark-0)' },
-	dark1: { backgroundColor: 'var(--spaces-color-dark-1)' },
-	dark2: { backgroundColor: 'var(--spaces-color-dark-2)' },
+	light0: { backgroundColor: colors.light0 },
+	light1: { backgroundColor: colors.light1 },
+	light2: { backgroundColor: colors.light2 },
+	dark0: { backgroundColor: colors.dark0 },
+	dark1: { backgroundColor: colors.dark1 },
+	dark2: { backgroundColor: colors.dark2 },
 	red: { backgroundColor: colors.red },
 	white: { backgroundColor: colors.white }
 });

@@ -1,29 +1,30 @@
 import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
 import useLocalParticipant from '../../../hooks/useLocalParticipant';
 import getRootFontSize from '../../../lib/getRootFontSize';
-import colors from '../../../styles/colors';
 import { createStylesheet } from '../../../styles/createStylesheet';
 import SpaceMediaContext from '../SpaceMediaContext';
-import SpaceViewTilesLocalParticipant from './SpaceViewTilesLocalParticipant';
-import SpaceViewTilesTileRow from './SpaceViewTilesTileRow';
-import SpaceViewTilesRemoteParticipant from './SpaceViewTilesRemoteParticipant';
-import { spaceViewStyles } from '../SpaceViewStyles';
-import useSpaceParticipants from '../../../hooks/useSpaceParticipants';
+import SpaceParticipantsContext from '../SpaceParticipantsContext';
 import SpaceViewLayoutContext from '../SpaceViewLayoutContext';
+import { spaceViewStyles } from '../SpaceViewStyles';
+import SpaceViewTilesLocalParticipant from './SpaceViewTilesLocalParticipant';
+import SpaceViewTilesRemoteParticipant from './SpaceViewTilesRemoteParticipant';
+import SpaceViewTilesTileRow from './SpaceViewTilesTileRow';
 
 export const styles = createStylesheet({
 	screen: {
-		extends: [spaceViewStyles.view],
+		extends: [spaceViewStyles.environment],
 		overflow: 'auto',
+
 		display: 'flex',
 		flexDirection: 'column',
-		justifyContent: 'center'
+		justifyContent: 'center',
+		backgroundColor: 'white'
 	}
 });
 
 export default function SpaceViewTiles() {
 	const me = useLocalParticipant();
-	const participants = useSpaceParticipants();
+	const participants = useContext(SpaceParticipantsContext);
 	const { twilioParticipants } = useContext(SpaceMediaContext) ?? {};
 	const [maxParticipantsPerRow, setMaxParticipantsPerRow] = useState(5);
 	const screenRef = useRef<HTMLDivElement | null>(null);
@@ -79,7 +80,7 @@ export default function SpaceViewTiles() {
 	}
 
 	return (
-		<div className={styles('screen')} style={{ backgroundColor: colors.white }} ref={screenRef}>
+		<div className={styles('screen')} ref={screenRef}>
 			{blocks.map((block, idx) => {
 				return <SpaceViewTilesTileRow participants={block} key={idx} />;
 			})}

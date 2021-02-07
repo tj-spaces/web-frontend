@@ -1,4 +1,5 @@
 import React from 'react';
+import colors from '../../styles/colors';
 import { createStylesheet } from '../../styles/createStylesheet';
 
 export const styles = createStylesheet({
@@ -9,9 +10,9 @@ export const styles = createStylesheet({
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: 'var(--spaces-color-dark-3)',
+		backgroundColor: colors.dark2,
 		textDecoration: 'none',
-		color: 'var(--spaces-color-light-0)',
+		color: colors.light1,
 		position: 'relative',
 		overflow: 'hidden',
 		subSelectors: {
@@ -24,17 +25,24 @@ export const styles = createStylesheet({
 	participantBubbleLocal: {
 		subSelectors: {
 			video: {
+				// Mirror our video
 				transform: 'scaleX(-1)'
 			}
 		}
 	},
 	participantBubbleRemote: {
+		// Center the participant
 		marginTop: '-4rem',
 		marginRight: '-4rem'
 	}
 });
 
-export default function SpaceParticipantCircle({ children, isLocal }: { children: React.ReactNode; isLocal: boolean }) {
+type Props = {
+	children: React.ReactNode;
+	isLocal: boolean;
+};
+
+export default function SpaceParticipantCircle({ children, isLocal }: Props) {
 	return (
 		<div className={styles('participantBubble', isLocal ? 'participantBubbleLocal' : 'participantBubbleRemote')}>
 			{children}

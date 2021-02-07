@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { VideoTrack } from 'twilio-video';
-import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
+import { SpaceParticipant } from '../../../typings/SpaceParticipant';
 import SpaceMediaContext from '../SpaceMediaContext';
-import SpaceParticipant from '../SpaceParticipant';
+import SpaceParticipantBackground from '../SpaceParticipant';
 import SpaceParticipantCircle from '../SpaceParticipantCircle';
 import { spaceViewStyles } from '../SpaceViewStyles';
 
@@ -11,14 +11,14 @@ import { spaceViewStyles } from '../SpaceViewStyles';
  * @param twilioParticipant The twilio-video library participant (includes MediaStreamTracks)
  * @param spacesParticipant The Spaces participant (includes location, displayName, etc)
  */
-export default function SpaceBottomLocalVideo({ participant }: { participant: ISpaceParticipant }) {
+export default function SpaceBottomLocalVideo({ participant }: { participant: SpaceParticipant }) {
 	const mediaContext = useContext(SpaceMediaContext);
 	const localVideoTrack = mediaContext?.localVideoTrack ?? null;
 
 	return (
 		<div className={spaceViewStyles('bottomLocalVideo')}>
 			<SpaceParticipantCircle isLocal>
-				<SpaceParticipant participant={participant} videoTrack={localVideoTrack as VideoTrack} />
+				<SpaceParticipantBackground participant={participant} videoTrack={localVideoTrack as VideoTrack} />
 			</SpaceParticipantCircle>
 		</div>
 	);
