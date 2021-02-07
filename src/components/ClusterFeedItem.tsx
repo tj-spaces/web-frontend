@@ -15,7 +15,7 @@ export default function ClusterPreview({ cluster }: { cluster: Cluster }) {
 	return (
 		<BaseRow direction="column" borderRadius={1} backgroundColor="dark2" rails={2} spacing={1} edges={1} boxShadow>
 			<BaseText fontSize="large" fontWeight="bold">
-				<Link to={'/spaces/' + cluster.id}>{cluster.name}</Link>
+				<Link to={'/clusters/' + cluster.id}>{cluster.name}</Link>
 			</BaseText>
 
 			<BaseButton size="small" variant="positive" onClick={() => joinThisCluster()}>
