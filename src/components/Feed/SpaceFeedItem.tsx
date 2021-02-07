@@ -41,7 +41,7 @@ export default function SpaceFeedItem({ space }: { space: SpaceSession }) {
 				<div className={styles('spaceFeedItemIcon')}>
 					<i className="fas fa-server"></i>
 				</div>
-				<div className={styles('spaceFeedItemContent')}>Online: {space.online_count}</div>
+				<div className={styles('spaceFeedItemContent')}>Online: {space.online_count ?? 0}</div>
 			</BaseRow>
 		</BaseRow>
 	);
