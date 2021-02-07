@@ -120,47 +120,57 @@ export async function deleteCluster(id: string): Promise<void> {
 }
 
 export async function getDiscoverableClusters(): Promise<ICluster[]> {
-	return (await makeAPIGetCall('/api/discoverable-clusters')).data.clusters;
+	let result = await makeAPIGetCall('/api/discoverable-clusters');
+	return result.data.data;
 }
 
 export async function getMyClusters(): Promise<ICluster[]> {
-	return (await makeAPIGetCall('/api/users/@me/clusters')).data.clusters;
+	let result = await makeAPIGetCall('/api/users/@me/clusters');
+	return result.data.data;
 }
 
 export async function createCluster(name: string, visibility: ClusterVisibility): Promise<string> {
-	return (await makeAPIPostCall('/api/clusters', { name, visibility })).data.cluster_id;
+	let result = await makeAPIPostCall('/api/clusters', { name, visibility });
+	return result.data.data.cluster_id;
 }
 
 export async function createSpaceInCluster(clusterId: string, topic: string): Promise<string> {
-	return (await makeAPIPostCall('/api/clusters/' + clusterId + '/spaces', { topic })).data.data.space_id;
+	let result = await makeAPIPostCall('/api/clusters/' + clusterId + '/spaces', { topic });
+	return result.data.data.space_id;
 }
 
 export async function createSpace(topic: string, visibility: InstantSpaceVisibilityType): Promise<string> {
-	return (await makeAPIPostCall('/api/spaces/', { topic, visibility })).data.data.space_id;
+	let result = await makeAPIPostCall('/api/spaces/', { topic, visibility });
+	return result.data.data.space_id;
 }
 
-export async function joinCluster(clusterId: string): Promise<void> {
-	await makeAPIPostCall('/api/clusters/' + clusterId + '/join');
+export async function joinCluster(clusterID: string): Promise<void> {
+	await makeAPIPostCall('/api/clusters/' + clusterID + '/join');
 }
 
 export async function getCluster(id: string): Promise<ICluster> {
-	return (await makeAPIGetCall('/api/clusters/' + id)).data.cluster;
+	let result = await makeAPIGetCall('/api/clusters/' + id);
+	return result.data.data;
 }
 
 export async function getMe(): Promise<User> {
-	return (await makeAPIGetCall('/api/users/@me')).data.user;
+	let result = await makeAPIGetCall('/api/users/@me');
+	return result.data.data;
 }
 
-export async function getSpace(spaceId: string): Promise<SpaceSession> {
-	return (await makeAPIGetCall('/api/spaces/' + spaceId)).data.space;
+export async function getSpace(spaceID: string): Promise<SpaceSession> {
+	let result = await makeAPIGetCall('/api/spaces/' + spaceID);
+	return result.data.data;
 }
 
 export async function getSpacesInCluster(id: string): Promise<SpaceSession[]> {
-	return (await makeAPIGetCall('/api/clusters/' + id + '/spaces')).data.spaces;
+	let result = await makeAPIGetCall('/api/clusters/' + id + '/spaces');
+	return result.data.data;
 }
 
 export async function startSpaceSessionNoCluster(topic: string, visibility: SpaceSessionVisibility): Promise<string> {
-	return (await makeAPIPostCall('/api/spaces', { topic, visibility })).data.spaceID;
+	let result = await makeAPIPostCall('/api/spaces', { topic, visibility });
+	return result.data.data.space_id;
 }
 
 export async function sendFriendRequest(user_id: string) {
