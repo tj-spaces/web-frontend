@@ -5,6 +5,7 @@ import useSocketEventListener from '../../hooks/useSocketEventListener';
 import { getLogger } from '../../lib/ClusterLogger';
 import { API_SERVER_URL } from '../../lib/constants';
 import getSessionId from '../../lib/getSessionId';
+import SpaceConnectionContext from './SpaceConnectionContext';
 import SpaceContainer from './SpaceContainer';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaWrapper from './SpaceMediaWrapper';
@@ -42,13 +43,15 @@ export default function Space({ id }: { id: string }) {
 
 	return (
 		<SpaceIDContext.Provider value={id}>
-			<SpaceParticipantsContext.Provider value={participants}>
-				<SpaceQuestionsContext.Provider value={questions}>
-					<SpaceMediaWrapper twilioRoom={twilioRoom}>
-						<SpaceContainer />
-					</SpaceMediaWrapper>
-				</SpaceQuestionsContext.Provider>
-			</SpaceParticipantsContext.Provider>
+			<SpaceConnectionContext.Provider value={conn}>
+				<SpaceParticipantsContext.Provider value={participants}>
+					<SpaceQuestionsContext.Provider value={questions}>
+						<SpaceMediaWrapper twilioRoom={twilioRoom}>
+							<SpaceContainer />
+						</SpaceMediaWrapper>
+					</SpaceQuestionsContext.Provider>
+				</SpaceParticipantsContext.Provider>
+			</SpaceConnectionContext.Provider>
 		</SpaceIDContext.Provider>
 	);
 }
