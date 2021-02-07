@@ -7,7 +7,7 @@ import getCSSTransform from '../../../lib/getCSSTransform';
 import { createStylesheet } from '../../../styles/createStylesheet';
 import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
 import SpaceParticipantCircle from '../SpaceParticipantCircle';
-import SpatialAudioTrack from '../../Media/SpatialAudioTrack';
+import SpatialAudioTrack from '../../../mediautil/SpatialAudioTrack';
 import SpaceParticipant from '../SpaceParticipant';
 
 const logger = getLogger('space/participant-bubble');

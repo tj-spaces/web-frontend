@@ -6,8 +6,6 @@ export const spaceViewStyles = createStylesheet({
 		position: 'absolute',
 		minWidth: '100%',
 		backgroundColor: 'white',
-		borderTopLeftRadius: '2rem',
-		borderTopRightRadius: '2rem',
 		bottom: '0px',
 		left: '0px',
 		right: '0px',
@@ -21,8 +19,11 @@ export const spaceViewStyles = createStylesheet({
 		maxHeight: '40vh'
 	},
 	view: {
-		width: '100%',
-		height: '100%',
+		position: 'absolute',
+		bottom: '5rem',
+		top: '5rem',
+		left: '0px',
+		right: '0px',
 		zIndex: -1
 	},
 	/**
@@ -56,7 +57,8 @@ export const spaceViewStyles = createStylesheet({
 		top: '0px',
 		height: '5em',
 		width: '100%',
-		paddingTop: '2em',
+		paddingTop: '1em',
+		paddingBottom: '1em',
 		textAlign: 'center',
 		color: 'black',
 		display: 'flex',

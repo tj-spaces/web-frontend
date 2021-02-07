@@ -20,13 +20,15 @@ export const styles = createStylesheet({
 		position: 'absolute',
 		width: '25%',
 		height: '25%',
-		backgroundColor: 'white'
+		backgroundColor: 'white',
+		border: '1px solid black',
+		margin: '1rem'
 	}
 });
 
 export function MinimapElementComponent({ item, relativeTo }: { item: MinimapElement; relativeTo: SpacePositionInfo }) {
-	const relativeX = item.position.location.x - relativeTo.location.x;
-	const relativeZ = relativeTo.location.z - item.position.location.z;
+	const relativeX = item.position.location.x;
+	const relativeZ = item.position.location.z;
 
 	return (
 		<div
@@ -35,7 +37,7 @@ export function MinimapElementComponent({ item, relativeTo }: { item: MinimapEle
 				backgroundColor: item.color,
 				transform: `rotateZ(${item.position.rotation}rad)`,
 				left: `${relativeX * 5 + 50}%`,
-				top: `${relativeZ * 5 + 50}%`
+				top: `${50 - relativeZ * 5}%`
 			}}
 		>
 			i

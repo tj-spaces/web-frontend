@@ -13,7 +13,7 @@ import SpaceViewLayoutContext from './SpaceViewLayoutContext';
 import { spaceViewStyles } from './SpaceViewStyles';
 import SpaceViewTiles from './SpaceViewTiles/SpaceViewTiles';
 
-const SPACE_VIEW_TYPE: 'tiles' | '3d' = 'tiles';
+const SPACE_VIEW_TYPE: 'tiles' | '3d' = '3d';
 
 export default function SpaceFrame() {
 	const spaceID = useContext(SpaceIDContext);
@@ -56,6 +56,7 @@ export default function SpaceFrame() {
 				<BaseRow
 					direction="row"
 					justifyContent="center"
+					alignment="center"
 					spacing={1}
 					rails={2}
 					xstyle={spaceViewStyles.bottomButtons}

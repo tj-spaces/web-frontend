@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef } from 'react';
 import { AudioTrack, AudioTrackPublication } from 'twilio-video';
-import useMediaStreamTrack from '../../hooks/useMediaStreamTrack';
-import useTrack from '../../hooks/useTrack';
-import { defaultPannerNodeSettings } from '../../lib/defaultPannerNodeSettings';
-import { SpacePositionInfo } from '../../typings/SpaceParticipant';
-import SpaceAudioContext from '../Space/SpaceAudioContext';
+import useMediaStreamTrack from '../hooks/useMediaStreamTrack';
+import useTrack from '../hooks/useTrack';
+import { defaultPannerNodeSettings } from '../lib/defaultPannerNodeSettings';
+import { SpacePositionInfo } from '../typings/SpaceParticipant';
+import SpaceAudioContext from '../components/Space/SpaceAudioContext';
 
 export default function SpatialAudioTrack({
 	position,

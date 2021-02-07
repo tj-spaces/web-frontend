@@ -6,7 +6,7 @@ import Fullscreen from '../../components/Base/BaseFullscreen';
 import AuthContext from '../../components/AuthContext';
 
 export function AuthorizationCallback() {
-	document.title = 'Logging In';
+	document.title = 'Logging in';
 
 	const { provider } = useParams<{ provider: string }>();
 	const { code } = qs.parse(useLocation().search);

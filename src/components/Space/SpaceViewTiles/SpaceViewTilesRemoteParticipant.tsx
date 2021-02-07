@@ -3,7 +3,7 @@ import * as twilio from 'twilio-video';
 import usePublications from '../../../hooks/usePublications';
 import useTrack from '../../../hooks/useTrack';
 import { ISpaceParticipant } from '../../../typings/SpaceParticipant';
-import AudioTrack from '../../Media/AudioTrack';
+import AudioTrack from '../../../mediautil/AudioTrack';
 import SpaceParticipant from '../SpaceParticipant';
 import SpaceParticipantTile from '../SpaceParticipantTile';
 

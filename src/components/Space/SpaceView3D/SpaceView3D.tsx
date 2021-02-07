@@ -6,7 +6,7 @@ import SpaceMediaContext from '../SpaceMediaContext';
 import SpaceBottomLocalVideo from './SpaceView3DBottomLocalVideo';
 import SpaceView3DMinimap from './SpaceView3DMinimap';
 import SpaceParticipantRemote3D from './SpaceView3DRemoteParticipant';
-import SpatialAudioListener from '../../Media/SpatialAudioListener';
+import SpatialAudioListener from '../../../mediautil/SpatialAudioListener';
 import { spaceViewStyles } from '../SpaceViewStyles';
 
 export default function SpaceView3D() {
