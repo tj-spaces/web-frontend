@@ -9,13 +9,9 @@ export default function AuthenticationWrapper({ children }: { children: React.Re
 
 	const refreshAuthState = useCallback(() => {
 		if (sessionId) {
-			getMe()
-				.then((user) => {
-					setAuthState({ isLoggedIn: true, user, refreshAuthState });
-				})
-				.catch(() => {
-					setAuthState({ isLoggedIn: false, user: null, refreshAuthState });
-				});
+			getMe().then((user) => {
+				setAuthState({ isLoggedIn: true, user, refreshAuthState });
+			});
 		} else {
 			setAuthState({ isLoggedIn: false, user: null, refreshAuthState });
 		}

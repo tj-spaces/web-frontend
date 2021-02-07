@@ -5,6 +5,7 @@ import { Cluster, ClusterVisibility } from '../typings/Cluster';
 import { PublicUserInfo } from '../typings/PublicUserInfo';
 import { SpaceSession, SpaceSessionVisibility } from '../typings/SpaceSession';
 import { User } from '../typings/User';
+import { createUrlWithGetParameters } from './apiUtils';
 
 axios.defaults.baseURL = API_SERVER_URL;
 
@@ -56,7 +57,7 @@ export function makeAPIPostCall(url: string, data?: any) {
 			.post(url, data, { headers: { Authorization: 'Bearer ' + getSessionId() } })
 			.then((successfulResponse) => resolve(successfulResponse))
 			.catch((error) => {
-				if (error.response.status === 401) {
+				if (error.response?.status === 401) {
 					localStorage.removeItem('session_id');
 					window.location.pathname = '/';
 				} else {
@@ -67,18 +68,7 @@ export function makeAPIPostCall(url: string, data?: any) {
 }
 
 export function makeAPIGetCall(url: string, params?: Record<string, string | undefined>) {
-	if (params) {
-		// Stringify the parameters
-		let stringifiedParameters = '';
-		for (let [name, value] of Object.entries(params)) {
-			if (value) {
-				stringifiedParameters += encodeURIComponent(name) + '=' + encodeURIComponent(value);
-			}
-		}
-		if (stringifiedParameters) {
-			url += '?' + stringifiedParameters;
-		}
-	}
+	url = createUrlWithGetParameters(url, params);
 	return new Promise<AxiosResponse>((resolve, reject) => {
 		axios
 			.get(url, {
@@ -86,12 +76,11 @@ export function makeAPIGetCall(url: string, params?: Record<string, string | und
 			})
 			.then((successfulResponse) => resolve(successfulResponse))
 			.catch((error) => {
-				if (error.response.status === 401) {
+				if (error.response?.status === 401) {
 					localStorage.removeItem('session_id');
 					window.location.pathname = '/';
 				} else {
-					console.log(error);
-					reject(new APIError(url, error.response.data.error));
+					reject(error);
 				}
 			});
 	});
@@ -105,7 +94,7 @@ export function makeAPIDeleteCall(url: string) {
 			})
 			.then((successfulResponse) => resolve(successfulResponse))
 			.catch((error) => {
-				if (error.response.status === 401) {
+				if (error.response?.status === 401) {
 					localStorage.removeItem('session_id');
 				} else {
 					reject(new APIError(url, error.response.data.error));

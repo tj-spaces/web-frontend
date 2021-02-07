@@ -10,6 +10,7 @@ export type LogCategory =
 	| 'space/2d/remote-participant'
 	| 'space/3d/local-participant'
 	| 'space/3d/remote-participant'
+	| 'api'
 	| 'stylesheet';
 
 function base(category: string, message: any, severity: LogSeverity = 'info') {

@@ -5,6 +5,7 @@ import './App.sass';
 
 import AuthenticationWrapper from './components/AuthenticationWrapper';
 import CenteredLoadingText from './components/CenteredLoadingText';
+import ErrorBoundary from './components/ErrorBoundary';
 import injectTheme from './styles/injectTheme';
 import { DarkTheme } from './styles/theme';
 
@@ -20,7 +21,7 @@ const TermsPage = lazy(() => import('./pages/TermsPage/TermsPage'));
 function App() {
 	injectTheme(DarkTheme);
 	return (
-		<div className="App">
+		<ErrorBoundary>
 			<AuthenticationWrapper>
 				<BrowserRouter>
 					<Suspense fallback={<CenteredLoadingText />}>
@@ -37,7 +38,7 @@ function App() {
 					</Suspense>
 				</BrowserRouter>
 			</AuthenticationWrapper>
-		</div>
+		</ErrorBoundary>
 	);
 }
 
