@@ -1,5 +1,6 @@
 import {createStylesheet} from './createStylesheet';
 
+// CSS variable colors are defined in ./theme.ts
 const colors = {
 	red: '#ff7361',
 	orange: '#ffb361',

@@ -1,7 +1,6 @@
 import React, {useContext, useState} from 'react';
 import useSpace from '../../hooks/useSpace';
 import AuthContext from '../AuthContext';
-import BackgroundColorContext from '../BackgroundColorContext';
 import BaseButton from '../Base/BaseButton';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
@@ -32,11 +31,9 @@ export default function SpaceContainer() {
 		<SpaceViewLayoutContext.Provider value={{expanded}}>
 			<div className={spaceViewStyles('container')}>
 				<div className={spaceViewStyles('topHeading')}>
-					<BackgroundColorContext.Provider value="light">
-						<BaseText variant="secondary-title" alignment="center">
-							{space ? space.topic : 'Loading Space'}
-						</BaseText>
-					</BackgroundColorContext.Provider>
+					<BaseText variant="secondary-title" alignment="center">
+						{space ? space.topic : 'Loading Space'}
+					</BaseText>
 				</div>
 
 				<div className={spaceViewStyles('mainContent')}>

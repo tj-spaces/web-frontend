@@ -15,7 +15,7 @@ export default function ClusterListRow({cluster}: {cluster: Cluster}) {
 		<BaseRow
 			direction="column"
 			borderRadius={1}
-			backgroundColor="bgPrimary"
+			backgroundColor="bgElevated"
 			alignment="center"
 			rails={1}
 			edges={1}

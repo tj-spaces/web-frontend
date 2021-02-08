@@ -1,7 +1,6 @@
-import { useEffect, useRef } from 'react';
+import {useEffect, useRef} from 'react';
 import boxShadow from '../../styles/boxShadow';
-import { stylex, createStylesheet } from '../../styles/createStylesheet';
-import BackgroundColorContext from '../BackgroundColorContext';
+import {stylex, createStylesheet} from '../../styles/createStylesheet';
 
 export const styles = createStylesheet({
 	modalBackground: {
@@ -14,7 +13,7 @@ export const styles = createStylesheet({
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
-		cursor: 'auto'
+		cursor: 'auto',
 	},
 	modalForeground: {
 		backgroundColor: '#303030',
@@ -22,20 +21,20 @@ export const styles = createStylesheet({
 		transition: 'all 800ms ease',
 		padding: '1em',
 		textTransform: 'none',
-		extends: [boxShadow.boxShadow]
-	}
+		extends: [boxShadow.boxShadow],
+	},
 });
 
 export const variantStyles = createStylesheet({
 	wide: {
-		minWidth: '512px'
-	}
+		minWidth: '512px',
+	},
 });
 
 export default function BaseModal({
 	children,
 	variant = 'wide',
-	onClickOutside
+	onClickOutside,
 }: {
 	children: React.ReactNode;
 	variant?: 'wide';
@@ -56,11 +55,12 @@ export default function BaseModal({
 	}, [onClickOutside]);
 	return (
 		<div className={styles('modalBackground')}>
-			<BackgroundColorContext.Provider value="dark">
-				<div ref={fgRef} className={stylex(styles.modalForeground, variantStyles[variant])}>
-					{children}
-				</div>
-			</BackgroundColorContext.Provider>
+			<div
+				ref={fgRef}
+				className={stylex(styles.modalForeground, variantStyles[variant])}
+			>
+				{children}
+			</div>
 		</div>
 	);
 }

@@ -1,4 +1,9 @@
-import {ButtonHTMLAttributes, DetailedHTMLProps, forwardRef} from 'react';
+import {
+	ButtonHTMLAttributes,
+	DetailedHTMLProps,
+	ForwardedRef,
+	forwardRef,
+} from 'react';
 import {Link} from 'react-router-dom';
 import boxShadow from '../../styles/boxShadow';
 import colors from '../../styles/colors';
@@ -44,6 +49,7 @@ const sizeStyles = createStylesheet({
 const variantStyles = createStylesheet({
 	primary: {
 		backgroundColor: 'var(--bg-primary)',
+		color: 'var(--text-primary)',
 	},
 	positive: {
 		backgroundColor: 'var(--text-primary)',
@@ -60,7 +66,7 @@ type ButtonProps = (
 	| /* Button */
 	DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 	/* Link styled like a button */
-	| {to: string}
+	| {to: string; children: React.ReactNode}
 ) & {
 	size?: keyof typeof sizeStyles;
 	variant?: keyof typeof variantStyles;
@@ -68,53 +74,51 @@ type ButtonProps = (
 	xstyle?: CompiledClasses;
 };
 
-const BaseButton = forwardRef<HTMLButtonElement, ButtonProps>(
-	(
-		{
-			size = 'small',
-			variant = 'primary',
-			boxShadow: useBoxShadow = false,
-			xstyle,
-			...props
-		},
-		ref
-	) => {
-		if ('to' in props) {
-			const {to} = props;
-			return (
-				<Link
-					to={to}
-					className={stylex(
-						styles.button,
-						sizeStyles[size],
-						variantStyles[variant],
-						useBoxShadow && boxShadow.boxShadow,
-						xstyle
-					)}
-				>
-					{props.children}
-				</Link>
-			);
-		} else {
-			return (
-				<button
-					ref={ref}
-					className={stylex(
-						styles.button,
-						sizeStyles[size],
-						variantStyles[variant],
-						useBoxShadow && boxShadow.boxShadow,
-						xstyle
-					)}
-					{...props}
-					onClick={(ev) => {
-						ev.stopPropagation();
-						props.onClick?.(ev);
-					}}
-				/>
-			);
-		}
+const BaseButton = (
+	{
+		size = 'small',
+		variant = 'primary',
+		boxShadow: useBoxShadow = false,
+		xstyle,
+		...props
+	}: ButtonProps,
+	ref: ForwardedRef<HTMLButtonElement>
+) => {
+	if ('to' in props) {
+		const {to} = props;
+		return (
+			<Link
+				to={to}
+				className={stylex(
+					styles.button,
+					sizeStyles[size],
+					variantStyles[variant],
+					useBoxShadow && boxShadow.boxShadow,
+					xstyle
+				)}
+			>
+				{props.children}
+			</Link>
+		);
+	} else {
+		return (
+			<button
+				ref={ref}
+				className={stylex(
+					styles.button,
+					sizeStyles[size],
+					variantStyles[variant],
+					useBoxShadow && boxShadow.boxShadow,
+					xstyle
+				)}
+				{...props}
+				onClick={(ev) => {
+					ev.stopPropagation();
+					props.onClick?.(ev);
+				}}
+			/>
+		);
 	}
-);
+};
 
-export default BaseButton;
+export default forwardRef<HTMLButtonElement, ButtonProps>(BaseButton);

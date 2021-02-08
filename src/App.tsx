@@ -1,17 +1,20 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {lazy, Suspense} from 'react';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
 import './App.sass';
 
 import AuthenticationWrapper from './components/AuthenticationWrapper';
 import CenteredLoadingText from './components/CenteredLoadingText';
 import ErrorBoundary from './components/ErrorBoundary';
-import injectTheme from './styles/injectTheme';
-import { DarkTheme } from './styles/theme';
+import ThemeProvider from './ThemeProvider';
 
-const AuthorizationCallback = lazy(() => import('./pages/AuthenticationCallback/AuthenticationCallback'));
+const AuthorizationCallback = lazy(
+	() => import('./pages/AuthenticationCallback/AuthenticationCallback')
+);
 const ClusterPage = lazy(() => import('./pages/ClusterPage/ClusterPage'));
-const ClusterExplorerPage = lazy(() => import('./pages/ClusterExplorerPage/ClusterExplorerPage'));
+const ClusterExplorerPage = lazy(
+	() => import('./pages/ClusterExplorerPage/ClusterExplorerPage')
+);
 const DefaultPage = lazy(() => import('./pages/DefaultPage/DefaultPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'));
 const Logout = lazy(() => import('./pages/LogoutPage/LogoutPage'));
@@ -19,23 +22,27 @@ const SpacePage = lazy(() => import('./pages/SpacePage/SpacePage'));
 const TermsPage = lazy(() => import('./pages/TermsPage/TermsPage'));
 
 function App() {
-	injectTheme(DarkTheme);
 	return (
 		<ErrorBoundary>
 			<AuthenticationWrapper>
 				<BrowserRouter>
-					<Suspense fallback={<CenteredLoadingText />}>
-						<Switch>
-							<Route path="/auth/:provider/callback" component={AuthorizationCallback} />
-							<Route path="/spaces/:spaceId" component={SpacePage} />
-							<Route path="/clusters/:clusterId" component={ClusterPage} />
-							<Route path="/login" exact component={LoginPage} />
-							<Route path="/logout" exact component={Logout} />
-							<Route path="/explore" exact component={ClusterExplorerPage} />
-							<Route path="/terms" exact component={TermsPage} />
-							<Route path="/" exact component={DefaultPage} />
-						</Switch>
-					</Suspense>
+					<ThemeProvider>
+						<Suspense fallback={<CenteredLoadingText />}>
+							<Switch>
+								<Route
+									path="/auth/:provider/callback"
+									component={AuthorizationCallback}
+								/>
+								<Route path="/spaces/:spaceId" component={SpacePage} />
+								<Route path="/clusters/:clusterId" component={ClusterPage} />
+								<Route path="/login" exact component={LoginPage} />
+								<Route path="/logout" exact component={Logout} />
+								<Route path="/explore" exact component={ClusterExplorerPage} />
+								<Route path="/terms" exact component={TermsPage} />
+								<Route path="/" exact component={DefaultPage} />
+							</Switch>
+						</Suspense>
+					</ThemeProvider>
 				</BrowserRouter>
 			</AuthenticationWrapper>
 		</ErrorBoundary>

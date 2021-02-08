@@ -1,7 +1,9 @@
 import hyphenate from '../lib/hyphenate';
 
-/** A dictionary of variables and their values */
 export type Theme = {
+	// The classname for the theme to go under
+	name: string;
+	/** A dictionary of variables and their values */
 	colors: {
 		textPrimary: string;
 		textSecondary: string;
@@ -24,12 +26,17 @@ function createStyleTag() {
 	return tag;
 }
 
+const injectedThemes = new Set<string>();
+
 export default function injectTheme(theme: Theme) {
-	const tag = createStyleTag();
-	let css = 'html{';
-	for (let [name, value] of Object.entries(theme.colors)) {
-		css += `--${hyphenate(name)}:${value};`;
+	if (!injectedThemes.has(theme.name)) {
+		const tag = createStyleTag();
+		let css = `.theme-${theme.name}{`;
+		for (let [name, value] of Object.entries(theme.colors)) {
+			css += `--${hyphenate(name)}:${value};`;
+		}
+		css += '}';
+		tag.innerHTML = css;
+		injectedThemes.add(theme.name);
 	}
-	css += '}';
-	tag.innerHTML = css;
 }

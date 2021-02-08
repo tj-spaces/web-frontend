@@ -1,11 +1,22 @@
-import { borderRadiusStyles } from '../../styles/borderRadius';
+import {borderRadiusStyles} from '../../styles/borderRadius';
 import boxShadowStyles from '../../styles/boxShadow';
-import { backgroundColors as backgroundColorStyles } from '../../styles/colors';
-import { stylex, createStylesheet, ClassProvider } from '../../styles/createStylesheet';
-import { columnEdgeStyles, rowEdgeStyles } from '../../styles/edges';
-import { alignmentStyles, flexStyles, justifyContentStyles } from '../../styles/flex';
-import { rowRails, colRails } from '../../styles/rails';
-import { spaceBetweenFlexColumnItems, spaceBetweenFlexRowItems } from '../../styles/spaceBetweenFlexItems';
+import {backgroundColors as backgroundColorStyles} from '../../styles/colors';
+import {
+	stylex,
+	createStylesheet,
+	ClassProvider,
+} from '../../styles/createStylesheet';
+import {columnEdgeStyles, rowEdgeStyles} from '../../styles/edges';
+import {
+	alignmentStyles,
+	flexStyles,
+	justifyContentStyles,
+} from '../../styles/flex';
+import {rowRails, colRails} from '../../styles/rails';
+import {
+	spaceBetweenFlexColumnItems,
+	spaceBetweenFlexRowItems,
+} from '../../styles/spaceBetweenFlexItems';
 
 export default function BaseRow({
 	alignment = 'start',
@@ -15,6 +26,7 @@ export default function BaseRow({
 	centerSelf = false,
 	direction = 'row',
 	edges = 0,
+	flex,
 	height,
 	justifyContent = 'start',
 	overflow = 'visible',
@@ -22,7 +34,7 @@ export default function BaseRow({
 	spacing = 0,
 	width,
 	xstyle,
-	children
+	children,
 }: {
 	alignment?: keyof typeof alignmentStyles;
 	backgroundColor?: keyof typeof backgroundColorStyles;
@@ -31,6 +43,7 @@ export default function BaseRow({
 	centerSelf?: boolean;
 	direction?: 'row' | 'column';
 	edges?: keyof typeof rowEdgeStyles;
+	flex?: number;
 	height?: string;
 	justifyContent?: keyof typeof justifyContentStyles;
 	overflow?: keyof typeof overflowStyles;
@@ -42,9 +55,13 @@ export default function BaseRow({
 }) {
 	const baseStyle = direction === 'row' ? flexStyles.row : flexStyles.column;
 	const boxShadowStyle = boxShadow && boxShadowStyles.boxShadow;
-	const spacingStyle = (direction === 'row' ? spaceBetweenFlexRowItems : spaceBetweenFlexColumnItems)[spacing];
+	const spacingStyle = (direction === 'row'
+		? spaceBetweenFlexRowItems
+		: spaceBetweenFlexColumnItems)[spacing];
 	const railsStyle = (direction === 'row' ? rowRails : colRails)[rails];
-	const edgesStyle = (direction === 'row' ? rowEdgeStyles : columnEdgeStyles)[edges];
+	const edgesStyle = (direction === 'row' ? rowEdgeStyles : columnEdgeStyles)[
+		edges
+	];
 	const alignmentStyle = alignmentStyles[alignment];
 	const justifyContentStyle = justifyContentStyles[justifyContent];
 	const overflowStyle = overflowStyles[overflow];
@@ -67,7 +84,7 @@ export default function BaseRow({
 				spacingStyle,
 				boxShadowStyle
 			)}
-			style={{ width, height }}
+			style={{width, height, flex}}
 		>
 			{children}
 		</div>
@@ -77,17 +94,17 @@ export default function BaseRow({
 export const centerSelfs = createStylesheet({
 	row: {
 		marginTop: 'auto',
-		marginBottom: 'auto'
+		marginBottom: 'auto',
 	},
 	column: {
 		marginLeft: 'auto',
-		marginRight: 'auto'
-	}
+		marginRight: 'auto',
+	},
 });
 
 export const overflowStyles = createStylesheet({
-	auto: { overflow: 'auto' },
-	scroll: { overflow: 'scroll' },
-	hidden: { overflow: 'hidden' },
-	visible: { overflow: 'visible' }
+	auto: {overflow: 'auto'},
+	scroll: {overflow: 'scroll'},
+	hidden: {overflow: 'hidden'},
+	visible: {overflow: 'visible'},
 });
