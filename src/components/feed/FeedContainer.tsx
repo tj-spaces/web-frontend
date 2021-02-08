@@ -1,23 +1,13 @@
 import {useEffect, useState} from 'react';
 import {getSuggestedSpaces} from '../../api/api';
-import {createStylesheet} from '../../styles/createStylesheet';
 import {SpaceSession} from '../../typings/SpaceSession';
 import CenteredLoadingText from '../CenteredLoadingText';
-import FriendList from '../friendList/FriendList';
 import Feed from './Feed';
 
-export const styles = createStylesheet({
-	feedWrapper: {
-		width: '100%',
-		maxHeight: '100vh',
-		overflowY: 'scroll',
-	},
-});
-
 /**
- * Wrapper component to fetch data about the feed and render it.
+ * Wrapper component that fetches data for the feed and renders it.
  */
-export default function FeedWrapper() {
+export default function FeedContainer() {
 	const [spaces, setSpaces] = useState<SpaceSession[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 
@@ -32,11 +22,6 @@ export default function FeedWrapper() {
 	if (loading) {
 		return <CenteredLoadingText />;
 	} else {
-		return (
-			<div className={styles('feedWrapper')}>
-				<FriendList />
-				<Feed spaces={spaces} />
-			</div>
-		);
+		return <Feed spaces={spaces} />;
 	}
 }

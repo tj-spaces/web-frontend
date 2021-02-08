@@ -1,7 +1,8 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
 import {createStylesheet} from '../../styles/createStylesheet';
-import FeedWrapper from '../../components/spaceFeed/FeedWrapper';
+import FeedContainer from '../../components/feed/FeedContainer';
+import FriendsSection from '../../components/friendsSection/FriendsSection';
 
 const styles = createStylesheet({
 	container: {
@@ -21,7 +22,8 @@ export default function HomePage() {
 	return (
 		<div className={styles('container')}>
 			<Navbar />
-			<FeedWrapper />
+			<FriendsSection />
+			<FeedContainer />
 		</div>
 	);
 }
