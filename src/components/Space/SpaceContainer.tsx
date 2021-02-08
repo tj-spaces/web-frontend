@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, {useContext, useState} from 'react';
 import useSpace from '../../hooks/useSpace';
 import AuthContext from '../AuthContext';
 import BackgroundColorContext from '../BackgroundColorContext';
@@ -10,7 +10,7 @@ import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaContext from './SpaceMediaContext';
 import SpaceView3D from './SpaceView3D/SpaceView3D';
 import SpaceViewLayoutContext from './SpaceViewLayoutContext';
-import { spaceViewStyles } from './SpaceViewStyles';
+import {spaceViewStyles} from './SpaceViewStyles';
 import SpaceViewTiles from './SpaceViewTiles/SpaceViewTiles';
 
 const SPACE_VIEW_TYPE: 'tiles' | '3d' = '3d';
@@ -19,7 +19,7 @@ export default function SpaceContainer() {
 	const spaceID = useContext(SpaceIDContext);
 	const space = useSpace(spaceID);
 	const media = useContext(SpaceMediaContext);
-	const { user } = useContext(AuthContext);
+	const {user} = useContext(AuthContext);
 	// eslint-disable-next-line
 	const [expanded, setExpanded] = useState(true);
 	const [questionsModalOpen, setQuestionsModalOpen] = useState(false);
@@ -29,11 +29,15 @@ export default function SpaceContainer() {
 	}
 
 	return (
-		<SpaceViewLayoutContext.Provider value={{ expanded }}>
+		<SpaceViewLayoutContext.Provider value={{expanded}}>
 			<div className={spaceViewStyles('container')}>
 				<div className={spaceViewStyles('topHeading')}>
 					<BackgroundColorContext.Provider value="light">
-						<BaseText fontSize="xl" fontWeight="bold" alignment="center">
+						<BaseText
+							fontSize="section-title"
+							fontWeight="bold"
+							alignment="center"
+						>
 							{space ? space.topic : 'Loading Space'}
 						</BaseText>
 					</BackgroundColorContext.Provider>
@@ -51,9 +55,13 @@ export default function SpaceContainer() {
 					rails={2}
 					xstyle={spaceViewStyles.bottomButtons}
 				>
-					<BaseButton onClick={() => setQuestionsModalOpen(true)}>Questions</BaseButton>
+					<BaseButton onClick={() => setQuestionsModalOpen(true)}>
+						Questions
+					</BaseButton>
 
-					{questionsModalOpen && <QuestionsModal onClose={() => setQuestionsModalOpen(false)} />}
+					{questionsModalOpen && (
+						<QuestionsModal onClose={() => setQuestionsModalOpen(false)} />
+					)}
 
 					<BaseButton to="..">Leave</BaseButton>
 

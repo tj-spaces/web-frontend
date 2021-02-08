@@ -1,6 +1,6 @@
-import React, { createRef, useContext, useState } from 'react';
-import { Redirect } from 'react-router-dom';
-import { createSpaceSessionInCluster } from '../../api/api';
+import React, {createRef, useContext, useState} from 'react';
+import {Redirect} from 'react-router-dom';
+import {createSpaceSessionInCluster} from '../../api/api';
 import BaseButton from '../Base/BaseButton';
 import BaseModal from '../Base/BaseModal';
 import BaseRow from '../Base/BaseRow';
@@ -8,7 +8,7 @@ import BaseText from '../Base/BaseText';
 import BaseTextInput from '../Base/BaseTextInput';
 import ClusterIDContext from '../Cluster/CurrentClusterContext';
 
-export default function SpaceCreateModal({ onClose }: { onClose: () => void }) {
+export default function SpaceCreateModal({onClose}: {onClose: () => void}) {
 	const topicRef = createRef<HTMLInputElement>();
 	const [isSpaceCreating, setIsSpaceCreating] = useState<boolean>(false);
 	const [isSpaceCreated, setIsSpaceCreated] = useState<boolean>(false);
@@ -30,7 +30,9 @@ export default function SpaceCreateModal({ onClose }: { onClose: () => void }) {
 	}
 
 	if (isSpaceCreated && newlyCreatedSpaceId) {
-		return <Redirect to={`/clusters/${cluster.id}/spaces/${newlyCreatedSpaceId}`} />;
+		return (
+			<Redirect to={`/clusters/${cluster.id}/spaces/${newlyCreatedSpaceId}`} />
+		);
 	}
 
 	return (
@@ -44,7 +46,11 @@ export default function SpaceCreateModal({ onClose }: { onClose: () => void }) {
 						Topic
 					</BaseText>
 					<br />
-					<BaseTextInput ref={topicRef} fontSize="xxl" style={{ width: '100%' }} />
+					<BaseTextInput
+						ref={topicRef}
+						fontSize="section-title"
+						style={{width: '100%'}}
+					/>
 				</div>
 				{!isSpaceCreating ? (
 					<BaseButton size="small" onClick={() => create()}>

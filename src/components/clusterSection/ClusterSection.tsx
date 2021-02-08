@@ -27,7 +27,7 @@ export default function ClusterSection() {
 
 	return (
 		<BaseRow direction="column">
-			<BaseText variant="heading" fontSize="xl" fontWeight="bold">
+			<BaseText variant="heading" fontSize="section-title" fontWeight="bold">
 				Clusters
 			</BaseText>
 			{fetchStatus === 'loaded' ? (

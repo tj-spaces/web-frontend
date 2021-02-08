@@ -1,18 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Fullscreen from '../../components/Base/BaseFullscreen';
 import BaseRow from '../../components/Base/BaseRow';
 import BaseText from '../../components/Base/BaseText';
-import { getGoogleAuthorizationUrl, getIonAuthorizationUrl } from '../../lib/getAuthorizationUrl';
+import {
+	getGoogleAuthorizationUrl,
+	getIonAuthorizationUrl,
+} from '../../lib/getAuthorizationUrl';
 
 export default function LoginPage() {
 	document.title = 'Log In';
 
 	return (
 		<Fullscreen>
-			<BaseText fontSize="xxl">Spaces</BaseText>
+			<BaseText fontSize="title">Spaces</BaseText>
 			<BaseRow direction="column" alignment="center">
-				<BaseText fontSize="xl" fontWeight="bold">
+				<BaseText fontSize="section-title" fontWeight="bold">
 					Log In
 				</BaseText>
 				<BaseText fontSize="large">

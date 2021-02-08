@@ -24,7 +24,7 @@ export default function Feed({spaces}: {spaces: SpaceSession[]}) {
 			<BaseText
 				variant="heading"
 				fontWeight="bold"
-				fontSize="xl"
+				fontSize="section-title"
 				alignment="center"
 			>
 				Explore

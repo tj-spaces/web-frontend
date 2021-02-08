@@ -35,7 +35,7 @@ export default function Cluster({id}: {id: string}) {
 					<ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />
 				)}
 
-				<BaseText variant="heading" fontSize="xl">
+				<BaseText variant="heading" fontSize="section-title">
 					{cluster?.name ?? 'Loading...'}{' '}
 					<span onClick={() => setIsSettingsOpen(true)}>
 						<i className="fas fa-cog pressable"></i>
@@ -44,13 +44,13 @@ export default function Cluster({id}: {id: string}) {
 				<div className={styles('clusterLayout')}>
 					<BackgroundColorContext.Provider value="light">
 						<BaseScrollableArea railPadding="railPadding" style={{flex: 1}}>
-							<BaseText fontSize="xl" fontWeight="bold">
+							<BaseText fontSize="section-title" fontWeight="bold">
 								Spaces
 							</BaseText>
 							<ClusterSpaceList spaces={spaces} />
 						</BaseScrollableArea>
 						<BaseScrollableArea railPadding="railPadding" style={{flex: 2}}>
-							<BaseText fontSize="xl" fontWeight="bold">
+							<BaseText fontSize="section-title" fontWeight="bold">
 								Posts
 							</BaseText>
 						</BaseScrollableArea>

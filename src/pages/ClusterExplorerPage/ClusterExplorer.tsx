@@ -26,7 +26,7 @@ export default function ClusterExplorer() {
 			overflow="auto"
 			spacing={1}
 		>
-			<BaseText variant="heading" fontSize="xl" fontWeight="bold">
+			<BaseText variant="heading" fontSize="section-title" fontWeight="bold">
 				Explore
 			</BaseText>
 
