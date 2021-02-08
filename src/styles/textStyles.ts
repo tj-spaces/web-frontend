@@ -18,16 +18,19 @@ export const textStyles = createStylesheet({
 		fontSize: '2.5rem',
 		marginBlockStart: '0.5rem',
 		marginBlockEnd: '0.5rem',
+		display: 'block',
 	},
 	'secondary-title': {
 		fontWeight: fontWeights.bold,
 		fontSize: '1.5rem',
 		marginBlockStart: '0.25rem',
 		marginBlockEnd: '0.25rem',
+		display: 'block',
 	},
 	'list-item-title': {
 		fontWeight: fontWeights.semibold,
 		fontSize: '1.25rem',
+		display: 'block',
 	},
 	body: {
 		fontWeight: fontWeights.regular,
