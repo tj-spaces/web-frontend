@@ -1,7 +1,7 @@
-import { Updater } from 'queryshift';
-import { useContext, useEffect } from 'react';
+import {Updater} from 'queryshift';
+import {useContext, useEffect} from 'react';
 import useKeyboardState from '../../hooks/useKeyboardState';
-import { SpaceParticipant } from '../../typings/SpaceParticipant';
+import {SpaceParticipant} from '../../typings/SpaceParticipant';
 import SpaceConnectionContext from './SpaceConnectionContext';
 
 export default function SpaceKeyboardMovementController() {
@@ -12,8 +12,8 @@ export default function SpaceKeyboardMovementController() {
 		let updater: Updater<SpaceParticipant> = {
 			$set: {
 				rotatingDirection: keyboardState.a ? -1 : keyboardState.d ? 1 : 0,
-				movingDirection: keyboardState.w ? 1 : keyboardState.s ? -1 : 0
-			}
+				movingDirection: keyboardState.w ? 1 : keyboardState.s ? -1 : 0,
+			},
 		};
 
 		connection?.emit('update', updater);

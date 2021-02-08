@@ -1,7 +1,7 @@
 import {lazy, Suspense} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
-import './App.sass';
+import './App.css';
 
 import AuthenticationWrapper from './components/AuthenticationWrapper';
 import CenteredLoadingText from './components/CenteredLoadingText';
