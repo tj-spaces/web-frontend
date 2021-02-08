@@ -2,8 +2,8 @@ import {useEffect, useState} from 'react';
 import {getDiscoverableClusters} from '../../api/api';
 import {Cluster} from '../../typings/Cluster';
 import ClusterPreview from '../../components/feed/ClusterFeedItem';
-import BaseText from '../../components/Base/BaseText';
-import BaseRow from '../../components/Base/BaseRow';
+import BaseText from '../../components/base/BaseText';
+import BaseRow from '../../components/base/BaseRow';
 
 /**
  * Renders suggested clusters for you to discover.

@@ -1,5 +1,5 @@
 import {Cluster} from '../../typings/Cluster';
-import BaseRow from '../Base/BaseRow';
+import BaseRow from '../base/BaseRow';
 import ClusterListRow from './ClusterListRow';
 
 /**

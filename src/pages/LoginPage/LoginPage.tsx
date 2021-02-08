@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import Fullscreen from '../../components/Base/BaseFullscreen';
-import BaseRow from '../../components/Base/BaseRow';
-import BaseText from '../../components/Base/BaseText';
+import Fullscreen from '../../components/base/BaseFullscreen';
+import BaseRow from '../../components/base/BaseRow';
+import BaseText from '../../components/base/BaseText';
 import {
 	getGoogleAuthorizationUrl,
 	getIonAuthorizationUrl,

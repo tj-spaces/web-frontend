@@ -1,9 +1,9 @@
 import {Link} from 'react-router-dom';
 import {joinCluster} from '../../api/api';
 import {Cluster} from '../../typings/Cluster';
-import BaseButton from '../Base/BaseButton';
-import BaseRow from '../Base/BaseRow';
-import BaseText from '../Base/BaseText';
+import BaseButton from '../base/BaseButton';
+import BaseRow from '../base/BaseRow';
+import BaseText from '../base/BaseText';
 
 export default function ClusterPreview({cluster}: {cluster: Cluster}) {
 	const joinThisCluster = () => {

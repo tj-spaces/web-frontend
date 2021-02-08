@@ -2,8 +2,8 @@ import {useEffect, useState} from 'react';
 import {getMyClusters} from '../../api/api';
 import {FetchStatus} from '../../api/FetchStatus';
 import {Cluster} from '../../typings/Cluster';
-import BaseRow from '../Base/BaseRow';
-import BaseText from '../Base/BaseText';
+import BaseRow from '../base/BaseRow';
+import BaseText from '../base/BaseText';
 import ClusterList from '../clusterList/ClusterList';
 
 /**

@@ -4,11 +4,11 @@ import {createCluster} from '../../api/api';
 import {backgroundColors} from '../../styles/colors';
 import InputStyles from '../../styles/InputStyles';
 import {ClusterVisibility} from '../../typings/Cluster';
-import BaseButton from '../Base/BaseButton';
-import BaseButtonGroupItem from '../Base/BaseButtonGroupItem';
-import BaseModal from '../Base/BaseModal';
-import BaseRow from '../Base/BaseRow';
-import BaseText from '../Base/BaseText';
+import BaseButton from '../base/BaseButton';
+import BaseButtonGroupItem from '../base/BaseButtonGroupItem';
+import BaseModal from '../base/BaseModal';
+import BaseRow from '../base/BaseRow';
+import BaseText from '../base/BaseText';
 
 /**
  * Renders a modal where a user can choose the name and visibility of a cluster.

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {Cluster} from '../../typings/Cluster';
-import BaseRow from '../Base/BaseRow';
-import BaseText from '../Base/BaseText';
+import BaseRow from '../base/BaseRow';
+import BaseText from '../base/BaseText';
 
 /**
  * A row to describe a Cluster, for example in the most recently active clusters list.

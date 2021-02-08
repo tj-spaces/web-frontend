@@ -1,6 +1,6 @@
 import {useContext} from 'react';
 import AuthContext from '../components/AuthContext';
-import SpaceParticipantsContext from '../components/Space/SpaceParticipantsContext';
+import SpaceParticipantsContext from '../components/space/SpaceParticipantsContext';
 import {SpaceParticipant} from '../typings/SpaceParticipant';
 
 export default function useLocalParticipant(): SpaceParticipant | null {

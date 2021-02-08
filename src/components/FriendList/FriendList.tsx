@@ -1,5 +1,5 @@
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
-import BaseRow from '../Base/BaseRow';
+import BaseRow from '../base/BaseRow';
 import FriendListRow from './FriendListRow';
 
 export default function FriendList({friends}: {friends: PublicUserInfo[]}) {

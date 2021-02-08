@@ -1,14 +1,14 @@
-import { useContext, useEffect, useRef } from 'react';
-import { AudioTrack, AudioTrackPublication } from 'twilio-video';
+import {useContext, useEffect, useRef} from 'react';
+import {AudioTrack, AudioTrackPublication} from 'twilio-video';
 import useMediaStreamTrack from '../hooks/useMediaStreamTrack';
 import useTrack from '../hooks/useTrack';
-import { defaultPannerNodeSettings } from '../lib/defaultPannerNodeSettings';
-import { SpacePositionInfo } from '../typings/SpaceParticipant';
-import SpaceAudioContext from '../components/Space/SpaceAudioContext';
+import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
+import {SpacePositionInfo} from '../typings/SpaceParticipant';
+import SpaceAudioContext from '../components/space/SpaceAudioContext';
 
 export default function SpatialAudioTrack({
 	position,
-	publication
+	publication,
 }: {
 	position: SpacePositionInfo;
 	publication: AudioTrackPublication;
@@ -21,8 +21,13 @@ export default function SpatialAudioTrack({
 	// [audioContext, audioTrack]
 	useEffect(() => {
 		if (mediaStreamTrack) {
-			let audioSource = audioContext.createMediaStreamSource(new MediaStream([mediaStreamTrack]));
-			pannerNode.current = new PannerNode(audioContext, defaultPannerNodeSettings);
+			let audioSource = audioContext.createMediaStreamSource(
+				new MediaStream([mediaStreamTrack])
+			);
+			pannerNode.current = new PannerNode(
+				audioContext,
+				defaultPannerNodeSettings
+			);
 			audioSource.connect(pannerNode.current).connect(audioContext.destination);
 
 			return () => {

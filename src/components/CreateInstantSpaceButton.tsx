@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import BaseButton from './Base/BaseButton';
+import {useState} from 'react';
+import BaseButton from './base/BaseButton';
 import CreateInstantSpaceModal from './CreateInstantSpaceModal';
 
 export default function CreateInstantSpaceButton() {
@@ -8,7 +8,11 @@ export default function CreateInstantSpaceButton() {
 	return (
 		<>
 			{modalOpen && <CreateInstantSpaceModal onClose={() => setModalOpen(false)} />}
-			<BaseButton variant="theme" size="small" onClick={() => setModalOpen(true)}>
+			<BaseButton
+				variant="theme"
+				size="small"
+				onClick={() => setModalOpen(true)}
+			>
 				Start A Space
 			</BaseButton>
 		</>

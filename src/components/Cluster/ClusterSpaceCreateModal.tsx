@@ -1,12 +1,12 @@
 import React, {createRef, useContext, useState} from 'react';
 import {Redirect} from 'react-router-dom';
 import {createSpaceSessionInCluster} from '../../api/api';
-import BaseButton from '../Base/BaseButton';
-import BaseModal from '../Base/BaseModal';
-import BaseRow from '../Base/BaseRow';
-import BaseText from '../Base/BaseText';
-import BaseTextInput from '../Base/BaseTextInput';
-import ClusterIDContext from '../Cluster/CurrentClusterContext';
+import BaseButton from '../base/BaseButton';
+import BaseModal from '../base/BaseModal';
+import BaseRow from '../base/BaseRow';
+import BaseText from '../base/BaseText';
+import BaseTextInput from '../base/BaseTextInput';
+import ClusterIDContext from './CurrentClusterContext';
 
 export default function SpaceCreateModal({onClose}: {onClose: () => void}) {
 	const topicRef = createRef<HTMLInputElement>();

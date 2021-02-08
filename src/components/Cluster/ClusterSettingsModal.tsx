@@ -1,8 +1,8 @@
 import {useCallback, useContext} from 'react';
 import {deleteCluster} from '../../api/api';
-import BaseButton from '../Base/BaseButton';
-import BaseModal from '../Base/BaseModal';
-import BaseRow from '../Base/BaseRow';
+import BaseButton from '../base/BaseButton';
+import BaseModal from '../base/BaseModal';
+import BaseRow from '../base/BaseRow';
 import ClusterIDContext from './CurrentClusterContext';
 
 /**

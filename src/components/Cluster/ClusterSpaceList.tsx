@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {createStylesheet} from '../../styles/createStylesheet';
 import hoverableLightBox from '../../styles/hoverableLightBox';
 import {SpaceSession} from '../../typings/SpaceSession';
-import BaseRow from '../Base/BaseRow';
+import BaseRow from '../base/BaseRow';
 import ClusterSpaceCreateButton from './ClusterSpaceCreateButton';
 import ClusterIDContext from './CurrentClusterContext';
 

@@ -1,10 +1,14 @@
-import { useContext, useEffect } from 'react';
-import { SpacePositionInfo } from '../typings/SpaceParticipant';
-import SpaceAudioContext from '../components/Space/SpaceAudioContext';
+import {useContext, useEffect} from 'react';
+import {SpacePositionInfo} from '../typings/SpaceParticipant';
+import SpaceAudioContext from '../components/space/SpaceAudioContext';
 
-export default function SpatialAudioListener({ position }: { position: SpacePositionInfo }) {
-	const { listener } = useContext(SpaceAudioContext);
-	const { location, rotation } = position;
+export default function SpatialAudioListener({
+	position,
+}: {
+	position: SpacePositionInfo;
+}) {
+	const {listener} = useContext(SpaceAudioContext);
+	const {location, rotation} = position;
 
 	useEffect(() => {
 		listener.positionX.value = location.x;

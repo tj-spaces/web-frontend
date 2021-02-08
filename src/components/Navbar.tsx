@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import boxShadow from '../styles/boxShadow';
 import {createStylesheet} from '../styles/createStylesheet';
-import BaseRow from './Base/BaseRow';
+import BaseRow from './base/BaseRow';
 import CreateInstanceSpaceButton from './CreateInstantSpaceButton';
 
 export const styles = createStylesheet({

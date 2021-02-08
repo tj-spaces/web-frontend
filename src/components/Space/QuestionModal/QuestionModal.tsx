@@ -1,9 +1,9 @@
 import {useCallback, useContext, useRef} from 'react';
 import {createStylesheet} from '../../../styles/createStylesheet';
-import BaseButton from '../../Base/BaseButton';
-import BaseModal from '../../Base/BaseModal';
-import BaseRow from '../../Base/BaseRow';
-import BaseText from '../../Base/BaseText';
+import BaseButton from '../../base/BaseButton';
+import BaseModal from '../../base/BaseModal';
+import BaseRow from '../../base/BaseRow';
+import BaseText from '../../base/BaseText';
 import SpaceConnectionContext from '../SpaceConnectionContext';
 import QuestionList from './QuestionList';
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import {createStylesheet} from '../../styles/createStylesheet';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
-import BaseButton from '../Base/BaseButton';
-import BaseRow from '../Base/BaseRow';
-import BaseText from '../Base/BaseText';
+import BaseButton from '../base/BaseButton';
+import BaseRow from '../base/BaseRow';
+import BaseText from '../base/BaseText';
 
 const styles = createStylesheet({
 	picture: {

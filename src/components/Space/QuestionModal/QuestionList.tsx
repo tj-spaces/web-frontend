@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import BaseRow from '../../Base/BaseRow';
+import {useContext} from 'react';
+import BaseRow from '../../base/BaseRow';
 import SpaceQuestionsContext from '../SpaceQuestionsContext';
 
 export default function QuestionList() {

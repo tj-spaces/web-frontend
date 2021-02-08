@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {getIncomingFriendRequests} from '../../api/api';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
-import BaseModal from '../Base/BaseModal';
-import BaseText from '../Base/BaseText';
+import BaseModal from '../base/BaseModal';
+import BaseText from '../base/BaseText';
 import IncomingFriendRequestsList from './IncomingFriendRequestsList';
 
 export default function IncomingFriendRequestsListContainer() {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import BaseRow from '../Base/BaseRow';
-import BaseText from '../Base/BaseText';
+import BaseRow from '../base/BaseRow';
+import BaseText from '../base/BaseText';
 import {createStylesheet} from '../../styles/createStylesheet';
 import {SpaceSession} from '../../typings/SpaceSession';
 

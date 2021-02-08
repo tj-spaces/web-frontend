@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import AddFriendsModal from './AddFriendsModal';
-import BaseText from '../Base/BaseText';
+import BaseText from '../base/BaseText';
 
 export default function AddFriendsPressableText() {
 	const [visible, setVisible] = useState(false);

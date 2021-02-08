@@ -1,6 +1,6 @@
 import React from 'react';
 import {useParams} from 'react-router-dom';
-import Cluster from '../../components/Cluster/Cluster';
+import Cluster from '../../components/cluster/Cluster';
 import Navbar from '../../components/Navbar';
 import {createStylesheet} from '../../styles/createStylesheet';
 

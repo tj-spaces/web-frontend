@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {acceptFriendRequest} from '../../api/api';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
-import BaseRow from '../Base/BaseRow';
+import BaseRow from '../base/BaseRow';
 import IncomingFriendRequestsListRow from './IncomingFriendRequestsListRow';
 
 /**

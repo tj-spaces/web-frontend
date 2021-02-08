@@ -1,8 +1,8 @@
 import React from 'react';
 import {createStylesheet} from '../../styles/createStylesheet';
 import {SpaceSession} from '../../typings/SpaceSession';
-import BaseRow from '../Base/BaseRow';
-import BaseText from '../Base/BaseText';
+import BaseRow from '../base/BaseRow';
+import BaseText from '../base/BaseText';
 import FeedEmptyFiller from './FeedEmptyFiller';
 import SpaceFeedItem from './SpaceFeedItem';
 

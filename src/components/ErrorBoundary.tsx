@@ -1,15 +1,15 @@
 import React from 'react';
-import Fullscreen from './Base/BaseFullscreen';
+import Fullscreen from './base/BaseFullscreen';
 
 export default class ErrorBoundary extends React.Component {
 	state = {
-		error: null
+		error: null,
 	};
 	static getDerivedStateFromError(error: any) {
-		return { error };
+		return {error};
 	}
 	componentDidMount() {
-		window.onunhandledrejection = (error: any) => this.setState({ error });
+		window.onunhandledrejection = (error: any) => this.setState({error});
 	}
 	componentDidCatch(error: any) {
 		console.error('Error:', error);
@@ -20,8 +20,8 @@ export default class ErrorBoundary extends React.Component {
 				<Fullscreen>
 					<h1>There's been an error</h1>
 					<p>
-						Our developers are working to fix it as soon as possible! Send us an email at dev@dev.net if the
-						error persists.
+						Our developers are working to fix it as soon as possible! Send us an
+						email at dev@dev.net if the error persists.
 					</p>
 				</Fullscreen>
 			);

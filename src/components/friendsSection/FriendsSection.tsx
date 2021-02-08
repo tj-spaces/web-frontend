@@ -1,6 +1,6 @@
 import AddFriendsPressableText from '../addFriends/AddFriendsPressableText';
-import BaseRow from '../Base/BaseRow';
-import BaseText from '../Base/BaseText';
+import BaseRow from '../base/BaseRow';
+import BaseText from '../base/BaseText';
 import FriendListContainer from '../friendList/FriendListContainer';
 
 /**

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import BaseButton from '../Base/BaseButton';
+import BaseButton from '../base/BaseButton';
 import SpaceCreateModal from './ClusterSpaceCreateModal';
 
 /**

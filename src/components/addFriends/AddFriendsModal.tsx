@@ -3,10 +3,10 @@ import {getSuggestedFriends} from '../../api/api';
 import {createStylesheet, stylex} from '../../styles/createStylesheet';
 import InputStyles from '../../styles/InputStyles';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
-import BaseButton from '../Base/BaseButton';
-import BaseModal from '../Base/BaseModal';
-import BaseRow from '../Base/BaseRow';
-import BaseText from '../Base/BaseText';
+import BaseButton from '../base/BaseButton';
+import BaseModal from '../base/BaseModal';
+import BaseRow from '../base/BaseRow';
+import BaseText from '../base/BaseText';
 import AddFriendsList from './AddFriendsList';
 
 const styles = createStylesheet({
