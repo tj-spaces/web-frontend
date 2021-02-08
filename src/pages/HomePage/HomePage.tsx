@@ -3,6 +3,7 @@ import Navbar from '../../components/Navbar';
 import {createStylesheet} from '../../styles/createStylesheet';
 import FeedContainer from '../../components/feed/FeedContainer';
 import FriendsSection from '../../components/friendsSection/FriendsSection';
+import ClusterSection from '../../components/clusterSection/ClusterSection';
 
 const styles = createStylesheet({
 	container: {
@@ -23,6 +24,7 @@ export default function HomePage() {
 		<div className={styles('container')}>
 			<Navbar />
 			<FriendsSection />
+			<ClusterSection />
 			<FeedContainer />
 		</div>
 	);

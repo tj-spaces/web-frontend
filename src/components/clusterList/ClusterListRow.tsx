@@ -1,3 +1,5 @@
+import React from 'react';
+import {Link} from 'react-router-dom';
 import {Cluster} from '../../typings/Cluster';
 import BaseRow from '../Base/BaseRow';
 import BaseText from '../Base/BaseText';
@@ -15,10 +17,14 @@ export default function ClusterListRow({cluster}: {cluster: Cluster}) {
 			borderRadius={1}
 			backgroundColor="dark0"
 			alignment="center"
+			rails={1}
+			edges={1}
+			spacing={1}
 		>
-			<BaseText variant="heading" fontSize="large">
-				{cluster.name}
+			<BaseText variant="heading" fontSize="large" fontWeight="bold">
+				<Link to={'/clusters/' + cluster.id}>{cluster.name}</Link>
 			</BaseText>
+			Hosted by {cluster.creator_id}
 		</BaseRow>
 	);
 }
