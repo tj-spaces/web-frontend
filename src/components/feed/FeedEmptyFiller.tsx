@@ -7,7 +7,7 @@ import BaseText from '../Base/BaseText';
 export default function FeedEmptyFiller() {
 	return (
 		<BaseRow direction="column" alignment="center">
-			<BaseText variant="heading" fontSize="large">
+			<BaseText variant="secondary-title">
 				There aren't any spaces yet.
 			</BaseText>
 		</BaseRow>

@@ -48,7 +48,7 @@ export default function ClusterCreateModal({onClose}: {onClose: () => void}) {
 	return (
 		<BaseModal onClickOutside={onClose}>
 			<BaseRow direction="column" spacing={1}>
-				<BaseText variant="heading">Create Cluster</BaseText>
+				<BaseText variant="secondary-title">Create Cluster</BaseText>
 				<BaseRow direction="column" alignment="start">
 					<BaseText variant="caption">Name</BaseText>
 					<input

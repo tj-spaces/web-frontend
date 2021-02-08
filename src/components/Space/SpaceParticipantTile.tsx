@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { createStylesheet } from '../../styles/createStylesheet';
+import React, {useContext} from 'react';
+import {createStylesheet} from '../../styles/createStylesheet';
 import SpaceViewLayoutContext from './SpaceViewLayoutContext';
 
 export const styles = createStylesheet({
@@ -7,40 +7,46 @@ export const styles = createStylesheet({
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: 'var(--spaces-color-dark-3)',
+		backgroundColor: 'var(--bg-elevated)',
 		textDecoration: 'none',
-		color: 'var(--spaces-color-light-0)',
+		color: 'var(--text-primary)',
 		position: 'relative',
 		overflow: 'hidden',
 		subSelectors: {
 			video: {
 				maxHeight: '100%',
-				objectFit: 'cover'
-			}
-		}
+				objectFit: 'cover',
+			},
+		},
 	},
 	participantTileLocal: {
 		subSelectors: {
 			video: {
-				transform: 'scaleX(-1)'
-			}
-		}
+				transform: 'scaleX(-1)',
+			},
+		},
 	},
 	participantTileRemote: {
 		marginTop: '-50%',
-		marginRight: '-50%'
+		marginRight: '-50%',
 	},
 	participantTileCondensed: {
 		width: '7.5rem',
-		height: '7.5rem'
+		height: '7.5rem',
 	},
 	participantTileExpanded: {
 		width: '10rem',
-		height: '10rem'
-	}
+		height: '10rem',
+	},
 });
 
-export default function SpaceParticipantTile({ children, isLocal }: { children: React.ReactNode; isLocal: boolean }) {
+export default function SpaceParticipantTile({
+	children,
+	isLocal,
+}: {
+	children: React.ReactNode;
+	isLocal: boolean;
+}) {
 	const layout = useContext(SpaceViewLayoutContext);
 
 	return (

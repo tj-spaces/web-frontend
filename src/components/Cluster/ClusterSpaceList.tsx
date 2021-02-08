@@ -11,7 +11,7 @@ const styles = createStylesheet({
 	spaceOnlineCount: {
 		fontSize: '0.75rem',
 		textTransform: 'uppercase',
-		color: 'var(--spaces-color-light-1)',
+		color: 'var(--text-primary)',
 	},
 	spaceListItem: {
 		extends: [hoverableLightBox.hoverableLightBox],

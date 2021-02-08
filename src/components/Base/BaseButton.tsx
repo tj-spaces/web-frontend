@@ -1,22 +1,24 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps, forwardRef } from 'react';
-import { Link } from 'react-router-dom';
+import {ButtonHTMLAttributes, DetailedHTMLProps, forwardRef} from 'react';
+import {Link} from 'react-router-dom';
 import boxShadow from '../../styles/boxShadow';
 import colors from '../../styles/colors';
-import { stylex, ClassProvider as CompiledClasses, createStylesheet } from '../../styles/createStylesheet';
+import {
+	stylex,
+	ClassProvider as CompiledClasses,
+	createStylesheet,
+} from '../../styles/createStylesheet';
 
 const styles = createStylesheet({
 	button: {
-		// extends: [boxShadow.boxShadow],
-
 		border: '0px',
 		padding: '0.25em',
-		color: 'var(--spaces-color-light-0)',
+		color: 'var(--white)',
 		transition: 'box-shadow 0.5s ease',
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
-		cursor: 'pointer'
-	}
+		cursor: 'pointer',
+	},
 });
 
 const sizeStyles = createStylesheet({
@@ -25,40 +27,40 @@ const sizeStyles = createStylesheet({
 		fontSize: '1.25rem',
 		fontWeight: 'bold',
 		textTransform: 'uppercase',
-		borderRadius: '0.5em'
+		borderRadius: '0.5em',
 	},
 	medium: {
 		padding: '0.25em',
 		fontSize: '1.5rem',
-		borderRadius: '0.5em'
+		borderRadius: '0.5em',
 	},
 	large: {
 		padding: '0.75em',
 		fontSize: '2rem',
-		borderRadius: '0.5em'
-	}
+		borderRadius: '0.5em',
+	},
 });
 
 const variantStyles = createStylesheet({
 	primary: {
-		backgroundColor: 'var(--spaces-color-dark-0)'
+		backgroundColor: 'var(--bg-primary)',
 	},
 	positive: {
-		backgroundColor: 'var(--spaces-color-positive)'
+		backgroundColor: 'var(--text-primary)',
 	},
 	negative: {
-		backgroundColor: 'var(--spaces-color-negative)'
+		backgroundColor: 'var(--text-warn)',
 	},
 	theme: {
-		backgroundColor: colors.red
-	}
+		backgroundColor: colors.red,
+	},
 });
 
 type ButtonProps = (
 	| /* Button */
 	DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 	/* Link styled like a button */
-	| { to: string }
+	| {to: string}
 ) & {
 	size?: keyof typeof sizeStyles;
 	variant?: keyof typeof variantStyles;
@@ -67,9 +69,18 @@ type ButtonProps = (
 };
 
 const BaseButton = forwardRef<HTMLButtonElement, ButtonProps>(
-	({ size = 'small', variant = 'primary', boxShadow: useBoxShadow = false, xstyle, ...props }, ref) => {
+	(
+		{
+			size = 'small',
+			variant = 'primary',
+			boxShadow: useBoxShadow = false,
+			xstyle,
+			...props
+		},
+		ref
+	) => {
 		if ('to' in props) {
-			const { to } = props;
+			const {to} = props;
 			return (
 				<Link
 					to={to}

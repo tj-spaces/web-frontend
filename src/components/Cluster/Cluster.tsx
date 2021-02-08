@@ -11,7 +11,7 @@ import ClusterIdContext from './CurrentClusterContext';
 
 export const styles = createStylesheet({
 	clusterLayout: {
-		backgroundColor: 'var(--spaces-color-light-1)',
+		backgroundColor: 'var(--white)',
 		padding: '0.5em 0em',
 		display: 'flex',
 		flexDirection: 'row',
@@ -35,7 +35,7 @@ export default function Cluster({id}: {id: string}) {
 					<ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />
 				)}
 
-				<BaseText variant="heading" fontSize="section-title">
+				<BaseText variant="primary-title">
 					{cluster?.name ?? 'Loading...'}{' '}
 					<span onClick={() => setIsSettingsOpen(true)}>
 						<i className="fas fa-cog pressable"></i>
@@ -44,15 +44,11 @@ export default function Cluster({id}: {id: string}) {
 				<div className={styles('clusterLayout')}>
 					<BackgroundColorContext.Provider value="light">
 						<BaseScrollableArea railPadding="railPadding" style={{flex: 1}}>
-							<BaseText fontSize="section-title" fontWeight="bold">
-								Spaces
-							</BaseText>
+							<BaseText variant="secondary-title">Spaces</BaseText>
 							<ClusterSpaceList spaces={spaces} />
 						</BaseScrollableArea>
 						<BaseScrollableArea railPadding="railPadding" style={{flex: 2}}>
-							<BaseText fontSize="section-title" fontWeight="bold">
-								Posts
-							</BaseText>
+							<BaseText variant="secondary-title">Posts</BaseText>
 						</BaseScrollableArea>
 					</BackgroundColorContext.Provider>
 				</div>

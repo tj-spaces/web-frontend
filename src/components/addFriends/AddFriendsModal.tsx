@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { getSuggestedFriends } from '../../api/api';
-import { createStylesheet, stylex } from '../../styles/createStylesheet';
+import React, {useEffect, useState} from 'react';
+import {getSuggestedFriends} from '../../api/api';
+import {createStylesheet, stylex} from '../../styles/createStylesheet';
 import InputStyles from '../../styles/InputStyles';
-import { PublicUserInfo } from '../../typings/PublicUserInfo';
+import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import BaseButton from '../Base/BaseButton';
 import BaseModal from '../Base/BaseModal';
 import BaseRow from '../Base/BaseRow';
@@ -11,13 +11,13 @@ import AddFriendsList from './AddFriendsList';
 
 const styles = createStylesheet({
 	largeFont: {
-		fontSize: '1.25rem'
-	}
+		fontSize: '1.25rem',
+	},
 });
 
 const suggestionCache: Record<string, PublicUserInfo[]> = {};
 
-export default function AddFriendsModal({ onClose }: { onClose: () => void }) {
+export default function AddFriendsModal({onClose}: {onClose: () => void}) {
 	const [search, setSearch] = useState('');
 	const [searchResults, setSearchResults] = useState<PublicUserInfo[]>([]);
 
@@ -35,9 +35,7 @@ export default function AddFriendsModal({ onClose }: { onClose: () => void }) {
 	return (
 		<BaseModal onClickOutside={() => onClose()}>
 			<BaseRow direction="column" spacing={1}>
-				<BaseText variant="heading" fontSize="large" fontWeight="medium">
-					Add Friends
-				</BaseText>
+				<BaseText variant="secondary-title">Add Friends</BaseText>
 				<input
 					className={stylex(InputStyles.rectangleInput, styles.largeFont)}
 					type="text"

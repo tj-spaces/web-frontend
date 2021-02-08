@@ -33,11 +33,7 @@ export default function SpaceContainer() {
 			<div className={spaceViewStyles('container')}>
 				<div className={spaceViewStyles('topHeading')}>
 					<BackgroundColorContext.Provider value="light">
-						<BaseText
-							fontSize="section-title"
-							fontWeight="bold"
-							alignment="center"
-						>
+						<BaseText variant="secondary-title" alignment="center">
 							{space ? space.topic : 'Loading Space'}
 						</BaseText>
 					</BackgroundColorContext.Provider>

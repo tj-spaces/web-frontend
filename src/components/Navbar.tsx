@@ -24,7 +24,7 @@ export default function Navbar() {
 			justifyContent="center"
 			rails={1}
 			spacing={1}
-			backgroundColor="dark2"
+			backgroundColor="bgElevated"
 			xstyle={styles.navbar}
 		>
 			<Link to="/logout">Log out</Link>

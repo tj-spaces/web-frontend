@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { createSpaceSession } from '../api/api';
-import { backgroundColors } from '../styles/colors';
+import React, {useState} from 'react';
+import {Link} from 'react-router-dom';
+import {createSpaceSession} from '../api/api';
+import {backgroundColors} from '../styles/colors';
 import InputStyles from '../styles/InputStyles';
-import { SpaceSessionVisibility } from '../typings/SpaceSession';
+import {SpaceSessionVisibility} from '../typings/SpaceSession';
 import BaseButton from './Base/BaseButton';
 import BaseButtonGroupItem from './Base/BaseButtonGroupItem';
 import BaseModal from './Base/BaseModal';
@@ -12,8 +12,14 @@ import BaseText from './Base/BaseText';
 
 export type CreationStatus = 'none' | 'pending' | 'done' | 'error';
 
-export default function CreateInstantSpaceModal({ onClose }: { onClose: () => void }) {
-	let [visibility, setVisibility] = useState<SpaceSessionVisibility>('discoverable');
+export default function CreateInstantSpaceModal({
+	onClose,
+}: {
+	onClose: () => void;
+}) {
+	let [visibility, setVisibility] = useState<SpaceSessionVisibility>(
+		'discoverable'
+	);
 	let [topic, setTopic] = useState<string>('');
 	let [creationStatus, setCreationStatus] = useState<CreationStatus>('none');
 	let [newlyCreatedSpaceID, setNewlyCreatedSpaceID] = useState<string>();
@@ -21,13 +27,11 @@ export default function CreateInstantSpaceModal({ onClose }: { onClose: () => vo
 	return (
 		<BaseModal onClickOutside={onClose}>
 			<BaseRow direction="column" spacing={1}>
-				<BaseText variant="heading" fontSize="large" fontWeight="medium">
-					Start a conversation
-				</BaseText>
+				<BaseText variant="secondary-title">Start a conversation</BaseText>
 				Topic
 				<input
 					className={InputStyles('rectangleInput')}
-					style={{ fontSize: '2rem', width: '100%' }}
+					style={{fontSize: '2rem', width: '100%'}}
 					onChange={(ev) => setTopic(ev.target.value)}
 					value={topic}
 				/>
@@ -66,7 +70,10 @@ export default function CreateInstantSpaceModal({ onClose }: { onClose: () => vo
 					<BaseText>Creating Space</BaseText>
 				) : creationStatus === 'done' ? (
 					<BaseText>
-						Space is made. <Link to={'/spaces/' + newlyCreatedSpaceID}>Click here to join!</Link>
+						Space is made.{' '}
+						<Link to={'/spaces/' + newlyCreatedSpaceID}>
+							Click here to join!
+						</Link>
 					</BaseText>
 				) : (
 					<BaseText>Error</BaseText>

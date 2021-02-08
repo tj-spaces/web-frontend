@@ -10,9 +10,7 @@ import FriendListContainer from '../friendList/FriendListContainer';
 export default function FriendsSection() {
 	return (
 		<BaseRow direction="row" alignment="center" spacing={1}>
-			<BaseText fontSize="section-title" fontWeight="bold">
-				Friends
-			</BaseText>
+			<BaseText variant="secondary-title">Friends</BaseText>
 			<AddFriendsPressableText />
 			<FriendListContainer />
 		</BaseRow>

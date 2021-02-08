@@ -1,14 +1,14 @@
-import { createStylesheet } from './createStylesheet';
+import {createStylesheet} from './createStylesheet';
 
 export default createStylesheet({
 	rectangleInput: {
 		borderRadius: '0px',
-		backgroundColor: 'var(--spaces-color-dark-1)',
+		backgroundColor: 'var(--bg-primary)',
 		subSelectors: {
 			':focus': {
 				outline: '0px',
-				borderBottom: '1px solid white'
-			}
-		}
-	}
+				borderBottom: '1px solid white',
+			},
+		},
+	},
 });

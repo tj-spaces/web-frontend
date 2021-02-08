@@ -1,72 +1,57 @@
-import { useContext } from 'react';
-import { createStylesheet, stylex } from '../../styles/createStylesheet';
-import { fontSizeStyles, fontWeightStyles } from '../../styles/font';
-import { textAlignStyles } from '../../styles/textAlign';
+import {useContext} from 'react';
+import {createStylesheet, stylex} from '../../styles/createStylesheet';
+import {textAlignStyles} from '../../styles/textAlign';
+import {textStyles} from '../../styles/textStyles';
 import BackgroundColorContext from '../BackgroundColorContext';
-
-const variantStyles = createStylesheet({
-	base: {},
-	heading: {
-		marginBlockStart: '0.5em',
-		marginBlockEnd: '0.5em',
-		display: 'block'
-	},
-	caption: {
-		textTransform: 'uppercase'
-	}
-});
 
 const colorStylesDarkBackground = createStylesheet({
 	normal: {
-		color: 'var(--spaces-color-light-0)'
-	}
+		color: 'var(--text-primary)',
+	},
 });
 
 const colorStylesLightBackground = createStylesheet({
 	normal: {
-		color: 'var(--spaces-color-dark-0)'
-	}
+		color: 'var(--bg-primary)',
+	},
 });
 
 const textDecorationStyles = createStylesheet({
 	underline: {
-		textDecoration: 'underline'
-	}
+		textDecoration: 'underline',
+	},
 });
 
 export default function BaseText({
-	fontWeight = 'normal',
-	fontSize = 'medium',
 	alignment = 'start',
-	variant = 'base',
+	variant,
 	underline = false,
 	children,
-	onClick
+	onClick,
 }: {
 	alignment?: 'start' | 'end' | 'center';
-	fontSize?: keyof typeof fontSizeStyles;
-	fontWeight?: keyof typeof fontWeightStyles;
-	variant?: keyof typeof variantStyles;
+	variant?: keyof typeof textStyles;
 	underline?: boolean;
 	children: React.ReactNode;
 	onClick?: () => void;
 }) {
 	const BackgroundColor = useContext(BackgroundColorContext);
 
-	const colorClass = (BackgroundColor === 'dark' ? colorStylesDarkBackground : colorStylesLightBackground).normal;
+	const colorClass = (BackgroundColor === 'dark'
+		? colorStylesDarkBackground
+		: colorStylesLightBackground
+	).normal;
 
 	return (
 		<span
 			className={stylex(
-				fontWeightStyles[fontWeight],
-				fontSizeStyles[fontSize],
 				textAlignStyles[alignment],
-				variantStyles[variant],
+				variant ? textStyles[variant] : undefined,
 				underline ? textDecorationStyles.underline : undefined,
 				colorClass
 			)}
 			onClick={onClick}
-			style={onClick ? { cursor: 'pointer' } : undefined}
+			style={onClick ? {cursor: 'pointer'} : undefined}
 		>
 			{children}
 		</span>

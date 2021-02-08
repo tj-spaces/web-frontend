@@ -28,9 +28,7 @@ export default function FriendListRow({friend}: {friend: PublicUserInfo}) {
 				alignment="center"
 				justifyContent="center"
 			>
-				<BaseText fontSize="medium" fontWeight="bold">
-					{friend.name}
-				</BaseText>
+				<BaseText variant="body-bold">{friend.name}</BaseText>
 			</BaseRow>
 		</BaseRow>
 	);

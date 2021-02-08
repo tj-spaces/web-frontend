@@ -28,13 +28,13 @@ export default function SpaceFeedItem({space}: {space: SpaceSession}) {
 		<BaseRow
 			direction="column"
 			borderRadius={1}
-			backgroundColor="dark2"
+			backgroundColor="bgElevated"
 			rails={2}
 			spacing={1}
 			edges={1}
 			boxShadow
 		>
-			<BaseText fontSize="large" fontWeight="bold">
+			<BaseText variant="list-item-title">
 				<Link to={'/spaces/' + space.id}>{space.topic}</Link>
 			</BaseText>
 			<BaseRow direction="row" width="100%" spacing={1}>
@@ -46,7 +46,7 @@ export default function SpaceFeedItem({space}: {space: SpaceSession}) {
 				<div className={styles('spaceFeedItemContent')}>
 					<BaseText>{space.online_count ?? 0} are online</BaseText>
 					<BaseText>
-						Hosted by <BaseText fontWeight="bold">{space.host.name}</BaseText>
+						Hosted by <BaseText variant="body-bold">{space.host.name}</BaseText>
 					</BaseText>
 				</div>
 			</BaseRow>

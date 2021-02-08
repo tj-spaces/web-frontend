@@ -38,13 +38,11 @@ export default function SpaceCreateModal({onClose}: {onClose: () => void}) {
 	return (
 		<BaseModal onClickOutside={() => onClose()}>
 			<BaseRow direction="column" spacing={2} rails={2}>
-				<BaseText variant="heading" fontSize="large" alignment="center">
+				<BaseText variant="secondary-title" alignment="center">
 					Create a Space
 				</BaseText>
 				<div>
-					<BaseText variant="caption" fontSize="small">
-						Topic
-					</BaseText>
+					<BaseText variant="caption">Topic</BaseText>
 					<br />
 					<BaseTextInput
 						ref={topicRef}

@@ -16,13 +16,13 @@ export default function ClusterPreview({cluster}: {cluster: Cluster}) {
 		<BaseRow
 			direction="column"
 			borderRadius={1}
-			backgroundColor="dark2"
+			backgroundColor="bgElevated"
 			rails={2}
 			spacing={1}
 			edges={1}
 			boxShadow
 		>
-			<BaseText fontSize="large" fontWeight="bold">
+			<BaseText variant="list-item-title">
 				<Link to={'/clusters/' + cluster.id}>{cluster.name}</Link>
 			</BaseText>
 

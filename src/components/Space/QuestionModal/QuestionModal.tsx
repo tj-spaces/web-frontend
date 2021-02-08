@@ -1,5 +1,5 @@
-import { useCallback, useContext, useRef } from 'react';
-import { createStylesheet } from '../../../styles/createStylesheet';
+import {useCallback, useContext, useRef} from 'react';
+import {createStylesheet} from '../../../styles/createStylesheet';
 import BaseButton from '../../Base/BaseButton';
 import BaseModal from '../../Base/BaseModal';
 import BaseRow from '../../Base/BaseRow';
@@ -13,20 +13,20 @@ const styles = createStylesheet({
 		position: 'absolute',
 		left: '0px',
 		right: '0px',
-		bottom: '0px'
+		bottom: '0px',
 	},
 	questionAskBox: {
 		width: '100%',
-		fontSize: '1.5rem'
+		fontSize: '1.5rem',
 	},
 	questionsContainer: {
 		position: 'relative',
 		minHeight: '16rem',
-		maxHeight: '30rem'
-	}
+		maxHeight: '30rem',
+	},
 });
 
-export default function QuestionsModal({ onClose }: { onClose: () => void }) {
+export default function QuestionsModal({onClose}: {onClose: () => void}) {
 	const conn = useContext(SpaceConnectionContext);
 	const questionTextRef = useRef<HTMLInputElement>(null);
 
@@ -40,14 +40,21 @@ export default function QuestionsModal({ onClose }: { onClose: () => void }) {
 	return (
 		<BaseModal onClickOutside={onClose}>
 			<BaseRow direction="column" xstyle={styles.questionsContainer}>
-				<BaseText variant="heading" fontSize="large">
-					Questions
-				</BaseText>
+				<BaseText variant="secondary-title">Questions</BaseText>
 
 				<QuestionList />
 
-				<BaseRow direction="row" alignment="center" spacing={1} xstyle={styles.bottomSection}>
-					<input type="text" ref={questionTextRef} className={styles('questionAskBox')} />
+				<BaseRow
+					direction="row"
+					alignment="center"
+					spacing={1}
+					xstyle={styles.bottomSection}
+				>
+					<input
+						type="text"
+						ref={questionTextRef}
+						className={styles('questionAskBox')}
+					/>
 
 					<BaseButton variant="positive" onClick={() => onClickedAskQuestion()}>
 						Ask

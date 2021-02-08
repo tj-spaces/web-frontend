@@ -15,13 +15,13 @@ export default function ClusterListRow({cluster}: {cluster: Cluster}) {
 		<BaseRow
 			direction="column"
 			borderRadius={1}
-			backgroundColor="dark0"
+			backgroundColor="bgPrimary"
 			alignment="center"
 			rails={1}
 			edges={1}
 			spacing={1}
 		>
-			<BaseText variant="heading" fontSize="large" fontWeight="bold">
+			<BaseText variant="list-item-title">
 				<Link to={'/clusters/' + cluster.id}>{cluster.name}</Link>
 			</BaseText>
 			Hosted by {cluster.creator_id}

@@ -13,18 +13,16 @@ export default function LoginPage() {
 
 	return (
 		<Fullscreen>
-			<BaseText fontSize="title">Spaces</BaseText>
+			<BaseText variant="primary-title">Spaces</BaseText>
 			<BaseRow direction="column" alignment="center">
-				<BaseText fontSize="section-title" fontWeight="bold">
-					Log In
-				</BaseText>
-				<BaseText fontSize="large">
+				<BaseText variant="secondary-title">Log In</BaseText>
+				<BaseText variant="body">
 					<a href={getGoogleAuthorizationUrl()}>Google</a>
 				</BaseText>
-				<BaseText fontSize="large">
+				<BaseText variant="body">
 					<a href={getIonAuthorizationUrl()}>Ion</a>
 				</BaseText>
-				<BaseText fontSize="medium">
+				<BaseText variant="body">
 					By logging in, you agree to the{' '}
 					<Link to="/terms" className="underline">
 						<b>terms</b>

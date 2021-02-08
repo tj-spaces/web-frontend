@@ -26,7 +26,7 @@ export default function IncomingFriendRequestsListContainer() {
 			<>
 				<BaseText>People sent you friend requests!</BaseText>
 				<BaseText
-					fontWeight="bold"
+					variant="body-bold"
 					onClick={() => {
 						setIncomingFriendRequestsModalOpen(true);
 					}}
@@ -37,9 +37,7 @@ export default function IncomingFriendRequestsListContainer() {
 					<BaseModal
 						onClickOutside={() => setIncomingFriendRequestsModalOpen(false)}
 					>
-						<BaseText variant="heading" fontSize="large" fontWeight="bold">
-							Friend Requests
-						</BaseText>
+						<BaseText variant="secondary-title">Friend Requests</BaseText>
 						<IncomingFriendRequestsList requests={incomingFriendRequests} />
 					</BaseModal>
 				)}

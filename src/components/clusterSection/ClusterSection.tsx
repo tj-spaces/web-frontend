@@ -27,9 +27,7 @@ export default function ClusterSection() {
 
 	return (
 		<BaseRow direction="column">
-			<BaseText variant="heading" fontSize="section-title" fontWeight="bold">
-				Clusters
-			</BaseText>
+			<BaseText variant="secondary-title">Clusters</BaseText>
 			{fetchStatus === 'loaded' ? (
 				<ClusterList clusters={clusters} />
 			) : fetchStatus === 'errored' ? (

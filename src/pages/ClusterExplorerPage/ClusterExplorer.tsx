@@ -26,9 +26,7 @@ export default function ClusterExplorer() {
 			overflow="auto"
 			spacing={1}
 		>
-			<BaseText variant="heading" fontSize="section-title" fontWeight="bold">
-				Explore
-			</BaseText>
+			<BaseText variant="secondary-title">Explore</BaseText>
 
 			{clusters != null
 				? clusters.map((cluster) => (

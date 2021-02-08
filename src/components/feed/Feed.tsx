@@ -21,12 +21,7 @@ const styles = createStylesheet({
 export default function Feed({spaces}: {spaces: SpaceSession[]}) {
 	return (
 		<BaseRow direction="column" spacing={1} width="100%" alignment="center">
-			<BaseText
-				variant="heading"
-				fontWeight="bold"
-				fontSize="section-title"
-				alignment="center"
-			>
+			<BaseText variant="secondary-title" alignment="center">
 				Explore
 			</BaseText>
 

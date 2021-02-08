@@ -43,9 +43,7 @@ export default function IncomingFriendRequestsListRow({
 				alignment="center"
 				justifyContent="center"
 			>
-				<BaseText fontSize="medium" fontWeight="bold">
-					{requester.name}
-				</BaseText>
+				<BaseText variant="body-bold">{requester.name}</BaseText>
 			</BaseRow>
 			{!acceptedRequest ? (
 				<BaseButton onClick={() => onClickedAcceptRequest()}>
