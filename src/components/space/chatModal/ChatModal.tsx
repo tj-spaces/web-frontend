@@ -10,18 +10,14 @@ import ChatMessageList from './ChatMessageList';
 const styles = createStylesheet({
 	bottomSection: {
 		height: '2rem',
-		position: 'absolute',
-		left: '0px',
-		right: '0px',
-		bottom: '0px',
+		width: '100%',
 	},
 	chatMessageBox: {
 		width: '100%',
 		fontSize: '1.5rem',
 	},
-	chatMessageListContainer: {
-		position: 'relative',
-		height: '20rem',
+	chatModalMessageList: {
+		height: '16rem',
 	},
 });
 
@@ -39,10 +35,10 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 
 	return (
 		<BaseModal onClickOutside={onClose}>
-			<BaseRow direction="column" xstyle={styles.chatMessageListContainer}>
+			<BaseRow direction="column">
 				<BaseText variant="secondary-title">Chat</BaseText>
 
-				<ChatMessageList />
+				<ChatMessageList xstyle={styles.chatModalMessageList} />
 
 				<BaseRow
 					direction="row"
