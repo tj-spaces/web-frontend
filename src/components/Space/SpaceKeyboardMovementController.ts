@@ -1,7 +1,7 @@
 import {Updater} from 'queryshift';
 import {useContext, useEffect} from 'react';
 import useKeyboardState from '../../hooks/useKeyboardState';
-import {SpaceParticipant} from '../../typings/SpaceParticipant';
+import {SpaceParticipant} from '../../typings/Space';
 import SpaceConnectionContext from './SpaceConnectionContext';
 
 export default function SpaceKeyboardMovementController() {

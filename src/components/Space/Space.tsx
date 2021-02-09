@@ -10,9 +10,9 @@ import SpaceContainer from './SpaceContainer';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaWrapper from './SpaceMediaWrapper';
 import SpaceParticipantsContext from './SpaceParticipantsContext';
-import SpaceQuestionsContext from './SpaceQuestionsContext';
+import SpaceMessagesContext from './SpaceQuestionsContext';
+import useSpaceMessages from './useSpaceMessages';
 import useSpaceParticipants from './useSpaceParticipants';
-import useSpaceQuestions from './useSpaceQuestions';
 
 const logger = getLogger('space');
 const conn = io.connect(API_SERVER_URL + '?sessionID=' + getSessionId());
@@ -42,18 +42,18 @@ export default function Space({id}: {id: string}) {
 		};
 	}, [id]);
 
-	const questions = useSpaceQuestions(conn);
+	const messages = useSpaceMessages(conn);
 	const participants = useSpaceParticipants(conn);
 
 	return (
 		<SpaceIDContext.Provider value={id}>
 			<SpaceConnectionContext.Provider value={conn}>
 				<SpaceParticipantsContext.Provider value={participants}>
-					<SpaceQuestionsContext.Provider value={questions}>
+					<SpaceMessagesContext.Provider value={messages}>
 						<SpaceMediaWrapper twilioRoom={twilioRoom}>
 							<SpaceContainer />
 						</SpaceMediaWrapper>
-					</SpaceQuestionsContext.Provider>
+					</SpaceMessagesContext.Provider>
 				</SpaceParticipantsContext.Provider>
 			</SpaceConnectionContext.Provider>
 		</SpaceIDContext.Provider>

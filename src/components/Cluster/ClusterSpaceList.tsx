@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {Link} from 'react-router-dom';
 import {createStylesheet} from '../../styles/createStylesheet';
 import hoverableLightBox from '../../styles/hoverableLightBox';
-import {SpaceSession} from '../../typings/SpaceSession';
+import {SpaceSession} from '../../typings/Space';
 import BaseRow from '../base/BaseRow';
 import ClusterSpaceCreateButton from './ClusterSpaceCreateButton';
 import ClusterIDContext from './CurrentClusterContext';

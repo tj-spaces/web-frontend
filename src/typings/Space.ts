@@ -1,3 +1,35 @@
+import {PublicUserInfo} from './PublicUserInfo';
+
+export type SpaceSessionVisibility = 'discoverable' | 'unlisted' | 'secret';
+
+export interface SpaceSession {
+	id: string;
+	topic: string;
+	start_time: string;
+	stop_time: string;
+	cluster_id?: string;
+	host_id: string;
+	host: PublicUserInfo;
+	visibility: SpaceSessionVisibility;
+	online_count: number;
+}
+
+export interface SpaceMessage {
+	/** Unique ID for this SpaceMessage */
+	id: string;
+	/** The ID of the message sender */
+	senderID: string;
+	/** Message text */
+	text: string;
+	/** The message this message is replying to. If not present, it isn't replying to anything. */
+	replyTo?: string;
+	/**
+	 * This is an easy way to see all the messages that have replied to this SpaceMessage.
+	 * This is not provided to us by the server. We must construct it based on the other messages we get.
+	 */
+	replies: SpaceMessage[];
+}
+
 /**
  * Where the user is in the space.
  * This is a 2D location, because as of now, the spaces are "2.5-dimensional" worlds
@@ -21,7 +53,13 @@ export interface SpacePositionInfo {
 	rotation: number;
 }
 
-export type DisplayStatus = 'agree' | 'disagree' | 'faster' | 'slower' | 'raised-hand' | 'none';
+export type DisplayStatus =
+	| 'agree'
+	| 'disagree'
+	| 'faster'
+	| 'slower'
+	| 'raised-hand'
+	| 'none';
 
 /**
  * An Participant in a space is anybody in the space that is either a guest or a user with an account.
@@ -44,7 +82,14 @@ export interface SpaceParticipant {
 	/**
 	 * Color of the user's avatar
 	 */
-	displayColor: 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'violet' | 'pink';
+	displayColor:
+		| 'red'
+		| 'orange'
+		| 'yellow'
+		| 'green'
+		| 'blue'
+		| 'violet'
+		| 'pink';
 
 	/**
 	 * Anything from 'agree' to 'disagree' to 'go faster'
@@ -91,4 +136,11 @@ export interface SpaceParticipant {
 	 */
 	rotatingDirection: 0 | 1 | -1;
 	movingDirection: 0 | 1 | -1;
+}
+
+export interface SpaceMessage {
+	id: string;
+	senderID: string;
+	text: string;
+	replyTo?: string;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStylesheet} from '../../styles/createStylesheet';
-import {SpaceSession} from '../../typings/SpaceSession';
+import {SpaceSession} from '../../typings/Space';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import FeedEmptyFiller from './FeedEmptyFiller';

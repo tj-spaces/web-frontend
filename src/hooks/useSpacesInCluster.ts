@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {getSpaceSessionsInCluster} from '../api/api';
-import {SpaceSession} from '../typings/SpaceSession';
+import {SpaceSession} from '../typings/Space';
 
 export default function useSpacesInCluster(clusterID: string) {
 	const [spaces, setSpaces] = useState<SpaceSession[]>();

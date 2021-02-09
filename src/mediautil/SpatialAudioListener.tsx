@@ -1,5 +1,5 @@
 import {useContext, useEffect} from 'react';
-import {SpacePositionInfo} from '../typings/SpaceParticipant';
+import {SpacePositionInfo} from '../typings/Space';
 import SpaceAudioContext from '../components/space/SpaceAudioContext';
 
 export default function SpatialAudioListener({

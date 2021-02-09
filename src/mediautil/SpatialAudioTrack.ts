@@ -3,7 +3,7 @@ import {AudioTrack, AudioTrackPublication} from 'twilio-video';
 import useMediaStreamTrack from '../hooks/useMediaStreamTrack';
 import useTrack from '../hooks/useTrack';
 import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
-import {SpacePositionInfo} from '../typings/SpaceParticipant';
+import {SpacePositionInfo} from '../typings/Space';
 import SpaceAudioContext from '../components/space/SpaceAudioContext';
 
 export default function SpatialAudioTrack({

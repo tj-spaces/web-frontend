@@ -5,7 +5,7 @@ import BaseModal from '../../base/BaseModal';
 import BaseRow from '../../base/BaseRow';
 import BaseText from '../../base/BaseText';
 import SpaceConnectionContext from '../SpaceConnectionContext';
-import QuestionList from './QuestionList';
+import QuestionList from './ChatMessageList';
 
 const styles = createStylesheet({
 	bottomSection: {
@@ -26,14 +26,14 @@ const styles = createStylesheet({
 	},
 });
 
-export default function QuestionsModal({onClose}: {onClose: () => void}) {
+export default function ChatModal({onClose}: {onClose: () => void}) {
 	const conn = useContext(SpaceConnectionContext);
-	const questionTextRef = useRef<HTMLInputElement>(null);
+	const messageTextRef = useRef<HTMLInputElement>(null);
 
-	const onClickedAskQuestion = useCallback(() => {
-		if (conn && questionTextRef.current?.value) {
-			conn.emit('question', questionTextRef.current?.value);
-			questionTextRef.current.value = '';
+	const onClickedSendMessage = useCallback(() => {
+		if (conn && messageTextRef.current?.value) {
+			conn.emit('message', messageTextRef.current?.value);
+			messageTextRef.current.value = '';
 		}
 	}, [conn]);
 
@@ -52,11 +52,11 @@ export default function QuestionsModal({onClose}: {onClose: () => void}) {
 				>
 					<input
 						type="text"
-						ref={questionTextRef}
+						ref={messageTextRef}
 						className={styles('questionAskBox')}
 					/>
 
-					<BaseButton variant="positive" onClick={() => onClickedAskQuestion()}>
+					<BaseButton variant="positive" onClick={() => onClickedSendMessage()}>
 						Ask
 					</BaseButton>
 				</BaseRow>

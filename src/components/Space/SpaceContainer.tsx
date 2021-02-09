@@ -4,7 +4,7 @@ import AuthContext from '../AuthContext';
 import BaseButton from '../base/BaseButton';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
-import QuestionsModal from './questionModal/QuestionModal';
+import ChatModal from './chatModal/ChatModal';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaContext from './SpaceMediaContext';
 import SpaceView3D from './spaceView3D/SpaceView3D';
@@ -53,7 +53,7 @@ export default function SpaceContainer() {
 					</BaseButton>
 
 					{questionsModalOpen && (
-						<QuestionsModal onClose={() => setQuestionsModalOpen(false)} />
+						<ChatModal onClose={() => setQuestionsModalOpen(false)} />
 					)}
 
 					<BaseButton to="..">Leave</BaseButton>

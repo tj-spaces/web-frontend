@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {getSuggestedSpaces} from '../../api/api';
-import {SpaceSession} from '../../typings/SpaceSession';
+import {SpaceSession} from '../../typings/Space';
 import CenteredLoadingText from '../CenteredLoadingText';
 import Feed from './Feed';
 

@@ -1,9 +1,9 @@
 import {useContext} from 'react';
 import BaseRow from '../../base/BaseRow';
-import SpaceQuestionsContext from '../SpaceQuestionsContext';
+import SpaceMessagesContext from '../SpaceQuestionsContext';
 
 export default function QuestionList() {
-	const questions = useContext(SpaceQuestionsContext);
+	const questions = useContext(SpaceMessagesContext);
 	return (
 		<BaseRow direction="column">
 			{Object.values(questions).map((question) => (

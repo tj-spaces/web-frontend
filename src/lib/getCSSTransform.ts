@@ -1,12 +1,15 @@
-import { CSSProperties } from 'react';
-import { SpacePositionInfo } from '../typings/SpaceParticipant';
+import {CSSProperties} from 'react';
+import {SpacePositionInfo} from '../typings/Space';
 
 const FOV = (Math.PI * 5) / 6;
 
 /**
  * Returns the CSS transform needed to render an item in 3D space from a given perspective
  */
-export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositionInfo): CSSProperties {
+export default function getCSSTransform(
+	from: SpacePositionInfo,
+	to: SpacePositionInfo
+): CSSProperties {
 	// For now, assumes a constant Y value
 	let xRelative = to.location.x - from.location.x;
 	let zRelative = to.location.z - from.location.z;
@@ -18,7 +21,8 @@ export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositi
 	let xRelativeRotated = cos * xRelative - sin * zRelative;
 	let zRelativeRotated = sin * xRelative + cos * zRelative;
 
-	let horizontalAngleToObject = Math.atan2(zRelativeRotated, xRelativeRotated) - Math.PI / 2;
+	let horizontalAngleToObject =
+		Math.atan2(zRelativeRotated, xRelativeRotated) - Math.PI / 2;
 	// This ranges from -1 to 1 and needs to be mapped to 100% --> 0%
 	// Add one, divide by 2, multiply by 100, subtract from 100.
 	let projectedLocationX = horizontalAngleToObject / (FOV / 2);
@@ -32,12 +36,12 @@ export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositi
 			transformOrigin: 'center',
 			position: 'absolute',
 			left: `${projectedLocationXPercent}%`,
-			opacity: 0
+			opacity: 0,
 		};
 	}
 	if (distance < 0.01 || distance > 10000 || zRelativeRotated < 0) {
 		return {
-			display: 'none'
+			display: 'none',
 		};
 	}
 
@@ -47,6 +51,6 @@ export default function getCSSTransform(from: SpacePositionInfo, to: SpacePositi
 		transform: `scale(${scale})`,
 		transformOrigin: 'center',
 		position: 'absolute',
-		left: `${projectedLocationXPercent}%`
+		left: `${projectedLocationXPercent}%`,
 	};
 }

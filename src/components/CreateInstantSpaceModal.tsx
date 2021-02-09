@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {createSpaceSession} from '../api/api';
 import {backgroundColors} from '../styles/colors';
 import InputStyles from '../styles/InputStyles';
-import {SpaceSessionVisibility} from '../typings/SpaceSession';
+import {SpaceSessionVisibility} from '../typings/Space';
 import BaseButton from './base/BaseButton';
 import BaseButtonGroupItem from './base/BaseButtonGroupItem';
 import BaseModal from './base/BaseModal';

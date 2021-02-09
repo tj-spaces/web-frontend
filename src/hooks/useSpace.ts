@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {getSpaceSession} from '../api/api';
-import {SpaceSession} from '../typings/SpaceSession';
+import {SpaceSession} from '../typings/Space';
 
 export default function useSpace(spaceID: string | null) {
 	const [space, setSpace] = useState<SpaceSession>();

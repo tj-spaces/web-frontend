@@ -2,7 +2,7 @@ import {Updater, mutate} from 'queryshift';
 import {useState} from 'react';
 import useSocketEventListener from '../../hooks/useSocketEventListener';
 import {getLogger} from '../../lib/ClusterLogger';
-import {SpaceParticipant} from '../../typings/SpaceParticipant';
+import {SpaceParticipant} from '../../typings/Space';
 
 const logger = getLogger('space/participants');
 

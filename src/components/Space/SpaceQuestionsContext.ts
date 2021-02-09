@@ -1,6 +1,6 @@
-import { createContext } from 'react';
-import { Question } from '../../typings/QuestionAndAnswer';
+import {createContext} from 'react';
+import {SpaceMessage} from '../../typings/Space';
 
-const SpaceQuestionsContext = createContext<Record<string, Question>>({});
+const SpaceMessagesContext = createContext<SpaceMessage[]>([]);
 
-export default SpaceQuestionsContext;
+export default SpaceMessagesContext;

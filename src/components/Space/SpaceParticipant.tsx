@@ -1,12 +1,12 @@
 import React from 'react';
-import { VideoTrack } from 'twilio-video';
-import { SpaceParticipant } from '../../typings/SpaceParticipant';
+import {VideoTrack} from 'twilio-video';
+import {SpaceParticipant} from '../../typings/Space';
 import TwilioVideoElement from '../TwilioVideoElement';
 
 export default function SpaceParticipantBackground({
 	participant,
 	photoUrl,
-	videoTrack
+	videoTrack,
 }: {
 	participant: SpaceParticipant;
 	photoUrl?: string;

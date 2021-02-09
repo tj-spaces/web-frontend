@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import {createStylesheet} from '../../styles/createStylesheet';
-import {SpaceSession} from '../../typings/SpaceSession';
+import {SpaceSession} from '../../typings/Space';
 
 const styles = createStylesheet({
 	spaceFeedItemIcon: {
