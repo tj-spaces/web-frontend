@@ -5,7 +5,7 @@ import BaseModal from '../../base/BaseModal';
 import BaseRow from '../../base/BaseRow';
 import BaseText from '../../base/BaseText';
 import SpaceConnectionContext from '../SpaceConnectionContext';
-import QuestionList from './ChatMessageList';
+import ChatMessageList from './ChatMessageList';
 
 const styles = createStylesheet({
 	bottomSection: {
@@ -42,7 +42,7 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 			<BaseRow direction="column" xstyle={styles.questionsContainer}>
 				<BaseText variant="secondary-title">Questions</BaseText>
 
-				<QuestionList />
+				<ChatMessageList />
 
 				<BaseRow
 					direction="row"

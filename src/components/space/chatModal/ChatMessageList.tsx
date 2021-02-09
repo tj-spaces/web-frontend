@@ -1,15 +1,14 @@
 import {useContext} from 'react';
 import BaseRow from '../../base/BaseRow';
-import SpaceMessagesContext from '../SpaceQuestionsContext';
+import SpaceMessagesContext from '../SpaceMessagesContext';
+import ChatMessage from './ChatMessage';
 
-export default function QuestionList() {
-	const questions = useContext(SpaceMessagesContext);
+export default function ChatMessageList() {
+	const message = useContext(SpaceMessagesContext);
 	return (
 		<BaseRow direction="column">
-			{Object.values(questions).map((question) => (
-				<BaseRow direction="row" key={question.id}>
-					{question.text}
-				</BaseRow>
+			{Object.values(message).map((message) => (
+				<ChatMessage message={message} key={message.id} />
 			))}
 		</BaseRow>
 	);

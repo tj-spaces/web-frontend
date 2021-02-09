@@ -10,7 +10,7 @@ import SpaceContainer from './SpaceContainer';
 import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaWrapper from './SpaceMediaWrapper';
 import SpaceParticipantsContext from './SpaceParticipantsContext';
-import SpaceMessagesContext from './SpaceQuestionsContext';
+import SpaceMessagesContext from './SpaceMessagesContext';
 import useSpaceMessages from './useSpaceMessages';
 import useSpaceParticipants from './useSpaceParticipants';
 
