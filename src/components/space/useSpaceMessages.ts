@@ -16,6 +16,7 @@ export default function useSpaceMessages(
 	const addMessage = useCallback(
 		(id: string, senderID: string, text: string, replyTo?: string) => {
 			let message = {senderID, text, id, replyTo, replies: []};
+			setMessageMap((messageMap) => ({...messageMap, [id]: message}));
 			// If this is replying to a message, add it to the parent message
 			if (replyTo != null) {
 				// We need to do this with a setState() so it triggers a render update
@@ -31,7 +32,6 @@ export default function useSpaceMessages(
 					message.id,
 				]);
 			}
-			setMessageMap((chat) => ({...chat, [id]: message}));
 		},
 		[]
 	);
@@ -57,6 +57,8 @@ export default function useSpaceMessages(
 		setMessageMap(messageMap);
 		setTopLevelMessages(topLevelMessages);
 	});
+
+	console.log(messageMap, topLevelMessageIDs);
 
 	return topLevelMessageIDs.map((id) => messageMap[id]);
 }
