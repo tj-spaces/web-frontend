@@ -6,12 +6,10 @@ export const spaceViewStyles = createStylesheet({
 		position: 'absolute',
 		minWidth: '100%',
 		height: '100vh',
-		backgroundColor: 'white',
 		bottom: '0px',
 		left: '0px',
 		right: '0px',
 		zIndex: 1,
-		transition: 'all 500ms ease',
 	},
 	mainContent: {
 		paddingTop: '5em',
@@ -23,6 +21,8 @@ export const spaceViewStyles = createStylesheet({
 	 * The top heading. Currently only stores the space topic.
 	 */
 	topHeading: {
+		backgroundColor: 'var(--bg-secondary)',
+
 		position: 'absolute',
 		top: '0px',
 		left: '0px',
@@ -31,7 +31,6 @@ export const spaceViewStyles = createStylesheet({
 		paddingTop: '1em',
 		paddingBottom: '1em',
 		textAlign: 'center',
-		color: 'black',
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'center',
@@ -64,7 +63,8 @@ export const spaceViewStyles = createStylesheet({
 	 * The mute/unmute, disable/enable camera, and Leave Space buttons container
 	 */
 	bottomButtons: {
-		width: '100%',
+		backgroundColor: 'var(--bg-secondary)',
+
 		height: '5em',
 		position: 'absolute',
 		bottom: '0px',
