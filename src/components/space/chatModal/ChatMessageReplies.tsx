@@ -11,8 +11,10 @@ const styles = createStylesheet({
 	},
 	chatMessageRepliesCollapser: {
 		backgroundColor: 'grey',
+		borderRadius: '0.25rem',
+		padding: '0.1rem',
 		height: '100%',
-		width: '0.5rem',
+		width: '0.25rem',
 	},
 });
 

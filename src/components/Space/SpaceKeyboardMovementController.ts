@@ -12,8 +12,6 @@ export default function SpaceKeyboardMovementController({
 	const connection = useContext(SpaceConnectionContext);
 	const keyboardState = useKeyboardState(attach);
 
-	console.log(attach);
-
 	useEffect(() => {
 		let updater: Updater<SpaceParticipant> = {
 			$set: {

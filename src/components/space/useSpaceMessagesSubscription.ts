@@ -28,6 +28,7 @@ export default function useSpaceMessageSubscription(
 			if (replyTo != null) {
 				// We need to do this with a setState() so it triggers a render update
 				setMessageMap((messageMap) => ({
+					...messageMap,
 					[replyTo]: {
 						...messageMap[replyTo],
 						replies: [...messageMap[replyTo].replies, message],

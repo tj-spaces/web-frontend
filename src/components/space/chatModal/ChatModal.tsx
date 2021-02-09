@@ -1,11 +1,13 @@
 import {useCallback, useContext, useRef, useState} from 'react';
 import {createStylesheet} from '../../../styles/createStylesheet';
+import {SpaceMessage} from '../../../typings/Space';
 import BaseButton from '../../base/BaseButton';
 import BaseModal from '../../base/BaseModal';
 import BaseRow from '../../base/BaseRow';
 import BaseText from '../../base/BaseText';
 import SpaceConnectionContext from '../SpaceConnectionContext';
 import ChatMessageList from './ChatMessageList';
+import ReplyToMessageContext from './ReplyToMessageContext';
 
 const styles = createStylesheet({
 	bottomSection: {
@@ -25,57 +27,76 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 	const conn = useContext(SpaceConnectionContext);
 	const messageTextRef = useRef<HTMLInputElement>(null);
 	const [pressingEscape, setPressingEscape] = useState(false);
+	const [replyToMessage, setReplyToMessage] = useState<SpaceMessage | null>(
+		null
+	);
 
 	const onClickedSendMessage = useCallback(() => {
 		if (conn && messageTextRef.current?.value) {
-			conn.emit('message', messageTextRef.current?.value);
+			conn.emit('message', messageTextRef.current?.value, replyToMessage?.id);
 			messageTextRef.current.value = '';
 		}
-	}, [conn]);
+	}, [conn, replyToMessage?.id]);
 
 	return (
 		<BaseModal onClickOutside={onClose}>
-			<BaseRow direction="column">
-				<BaseText variant="secondary-title">Chat</BaseText>
+			<ReplyToMessageContext.Provider
+				value={{message: replyToMessage, setMessage: setReplyToMessage}}
+			>
+				<BaseRow direction="column">
+					<BaseText variant="secondary-title">Chat</BaseText>
 
-				<ChatMessageList xstyle={styles.chatModalMessageList} />
+					<ChatMessageList xstyle={styles.chatModalMessageList} />
 
-				<BaseRow
-					direction="row"
-					alignment="center"
-					spacing={1}
-					xstyle={styles.bottomSection}
-				>
-					<input
-						type="text"
-						ref={messageTextRef}
-						className={styles('chatMessageBox')}
-						onKeyUp={(ev) => {
-							// Send message when the user presses enter
-							if (ev.key === 'Enter') {
-								// If the user is pressing "escape" don't sent the message
-								// Because we wanna help ya out :)
-								if (!pressingEscape) {
-									onClickedSendMessage();
-								} else {
+					{replyToMessage && (
+						<>
+							Replying to {replyToMessage.text}.{' '}
+							<BaseText onClick={() => setReplyToMessage(null)}>
+								[cancel]
+							</BaseText>
+						</>
+					)}
+
+					<BaseRow
+						direction="row"
+						alignment="center"
+						spacing={1}
+						xstyle={styles.bottomSection}
+					>
+						<input
+							type="text"
+							ref={messageTextRef}
+							className={styles('chatMessageBox')}
+							onKeyUp={(ev) => {
+								// Send message when the user presses enter
+								if (ev.key === 'Enter') {
+									// If the user is pressing "escape" don't sent the message
+									// Because we wanna help ya out :)
+									if (!pressingEscape) {
+										onClickedSendMessage();
+									} else {
+										setPressingEscape(false);
+									}
+								} else if (ev.key === 'Escape') {
 									setPressingEscape(false);
 								}
-							} else if (ev.key === 'Escape') {
-								setPressingEscape(false);
-							}
-						}}
-						onKeyDown={(ev) => {
-							if (ev.key === 'Escape') {
-								setPressingEscape(true);
-							}
-						}}
-					/>
+							}}
+							onKeyDown={(ev) => {
+								if (ev.key === 'Escape') {
+									setPressingEscape(true);
+								}
+							}}
+						/>
 
-					<BaseButton variant="positive" onClick={() => onClickedSendMessage()}>
-						Send
-					</BaseButton>
+						<BaseButton
+							variant="positive"
+							onClick={() => onClickedSendMessage()}
+						>
+							Send
+						</BaseButton>
+					</BaseRow>
 				</BaseRow>
-			</BaseRow>
+			</ReplyToMessageContext.Provider>
 		</BaseModal>
 	);
 }
