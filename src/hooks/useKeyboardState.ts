@@ -1,25 +1,28 @@
-import {useState} from 'react';
-import useGlobalEventListener from './useGlobalEventListener';
+import {useCallback, useEffect, useState} from 'react';
 
-export default function useKeyboardState() {
+export default function useKeyboardState(attach: HTMLElement | null) {
 	const [keys, setKeys] = useState<{[key: string]: boolean}>({});
 
-	useGlobalEventListener('keydown', (ev: KeyboardEvent) => {
-		// Only update if absolutely necessary
-		if (!keys[ev.key]) {
-			setKeys((keys) => ({
-				...keys,
-				[ev.key]: true,
-			}));
-		}
-	});
+	const onKeyDown = useCallback((ev: KeyboardEvent) => {
+		// Don't update if the key didn't change
+		setKeys((keys) => (!keys[ev.key] ? {...keys, [ev.key]: true} : keys));
+	}, []);
 
-	useGlobalEventListener('keyup', (ev: KeyboardEvent) => {
-		setKeys((keys) => ({
-			...keys,
-			[ev.key]: false,
-		}));
-	});
+	const onKeyUp = useCallback((ev: KeyboardEvent) => {
+		setKeys((keys) => ({...keys, [ev.key]: false}));
+	}, []);
+
+	useEffect(() => {
+		if (attach) {
+			attach.addEventListener('keydown', onKeyDown);
+			attach.addEventListener('keyup', onKeyUp);
+
+			return () => {
+				attach.removeEventListener('keydown', onKeyDown);
+				attach.removeEventListener('keyup', onKeyUp);
+			};
+		}
+	}, [attach, onKeyDown, onKeyUp]);
 
 	return keys;
 }

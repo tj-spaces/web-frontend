@@ -1,4 +1,4 @@
-import { createStylesheet } from '../../styles/createStylesheet';
+import {createStylesheet} from '../../styles/createStylesheet';
 
 export const spaceViewStyles = createStylesheet({
 	// The background
@@ -11,13 +11,13 @@ export const spaceViewStyles = createStylesheet({
 		left: '0px',
 		right: '0px',
 		zIndex: 1,
-		transition: 'all 500ms ease'
+		transition: 'all 500ms ease',
 	},
 	mainContent: {
 		paddingTop: '5em',
 		paddingBottom: '5em',
 		height: '100%',
-		maxWidth: '100%'
+		maxWidth: '100%',
 	},
 	/**
 	 * The top heading. Currently only stores the space topic.
@@ -40,9 +40,9 @@ export const spaceViewStyles = createStylesheet({
 			i: {
 				cursor: 'pointer',
 				fontSize: '3rem',
-				marginRight: '1.5rem'
-			}
-		}
+				marginRight: '1.5rem',
+			},
+		},
 	},
 	/**
 	 * The actual Space itself: tiles, 3D view, etc
@@ -53,7 +53,12 @@ export const spaceViewStyles = createStylesheet({
 		top: '5rem',
 		left: '0px',
 		right: '0px',
-		zIndex: -1
+		zIndex: -1,
+		subSelectors: {
+			':focus': {
+				outline: 'none',
+			},
+		},
 	},
 	/**
 	 * The mute/unmute, disable/enable camera, and Leave Space buttons container
@@ -64,7 +69,7 @@ export const spaceViewStyles = createStylesheet({
 		position: 'absolute',
 		bottom: '0px',
 		left: '0px',
-		right: '0px'
+		right: '0px',
 	},
 	/**
 	 * The local user's video
@@ -73,6 +78,6 @@ export const spaceViewStyles = createStylesheet({
 		position: 'absolute',
 		left: '0px',
 		bottom: '0px',
-		padding: '1em'
-	}
+		padding: '1em',
+	},
 });

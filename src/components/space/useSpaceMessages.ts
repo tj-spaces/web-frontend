@@ -58,7 +58,5 @@ export default function useSpaceMessages(
 		setTopLevelMessages(topLevelMessages);
 	});
 
-	console.log(messageMap, topLevelMessageIDs);
-
 	return topLevelMessageIDs.map((id) => messageMap[id]);
 }

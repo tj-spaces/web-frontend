@@ -36,9 +36,7 @@ export default function SpaceContainer() {
 					</BaseText>
 				</div>
 
-				<div className={spaceViewStyles('mainContent')}>
-					{SPACE_VIEW_TYPE === '3d' ? <SpaceView3D /> : <SpaceViewTiles />}
-				</div>
+				{SPACE_VIEW_TYPE === '3d' ? <SpaceView3D /> : <SpaceViewTiles />}
 
 				<BaseRow
 					direction="row"

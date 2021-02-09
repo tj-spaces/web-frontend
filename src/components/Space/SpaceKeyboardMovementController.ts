@@ -4,9 +4,15 @@ import useKeyboardState from '../../hooks/useKeyboardState';
 import {SpaceParticipant} from '../../typings/Space';
 import SpaceConnectionContext from './SpaceConnectionContext';
 
-export default function SpaceKeyboardMovementController() {
+export default function SpaceKeyboardMovementController({
+	attach,
+}: {
+	attach: HTMLElement | null;
+}) {
 	const connection = useContext(SpaceConnectionContext);
-	const keyboardState = useKeyboardState();
+	const keyboardState = useKeyboardState(attach);
+
+	console.log(attach);
 
 	useEffect(() => {
 		let updater: Updater<SpaceParticipant> = {
@@ -18,5 +24,6 @@ export default function SpaceKeyboardMovementController() {
 
 		connection?.emit('update', updater);
 	}, [connection, keyboardState]);
+
 	return null;
 }
