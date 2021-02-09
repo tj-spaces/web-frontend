@@ -54,6 +54,12 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 						type="text"
 						ref={messageTextRef}
 						className={styles('chatMessageBox')}
+						onKeyUp={(ev) => {
+							// Send message when the user presses enter
+							if (ev.key === 'Enter') {
+								onClickedSendMessage();
+							}
+						}}
 					/>
 
 					<BaseButton variant="positive" onClick={() => onClickedSendMessage()}>
