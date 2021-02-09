@@ -29,7 +29,7 @@ export default function Navbar() {
 		>
 			<Link to="/logout">Log out</Link>
 
-			{/* <Link to="/explore">Explore</Link> */}
+			<Link to="/">Home</Link>
 
 			<CreateInstanceSpaceButton />
 		</BaseRow>

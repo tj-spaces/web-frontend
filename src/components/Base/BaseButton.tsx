@@ -53,6 +53,7 @@ const variantStyles = createStylesheet({
 	},
 	positive: {
 		backgroundColor: 'var(--text-primary)',
+		color: 'var(--bg-primary)',
 	},
 	negative: {
 		backgroundColor: 'var(--text-warn)',
