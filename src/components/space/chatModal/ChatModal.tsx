@@ -21,8 +21,7 @@ const styles = createStylesheet({
 	},
 	chatMessageListContainer: {
 		position: 'relative',
-		minHeight: '16rem',
-		maxHeight: '30rem',
+		height: '20rem',
 	},
 });
 
