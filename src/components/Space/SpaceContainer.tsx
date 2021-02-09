@@ -21,7 +21,7 @@ export default function SpaceContainer() {
 	const {user} = useContext(AuthContext);
 	// eslint-disable-next-line
 	const [expanded, setExpanded] = useState(true);
-	const [questionsModalOpen, setQuestionsModalOpen] = useState(false);
+	const [chatModalOpen, setChatModalOpen] = useState(false);
 
 	if (user == null) {
 		return <h1>Authenticating</h1>;
@@ -48,12 +48,10 @@ export default function SpaceContainer() {
 					rails={2}
 					xstyle={spaceViewStyles.bottomButtons}
 				>
-					<BaseButton onClick={() => setQuestionsModalOpen(true)}>
-						Questions
-					</BaseButton>
+					<BaseButton onClick={() => setChatModalOpen(true)}>Chat</BaseButton>
 
-					{questionsModalOpen && (
-						<ChatModal onClose={() => setQuestionsModalOpen(false)} />
+					{chatModalOpen && (
+						<ChatModal onClose={() => setChatModalOpen(false)} />
 					)}
 
 					<BaseButton to="..">Leave</BaseButton>

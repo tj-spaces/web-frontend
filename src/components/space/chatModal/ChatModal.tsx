@@ -15,11 +15,11 @@ const styles = createStylesheet({
 		right: '0px',
 		bottom: '0px',
 	},
-	questionAskBox: {
+	chatMessageBox: {
 		width: '100%',
 		fontSize: '1.5rem',
 	},
-	questionsContainer: {
+	chatMessageListContainer: {
 		position: 'relative',
 		minHeight: '16rem',
 		maxHeight: '30rem',
@@ -39,8 +39,8 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 
 	return (
 		<BaseModal onClickOutside={onClose}>
-			<BaseRow direction="column" xstyle={styles.questionsContainer}>
-				<BaseText variant="secondary-title">Questions</BaseText>
+			<BaseRow direction="column" xstyle={styles.chatMessageListContainer}>
+				<BaseText variant="secondary-title">Chat</BaseText>
 
 				<ChatMessageList />
 
@@ -53,11 +53,11 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 					<input
 						type="text"
 						ref={messageTextRef}
-						className={styles('questionAskBox')}
+						className={styles('chatMessageBox')}
 					/>
 
 					<BaseButton variant="positive" onClick={() => onClickedSendMessage()}>
-						Ask
+						Send
 					</BaseButton>
 				</BaseRow>
 			</BaseRow>

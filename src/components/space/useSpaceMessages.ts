@@ -31,7 +31,7 @@ export default function useSpaceMessages(
 					message.id,
 				]);
 			}
-			setMessageMap((questions) => ({...questions, [id]: message}));
+			setMessageMap((chat) => ({...chat, [id]: message}));
 		},
 		[]
 	);
