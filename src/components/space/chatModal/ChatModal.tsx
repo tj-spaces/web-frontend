@@ -1,4 +1,4 @@
-import {useCallback, useContext, useRef} from 'react';
+import {useCallback, useContext, useRef, useState} from 'react';
 import {createStylesheet} from '../../../styles/createStylesheet';
 import BaseButton from '../../base/BaseButton';
 import BaseModal from '../../base/BaseModal';
@@ -29,6 +29,7 @@ const styles = createStylesheet({
 export default function ChatModal({onClose}: {onClose: () => void}) {
 	const conn = useContext(SpaceConnectionContext);
 	const messageTextRef = useRef<HTMLInputElement>(null);
+	const [pressingEscape, setPressingEscape] = useState(false);
 
 	const onClickedSendMessage = useCallback(() => {
 		if (conn && messageTextRef.current?.value) {
@@ -57,7 +58,20 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 						onKeyUp={(ev) => {
 							// Send message when the user presses enter
 							if (ev.key === 'Enter') {
-								onClickedSendMessage();
+								// If the user is pressing "escape" don't sent the message
+								// Because we wanna help ya out :)
+								if (!pressingEscape) {
+									onClickedSendMessage();
+								} else {
+									setPressingEscape(false);
+								}
+							} else if (ev.key === 'Escape') {
+								setPressingEscape(false);
+							}
+						}}
+						onKeyDown={(ev) => {
+							if (ev.key === 'Escape') {
+								setPressingEscape(true);
 							}
 						}}
 					/>

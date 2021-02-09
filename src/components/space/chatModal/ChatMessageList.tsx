@@ -4,10 +4,10 @@ import SpaceMessagesContext from '../SpaceMessagesContext';
 import ChatMessage from './ChatMessage';
 
 export default function ChatMessageList() {
-	const message = useContext(SpaceMessagesContext);
+	const messages = useContext(SpaceMessagesContext);
 	return (
 		<BaseRow direction="column">
-			{Object.values(message).map((message) => (
+			{messages.map((message) => (
 				<ChatMessage message={message} key={message.id} />
 			))}
 		</BaseRow>
