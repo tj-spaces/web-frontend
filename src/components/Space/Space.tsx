@@ -11,8 +11,8 @@ import SpaceIDContext from './SpaceIDContext';
 import SpaceMediaWrapper from './SpaceMediaWrapper';
 import SpaceParticipantsContext from './SpaceParticipantsContext';
 import SpaceMessagesContext from './SpaceMessagesContext';
-import useSpaceMessages from './useSpaceMessages';
-import useSpaceParticipants from './useSpaceParticipants';
+import useSpaceMessageSubscription from './useSpaceMessagesSubscription';
+import useSpaceParticipantsSubscription from './useSpaceParticipantsSubscription';
 
 const logger = getLogger('space');
 const conn = io.connect(API_SERVER_URL + '?sessionID=' + getSessionId());
@@ -42,8 +42,8 @@ export default function Space({id}: {id: string}) {
 		};
 	}, [id]);
 
-	const messages = useSpaceMessages(conn);
-	const participants = useSpaceParticipants(conn);
+	const messages = useSpaceMessageSubscription(conn);
+	const participants = useSpaceParticipantsSubscription(conn);
 
 	return (
 		<SpaceIDContext.Provider value={id}>

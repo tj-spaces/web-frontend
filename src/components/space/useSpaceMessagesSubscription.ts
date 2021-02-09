@@ -2,7 +2,14 @@ import {useCallback, useState} from 'react';
 import useSocketEventListener from '../../hooks/useSocketEventListener';
 import {SpaceMessage} from '../../typings/Space';
 
-export default function useSpaceMessages(
+/**
+ * This attaches to a socket and listens for incoming space messages.
+ * This is NOT a hook for space messages: this specifically creates an
+ * event listener for space messages. To hook onto space messages, use
+ * the context created in <Space/>.
+ * @param conn The socket connection to use
+ */
+export default function useSpaceMessageSubscription(
 	conn: SocketIOClient.Socket
 ): SpaceMessage[] {
 	// This is so if a message is replied to, we can add it in O(1) time

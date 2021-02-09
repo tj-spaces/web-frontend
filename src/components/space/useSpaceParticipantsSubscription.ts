@@ -6,7 +6,16 @@ import {SpaceParticipant} from '../../typings/Space';
 
 const logger = getLogger('space/participants');
 
-export default function useSpaceParticipants(conn: SocketIOClient.Socket) {
+/**
+ * This attaches to a socket and listens for incoming space participants.
+ * This is NOT a hook for space participants: this specifically creates an
+ * event listener for space participants. To hook onto space participants, use
+ * the context created in <Space/>.
+ * @param conn The socket connection to use
+ */
+export default function useSpaceParticipantsSubscription(
+	conn: SocketIOClient.Socket
+) {
 	const [participants, setParticipants] = useState<
 		Record<string, SpaceParticipant>
 	>({});
