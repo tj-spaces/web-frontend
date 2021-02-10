@@ -1,11 +1,12 @@
+import {AssertionError} from 'assert';
 import React, {useContext} from 'react';
 import {Link} from 'react-router-dom';
 import {createStylesheet} from '../../styles/createStylesheet';
 import hoverableLightBox from '../../styles/hoverableLightBox';
 import {SpaceSession} from '../../typings/Space';
 import BaseRow from '../base/BaseRow';
-import ClusterSpaceCreateButton from './ClusterSpaceCreateButton';
-import ClusterIDContext from './CurrentClusterContext';
+import CreateInstantSpaceButton from '../CreateInstantSpaceButton';
+import CurrentClusterContext from './CurrentClusterContext';
 
 const styles = createStylesheet({
 	spaceOnlineCount: {
@@ -45,19 +46,23 @@ export default function ClusterSpaceList({
 }: {
 	spaces?: SpaceSession[];
 }) {
-	const cluster = useContext(ClusterIDContext);
+	const cluster = useContext(CurrentClusterContext);
+
+	if (cluster == null) {
+		throw new AssertionError({message: 'cluster == null'});
+	}
 
 	return (
 		<BaseRow direction="column" spacing={1}>
 			{spaces.map((space) => (
 				<ClusterSpaceListItem
-					clusterId={cluster.id!}
+					clusterId={cluster.id}
 					space={space}
 					key={space.id}
 				/>
 			))}
 
-			<ClusterSpaceCreateButton />
+			<CreateInstantSpaceButton cluster={cluster} />
 		</BaseRow>
 	);
 }

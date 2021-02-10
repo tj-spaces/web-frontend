@@ -6,7 +6,7 @@ import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import ClusterSettingsModal from './ClusterSettingsModal';
 import ClusterSpaceList from './ClusterSpaceList';
-import ClusterIDContext from './CurrentClusterContext';
+import CurrentClusterContext from './CurrentClusterContext';
 
 export const styles = createStylesheet({
 	clusterLayout: {
@@ -28,9 +28,13 @@ export default function Cluster({id}: {id: string}) {
 	const spaces = useSpacesInCluster(id) ?? [];
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
+	if (cluster == null) {
+		return null;
+	}
+
 	return (
 		<BaseRow direction="column" overflow="auto" width="100%" height="100%">
-			<ClusterIDContext.Provider value={{id, spaces}}>
+			<CurrentClusterContext.Provider value={cluster}>
 				{isSettingsOpen && (
 					<ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />
 				)}
@@ -50,7 +54,7 @@ export default function Cluster({id}: {id: string}) {
 						<BaseText variant="secondary-title">Posts</BaseText>
 					</BaseRow>
 				</div>
-			</ClusterIDContext.Provider>
+			</CurrentClusterContext.Provider>
 		</BaseRow>
 	);
 }

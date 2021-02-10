@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import {createSpaceSession} from '../api/api';
+import {createSpaceSession, createSpaceSessionInCluster} from '../api/api';
 import {backgroundColors} from '../styles/colors';
 import InputStyles from '../styles/InputStyles';
+import {Cluster} from '../typings/Cluster';
 import {SpaceSessionVisibility} from '../typings/Space';
 import BaseButton from './base/BaseButton';
 import BaseButtonGroupItem from './base/BaseButtonGroupItem';
@@ -14,8 +15,10 @@ export type CreationStatus = 'none' | 'pending' | 'done' | 'error';
 
 export default function CreateInstantSpaceModal({
 	onClose,
+	cluster,
 }: {
 	onClose: () => void;
+	cluster?: Cluster;
 }) {
 	let [visibility, setVisibility] = useState<SpaceSessionVisibility>(
 		'discoverable'
@@ -28,6 +31,7 @@ export default function CreateInstantSpaceModal({
 		<BaseModal onClickOutside={onClose}>
 			<BaseRow direction="column" spacing={1}>
 				<BaseText variant="secondary-title">Start a conversation</BaseText>
+				{cluster && <BaseText>Creating in cluster {cluster.name}</BaseText>}
 				Topic
 				<input
 					className={InputStyles('rectangleInput')}
@@ -56,12 +60,21 @@ export default function CreateInstantSpaceModal({
 						size="small"
 						onClick={() => {
 							setCreationStatus('pending');
-							createSpaceSession(topic, visibility)
-								.then((id) => {
-									setCreationStatus('done');
-									setNewlyCreatedSpaceID(id);
-								})
-								.catch((err) => setCreationStatus('error'));
+							if (cluster) {
+								createSpaceSessionInCluster(cluster.id, topic, visibility)
+									.then((id) => {
+										setCreationStatus('done');
+										setNewlyCreatedSpaceID(id);
+									})
+									.catch((err) => setCreationStatus('error'));
+							} else {
+								createSpaceSession(topic, visibility)
+									.then((id) => {
+										setCreationStatus('done');
+										setNewlyCreatedSpaceID(id);
+									})
+									.catch((err) => setCreationStatus('error'));
+							}
 						}}
 					>
 						Start

@@ -1,9 +1,6 @@
 import {createContext} from 'react';
-import {SpaceSession} from '../../typings/Space';
+import {Cluster} from '../../typings/Cluster';
 
-const ClusterIDContext = createContext<{
-	id: string | null;
-	spaces: SpaceSession[];
-}>({id: null, spaces: []});
+const CurrentClusterContext = createContext<Cluster | null>(null);
 
-export default ClusterIDContext;
+export default CurrentClusterContext;

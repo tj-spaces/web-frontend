@@ -21,7 +21,13 @@ export const styles = createStylesheet({
 		transition: 'all 800ms ease',
 		padding: '1em',
 		textTransform: 'none',
+		position: 'relative',
 		extends: [boxShadow.boxShadow],
+	},
+	modalCloseButton: {
+		position: 'absolute',
+		right: '0.5rem',
+		top: '0.5rem',
 	},
 });
 
@@ -59,6 +65,7 @@ export default function BaseModal({
 				ref={fgRef}
 				className={stylex(styles.modalForeground, variantStyles[variant])}
 			>
+				<div className={styles('modalCloseButton')}>Close</div>
 				{children}
 			</div>
 		</div>

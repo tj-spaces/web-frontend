@@ -142,10 +142,12 @@ export async function createCluster(
 
 export async function createSpaceSessionInCluster(
 	clusterId: string,
-	topic: string
+	topic: string,
+	visibility: SpaceSessionVisibility
 ): Promise<string> {
 	let result = await makeAPIPostCall('/api/clusters/' + clusterId + '/spaces', {
 		topic,
+		visibility,
 	});
 	return result.data.data.space_id;
 }

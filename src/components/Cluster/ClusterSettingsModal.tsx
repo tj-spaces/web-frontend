@@ -1,18 +1,23 @@
+import {AssertionError} from 'assert';
 import {useCallback, useContext} from 'react';
 import {deleteCluster} from '../../api/api';
 import BaseButton from '../base/BaseButton';
 import BaseModal from '../base/BaseModal';
 import BaseRow from '../base/BaseRow';
-import ClusterIDContext from './CurrentClusterContext';
+import CurrentClusterContext from './CurrentClusterContext';
 
 /**
  * Renders a modal where a user can configure a cluster or delete it.
  */
 export default function ClusterSettingsModal({onClose}: {onClose: () => void}) {
-	const currentCluster = useContext(ClusterIDContext);
+	const currentCluster = useContext(CurrentClusterContext);
+
+	if (currentCluster == null) {
+		throw new AssertionError({message: 'Cluster was null'});
+	}
 
 	const deleteCluster_ = useCallback(() => {
-		deleteCluster(currentCluster.id!);
+		deleteCluster(currentCluster.id);
 	}, [currentCluster.id]);
 
 	const save_ = useCallback(() => {

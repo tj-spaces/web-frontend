@@ -1,3 +1,5 @@
+import {AssertionError} from 'assert';
+
 export type LogSeverity = 'debug' | 'log' | 'info' | 'warn' | 'error';
 export type LogCategory =
 	| 'performance'
@@ -30,6 +32,12 @@ export function getLogger(category: LogCategory) {
 		},
 		warn(message: any) {
 			base(category, message, 'warn');
-		}
+		},
+		assert(condition: any, onFailureMessage: string) {
+			if (!condition) {
+				base(category, onFailureMessage, 'error');
+				throw new AssertionError({message: onFailureMessage});
+			}
+		},
 	};
 }
