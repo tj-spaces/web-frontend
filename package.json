@@ -10,6 +10,7 @@
 		"@types/socket.io-client": "^1.4.35",
 		"@types/twilio-video": "^2.7.3",
 		"axios": "^0.21.1",
+		"proxima-react-sdk": "^0.0.1",
 		"query-string": "^6.13.8",
 		"queryshift": "^1.0.2",
 		"react": "^17.0.1",
