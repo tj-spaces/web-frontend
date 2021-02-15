@@ -1,9 +1,7 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
 import {createStylesheet} from '../../styles/createStylesheet';
-import FeedContainer from '../../components/feed/FeedContainer';
-import FriendsSection from '../../components/friendsSection/FriendsSection';
-import ClusterSection from '../../components/clusterSection/ClusterSection';
+import TabSelector from '../../components/TabSelector';
 
 const styles = createStylesheet({
 	container: {
@@ -23,9 +21,7 @@ export default function HomePage() {
 	return (
 		<div className={styles('container')}>
 			<Navbar />
-			<FriendsSection />
-			<ClusterSection />
-			<FeedContainer />
+			<TabSelector />
 		</div>
 	);
 }
