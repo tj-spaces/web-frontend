@@ -40,19 +40,19 @@ export default function SpaceView3D() {
 			)}
 			<SpaceView3DMinimap
 				elements={Object.values(participants).map((participant) => ({
-					color: participant.accountId === me?.accountId ? 'blue' : 'red',
+					color: participant.accountID === me?.accountID ? 'blue' : 'red',
 					position: participant.position,
 				}))}
 				center={perspective}
 			/>
 			{Object.values(participants).map((participant) => {
-				if (participant.accountId !== me.accountId) {
-					const twilioParticipant = twilioParticipants?.[participant.accountId];
+				if (participant.accountID !== me.accountID) {
+					const twilioParticipant = twilioParticipants?.[participant.accountID];
 					return (
 						<SpaceParticipantRemote3D
 							twilioParticipant={twilioParticipant ?? null}
 							spacesParticipant={participant}
-							key={participant.accountId}
+							key={participant.accountID}
 						/>
 					);
 				} else {

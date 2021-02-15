@@ -30,10 +30,10 @@ export default function useSpaceParticipantsSubscription(
 	);
 
 	useSocketEventListener(conn, 'peer_joined', (peer: SpaceParticipant) => {
-		logger.debug(`Peer joined: ${peer.accountId}`);
+		logger.debug(`Peer joined: ${peer.accountID}`);
 		setParticipants((participants) => ({
 			...participants,
-			[peer.accountId]: peer,
+			[peer.accountID]: peer,
 		}));
 	});
 
