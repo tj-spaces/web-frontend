@@ -1,7 +1,8 @@
 import {useEffect, useState} from 'react';
 import {getSuggestedSpaces} from '../../api/api';
+import {FetchStatus} from '../../api/FetchStatus';
 import {SpaceSession} from '../../typings/Space';
-import CenteredLoadingText from '../CenteredLoadingText';
+import Awaiting from '../Awaiting';
 import Feed from './Feed';
 
 /**
@@ -9,19 +10,21 @@ import Feed from './Feed';
  */
 export default function FeedContainer() {
 	const [spaces, setSpaces] = useState<SpaceSession[]>([]);
-	const [loading, setLoading] = useState<boolean>(true);
+	const [fetchStatus, setFetchStatus] = useState<FetchStatus>(null);
 
 	useEffect(() => {
-		(async () => {
-			const spaces = await getSuggestedSpaces();
-			setSpaces(spaces);
-			setLoading(false);
-		})();
+		setFetchStatus('loading');
+		getSuggestedSpaces()
+			.then((spaces) => {
+				setSpaces(spaces);
+				setFetchStatus('loaded');
+			})
+			.catch((error) => setFetchStatus('errored'));
 	}, []);
 
-	if (loading) {
-		return <CenteredLoadingText />;
-	} else {
-		return <Feed spaces={spaces} />;
-	}
+	return (
+		<Awaiting fetchStatus={fetchStatus}>
+			<Feed spaces={spaces} />
+		</Awaiting>
+	);
 }

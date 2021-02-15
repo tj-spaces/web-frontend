@@ -7,17 +7,17 @@ import FriendList from './FriendList';
  * Controller that fetches data about the user's friends and renders them in a <FriendList/>
  */
 export default function FriendListContainer() {
-	let [friendsPagingAfter, setFriendPagingAfter] = useState<string>('0');
+	let [nextKey, setNextKey] = useState<string>('0');
 	let [friends, setFriends] = useState<PublicUserInfo[]>([]);
 
 	useEffect(() => {
-		if (friendsPagingAfter != null) {
-			getFriendsList(friendsPagingAfter).then(({data, paging}) => {
+		if (nextKey != null) {
+			getFriendsList(nextKey).then(({data, paging}) => {
 				setFriends((friends) => friends.concat(data));
-				setFriendPagingAfter(paging.after);
+				setNextKey(paging.after);
 			});
 		}
-	}, [friendsPagingAfter]);
+	}, [nextKey]);
 
 	return <FriendList friends={friends} />;
 }

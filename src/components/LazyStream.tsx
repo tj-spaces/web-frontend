@@ -1,4 +1,5 @@
 import {useLayoutEffect, useRef} from 'react';
+import {FetchStatus} from '../api/FetchStatus';
 import {ClassProvider, stylex} from '../styles/createStylesheet';
 
 /**
@@ -6,12 +7,12 @@ import {ClassProvider, stylex} from '../styles/createStylesheet';
  */
 export default function LazyStream({
 	onReachEnd,
-	fetching,
+	fetchStatus,
 	xstyle,
 	children,
 }: {
 	onReachEnd: () => unknown;
-	fetching: boolean;
+	fetchStatus: FetchStatus;
 	xstyle?: ClassProvider;
 	children: React.ReactNode;
 }) {
@@ -20,7 +21,7 @@ export default function LazyStream({
 
 	useLayoutEffect(() => {
 		// Don't add any listeners if we're currently fetching
-		if (fetching) {
+		if (fetchStatus === 'loading' || fetchStatus === 'errored') {
 			return;
 		}
 
@@ -44,7 +45,7 @@ export default function LazyStream({
 		return () => {
 			stream?.removeEventListener('scroll', scrollListener);
 		};
-	}, [fetching, onReachEnd]);
+	}, [fetchStatus, onReachEnd]);
 
 	return (
 		<div ref={streamRef} className={stylex(xstyle)}>

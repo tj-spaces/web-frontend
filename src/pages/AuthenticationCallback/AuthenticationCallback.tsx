@@ -4,7 +4,9 @@ import * as qs from 'query-string';
 import {useContext, useEffect, useState} from 'react';
 import Fullscreen from '../../components/base/BaseFullscreen';
 import AuthContext from '../../components/AuthContext';
-import CenteredLoadingText from '../../components/CenteredLoadingText';
+import {FetchStatus} from '../../api/FetchStatus';
+import React from 'react';
+import Awaiting from '../../components/Awaiting';
 
 const LoginError = () => (
 	<Fullscreen>
@@ -31,28 +33,28 @@ export function AuthorizationCallback() {
 	const {provider} = useParams<{provider: string}>();
 	const {code} = qs.parse(useLocation().search);
 	const {refreshAuthState} = useContext(AuthContext);
-	const [state, setState] = useState<'loading' | 'error' | 'loaded'>('loading');
+	const [fetchStatus, setFetchStatus] = useState<FetchStatus>(null);
 
 	useEffect(() => {
 		if (typeof code !== 'string') {
-			setState('error');
+			setFetchStatus('errored');
 		} else {
-			createSession(code, provider).then((sessionId) => {
-				localStorage.setItem('session_id', sessionId);
-				refreshAuthState?.();
-				setState('loaded');
-			});
+			setFetchStatus('loading');
+			createSession(code, provider)
+				.then((sessionId) => {
+					localStorage.setItem('session_id', sessionId);
+					refreshAuthState?.();
+					setFetchStatus('loaded');
+				})
+				.catch((error) => setFetchStatus('errored'));
 		}
 	}, [code, provider, refreshAuthState]);
 
-	switch (state) {
-		case 'loading':
-			return <CenteredLoadingText />;
-		case 'loaded':
-			return <Redirect to="/" />;
-		case 'error':
-			return <LoginError />;
-	}
+	return (
+		<Awaiting fetchStatus={fetchStatus} errored={<LoginError />}>
+			<Redirect to="/" />
+		</Awaiting>
+	);
 }
 
 /**

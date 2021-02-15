@@ -21,8 +21,8 @@ export default function Awaiting({
 		case 'loaded':
 			return <>{children}</>;
 		case 'loading':
-			return loading;
+			return <>{loading}</>;
 		case 'errored':
-			return errored;
+			return <>{errored}</>;
 	}
 }

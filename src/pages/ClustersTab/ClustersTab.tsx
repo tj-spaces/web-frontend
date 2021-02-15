@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {getMyClusters} from '../../api/api';
 import {FetchStatus} from '../../api/FetchStatus';
+import Awaiting from '../../components/Awaiting';
 import BaseText from '../../components/base/BaseText';
 import ClusterList from '../../components/clusterList/ClusterList';
 import {Cluster} from '../../typings/Cluster';
@@ -10,14 +11,25 @@ export default function ClustersTab() {
 	let [fetchStatus, setFetchStatus] = useState<FetchStatus>(null);
 
 	useEffect(() => {
-		getMyClusters().then((clusters) => setClusters(clusters));
+		setFetchStatus('loading');
+		getMyClusters()
+			.then((clusters) => {
+				setClusters(clusters);
+				setFetchStatus('loaded');
+			})
+			.catch((error) => {
+				setFetchStatus('errored');
+			});
 	}, []);
+
 	return (
 		<>
 			<BaseText variant="primary-title" alignment="center">
 				Clusters
 			</BaseText>
-			<ClusterList clusters={clusters} />
+			<Awaiting fetchStatus={fetchStatus}>
+				<ClusterList clusters={clusters} />
+			</Awaiting>
 		</>
 	);
 }

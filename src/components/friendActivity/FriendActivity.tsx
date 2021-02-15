@@ -44,7 +44,7 @@ export default function FriendActivity() {
 
 	return (
 		<LazyStream
-			fetching={fetchStatus !== 'loaded' && fetchStatus !== 'errored'}
+			fetchStatus={fetchStatus}
 			onReachEnd={() => fetchMore()}
 			xstyle={styles.friendActivity}
 		>
