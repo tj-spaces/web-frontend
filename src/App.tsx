@@ -28,8 +28,8 @@ function App() {
 		<ErrorBoundary>
 			<AuthenticationWrapper>
 				<StreamerModeContext.Provider value={false}>
-					<BrowserRouter>
-						<ThemeProvider>
+					<ThemeProvider>
+						<BrowserRouter>
 							<Suspense fallback={<CenteredLoadingText />}>
 								<Switch>
 									<Route path="/account" component={AccountPage} />
@@ -50,8 +50,8 @@ function App() {
 									<Route path="/" exact component={DefaultPage} />
 								</Switch>
 							</Suspense>
-						</ThemeProvider>
-					</BrowserRouter>
+						</BrowserRouter>
+					</ThemeProvider>
 				</StreamerModeContext.Provider>
 			</AuthenticationWrapper>
 		</ErrorBoundary>

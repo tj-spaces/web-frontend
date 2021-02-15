@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import boxShadow from '../styles/boxShadow';
 import {createStylesheet} from '../styles/createStylesheet';
 import BaseRow from './base/BaseRow';
-import CreateInstanceSpaceButton from './CreateInstantSpaceButton';
+import CreateInstantSpaceButton from './CreateInstantSpaceButton';
 
 export const styles = createStylesheet({
 	navbar: {
@@ -28,10 +28,10 @@ export default function Navbar() {
 			xstyle={styles.navbar}
 		>
 			<Link to="/logout">Log out</Link>
-
+			<Link to="/account">My Account</Link>
 			<Link to="/">Home</Link>
 
-			<CreateInstanceSpaceButton />
+			<CreateInstantSpaceButton />
 		</BaseRow>
 	);
 }

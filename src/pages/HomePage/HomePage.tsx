@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
 import {createStylesheet} from '../../styles/createStylesheet';
-import TabSelector from '../../components/TabSelector';
+import Tabs from '../../components/Tabs';
 
 const styles = createStylesheet({
 	container: {
@@ -21,7 +21,7 @@ export default function HomePage() {
 	return (
 		<div className={styles('container')}>
 			<Navbar />
-			<TabSelector />
+			<Tabs />
 		</div>
 	);
 }

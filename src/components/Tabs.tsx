@@ -7,7 +7,12 @@ import BaseText from './base/BaseText';
 
 type Tab = 'explore' | 'friends' | 'clusters';
 
-export default function TabSelector() {
+/**
+ * Contains three tabs: the Explore tab, the Friends tab, and the Clusters tab.
+ * This <Tabs/> component renders the tab selector buttons as well as the content
+ * of the selected tab.
+ */
+export default function Tabs() {
 	let [tab, setTab] = useState<Tab>('explore');
 
 	return (
