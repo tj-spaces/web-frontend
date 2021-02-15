@@ -1,14 +1,15 @@
 import React from 'react';
 import BaseText from '../../components/base/BaseText';
-import FriendListContainer from '../../components/friendList/FriendListContainer';
+import FriendActivity from '../../components/friendActivity/FriendActivity';
 
+/**
+ * Renders a tab where you can see which friends are online
+ */
 export default function FriendsTab() {
 	return (
 		<>
-			<BaseText variant="primary-title" alignment="center">
-				Friends
-			</BaseText>
-			<FriendListContainer />
+			<BaseText variant="primary-title">Friends</BaseText>
+			<FriendActivity />
 		</>
 	);
 }

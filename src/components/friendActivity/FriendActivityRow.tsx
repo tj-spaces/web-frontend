@@ -16,7 +16,16 @@ const styles = createStylesheet({
 
 export default function FriendActivityRow({friend}: {friend: PublicUserInfo}) {
 	return (
-		<BaseRow direction="row" alignment="center" spacing={1}>
+		<BaseRow
+			direction="row"
+			alignment="center"
+			spacing={1}
+			rails={1}
+			edges={1}
+			borderRadius={1}
+			width="100%"
+			backgroundColor="bgSecondary"
+		>
 			<img
 				src={friend.picture}
 				className={styles('picture')}
@@ -29,6 +38,7 @@ export default function FriendActivityRow({friend}: {friend: PublicUserInfo}) {
 				justifyContent="center"
 			>
 				<BaseText variant="body-bold">{friend.name}</BaseText>
+				<BaseText variant="body-semibold">Online</BaseText>
 			</BaseRow>
 		</BaseRow>
 	);

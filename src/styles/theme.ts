@@ -9,7 +9,7 @@ export const DarkTheme: Theme = {
 		textWarn: '#ff6060',
 		textError: '#ff6060',
 		bgPrimary: '#222222',
-		bgSecondary: '#282828',
+		bgSecondary: '#2d2d2d',
 		bgElevated: '#343434',
 		white: '#ffffff',
 	},

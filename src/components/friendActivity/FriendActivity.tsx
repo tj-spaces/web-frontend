@@ -1,14 +1,23 @@
+import React from 'react';
 import {useState, useEffect, useCallback} from 'react';
 import {getFriendsList} from '../../api/api';
 import {FetchStatus} from '../../api/FetchStatus';
+import {createStylesheet} from '../../styles/createStylesheet';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
+import BaseRow from '../base/BaseRow';
 import LazyStream from '../LazyStream';
-import FriendActivityList from './FriendActivity';
+import FriendActivityRow from './FriendActivityRow';
+
+const styles = createStylesheet({
+	friendActivity: {
+		maxWidth: '20rem',
+	},
+});
 
 /**
  * Controller that fetches data about the user's friend activity and renders them in a <FriendActivityList/>
  */
-export default function FriendActivityListContainer() {
+export default function FriendActivity() {
 	let [fetchStatus, setFetchStatus] = useState<FetchStatus>(null);
 	let [nextKey, setNextKey] = useState<string>('0');
 	let [friends, setFriends] = useState<PublicUserInfo[]>([]);
@@ -37,8 +46,13 @@ export default function FriendActivityListContainer() {
 		<LazyStream
 			fetching={fetchStatus !== 'loaded' && fetchStatus !== 'errored'}
 			onReachEnd={() => fetchMore()}
+			xstyle={styles.friendActivity}
 		>
-			<FriendActivityList friends={friends} />;
+			<BaseRow direction="column" alignment="center" spacing={1} edges={1}>
+				{friends.map((friend) => (
+					<FriendActivityRow friend={friend} key={friend.id} />
+				))}
+			</BaseRow>
 		</LazyStream>
 	);
 }
