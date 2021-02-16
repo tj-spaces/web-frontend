@@ -1,6 +1,7 @@
 import {createStylesheet} from '../../styles/createStylesheet';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
+import SidebarItem from '../SidebarItem';
 
 export type ClusterSidebarSectionItem =
 	| {
@@ -51,8 +52,14 @@ export default function ClusterSidebar({
 	}
 
 	return (
-		<BaseRow direction="column" rails={1} xstyle={styles.sidebar}>
+		<BaseRow direction="column" xstyle={styles.sidebar}>
 			<BaseText variant="secondary-title">{clusterName}</BaseText>
+			<SidebarItem>Hub</SidebarItem>
+			<SidebarItem>Posts</SidebarItem>
+			<SidebarItem>Members</SidebarItem>
+			<SidebarItem>Spaces</SidebarItem>
+			<SidebarItem>Text Channels</SidebarItem>
+			<SidebarItem>Settings</SidebarItem>
 		</BaseRow>
 	);
 }
