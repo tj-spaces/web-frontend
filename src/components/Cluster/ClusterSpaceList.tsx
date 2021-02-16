@@ -3,7 +3,7 @@ import React, {useContext} from 'react';
 import {Link} from 'react-router-dom';
 import {createStylesheet} from '../../styles/createStylesheet';
 import hoverableLightBox from '../../styles/hoverableLightBox';
-import {SpaceSession} from '../../typings/Space';
+import {Space} from '../../typings/Space';
 import BaseRow from '../base/BaseRow';
 import CreateInstantSpaceButton from '../CreateInstantSpaceButton';
 import CurrentClusterContext from './CurrentClusterContext';
@@ -22,30 +22,26 @@ const styles = createStylesheet({
 });
 
 export function ClusterSpaceListItem({
-	clusterId,
+	clusterID,
 	space,
 }: {
-	clusterId: string;
-	space: SpaceSession;
+	clusterID: string;
+	space: Space;
 }) {
 	return (
 		<div className={styles('spaceListItem')}>
 			<b>
 				<Link to={`/spaces/${space.id}`} className="unstyled-link">
-					{space.topic}
+					{space.name}
 				</Link>
 			</b>
 			<br />
-			<b className={styles('spaceOnlineCount')}>Online: {space.online_count}</b>
+			<b className={styles('spaceOnlineCount')}>Online: 1.2K</b>
 		</div>
 	);
 }
 
-export default function ClusterSpaceList({
-	spaces = [],
-}: {
-	spaces?: SpaceSession[];
-}) {
+export default function ClusterSpaceList({spaces = []}: {spaces?: Space[]}) {
 	const cluster = useContext(CurrentClusterContext);
 
 	if (cluster == null) {
@@ -56,7 +52,7 @@ export default function ClusterSpaceList({
 		<BaseRow direction="column" spacing={1}>
 			{spaces.map((space) => (
 				<ClusterSpaceListItem
-					clusterId={cluster.id}
+					clusterID={cluster.id}
 					space={space}
 					key={space.id}
 				/>

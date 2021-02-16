@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStylesheet} from '../../styles/createStylesheet';
-import {SpaceSession} from '../../typings/Space';
+import {Space} from '../../typings/Space';
 import BaseRow from '../base/BaseRow';
 import FeedEmptyFiller from './FeedEmptyFiller';
 import SpaceFeedItem from './SpaceFeedItem';
@@ -17,7 +17,7 @@ const styles = createStylesheet({
 /**
  * Renders a list of feed items.
  */
-export default function Feed({spaces}: {spaces: SpaceSession[]}) {
+export default function Feed({spaces}: {spaces: Space[]}) {
 	return (
 		<BaseRow direction="column" spacing={1} width="100%" alignment="center">
 			{spaces.length > 0 ? (

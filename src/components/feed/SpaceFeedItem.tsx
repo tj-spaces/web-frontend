@@ -1,9 +1,13 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import {createStylesheet} from '../../styles/createStylesheet';
-import {SpaceSession} from '../../typings/Space';
+import {Space} from '../../typings/Space';
+import {Cluster} from '../../typings/Cluster';
+import {PublicUserInfo} from '../../typings/PublicUserInfo';
+import {FetchStatus} from '../../api/FetchStatus';
+import {getCluster, getPublicUser} from '../../api/api';
 
 const styles = createStylesheet({
 	spaceFeedItemIcon: {
@@ -23,7 +27,26 @@ const styles = createStylesheet({
  * a display for how many people are online, and the name of the host of the space. When
  * you click on the name of the space (which is in larger font), you are taken to the space.
  */
-export default function SpaceFeedItem({space}: {space: SpaceSession}) {
+export default function SpaceFeedItem({space}: {space: Space}) {
+	const [host, setHost] = useState<Cluster | PublicUserInfo>();
+	const [hostFs, setHostFs] = useState<FetchStatus>(null);
+
+	useEffect(() => {
+		setHost(undefined);
+		setHostFs('loading');
+		(async () => {
+			try {
+				if (space.creator_id) {
+					setHost(await getPublicUser(space.creator_id));
+				} else if (space.cluster_id) {
+					setHost(await getCluster(space.cluster_id));
+				}
+			} catch (e) {
+				setHostFs('errored');
+			}
+		})();
+	}, [space]);
+
 	return (
 		<BaseRow
 			direction="column"
@@ -35,18 +58,18 @@ export default function SpaceFeedItem({space}: {space: SpaceSession}) {
 			boxShadow
 		>
 			<BaseText variant="list-item-title">
-				<Link to={'/spaces/' + space.id}>{space.topic}</Link>
+				<Link to={'/spaces/' + space.id}>{space.name}</Link>
 			</BaseText>
 			<BaseRow direction="row" width="100%" spacing={1}>
-				<img
+				{/* <img
 					className={styles('spaceFeedItemIcon')}
-					src={space.host.picture}
-					alt={space.host.name + ' is hosting this space'}
-				/>
+					src={host?.picture ?? ""}
+					alt={host?.name + ' is hosting this space'}
+				/> */}
 				<div className={styles('spaceFeedItemContent')}>
-					<BaseText>{space.online_count ?? 0} are online</BaseText>
+					<BaseText>1.3k are online</BaseText>
 					<BaseText>
-						Hosted by <BaseText variant="body-bold">{space.host.name}</BaseText>
+						Hosted by <BaseText variant="body-bold">{host?.name}</BaseText>
 					</BaseText>
 				</div>
 			</BaseRow>

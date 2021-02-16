@@ -32,7 +32,7 @@ export default function SpaceContainer() {
 			<div className={spaceViewStyles('container')}>
 				<div className={spaceViewStyles('topHeading')}>
 					<BaseText variant="secondary-title" alignment="center">
-						{space ? space.topic : 'Loading Space'}
+						{space ? space.name : 'Loading Space'}
 					</BaseText>
 				</div>
 

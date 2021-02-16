@@ -1,19 +1,13 @@
-import axios, {AxiosResponse} from 'axios';
+import axios from 'axios';
 import {API_SERVER_URL} from '../lib/constants';
-import getSessionId from '../lib/getSessionId';
 import {Cluster, ClusterVisibility} from '../typings/Cluster';
 import {PublicUserInfo} from '../typings/PublicUserInfo';
-import {SpaceSession, SpaceSessionVisibility} from '../typings/Space';
+import {Space, SpaceVisibility} from '../typings/Space';
 import {User} from '../typings/User';
-import {createUrlWithGetParameters} from './apiUtils';
+import {makeAPIDeleteCall, makeAPIGetCall, makeAPIPostCall} from './apiUtils';
+import {APIError} from './error';
 
 axios.defaults.baseURL = API_SERVER_URL;
-
-class APIError extends Error {
-	constructor(route: string, message: string) {
-		super('API Error @' + route + ': ' + message);
-	}
-}
 
 /**
  *
@@ -36,88 +30,11 @@ export async function createSession(
 	}
 }
 
-export function graphql(query: string, variables?: any) {
-	return new Promise<AxiosResponse>((resolve, reject) => {
-		axios
-			.post(
-				'/graphql',
-				{query, variables},
-				{headers: {Authorization: 'Bearer ' + getSessionId()}}
-			)
-			.then((successfulResponse) => {
-				resolve(successfulResponse.data.data);
-			})
-			.catch((error) => {
-				if (error.response.status === 401) {
-					localStorage.removeItem('session_id');
-					window.location.pathname = '/';
-				} else {
-					reject(new APIError('/api/users/@me', error.response.data.error));
-				}
-			});
-	});
-}
-
-export function makeAPIPostCall(url: string, data?: any) {
-	return new Promise<AxiosResponse>((resolve, reject) => {
-		axios
-			.post(url, data, {headers: {Authorization: 'Bearer ' + getSessionId()}})
-			.then((successfulResponse) => resolve(successfulResponse))
-			.catch((error) => {
-				if (error.response?.status === 401) {
-					localStorage.removeItem('session_id');
-					window.location.pathname = '/';
-				} else {
-					reject(new APIError(url, error.response.data.error));
-				}
-			});
-	});
-}
-
-export function makeAPIGetCall(
-	url: string,
-	params?: Record<string, string | undefined>
-) {
-	url = createUrlWithGetParameters(url, params);
-	return new Promise<AxiosResponse>((resolve, reject) => {
-		axios
-			.get(url, {
-				headers: {Authorization: 'Bearer ' + getSessionId()},
-			})
-			.then((successfulResponse) => resolve(successfulResponse))
-			.catch((error) => {
-				if (error.response?.status === 401) {
-					localStorage.removeItem('session_id');
-					window.location.pathname = '/';
-				} else {
-					reject(error);
-				}
-			});
-	});
-}
-
-export function makeAPIDeleteCall(url: string) {
-	return new Promise<AxiosResponse>((resolve, reject) => {
-		axios
-			.delete(url, {
-				headers: {Authorization: 'Bearer ' + getSessionId()},
-			})
-			.then((successfulResponse) => resolve(successfulResponse))
-			.catch((error) => {
-				if (error.response?.status === 401) {
-					localStorage.removeItem('session_id');
-				} else {
-					reject(new APIError(url, error.response.data.error));
-				}
-			});
-	});
-}
-
 export async function deleteCluster(id: string): Promise<void> {
 	await makeAPIDeleteCall('/api/clusters/' + id);
 }
 
-export async function getSuggestedSpaces(): Promise<SpaceSession[]> {
+export async function getSuggestedSpaces(): Promise<Space[]> {
 	let result = await makeAPIGetCall('/api/spaces/suggested');
 	return result.data.data;
 }
@@ -143,7 +60,7 @@ export async function createCluster(
 export async function createSpaceSessionInCluster(
 	clusterId: string,
 	topic: string,
-	visibility: SpaceSessionVisibility
+	visibility: SpaceVisibility
 ): Promise<string> {
 	let result = await makeAPIPostCall('/api/clusters/' + clusterId + '/spaces', {
 		topic,
@@ -154,7 +71,7 @@ export async function createSpaceSessionInCluster(
 
 export async function createSpaceSession(
 	topic: string,
-	visibility: SpaceSessionVisibility
+	visibility: SpaceVisibility
 ): Promise<string> {
 	let result = await makeAPIPostCall('/api/spaces/', {topic, visibility});
 	return result.data.data.space_id;
@@ -174,21 +91,24 @@ export async function getMe(): Promise<User> {
 	return result.data.data;
 }
 
-export async function getSpaceSession(spaceID: string): Promise<SpaceSession> {
+export async function getPublicUser(id: string): Promise<PublicUserInfo> {
+	let result = await makeAPIGetCall('/api/users/' + id);
+	return result.data.data;
+}
+
+export async function getSpaceSession(spaceID: string): Promise<Space> {
 	let result = await makeAPIGetCall('/api/spaces/' + spaceID);
 	return result.data.data;
 }
 
-export async function getSpaceSessionsInCluster(
-	id: string
-): Promise<SpaceSession[]> {
+export async function getSpaceSessionsInCluster(id: string): Promise<Space[]> {
 	let result = await makeAPIGetCall('/api/clusters/' + id + '/spaces');
 	return result.data.data;
 }
 
 export async function startSpaceSessionNoCluster(
 	topic: string,
-	visibility: SpaceSessionVisibility
+	visibility: SpaceVisibility
 ): Promise<string> {
 	let result = await makeAPIPostCall('/api/spaces', {topic, visibility});
 	return result.data.data.space_id;

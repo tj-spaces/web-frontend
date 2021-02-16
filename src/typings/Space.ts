@@ -1,17 +1,14 @@
-import {PublicUserInfo} from './PublicUserInfo';
+export type SpaceVisibility = 'discoverable' | 'unlisted' | 'secret';
 
-export type SpaceSessionVisibility = 'discoverable' | 'unlisted' | 'secret';
-
-export interface SpaceSession {
+export interface Space {
 	id: string;
-	topic: string;
-	start_time: string;
-	stop_time: string;
+	creator_id?: string;
 	cluster_id?: string;
-	host_id: string;
-	host: PublicUserInfo;
-	visibility: SpaceSessionVisibility;
-	online_count: number;
+	name: string;
+	description: string;
+	visibility: SpaceVisibility;
+	allows_templating: boolean;
+	download_count: number;
 }
 
 export interface SpaceMessage {

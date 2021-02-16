@@ -12,6 +12,7 @@ import {
 	flexStyles,
 	justifyContentStyles,
 } from '../../styles/flex';
+import positionStyles from '../../styles/position';
 import {rowRails, colRails} from '../../styles/rails';
 import {
 	spaceBetweenFlexColumnItems,
@@ -30,6 +31,7 @@ export default function BaseRow({
 	height,
 	justifyContent = 'start',
 	overflow = 'visible',
+	position = 'static',
 	rails = 0,
 	spacing = 0,
 	width,
@@ -47,6 +49,7 @@ export default function BaseRow({
 	height?: string;
 	justifyContent?: keyof typeof justifyContentStyles;
 	overflow?: keyof typeof overflowStyles;
+	position?: keyof typeof positionStyles;
 	rails?: keyof typeof rowRails;
 	spacing?: keyof typeof spaceBetweenFlexRowItems;
 	width?: string;

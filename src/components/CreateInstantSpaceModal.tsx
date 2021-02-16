@@ -4,7 +4,7 @@ import {createSpaceSession, createSpaceSessionInCluster} from '../api/api';
 import {backgroundColors} from '../styles/colors';
 import InputStyles from '../styles/InputStyles';
 import {Cluster} from '../typings/Cluster';
-import {SpaceSessionVisibility} from '../typings/Space';
+import {SpaceVisibility} from '../typings/Space';
 import BaseButton from './base/BaseButton';
 import BaseButtonGroupItem from './base/BaseButtonGroupItem';
 import BaseModal from './base/BaseModal';
@@ -20,9 +20,7 @@ export default function CreateInstantSpaceModal({
 	onClose: () => void;
 	cluster?: Cluster;
 }) {
-	let [visibility, setVisibility] = useState<SpaceSessionVisibility>(
-		'discoverable'
-	);
+	let [visibility, setVisibility] = useState<SpaceVisibility>('discoverable');
 	let [topic, setTopic] = useState<string>('');
 	let [creationStatus, setCreationStatus] = useState<CreationStatus>('none');
 	let [newlyCreatedSpaceID, setNewlyCreatedSpaceID] = useState<string>();
