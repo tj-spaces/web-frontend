@@ -3,10 +3,9 @@ import {createStylesheet} from '../styles/createStylesheet';
 
 const styles = createStylesheet({
 	sidebarItem: {
-		backgroundColor: colors.bgPrimary,
-		transition: 'background-color 500ms ease;',
 		width: '100%',
-		padding: '0.5rem 1rem',
+		padding: '0.5rem',
+		borderRadius: '0.5em',
 		cursor: 'pointer',
 		subSelectors: {
 			':hover': {

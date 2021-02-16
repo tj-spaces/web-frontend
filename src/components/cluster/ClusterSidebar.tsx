@@ -1,3 +1,5 @@
+import {Link} from 'react-router-dom';
+import colors from '../../styles/colors';
 import {createStylesheet} from '../../styles/createStylesheet';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
@@ -22,10 +24,13 @@ export type ClusterSidebarSectionItem =
 
 const styles = createStylesheet({
 	sidebar: {
-		position: 'absolute',
-		left: '0px',
-		top: '0px',
-		bottom: '0px',
+		flex: 1,
+		height: '100%',
+		backgroundColor: colors.bgSecondary,
+		padding: '1rem',
+	},
+	clusterName: {
+		marginBottom: '2rem',
 	},
 });
 
@@ -53,7 +58,10 @@ export default function ClusterSidebar({
 
 	return (
 		<BaseRow direction="column" xstyle={styles.sidebar}>
-			<BaseText variant="secondary-title">{clusterName}</BaseText>
+			<div className={styles('clusterName')}>
+				<BaseText variant="secondary-title">{clusterName}</BaseText>
+				<Link to="/">Home</Link>
+			</div>
 			<SidebarItem>Hub</SidebarItem>
 			<SidebarItem>Posts</SidebarItem>
 			<SidebarItem>Members</SidebarItem>

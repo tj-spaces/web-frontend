@@ -21,30 +21,35 @@ export default function Cluster({id}: {id: string}) {
 
 	return (
 		<CurrentClusterContext.Provider value={cluster}>
-			<BaseRow direction="column" overflow="auto" width="100%" height="100%">
-				{isSettingsOpen && (
-					<ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />
-				)}
+			{isSettingsOpen && (
+				<ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />
+			)}
 
-				{/* At top, title */}
-				<BaseText variant="primary-title" alignment="center">
-					{cluster.name}
-				</BaseText>
-
-				<BaseRow
-					direction="row"
-					rails={1}
-					backgroundColor="bgSecondary"
-					position="relative"
-					width="100%"
-					height="100%"
+			<BaseRow
+				direction="row"
+				rails={1}
+				backgroundColor="bgSecondary"
+				width="100%"
+				height="100%"
+			>
+				<ClusterSidebar
+					sections={[]}
+					clusterName={cluster.name}
+					isOpen={isSidebarOpen}
+				/>
+				<div
+					style={{
+						flex: 4,
+						display: 'flex',
+						flexDirection: 'column',
+						justifyContent: 'center',
+						paddingTop: '5rem',
+					}}
 				>
-					<ClusterSidebar
-						sections={[]}
-						clusterName={cluster.name}
-						isOpen={isSidebarOpen}
-					/>
-				</BaseRow>
+					<BaseText variant="primary-title" alignment="center">
+						wave to your friends and get the party started!
+					</BaseText>
+				</div>
 			</BaseRow>
 		</CurrentClusterContext.Provider>
 	);
