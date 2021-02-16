@@ -8,7 +8,7 @@ import ClusterListRow from './ClusterListRow';
  */
 export default function ClusterList({clusters}: {clusters: Cluster[]}) {
 	return (
-		<BaseRow direction="column" spacing={1}>
+		<BaseRow direction="column" spacing={1} edges={1}>
 			{clusters.map((cluster) => (
 				<ClusterListRow key={cluster.id} cluster={cluster} />
 			))}

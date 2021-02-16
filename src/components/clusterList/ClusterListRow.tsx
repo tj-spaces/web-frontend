@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {usePublicUser} from '../../api/users';
 import {Cluster} from '../../typings/Cluster';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
@@ -11,6 +12,8 @@ import BaseText from '../base/BaseText';
  * in the past day, and more.
  */
 export default function ClusterListRow({cluster}: {cluster: Cluster}) {
+	const creator = usePublicUser(cluster.creator_id);
+
 	return (
 		<BaseRow
 			direction="column"
@@ -24,7 +27,7 @@ export default function ClusterListRow({cluster}: {cluster: Cluster}) {
 			<BaseText variant="list-item-title">
 				<Link to={'/clusters/' + cluster.id}>{cluster.name}</Link>
 			</BaseText>
-			{/* Hosted by {cluster.creator_id} */}
+			Hosted by {creator?.name ?? 'loading...'}
 		</BaseRow>
 	);
 }
