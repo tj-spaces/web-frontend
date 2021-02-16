@@ -7,8 +7,9 @@ import {Space} from '../../typings/Space';
 import {Cluster} from '../../typings/Cluster';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import {FetchStatus} from '../../api/FetchStatus';
-import {getCluster, getPublicUser} from '../../api/api';
+import {getPublicUser} from '../../api/api';
 import Awaiting from '../Awaiting';
+import {getCluster} from '../../api/clusters';
 
 const styles = createStylesheet({
 	spaceFeedItemIcon: {

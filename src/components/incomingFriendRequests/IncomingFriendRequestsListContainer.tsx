@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {getIncomingFriendRequests} from '../../api/api';
+import {getIncomingFriendRequests} from '../../api/friends';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import BaseModal from '../base/BaseModal';
 import BaseText from '../base/BaseText';
@@ -35,9 +35,7 @@ export default function IncomingFriendRequestsListContainer() {
 					Open them
 				</BaseText>
 				{incomingFriendRequestsModalOpen && (
-					<BaseModal
-						onClickOutside={() => setIncomingFriendRequestsModalOpen(false)}
-					>
+					<BaseModal onClose={() => setIncomingFriendRequestsModalOpen(false)}>
 						<BaseText variant="secondary-title">Friend Requests</BaseText>
 						<IncomingFriendRequestsList requests={incomingFriendRequests} />
 					</BaseModal>

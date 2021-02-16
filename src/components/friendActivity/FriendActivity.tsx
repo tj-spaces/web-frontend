@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState, useEffect, useCallback} from 'react';
-import {getFriendsList} from '../../api/api';
+import {getFriendsList} from '../../api/friends';
 import {FetchStatus} from '../../api/FetchStatus';
 import {createStylesheet} from '../../styles/createStylesheet';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';

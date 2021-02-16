@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import useSpace from '../../hooks/useSpace';
+import {useSpace} from '../../api/spaces';
 import AuthContext from '../AuthContext';
 import BaseButton from '../base/BaseButton';
 import BaseRow from '../base/BaseRow';
@@ -15,7 +15,7 @@ import SpaceViewTiles from './spaceViewTiles/SpaceViewTiles';
 const SPACE_VIEW_TYPE: 'tiles' | '3d' = '3d';
 
 export default function SpaceContainer() {
-	const spaceID = useContext(SpaceIDContext);
+	const spaceID = useContext(SpaceIDContext)!;
 	const space = useSpace(spaceID);
 	const media = useContext(SpaceMediaContext);
 	const {user} = useContext(AuthContext);

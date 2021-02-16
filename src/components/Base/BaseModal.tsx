@@ -41,25 +41,25 @@ export const variantStyles = createStylesheet({
 export default function BaseModal({
 	children,
 	variant = 'wide',
-	onClickOutside,
+	onClose,
 }: {
 	children: React.ReactNode;
 	variant?: 'wide';
-	onClickOutside: () => void;
+	onClose: () => void;
 }) {
 	const fgRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
 		const checkForOutsideClick = (ev: MouseEvent) => {
 			let target = ev.target as HTMLDivElement;
 			if (!fgRef.current?.contains(target)) {
-				onClickOutside();
+				onClose();
 			}
 		};
 		document.addEventListener('click', checkForOutsideClick);
 		return () => {
 			document.removeEventListener('click', checkForOutsideClick);
 		};
-	}, [onClickOutside]);
+	}, [onClose]);
 	return (
 		<div className={styles('modalBackground')}>
 			<div
@@ -69,7 +69,7 @@ export default function BaseModal({
 				<BaseText
 					variant="body"
 					xstyle={styles.modalCloseButton}
-					onClick={() => onClickOutside()}
+					onClick={() => onClose()}
 				>
 					Close
 				</BaseText>

@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {getFriendsList} from '../../api/api';
+import {getFriendsList} from '../../api/friends';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import FriendList from './FriendList';
 

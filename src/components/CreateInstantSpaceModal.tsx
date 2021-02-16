@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import {createSpaceSession} from '../api/api';
+import {createSpace} from '../api/spaces';
 import {FetchStatus} from '../api/FetchStatus';
 import {backgroundColors} from '../styles/colors';
 import InputStyles from '../styles/InputStyles';
@@ -26,7 +26,7 @@ export default function CreateInstantSpaceModal({
 	let [newlyCreatedSpaceID, setNewlyCreatedSpaceID] = useState<string>();
 
 	return (
-		<BaseModal onClickOutside={onClose}>
+		<BaseModal onClose={onClose}>
 			<BaseRow direction="column" spacing={1}>
 				<BaseText variant="secondary-title">Start a conversation</BaseText>
 				{cluster && <BaseText>Creating in cluster {cluster.name}</BaseText>}
@@ -65,13 +65,7 @@ export default function CreateInstantSpaceModal({
 						size="small"
 						onClick={() => {
 							setCreationStatus('loading');
-							createSpaceSession(
-								name,
-								description,
-								visibility,
-								false,
-								cluster?.id
-							)
+							createSpace(name, description, visibility, false, cluster?.id)
 								.then((id) => {
 									setCreationStatus('loaded');
 									setNewlyCreatedSpaceID(id);

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {acceptFriendRequest} from '../../api/api';
+import {acceptFriendRequest} from '../../api/friends';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import BaseRow from '../base/BaseRow';
 import IncomingFriendRequestsListRow from './IncomingFriendRequestsListRow';

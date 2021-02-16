@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {getSuggestedSpaces} from '../../api/api';
+import {getSuggestedSpaces} from '../../api/spaces';
 import {FetchStatus} from '../../api/FetchStatus';
 import {Space} from '../../typings/Space';
 import Awaiting from '../Awaiting';

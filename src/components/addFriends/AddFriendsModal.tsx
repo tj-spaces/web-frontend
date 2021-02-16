@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {getSuggestedFriends} from '../../api/api';
+import {getSuggestedFriends} from '../../api/friends';
 import {createStylesheet, stylex} from '../../styles/createStylesheet';
 import InputStyles from '../../styles/InputStyles';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
@@ -33,7 +33,7 @@ export default function AddFriendsModal({onClose}: {onClose: () => void}) {
 	}, [search]);
 
 	return (
-		<BaseModal onClickOutside={() => onClose()}>
+		<BaseModal onClose={() => onClose()}>
 			<BaseRow direction="column" spacing={1}>
 				<BaseText variant="secondary-title">Add Friends</BaseText>
 				<input

@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom';
-import {joinCluster} from '../../api/api';
+import {joinCluster} from '../../api/clusters';
 import {Cluster} from '../../typings/Cluster';
 import BaseButton from '../base/BaseButton';
 import BaseRow from '../base/BaseRow';

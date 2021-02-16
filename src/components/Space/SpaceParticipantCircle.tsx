@@ -32,8 +32,8 @@ export const styles = createStylesheet({
 	},
 	participantBubbleRemote: {
 		// Center the participant
-		marginTop: '-4rem',
-		marginRight: '-4rem',
+		marginTop: '-5rem',
+		marginRight: '-5rem',
 	},
 });
 

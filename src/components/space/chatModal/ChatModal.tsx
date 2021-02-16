@@ -39,7 +39,7 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 	}, [conn, replyToMessage?.id]);
 
 	return (
-		<BaseModal onClickOutside={onClose}>
+		<BaseModal onClose={onClose}>
 			<ReplyToMessageContext.Provider
 				value={{message: replyToMessage, setMessage: setReplyToMessage}}
 			>

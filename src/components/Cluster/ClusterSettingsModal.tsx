@@ -1,6 +1,6 @@
 import {AssertionError} from 'assert';
 import {useCallback, useContext} from 'react';
-import {deleteCluster} from '../../api/api';
+import {deleteCluster} from '../../api/clusters';
 import BaseButton from '../base/BaseButton';
 import BaseModal from '../base/BaseModal';
 import BaseRow from '../base/BaseRow';
@@ -26,7 +26,7 @@ export default function ClusterSettingsModal({onClose}: {onClose: () => void}) {
 	}, [onClose]);
 
 	return (
-		<BaseModal onClickOutside={() => onClose()}>
+		<BaseModal onClose={() => onClose()}>
 			<BaseRow direction="column" alignment="center" spacing={1}>
 				<h1>Settings</h1>
 				<table>

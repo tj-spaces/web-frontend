@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {getDiscoverableClusters} from '../../api/api';
+import {getDiscoverableClusters} from '../../api/clusters';
 import {Cluster} from '../../typings/Cluster';
 import ClusterPreview from '../../components/feed/ClusterFeedItem';
 import BaseText from '../../components/base/BaseText';

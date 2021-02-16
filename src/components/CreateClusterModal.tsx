@@ -1,6 +1,6 @@
 import {createRef, useCallback, useState} from 'react';
 import {Redirect} from 'react-router-dom';
-import {createCluster} from '../api/api';
+import {createCluster} from '../api/clusters';
 import {backgroundColors} from '../styles/colors';
 import InputStyles from '../styles/InputStyles';
 import {ClusterVisibility} from '../typings/Cluster';
@@ -46,7 +46,7 @@ export default function ClusterCreateModal({onClose}: {onClose: () => void}) {
 	}
 
 	return (
-		<BaseModal onClickOutside={onClose}>
+		<BaseModal onClose={onClose}>
 			<BaseRow direction="column" spacing={1}>
 				<BaseText variant="secondary-title">Create Cluster</BaseText>
 				<BaseRow direction="column" alignment="start">

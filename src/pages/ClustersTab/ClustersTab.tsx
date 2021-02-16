@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {getMyClusters} from '../../api/api';
+import {getMyClusters} from '../../api/clusters';
 import {FetchStatus} from '../../api/FetchStatus';
 import Awaiting from '../../components/Awaiting';
 import BaseText from '../../components/base/BaseText';
