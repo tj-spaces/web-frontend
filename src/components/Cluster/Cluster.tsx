@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import useCluster from '../../hooks/useCluster';
+import {useCluster} from '../../api/clusters';
 import useSpacesInCluster from '../../hooks/useSpacesInCluster';
 import {createStylesheet} from '../../styles/createStylesheet';
 import BaseRow from '../base/BaseRow';

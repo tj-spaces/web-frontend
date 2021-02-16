@@ -21,7 +21,7 @@ export class Store<T> {
 	 * @param key The key to get the data for
 	 * @param forceRefresh If the data already exists, fetch it again anyway
 	 */
-	get(key: string, forceRefresh = false) {
+	get(key: string, forceRefresh = false): T | null {
 		if (!this.data.has(key) || forceRefresh) {
 			this.fetcher(key).then((value) => {
 				this.set(key, value);
@@ -30,7 +30,7 @@ export class Store<T> {
 			return null;
 		}
 
-		return this.data.get(key);
+		return this.data.get(key) ?? null;
 	}
 
 	set(key: string, value: T | null) {
@@ -69,7 +69,7 @@ export class Store<T> {
 }
 
 export function useStoredValue<T>(store: Store<T>, key: string) {
-	const [value, setValue] = useState<T | null>(null);
+	const [value, setValue] = useState<T | null>(store.get(key));
 
 	useEffect(() => {
 		const callback = (value: T | null) => setValue(value);
