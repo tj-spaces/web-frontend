@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {createSpaceSession, createSpaceSessionInCluster} from '../api/api';
+import {FetchStatus} from '../api/FetchStatus';
 import {backgroundColors} from '../styles/colors';
 import InputStyles from '../styles/InputStyles';
 import {Cluster} from '../typings/Cluster';
@@ -11,8 +12,6 @@ import BaseModal from './base/BaseModal';
 import BaseRow from './base/BaseRow';
 import BaseText from './base/BaseText';
 
-export type CreationStatus = 'none' | 'pending' | 'done' | 'error';
-
 export default function CreateInstantSpaceModal({
 	onClose,
 	cluster,
@@ -21,8 +20,9 @@ export default function CreateInstantSpaceModal({
 	cluster?: Cluster;
 }) {
 	let [visibility, setVisibility] = useState<SpaceVisibility>('discoverable');
-	let [topic, setTopic] = useState<string>('');
-	let [creationStatus, setCreationStatus] = useState<CreationStatus>('none');
+	let [name, setTopic] = useState<string>('');
+	let [description, setDescription] = useState<string>('');
+	let [creationStatus, setCreationStatus] = useState<FetchStatus>(null);
 	let [newlyCreatedSpaceID, setNewlyCreatedSpaceID] = useState<string>();
 
 	return (
@@ -35,7 +35,7 @@ export default function CreateInstantSpaceModal({
 					className={InputStyles('rectangleInput')}
 					style={{fontSize: '2rem', width: '100%'}}
 					onChange={(ev) => setTopic(ev.target.value)}
-					value={topic}
+					value={name}
 				/>
 				Visibility
 				<BaseRow direction="row">
@@ -52,34 +52,40 @@ export default function CreateInstantSpaceModal({
 						Unlisted
 					</BaseButtonGroupItem>
 				</BaseRow>
-				{creationStatus === 'none' ? (
+				{creationStatus == null ? (
 					<BaseButton
 						variant="theme"
 						size="small"
 						onClick={() => {
-							setCreationStatus('pending');
+							setCreationStatus('loading');
 							if (cluster) {
-								createSpaceSessionInCluster(cluster.id, topic, visibility)
+								createSpaceSessionInCluster(
+									name,
+									description,
+									visibility,
+									false,
+									cluster.id
+								)
 									.then((id) => {
-										setCreationStatus('done');
+										setCreationStatus('loaded');
 										setNewlyCreatedSpaceID(id);
 									})
-									.catch((err) => setCreationStatus('error'));
+									.catch((err) => setCreationStatus('errored'));
 							} else {
-								createSpaceSession(topic, visibility)
+								createSpaceSession(name, description, visibility, false)
 									.then((id) => {
-										setCreationStatus('done');
+										setCreationStatus('loaded');
 										setNewlyCreatedSpaceID(id);
 									})
-									.catch((err) => setCreationStatus('error'));
+									.catch((err) => setCreationStatus('errored'));
 							}
 						}}
 					>
 						Start
 					</BaseButton>
-				) : creationStatus === 'pending' ? (
-					<BaseText>Creating Space</BaseText>
-				) : creationStatus === 'done' ? (
+				) : creationStatus === 'loading' ? (
+					<BaseText>Creating</BaseText>
+				) : creationStatus === 'loaded' ? (
 					<BaseText>
 						Space is made.{' '}
 						<Link to={'/spaces/' + newlyCreatedSpaceID}>
