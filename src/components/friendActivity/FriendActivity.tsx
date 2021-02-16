@@ -6,7 +6,7 @@ import {createStylesheet} from '../../styles/createStylesheet';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import BaseRow from '../base/BaseRow';
 import LazyStream from '../LazyStream';
-import FriendActivityRow from './FriendActivityRow';
+import UserListRow from '../UserListRow';
 
 const styles = createStylesheet({
 	friendActivity: {
@@ -50,7 +50,7 @@ export default function FriendActivity() {
 		>
 			<BaseRow direction="column" alignment="center" spacing={1} edges={1}>
 				{friends.map((friend) => (
-					<FriendActivityRow friend={friend} key={friend.id} />
+					<UserListRow user={friend} key={friend.id} />
 				))}
 			</BaseRow>
 		</LazyStream>

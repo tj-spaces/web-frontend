@@ -5,6 +5,7 @@ import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import Awaiting from '../Awaiting';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
+import UserListRow from '../UserListRow';
 import ClusterSettingsModal from './ClusterSettingsModal';
 import ClusterSidebar from './ClusterSidebar';
 import CurrentClusterContext from './CurrentClusterContext';
@@ -69,9 +70,9 @@ export default function Cluster({id}: {id: string}) {
 					<BaseRow direction="column" alignment="center" spacing={1}>
 						<BaseText variant="secondary-title">Members</BaseText>
 						<Awaiting fetchStatus={membersFs}>
-							{members.map((member) => {
-								return <div>{member.name}</div>;
-							})}
+							{members.map((member) => (
+								<UserListRow user={member} />
+							))}
 						</Awaiting>
 					</BaseRow>
 				</div>

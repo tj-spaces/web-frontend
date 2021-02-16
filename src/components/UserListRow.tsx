@@ -1,7 +1,7 @@
-import {createStylesheet} from '../../styles/createStylesheet';
-import {PublicUserInfo} from '../../typings/PublicUserInfo';
-import BaseRow from '../base/BaseRow';
-import BaseText from '../base/BaseText';
+import {createStylesheet} from '../styles/createStylesheet';
+import {PublicUserInfo} from '../typings/PublicUserInfo';
+import BaseRow from './base/BaseRow';
+import BaseText from './base/BaseText';
 
 const styles = createStylesheet({
 	picture: {
@@ -13,11 +13,14 @@ const styles = createStylesheet({
 		flex: 5,
 	},
 	wave: {
-		flex: 2,
+		flex: 1,
+	},
+	userListRow: {
+		maxWidth: '24rem',
 	},
 });
 
-export default function FriendActivityRow({friend}: {friend: PublicUserInfo}) {
+export default function UserListRow({user}: {user: PublicUserInfo}) {
 	return (
 		<BaseRow
 			direction="row"
@@ -26,14 +29,10 @@ export default function FriendActivityRow({friend}: {friend: PublicUserInfo}) {
 			rails={1}
 			edges={1}
 			borderRadius={1}
-			width="100%"
+			xstyle={styles.userListRow}
 			backgroundColor="bgSecondary"
 		>
-			<img
-				src={friend.picture}
-				className={styles('picture')}
-				alt={friend.name + "'s profile photo"}
-			/>
+			<img src={user.picture} className={styles('picture')} alt={user.name} />
 			<BaseRow
 				direction="column"
 				xstyle={styles.bio}
@@ -41,7 +40,7 @@ export default function FriendActivityRow({friend}: {friend: PublicUserInfo}) {
 				justifyContent="center"
 			>
 				<BaseText variant="body-bold" alignment="center">
-					{friend.name}
+					{user.name}
 				</BaseText>
 				{/* <BaseText variant="body-semibold">Online</BaseText> */}
 			</BaseRow>
