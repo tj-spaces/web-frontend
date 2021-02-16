@@ -17,6 +17,7 @@ export default function IncomingFriendRequestsListContainer() {
 
 	useEffect(() => {
 		getIncomingFriendRequests().then((requests) => {
+			console.log('Loaded friend requests: ', requests);
 			setIncomingFriendRequests(requests);
 		});
 	}, []);
