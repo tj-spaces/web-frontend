@@ -1,0 +1,82 @@
+import {useEffect, useState} from 'react';
+
+export type UpdateListener<T> = (newValue: T | null) => void;
+
+export type ValueFetcher<T> = (key: string) => Promise<T | null>;
+
+/**
+ * This is a general-purpose, subscribable key-value store for content like posts, groups, and spaces.
+ */
+export class Store<T> {
+	/**
+	 * Stores the internal data. If the value is `null`, then we attempted to fetch the data, but it did not exist.
+	 */
+	private data = new Map<string, T | null>();
+	private listeners = new Map<string, Set<UpdateListener<T>>>();
+
+	constructor(private fetcher: ValueFetcher<T>) {}
+
+	/**
+	 *
+	 * @param key The key to get the data for
+	 * @param forceRefresh If the data already exists, fetch it again anyway
+	 */
+	get(key: string, forceRefresh = false) {
+		if (!this.data.has(key) || forceRefresh) {
+			this.fetcher(key).then((value) => {
+				this.set(key, value);
+			});
+
+			return null;
+		}
+
+		return this.data.get(key);
+	}
+
+	set(key: string, value: T | null) {
+		if (this.listeners.has(key)) {
+			this.listeners.get(key)?.forEach((callback) => {
+				callback(value);
+			});
+		}
+
+		return this.data.set(key, value);
+	}
+
+	subscribe(key: string, listener: UpdateListener<T>) {
+		if (!this.listeners.has(key)) {
+			this.listeners.set(key, new Set());
+		}
+
+		this.listeners.get(key)?.add(listener);
+	}
+
+	unsubscribe(key: string, listener: UpdateListener<T>) {
+		if (this.listeners.has(key)) {
+			if (this.listeners.get(key)?.has(listener)) {
+				this.listeners.get(key)?.delete(listener);
+				return;
+			}
+		}
+
+		console.warn(
+			'Unsubscribed from',
+			key,
+			'but listener does not exist: ',
+			listener
+		);
+	}
+}
+
+export function useStoredValue<T>(store: Store<T>, key: string) {
+	const [value, setValue] = useState<T | null>(null);
+
+	useEffect(() => {
+		const callback = (value: T | null) => setValue(value);
+		store.subscribe(key, callback);
+
+		return () => store.unsubscribe(key, callback);
+	}, [key, store]);
+
+	return value;
+}

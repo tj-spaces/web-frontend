@@ -24,7 +24,7 @@ export default function ClusterListRow({cluster}: {cluster: Cluster}) {
 			<BaseText variant="list-item-title">
 				<Link to={'/clusters/' + cluster.id}>{cluster.name}</Link>
 			</BaseText>
-			Hosted by {cluster.creator_id}
+			{/* Hosted by {cluster.creator_id} */}
 		</BaseRow>
 	);
 }
