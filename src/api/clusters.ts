@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Store, useStoredValue} from '../store/store';
 import {Cluster, ClusterVisibility} from '../typings/Cluster';
+import {PublicUserInfo} from '../typings/PublicUserInfo';
 import {makeAPIGetCall, makeAPIPostCall, makeAPIDeleteCall} from './utils';
 
 export async function getDiscoverableClusters(): Promise<Cluster[]> {
@@ -23,6 +24,11 @@ export async function getCluster(id: string): Promise<Cluster> {
 
 export async function getMyClusters(): Promise<Cluster[]> {
 	let result = await makeAPIGetCall('/api/users/@me/clusters');
+	return result.data.data;
+}
+
+export async function getClusterMembers(id: string): Promise<PublicUserInfo[]> {
+	let result = await makeAPIGetCall('/api/clusters/' + id + '/members');
 	return result.data.data;
 }
 
