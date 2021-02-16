@@ -1,5 +1,4 @@
 import {useState} from 'react';
-import {Cluster} from '../typings/Cluster';
 import BaseButton from './base/BaseButton';
 import CreateClusterModal from './CreateClusterModal';
 
