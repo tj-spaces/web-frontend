@@ -71,10 +71,10 @@ export default function BaseRow({
 	const borderRadiusStyle = borderRadiusStyles[borderRadius];
 	const backgroundColorStyle = backgroundColorStyles[backgroundColor];
 	const centerStyle = centerSelf && centerSelfs[direction];
+	const positionStyle = positionStyles[position];
 	return (
 		<div
 			className={stylex(
-				xstyle,
 				alignmentStyle,
 				backgroundColorStyle,
 				baseStyle,
@@ -84,8 +84,10 @@ export default function BaseRow({
 				justifyContentStyle,
 				overflowStyle,
 				railsStyle,
+				positionStyle,
 				spacingStyle,
-				boxShadowStyle
+				boxShadowStyle,
+				xstyle
 			)}
 			style={{width, height, flex}}
 		>
