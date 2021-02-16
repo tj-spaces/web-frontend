@@ -8,6 +8,7 @@ import {Cluster} from '../../typings/Cluster';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import {FetchStatus} from '../../api/FetchStatus';
 import {getCluster, getPublicUser} from '../../api/api';
+import Awaiting from '../Awaiting';
 
 const styles = createStylesheet({
 	spaceFeedItemIcon: {
@@ -41,6 +42,7 @@ export default function SpaceFeedItem({space}: {space: Space}) {
 				} else if (space.cluster_id) {
 					setHost(await getCluster(space.cluster_id));
 				}
+				setHostFs('loaded');
 			} catch (e) {
 				setHostFs('errored');
 			}
@@ -54,7 +56,7 @@ export default function SpaceFeedItem({space}: {space: Space}) {
 			backgroundColor="bgElevated"
 			rails={2}
 			spacing={1}
-			edges={1}
+			edges={2}
 			boxShadow
 		>
 			<BaseText variant="list-item-title">
@@ -69,7 +71,9 @@ export default function SpaceFeedItem({space}: {space: Space}) {
 				<div className={styles('spaceFeedItemContent')}>
 					<BaseText>1.3k are online</BaseText>
 					<BaseText>
-						Hosted by <BaseText variant="body-bold">{host?.name}</BaseText>
+						<Awaiting fetchStatus={hostFs}>
+							Hosted by <BaseText variant="body-bold">{host?.name}</BaseText>
+						</Awaiting>
 					</BaseText>
 				</div>
 			</BaseRow>
