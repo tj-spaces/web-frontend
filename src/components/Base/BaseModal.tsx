@@ -1,6 +1,7 @@
 import {useEffect, useRef} from 'react';
 import boxShadow from '../../styles/boxShadow';
 import {stylex, createStylesheet} from '../../styles/createStylesheet';
+import BaseText from './BaseText';
 
 export const styles = createStylesheet({
 	modalBackground: {
@@ -65,7 +66,13 @@ export default function BaseModal({
 				ref={fgRef}
 				className={stylex(styles.modalForeground, variantStyles[variant])}
 			>
-				<div className={styles('modalCloseButton')}>Close</div>
+				<BaseText
+					variant="body"
+					xstyle={styles.modalCloseButton}
+					onClick={() => onClickOutside()}
+				>
+					Close
+				</BaseText>
 				{children}
 			</div>
 		</div>
