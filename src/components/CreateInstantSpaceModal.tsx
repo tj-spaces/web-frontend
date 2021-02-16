@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import {createSpaceSession, createSpaceSessionInCluster} from '../api/api';
+import {createSpaceSession} from '../api/api';
 import {FetchStatus} from '../api/FetchStatus';
 import {backgroundColors} from '../styles/colors';
 import InputStyles from '../styles/InputStyles';
@@ -20,7 +20,7 @@ export default function CreateInstantSpaceModal({
 	cluster?: Cluster;
 }) {
 	let [visibility, setVisibility] = useState<SpaceVisibility>('discoverable');
-	let [name, setTopic] = useState<string>('');
+	let [name, setName] = useState<string>('');
 	let [description, setDescription] = useState<string>('');
 	let [creationStatus, setCreationStatus] = useState<FetchStatus>(null);
 	let [newlyCreatedSpaceID, setNewlyCreatedSpaceID] = useState<string>();
@@ -30,11 +30,18 @@ export default function CreateInstantSpaceModal({
 			<BaseRow direction="column" spacing={1}>
 				<BaseText variant="secondary-title">Start a conversation</BaseText>
 				{cluster && <BaseText>Creating in cluster {cluster.name}</BaseText>}
-				Topic
+				Name
 				<input
 					className={InputStyles('rectangleInput')}
 					style={{fontSize: '2rem', width: '100%'}}
-					onChange={(ev) => setTopic(ev.target.value)}
+					onChange={(ev) => setName(ev.target.value)}
+					value={name}
+				/>
+				Description
+				<input
+					className={InputStyles('rectangleInput')}
+					style={{fontSize: '2rem', width: '100%'}}
+					onChange={(ev) => setDescription(ev.target.value)}
 					value={name}
 				/>
 				Visibility
@@ -58,27 +65,18 @@ export default function CreateInstantSpaceModal({
 						size="small"
 						onClick={() => {
 							setCreationStatus('loading');
-							if (cluster) {
-								createSpaceSessionInCluster(
-									name,
-									description,
-									visibility,
-									false,
-									cluster.id
-								)
-									.then((id) => {
-										setCreationStatus('loaded');
-										setNewlyCreatedSpaceID(id);
-									})
-									.catch((err) => setCreationStatus('errored'));
-							} else {
-								createSpaceSession(name, description, visibility, false)
-									.then((id) => {
-										setCreationStatus('loaded');
-										setNewlyCreatedSpaceID(id);
-									})
-									.catch((err) => setCreationStatus('errored'));
-							}
+							createSpaceSession(
+								name,
+								description,
+								visibility,
+								false,
+								cluster?.id
+							)
+								.then((id) => {
+									setCreationStatus('loaded');
+									setNewlyCreatedSpaceID(id);
+								})
+								.catch((err) => setCreationStatus('errored'));
 						}}
 					>
 						Start

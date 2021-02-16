@@ -57,33 +57,19 @@ export async function createCluster(
 	return result.data.data.cluster_id;
 }
 
-export async function createSpaceSessionInCluster(
-	name: string,
-	description: string,
-	visibility: SpaceVisibility,
-	allowsTemplating: boolean,
-	clusterID: string
-): Promise<string> {
-	let result = await makeAPIPostCall('/api/clusters/' + clusterID + '/spaces', {
-		name,
-		description,
-		visibility,
-		allowsTemplating,
-	});
-	return result.data.data.space_id;
-}
-
 export async function createSpaceSession(
 	name: string,
 	description: string,
 	visibility: SpaceVisibility,
-	allowsTemplating: boolean
+	allowsTemplating: boolean,
+	clusterID?: string
 ): Promise<string> {
 	let result = await makeAPIPostCall('/api/spaces', {
 		name,
 		description,
 		visibility,
-		allowsTemplating,
+		allows_templating: allowsTemplating,
+		cluster_id: clusterID,
 	});
 	return result.data.data.space_id;
 }
