@@ -42,7 +42,7 @@ export default function CreateInstantSpaceModal({
 					className={InputStyles('rectangleInput')}
 					style={{fontSize: '2rem', width: '100%'}}
 					onChange={(ev) => setDescription(ev.target.value)}
-					value={name}
+					value={description}
 				/>
 				Visibility
 				<BaseRow direction="row">
