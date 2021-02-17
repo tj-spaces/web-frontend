@@ -11,6 +11,7 @@ import BaseButtonGroupItem from './base/BaseButtonGroupItem';
 import BaseModal from './base/BaseModal';
 import BaseRow from './base/BaseRow';
 import BaseText from './base/BaseText';
+import {WorldType} from '../typings/Types';
 
 export default function CreateInstantSpaceModal({
 	onClose,
@@ -20,6 +21,7 @@ export default function CreateInstantSpaceModal({
 	cluster?: Cluster;
 }) {
 	let [visibility, setVisibility] = useState<SpaceVisibility>('discoverable');
+	let [worldType, setWorldType] = useState<WorldType>('2d-pixel');
 	let [name, setName] = useState<string>('');
 	let [description, setDescription] = useState<string>('');
 	let [creationStatus, setCreationStatus] = useState<FetchStatus>(null);
@@ -59,13 +61,35 @@ export default function CreateInstantSpaceModal({
 						Unlisted
 					</BaseButtonGroupItem>
 				</BaseRow>
+				Type
+				<BaseRow direction="row">
+					<BaseButtonGroupItem
+						classes={worldType === '3d-voxel' && backgroundColors.red}
+						onClick={() => setWorldType('3d-voxel')}
+					>
+						3D
+					</BaseButtonGroupItem>
+					<BaseButtonGroupItem
+						classes={worldType === '2d-pixel' && backgroundColors.red}
+						onClick={() => setWorldType('2d-pixel')}
+					>
+						2D
+					</BaseButtonGroupItem>
+				</BaseRow>
 				{creationStatus == null ? (
 					<BaseButton
 						variant="theme"
 						size="small"
 						onClick={() => {
 							setCreationStatus('loading');
-							createSpace(name, description, visibility, false, cluster?.id)
+							createSpace(
+								name,
+								description,
+								visibility,
+								false,
+								worldType,
+								cluster?.id
+							)
 								.then((id) => {
 									setCreationStatus('loaded');
 									setNewlyCreatedSpaceID(id);

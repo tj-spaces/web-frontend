@@ -1,4 +1,5 @@
-import {useLayoutEffect, useRef} from 'react';
+import {useEffect, useLayoutEffect, useRef} from 'react';
+import joinSpace from '../../../space/joinSpace';
 import PixelSpaceRenderer from './PixelSpaceRenderer';
 import SpaceManager from './SpaceManager';
 
@@ -6,6 +7,10 @@ export default function PixelSpace({id}: {id: string}) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const renderRef = useRef<PixelSpaceRenderer>();
 	const managerRef = useRef<SpaceManager>(new SpaceManager(id));
+
+	useEffect(() => {
+		joinSpace(id).then((val) => console.log(val));
+	}, [id]);
 
 	useLayoutEffect(() => {
 		const canvas = canvasRef.current!;

@@ -1,3 +1,4 @@
+import {getSpaceJoinCode} from '../../../api/spaces';
 import {SIM_SERVER_URL} from '../../../lib/constants';
 import {SpaceParticipant} from '../../../typings/Space';
 
@@ -31,10 +32,14 @@ export default class SpaceManager {
 	constructedWorldData = new Map<ChunkPosition, ChunkData>();
 	spaceMetadata: SpaceMetadata = {};
 	constructor(public readonly id: string) {
-		this.socket = new WebSocket(`${SIM_SERVER_URL}/space/${id}`);
+		this.socket = new WebSocket(SIM_SERVER_URL);
+
+		getSpaceJoinCode(id).then((code) => {
+			this.socket.send('connect:' + code);
+		});
 
 		this.socket.addEventListener('message', (message) => {
-			console.log(message);
+			console.log('WEBSOCKET MESSAGE:', message);
 		});
 	}
 }

@@ -1,5 +1,6 @@
 import {Store, useStoredValue} from '../store/store';
 import {Space, SpaceVisibility} from '../typings/Space';
+import {WorldType} from '../typings/Types';
 import {makeAPIGetCall, makeAPIPostCall} from './utils';
 
 export async function getSpace(spaceID: string): Promise<Space> {
@@ -17,6 +18,7 @@ export async function createSpace(
 	description: string,
 	visibility: SpaceVisibility,
 	allowsTemplating: boolean,
+	worldType: WorldType,
 	clusterID?: string
 ): Promise<string> {
 	let result = await makeAPIPostCall('/api/spaces', {
@@ -25,6 +27,7 @@ export async function createSpace(
 		visibility,
 		allows_templating: allowsTemplating,
 		cluster_id: clusterID,
+		world_type: worldType,
 	});
 	return result.data.data.space_id;
 }
@@ -38,4 +41,15 @@ const spaceStore = new Store((id) => getSpace(id));
 
 export function useSpace(id: string) {
 	return useStoredValue(spaceStore, id);
+}
+
+/**
+ *
+ * @param id The ID of the space to fetch the join code for
+ */
+export async function getSpaceJoinCode(
+	id: string
+): Promise<{code: string; twilioGrant: string}> {
+	const result = await makeAPIGetCall(`/api/spaces/${id}/join`);
+	return result.data.data;
 }

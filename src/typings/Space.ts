@@ -1,3 +1,5 @@
+import {WorldType} from './Types';
+
 export type SpaceVisibility = 'discoverable' | 'unlisted' | 'secret';
 
 export interface Space {
@@ -9,6 +11,7 @@ export interface Space {
 	visibility: SpaceVisibility;
 	allows_templating: boolean;
 	download_count: number;
+	world_type: WorldType;
 }
 
 export interface SpaceMessage {
