@@ -1,5 +1,5 @@
 import SpaceManager from './SpaceManager';
-import * as pixi from 'pixi.js';
+// import * as pixi from 'pixi.js';
 
 export default class PixelSpaceRenderer {
 	constructor(

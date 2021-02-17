@@ -1,5 +1,4 @@
-import * as io from 'socket.io-client';
-import {API_SERVER_URL} from '../../../lib/constants';
+import {SIM_SERVER_URL} from '../../../lib/constants';
 import {SpaceParticipant} from '../../../typings/Space';
 
 export interface SpaceMetadata {}
@@ -27,17 +26,15 @@ export interface ChunkData {
  * This manager class processes data about a cluster as it arrives.
  */
 export default class SpaceManager {
-	socket: SocketIOClient.Socket;
+	socket: WebSocket;
 	participants = new Map<string, SpaceParticipant>();
 	constructedWorldData = new Map<ChunkPosition, ChunkData>();
 	spaceMetadata: SpaceMetadata = {};
 	constructor(public readonly id: string) {
-		this.socket = io.connect(API_SERVER_URL + '/space/' + id);
+		this.socket = new WebSocket(`${SIM_SERVER_URL}/space/${id}`);
 
-		const onReceiveSpaceMetadata = (metadata: SpaceMetadata) => {
-			this.spaceMetadata = metadata;
-		};
-
-		this.socket.on('space-metadata', onReceiveSpaceMetadata);
+		this.socket.addEventListener('message', (message) => {
+			console.log(message);
+		});
 	}
 }
