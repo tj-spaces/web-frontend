@@ -1,8 +1,6 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import * as io from 'socket.io-client';
 import {connect, Room} from 'twilio-video';
-import useSocketEventListener from '../../hooks/useSocketEventListener';
-import {getLogger} from '../../lib/ClusterLogger';
 import {API_SERVER_URL} from '../../lib/constants';
 import getSessionId from '../../lib/getSessionId';
 import SpaceConnectionContext from './SpaceConnectionContext';
@@ -13,41 +11,41 @@ import SpaceParticipantsContext from './SpaceParticipantsContext';
 import SpaceMessagesContext from './SpaceMessagesContext';
 import useSpaceMessageSubscription from './useSpaceMessagesSubscription';
 import useSpaceParticipantsSubscription from './useSpaceParticipantsSubscription';
-
-const logger = getLogger('space');
-const conn = io.connect(API_SERVER_URL + '?sessionID=' + getSessionId());
+import joinSpace from '../../space/joinSpace';
+import SpaceManager from './SpaceManager';
 
 export default function Space({id}: {id: string}) {
 	const [twilioRoom, setTwilioRoom] = useState<Room | null>(null);
-
-	const onReceiveTwilioGrant = useCallback((grant: string) => {
-		logger.debug('Received Twilio grant');
-		connect(grant, {region: 'us1'})
-			.then((room) => {
-				setTwilioRoom(room);
-			})
-			.catch((err) => {
-				logger.error('Error when receiving Twilio grant: ' + err);
-			});
-	}, []);
-
-	useSocketEventListener(conn, 'twilio_grant', onReceiveTwilioGrant);
+	const connectionRef = useRef<WebSocket>();
+	const managerRef = useRef<SpaceManager>();
 
 	useEffect(() => {
-		conn.emit('join_space', id);
+		(async () => {
+			const {connection, twilioGrant} = await joinSpace(id);
+			connectionRef.current = connection;
+			managerRef.current = new SpaceManager(connection);
 
-		return () => {
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-			conn.emit('leave_space');
-		};
+			const room = await connect(twilioGrant, {region: 'us1'});
+			setTwilioRoom(room);
+		})();
 	}, [id]);
 
-	const messages = useSpaceMessageSubscription(conn);
-	const participants = useSpaceParticipantsSubscription(conn);
+	/*
+	useLayoutEffect(() => {
+		const canvas = canvasRef.current!;
+		renderRef.current = new PixelSpaceRenderer(
+			canvas.getContext('2d')!,
+			managerRef.current
+		);
+	}, []);
+	*/
+
+	// const messages = useSpaceMessageSubscription(conn);
+	// const participants = useSpaceParticipantsSubscription(conn);
 
 	return (
 		<SpaceIDContext.Provider value={id}>
-			<SpaceConnectionContext.Provider value={conn}>
+			{/* <SpaceConnectionContext.Provider value={conn}>
 				<SpaceParticipantsContext.Provider value={participants}>
 					<SpaceMessagesContext.Provider value={messages}>
 						<SpaceMediaWrapper twilioRoom={twilioRoom}>
@@ -55,7 +53,7 @@ export default function Space({id}: {id: string}) {
 						</SpaceMediaWrapper>
 					</SpaceMessagesContext.Provider>
 				</SpaceParticipantsContext.Provider>
-			</SpaceConnectionContext.Provider>
+			</SpaceConnectionContext.Provider> */}
 		</SpaceIDContext.Provider>
 	);
 }

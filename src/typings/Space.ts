@@ -144,3 +144,24 @@ export interface SpaceMessage {
 	text: string;
 	replyTo?: string;
 }
+
+export interface SpaceMetadata {}
+
+export interface ChunkPosition {
+	x: number;
+	y: number;
+	z: number;
+}
+
+export interface Block {
+	id: string;
+}
+
+export interface ChunkData {
+	// X, Y, and Z position, divided by 16
+	position: ChunkPosition;
+	// A list of the unique blocks (with metadata) that occur in the world
+	palette: Block[];
+	// A list of palette indexes, returned as a stream of binary data
+	blocks: Uint32Array;
+}

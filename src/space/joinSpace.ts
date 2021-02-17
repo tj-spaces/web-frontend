@@ -8,9 +8,10 @@ export default async function joinSpace(
 	const ws = new WebSocket(SIM_SERVER_URL);
 
 	return new Promise((resolve, reject) => {
-		ws.send('connect:' + code);
+		ws.onopen = () => ws.send('connect:' + code);
 
 		const onMessage = (ev: MessageEvent<string>) => {
+			console.log(ev);
 			// Immediately remove this event hook after the first message
 			ws.removeEventListener('message', onMessage);
 
@@ -26,5 +27,3 @@ export default async function joinSpace(
 		ws.addEventListener('message', onMessage);
 	});
 }
-
-console.log(joinSpace);
