@@ -1,16 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
-import * as io from 'socket.io-client';
 import {connect, Room} from 'twilio-video';
-import {API_SERVER_URL} from '../../lib/constants';
-import getSessionId from '../../lib/getSessionId';
-import SpaceConnectionContext from './SpaceConnectionContext';
-import SpaceContainer from './SpaceContainer';
 import SpaceIDContext from './SpaceIDContext';
-import SpaceMediaWrapper from './SpaceMediaWrapper';
-import SpaceParticipantsContext from './SpaceParticipantsContext';
-import SpaceMessagesContext from './SpaceMessagesContext';
-import useSpaceMessageSubscription from './useSpaceMessagesSubscription';
-import useSpaceParticipantsSubscription from './useSpaceParticipantsSubscription';
 import joinSpace from '../../space/joinSpace';
 import SpaceManager from './SpaceManager';
 
