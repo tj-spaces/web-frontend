@@ -1,10 +1,10 @@
 import {useContext} from 'react';
-import AuthContext from '../../components/AuthContext';
-import BaseRow from '../../components/base/BaseRow';
-import BaseText from '../../components/base/BaseText';
-import Navbar from '../../components/Navbar';
-import StreamerModeContext from '../../components/StreamerModeContext';
-import {createStylesheet} from '../../styles/createStylesheet';
+import AuthContext from '../components/AuthContext';
+import BaseRow from '../components/base/BaseRow';
+import BaseText from '../components/base/BaseText';
+import Navbar from '../components/Navbar';
+import StreamerModeContext from '../components/StreamerModeContext';
+import {createStylesheet} from '../styles/createStylesheet';
 
 const styles = createStylesheet({
 	picture: {

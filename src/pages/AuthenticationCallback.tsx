@@ -1,12 +1,12 @@
 import {Link, Redirect, useLocation, useParams} from 'react-router-dom';
-import {createSession} from '../../api/api';
+import {createSession} from '../api/api';
 import * as qs from 'query-string';
 import {useContext, useEffect, useState} from 'react';
-import Fullscreen from '../../components/base/BaseFullscreen';
-import AuthContext from '../../components/AuthContext';
-import {FetchStatus} from '../../api/FetchStatus';
+import Fullscreen from '../components/base/BaseFullscreen';
+import AuthContext from '../components/AuthContext';
+import {FetchStatus} from '../api/FetchStatus';
 import React from 'react';
-import Awaiting from '../../components/Awaiting';
+import Awaiting from '../components/Awaiting';
 
 const LoginError = () => (
 	<Fullscreen>

@@ -10,18 +10,15 @@ import StreamerModeContext from './components/StreamerModeContext';
 import ThemeProvider from './ThemeProvider';
 
 const AuthorizationCallback = lazy(
-	() => import('./pages/AuthenticationCallback/AuthenticationCallback')
+	() => import('./pages/AuthenticationCallback')
 );
-const AccountPage = lazy(() => import('./pages/AccountPage/AccountPage'));
-const ClusterPage = lazy(() => import('./pages/ClusterPage/ClusterPage'));
-const ClusterExplorerPage = lazy(
-	() => import('./pages/ClusterExplorerPage/ClusterExplorerPage')
-);
-const DefaultPage = lazy(() => import('./pages/DefaultPage/DefaultPage'));
-const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'));
-const Logout = lazy(() => import('./pages/LogoutPage/LogoutPage'));
-const SpacePage = lazy(() => import('./pages/SpacePage/SpacePage'));
-const TermsPage = lazy(() => import('./pages/TermsPage/TermsPage'));
+const AccountPage = lazy(() => import('./pages/AccountPage'));
+const ClusterPage = lazy(() => import('./pages/ClusterPage'));
+const DefaultPage = lazy(() => import('./pages/DefaultPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const Logout = lazy(() => import('./pages/LogoutPage'));
+const SpacePage = lazy(() => import('./pages/SpacePage'));
+const TermsPage = lazy(() => import('./pages/TermsPage'));
 
 function App() {
 	return (
@@ -41,11 +38,6 @@ function App() {
 									<Route path="/clusters/:clusterId" component={ClusterPage} />
 									<Route path="/login" exact component={LoginPage} />
 									<Route path="/logout" exact component={Logout} />
-									<Route
-										path="/explore"
-										exact
-										component={ClusterExplorerPage}
-									/>
 									<Route path="/terms" exact component={TermsPage} />
 									<Route path="/" exact component={DefaultPage} />
 								</Switch>

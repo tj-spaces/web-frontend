@@ -1,7 +1,7 @@
 import {useContext} from 'react';
-import AuthContext from '../../components/AuthContext';
-import HomePage from '../HomePage/HomePage';
-import LoginPage from '../LoginPage/LoginPage';
+import AuthContext from '../components/AuthContext';
+import HomePage from './HomePage';
+import LoginPage from './LoginPage';
 
 /**
  * This is the root page. If you aren't logged in, it renders the login page,

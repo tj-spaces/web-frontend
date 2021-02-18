@@ -1,7 +1,7 @@
 import {useState} from 'react';
-import ClustersTab from '../pages/ClustersTab/ClustersTab';
-import ExploreTab from '../pages/ExploreTab/ExploreTab';
-import FriendsTab from '../pages/FriendsTab/FriendsTab';
+import ClustersTab from '../pages/ClustersTab';
+import ExploreTab from '../pages/ExploreTab';
+import FriendsTab from '../pages/FriendsTab';
 import BaseRow from './base/BaseRow';
 import BaseText from './base/BaseText';
 

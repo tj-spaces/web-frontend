@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react';
-import {getMyClusters} from '../../api/clusters';
-import {FetchStatus} from '../../api/FetchStatus';
-import Awaiting from '../../components/Awaiting';
-import ClusterList from '../../components/clusterList/ClusterList';
-import CreateClusterButton from '../../components/CreateClusterButton';
-import {Cluster} from '../../typings/Cluster';
+import {getMyClusters} from '../api/clusters';
+import {FetchStatus} from '../api/FetchStatus';
+import Awaiting from '../components/Awaiting';
+import ClusterList from '../components/clusterList/ClusterList';
+import CreateClusterButton from '../components/CreateClusterButton';
+import {Cluster} from '../typings/Cluster';
 
 export default function ClustersTab() {
 	let [clusters, setClusters] = useState<Cluster[]>([]);

@@ -1,12 +1,12 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import Fullscreen from '../../components/base/BaseFullscreen';
-import BaseRow from '../../components/base/BaseRow';
-import BaseText from '../../components/base/BaseText';
+import Fullscreen from '../components/base/BaseFullscreen';
+import BaseRow from '../components/base/BaseRow';
+import BaseText from '../components/base/BaseText';
 import {
 	getGoogleAuthorizationUrl,
 	getIonAuthorizationUrl,
-} from '../../lib/getAuthorizationUrl';
+} from '../lib/getAuthorizationUrl';
 
 export default function LoginPage() {
 	document.title = 'Log In';

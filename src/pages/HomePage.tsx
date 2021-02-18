@@ -1,7 +1,7 @@
 import React from 'react';
-import Navbar from '../../components/Navbar';
-import {createStylesheet} from '../../styles/createStylesheet';
-import Tabs from '../../components/Tabs';
+import Navbar from '../components/Navbar';
+import {createStylesheet} from '../styles/createStylesheet';
+import Tabs from '../components/Tabs';
 
 const styles = createStylesheet({
 	container: {

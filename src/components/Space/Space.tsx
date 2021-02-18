@@ -3,11 +3,6 @@ import {connect, Room} from 'twilio-video';
 import SpaceIDContext from './SpaceIDContext';
 import joinSpace from '../../space/joinSpace';
 import SpaceManager from './SpaceManager';
-import SpaceConnectionContext from './SpaceConnectionContext';
-import SpaceMessagesContext from './SpaceMessagesContext';
-import SpaceParticipantsContext from './SpaceParticipantsContext';
-import useSpaceMessageSubscription from './useSpaceMessagesSubscription';
-import useSpaceParticipantsSubscription from './useSpaceParticipantsSubscription';
 import SpaceContainer from './SpaceContainer';
 import SpaceMediaWrapper from './SpaceMediaWrapper';
 
