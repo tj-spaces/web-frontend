@@ -10,8 +10,10 @@ import {
  */
 export default class SpaceManager {
 	participants = new Map<string, SpaceParticipant>();
+
 	constructedWorldData = new Map<ChunkPosition, ChunkData>();
 	spaceMetadata: SpaceMetadata = {};
+
 	constructor(public readonly connection: WebSocket) {
 		this.connection.addEventListener('message', (message) => {
 			console.log('WEBSOCKET MESSAGE:', message);

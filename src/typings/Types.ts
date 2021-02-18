@@ -5,3 +5,8 @@ export interface FriendWithRecentActivity extends PublicUserInfo {
 }
 
 export type WorldType = '3d-voxel' | '2d-pixel';
+
+export interface ITopicTag {
+	id: string;
+	display: string;
+}
