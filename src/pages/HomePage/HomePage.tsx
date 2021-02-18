@@ -22,7 +22,6 @@ export default function HomePage() {
 	return (
 		<div className={styles('container')}>
 			<Navbar />
-			<ModelViewerTest />
 			<Tabs />
 		</div>
 	);
