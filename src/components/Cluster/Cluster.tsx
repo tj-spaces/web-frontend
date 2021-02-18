@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {getClusterMembers, useCluster} from '../../api/clusters';
 import {FetchStatus} from '../../api/FetchStatus';
+import {createStylesheet} from '../../styles/createStylesheet';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import Awaiting from '../Awaiting';
 import BaseRow from '../base/BaseRow';
@@ -9,6 +10,16 @@ import UserListRow from '../UserListRow';
 import ClusterSettingsModal from './ClusterSettingsModal';
 import ClusterSidebar from './ClusterSidebar';
 import CurrentClusterContext from './CurrentClusterContext';
+
+const styles = createStylesheet({
+	clusterContent: {
+		flex: 4,
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center',
+		paddingTop: '5rem',
+	},
+});
 
 /**
  * Renders the main page for a cluster. This includes the list of Spaces and list of Posts in the cluster.
@@ -55,15 +66,7 @@ export default function Cluster({id}: {id: string}) {
 					clusterName={cluster.name}
 					isOpen={isSidebarOpen}
 				/>
-				<div
-					style={{
-						flex: 4,
-						display: 'flex',
-						flexDirection: 'column',
-						justifyContent: 'center',
-						paddingTop: '5rem',
-					}}
-				>
+				<div className={styles('clusterContent')}>
 					<BaseText variant="primary-title" alignment="center">
 						wave to your friends and get the party started!
 					</BaseText>

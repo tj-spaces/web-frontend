@@ -42,7 +42,7 @@ export default function UserListRow({user}: {user: PublicUserInfo}) {
 				<BaseText variant="body-bold" alignment="center">
 					{user.name}
 				</BaseText>
-				{/* <BaseText variant="body-semibold">Online</BaseText> */}
+				<BaseText variant="body-semibold">Online in unlisted space</BaseText>
 			</BaseRow>
 			<BaseRow
 				direction="column"
