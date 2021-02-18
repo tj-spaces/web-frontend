@@ -24,7 +24,6 @@ export default function ModelViewerTest() {
 		if (canvas && !context2DRef.current) {
 			context2DRef.current = canvas.getContext('2d')!;
 			const keyListener = (ev: KeyboardEvent) => {
-				console.log('Key was released:', ev.key);
 				switch (ev.key) {
 					case 'f':
 						setScrollLevel((scrollLevel) => scrollLevel / 2);

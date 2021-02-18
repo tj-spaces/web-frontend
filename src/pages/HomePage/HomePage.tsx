@@ -2,7 +2,6 @@ import React from 'react';
 import Navbar from '../../components/Navbar';
 import {createStylesheet} from '../../styles/createStylesheet';
 import Tabs from '../../components/Tabs';
-import ModelViewerTest from '../../components/ModelViewerTest';
 
 const styles = createStylesheet({
 	container: {
@@ -22,7 +21,6 @@ export default function HomePage() {
 	return (
 		<div className={styles('container')}>
 			<Navbar />
-			<ModelViewerTest />
 			<Tabs />
 		</div>
 	);
