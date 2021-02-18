@@ -18,13 +18,28 @@ export default function Tabs() {
 	return (
 		<BaseRow direction="column" alignment="center" width="100%">
 			<BaseRow direction="row" spacing={1} justifyContent="center" rails={1}>
-				<BaseText variant="list-item-title" onClick={() => setTab('explore')}>
+				<BaseText
+					variant="list-item-title"
+					onClick={() => setTab('explore')}
+					underline={tab === 'explore'}
+					unselectable
+				>
 					Explore
 				</BaseText>
-				<BaseText variant="list-item-title" onClick={() => setTab('friends')}>
+				<BaseText
+					variant="list-item-title"
+					onClick={() => setTab('friends')}
+					underline={tab === 'friends'}
+					unselectable
+				>
 					Friends
 				</BaseText>
-				<BaseText variant="list-item-title" onClick={() => setTab('clusters')}>
+				<BaseText
+					variant="list-item-title"
+					onClick={() => setTab('clusters')}
+					underline={tab === 'clusters'}
+					unselectable
+				>
 					Clusters
 				</BaseText>
 			</BaseRow>

@@ -5,9 +5,6 @@ import TopicTagList from '../../components/TopicTagList';
 export default function ExploreTab() {
 	return (
 		<>
-			<BaseText variant="primary-title" alignment="center">
-				Explore
-			</BaseText>
 			<BaseText variant="caption">Trending Topics</BaseText>
 			<TopicTagList
 				tags={[

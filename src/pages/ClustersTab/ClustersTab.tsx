@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import {getMyClusters} from '../../api/clusters';
 import {FetchStatus} from '../../api/FetchStatus';
 import Awaiting from '../../components/Awaiting';
-import BaseText from '../../components/base/BaseText';
 import ClusterList from '../../components/clusterList/ClusterList';
 import CreateClusterButton from '../../components/CreateClusterButton';
 import {Cluster} from '../../typings/Cluster';
@@ -25,9 +24,6 @@ export default function ClustersTab() {
 
 	return (
 		<>
-			<BaseText variant="primary-title" alignment="center">
-				Clusters
-			</BaseText>
 			<CreateClusterButton />
 			<Awaiting fetchStatus={fetchStatus}>
 				<ClusterList clusters={clusters} />

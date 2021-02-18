@@ -1,6 +1,5 @@
 import React from 'react';
 import AddFriendsPressableText from '../../components/addFriends/AddFriendsPressableText';
-import BaseText from '../../components/base/BaseText';
 import FriendActivity from '../../components/friendActivity/FriendActivity';
 import IncomingFriendRequestsListContainer from '../../components/incomingFriendRequests/IncomingFriendRequestsListContainer';
 
@@ -10,7 +9,6 @@ import IncomingFriendRequestsListContainer from '../../components/incomingFriend
 export default function FriendsTab() {
 	return (
 		<>
-			<BaseText variant="primary-title">Friends</BaseText>
 			<AddFriendsPressableText />
 			<IncomingFriendRequestsListContainer />
 			<FriendActivity />

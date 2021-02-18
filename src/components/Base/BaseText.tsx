@@ -12,20 +12,28 @@ const textDecorationStyles = createStylesheet({
 	},
 });
 
+const selectableStyles = createStylesheet({
+	unselectable: {
+		userSelect: 'none',
+	},
+});
+
 export default function BaseText({
 	alignment = 'start',
-	variant,
-	underline = false,
-	xstyle,
 	children,
 	onClick,
+	underline = false,
+	unselectable = false,
+	variant,
+	xstyle,
 }: {
 	alignment?: 'start' | 'end' | 'center';
-	variant?: keyof typeof textStyles;
-	underline?: boolean;
-	xstyle?: ClassProvider;
 	children: React.ReactNode;
 	onClick?: () => void;
+	underline?: boolean;
+	unselectable?: boolean;
+	variant?: keyof typeof textStyles;
+	xstyle?: ClassProvider;
 }) {
 	return (
 		<span
@@ -33,6 +41,7 @@ export default function BaseText({
 				textAlignStyles[alignment],
 				variant ? textStyles[variant] : undefined,
 				underline ? textDecorationStyles.underline : undefined,
+				unselectable ? selectableStyles.unselectable : undefined,
 				xstyle
 			)}
 			onClick={onClick}
