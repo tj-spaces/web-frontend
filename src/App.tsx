@@ -7,6 +7,7 @@ import AuthenticationWrapper from './components/AuthenticationWrapper';
 import CenteredLoadingText from './components/CenteredLoadingText';
 import ErrorBoundary from './components/ErrorBoundary';
 import StreamerModeContext from './components/StreamerModeContext';
+import TestNbla from './components/testNbla/NblaEditor';
 import ThemeProvider from './ThemeProvider';
 
 const AuthorizationCallback = lazy(
@@ -39,6 +40,7 @@ function App() {
 									<Route path="/login" exact component={LoginPage} />
 									<Route path="/logout" exact component={Logout} />
 									<Route path="/terms" exact component={TermsPage} />
+									<Route path="/testnbla" exact component={TestNbla} />
 									<Route path="/" exact component={DefaultPage} />
 								</Switch>
 							</Suspense>
