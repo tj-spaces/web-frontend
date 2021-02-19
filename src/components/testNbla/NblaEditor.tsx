@@ -8,7 +8,7 @@ export default function TestNbla() {
 
 	return (
 		<BaseRow direction="row">
-			<BaseRow direction="column" flex={1} spacing={1}>
+			<BaseRow direction="column" flex={2} spacing={1}>
 				<button
 					onClick={() =>
 						setFns([

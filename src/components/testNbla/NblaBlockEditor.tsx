@@ -168,22 +168,18 @@ export default function NblaBlockEditor({
 				}
 
 				return (
-					<div
-						style={
-							{
-								// borderTop: '1px solid white',
-								// borderBottom: '1px solid white',
-							}
-						}
-					>
+					<BaseRow direction="row" spacing={1}>
+						<div>
+							<button
+								onClick={() => deleteStatementAtIndex(index)}
+								style={{marginTop: '1em'}}
+							>
+								Delete
+							</button>
+						</div>
+
 						{component}
-						<button
-							onClick={() => deleteStatementAtIndex(index)}
-							style={{marginTop: '1em'}}
-						>
-							Delete
-						</button>
-					</div>
+					</BaseRow>
 				);
 			})}
 			<BaseRow direction="row" spacing={1}>
@@ -249,6 +245,31 @@ export default function NblaBlockEditor({
 					}}
 				>
 					Add Variable
+				</button>
+				<button
+					onClick={() => {
+						insertStatementAtIndex(
+							{
+								type: 'expression',
+								expression: {
+									type: 'call',
+									callee: {
+										type: 'identifier',
+										id: 'console.log',
+									},
+									parameters: [
+										{
+											type: 'string',
+											value: 'Hello world!',
+										},
+									],
+								},
+							},
+							block.body.length
+						);
+					}}
+				>
+					Add Function Call
 				</button>
 			</BaseRow>
 		</BaseRow>

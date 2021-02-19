@@ -5,6 +5,8 @@ import NblaIntExpressionEditor from './NblaIntExpressionEditor';
 import NblaAssignmentExpressionEditor from './NblaAssignmentExpressionEditor';
 import React from 'react';
 import NblaBooleanExpressionEditor from './NblaBooleanExpressionEditor';
+import NblaCallExpressionEditor from './NblaCallExpressionEditor';
+import NblaStringExpressionEditor from './NblaStringExpressionEditor';
 
 export default function NblaExpressionEditor({
 	expression,
@@ -35,6 +37,13 @@ export default function NblaExpressionEditor({
 					setExpression={setExpression}
 				/>
 			);
+		case 'string':
+			return (
+				<NblaStringExpressionEditor
+					expression={expression}
+					setExpression={setExpression}
+				/>
+			);
 		case 'identifier':
 			return (
 				<NblaIdentifierEditor
@@ -45,6 +54,13 @@ export default function NblaExpressionEditor({
 		case 'assignment':
 			return (
 				<NblaAssignmentExpressionEditor
+					expression={expression}
+					setExpression={setExpression}
+				/>
+			);
+		case 'call':
+			return (
+				<NblaCallExpressionEditor
 					expression={expression}
 					setExpression={setExpression}
 				/>
