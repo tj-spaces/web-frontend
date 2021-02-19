@@ -4,9 +4,7 @@ import BaseRow from '../base/BaseRow';
 import {NbBlock, NbStatement} from './ASTTypes';
 import {defaultStatements} from './DefaultValues';
 import NblaBindingEditor from './NblaBindingEditor';
-import NblaExpressionEditor from './NblaExpressionEditor';
-import NblaHookEditor from './NblaHookEditor';
-import NblaIfStatementEditor from './NblaIfStatementEditor';
+import NblaStatementEditor from './NblaStatementEditor';
 
 const styles = createStylesheet({
 	block: {
@@ -95,34 +93,6 @@ export default function NblaBlockEditor({
 				);
 			})}
 			{block.body.map((statement, index) => {
-				let component: JSX.Element = null!;
-				if (statement.type === 'hook') {
-					component = (
-						<NblaHookEditor
-							hook={statement}
-							setHook={(hook) => replaceStatementAtIndex(hook, index)}
-						/>
-					);
-				} else if (statement.type === 'expression') {
-					component = (
-						<NblaExpressionEditor
-							expression={statement.expression}
-							setExpression={(expression) =>
-								replaceStatementAtIndex({type: 'expression', expression}, index)
-							}
-						/>
-					);
-				} else if (statement.type === 'if') {
-					component = (
-						<NblaIfStatementEditor
-							statement={statement}
-							setStatement={(statement) =>
-								replaceStatementAtIndex(statement, index)
-							}
-						/>
-					);
-				}
-
 				return (
 					<BaseRow direction="row" spacing={1}>
 						<div>
@@ -134,18 +104,16 @@ export default function NblaBlockEditor({
 							</button>
 						</div>
 
-						{component}
+						<NblaStatementEditor
+							statement={statement}
+							setStatement={(statement) =>
+								replaceStatementAtIndex(statement, index)
+							}
+						/>
 					</BaseRow>
 				);
 			})}
 			<BaseRow direction="row" spacing={1}>
-				<button
-					onClick={() =>
-						insertStatementAtIndex(defaultStatements.hook, block.body.length)
-					}
-				>
-					Add hook
-				</button>
 				<button
 					onClick={() =>
 						insertStatementAtIndex(
@@ -161,7 +129,7 @@ export default function NblaBlockEditor({
 						insertStatementAtIndex(defaultStatements.if, block.body.length);
 					}}
 				>
-					Add If Statement
+					Add Statement
 				</button>
 				<button
 					onClick={() => {

@@ -84,7 +84,7 @@ export interface NbHookExpression {
 
 export interface NbAsyncStatement {
 	type: 'async';
-	body: NbStatement[];
+	body: NbBlock;
 }
 
 export interface NbAmbientStatement {

@@ -29,15 +29,22 @@ export default function TestNbla() {
 				</button>
 				{fns.map((fn, idx) => {
 					return (
-						<NblaFunctionEditor
-							fn={fn}
-							setFn={(fn) =>
-								setFns([...fns.slice(0, idx), fn, ...fns.slice(idx + 1)])
-							}
-							deleteFn={() =>
-								setFns([...fns.slice(0, idx), ...fns.slice(idx + 1)])
-							}
-						/>
+						<>
+							<NblaFunctionEditor
+								key={idx}
+								fn={fn}
+								setFn={(fn) =>
+									setFns([...fns.slice(0, idx), fn, ...fns.slice(idx + 1)])
+								}
+							/>
+							<button
+								onClick={() =>
+									setFns([...fns.slice(0, idx), ...fns.slice(idx + 1)])
+								}
+							>
+								Delete
+							</button>
+						</>
 					);
 				})}
 			</BaseRow>

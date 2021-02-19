@@ -4,29 +4,29 @@ import {NbHookStatement} from './ASTTypes';
 import NblaBlockEditor from './NblaBlockEditor';
 import NblaExpressionEditor from './NblaExpressionEditor';
 
-export default function NblaHookEditor({
-	hook,
-	setHook,
+export default function NblaHookStatementEditor({
+	statement,
+	setStatement,
 }: {
-	hook: NbHookStatement;
-	setHook: (newValue: NbHookStatement) => void;
+	statement: NbHookStatement;
+	setStatement: (newValue: NbHookStatement) => void;
 }) {
 	return (
 		<BaseRow direction="column" spacing={1}>
 			<BaseText variant="caption">Hook</BaseText>
 			<NblaExpressionEditor
-				expression={hook.to}
+				expression={statement.to}
 				setExpression={(expr) =>
-					setHook({
-						...hook,
+					setStatement({
+						...statement,
 						to: expr,
 					})
 				}
 			/>
 			<BaseText variant="caption">Body</BaseText>
 			<NblaBlockEditor
-				block={hook.body}
-				setBlock={(body) => setHook({...hook, body})}
+				block={statement.body}
+				setBlock={(body) => setStatement({...statement, body})}
 			/>
 		</BaseRow>
 	);

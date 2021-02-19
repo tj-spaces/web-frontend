@@ -144,7 +144,10 @@ export const defaultStatements: Record<NbStatement['type'], NbStatement> = {
 	},
 	async: {
 		type: 'async',
-		body: [],
+		body: {
+			body: [],
+			bindings: [],
+		},
 	},
 	expression: {
 		type: 'expression',
