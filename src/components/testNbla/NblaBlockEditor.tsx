@@ -1,19 +1,20 @@
 import React, {useCallback} from 'react';
 import {createStylesheet} from '../../styles/createStylesheet';
 import BaseRow from '../base/BaseRow';
-import BaseText from '../base/BaseText';
 import {
 	NbBlock,
 	NbExpressionStatement,
 	NbHookStatement,
 	NbStatement,
 } from './ASTTypes';
+import NblaBindingEditor from './NblaBindingEditor';
 import NblaExpressionEditor from './NblaExpressionEditor';
 import NblaHookEditor from './NblaHookEditor';
+import NblaIfStatementEditor from './NblaIfStatementEditor';
 
 const styles = createStylesheet({
 	block: {
-		marginLeft: '0.5em',
+		paddingLeft: '0.5em',
 		borderLeft: '2px solid white',
 	},
 });
@@ -105,34 +106,85 @@ export default function NblaBlockEditor({
 
 	return (
 		<BaseRow direction="column" spacing={1} xstyle={styles.block}>
+			{block.bindings.map((binding, index) => {
+				return (
+					<>
+						<NblaBindingEditor
+							binding={binding}
+							setBinding={(binding) =>
+								setBlock({
+									...block,
+									bindings: [
+										...block.bindings.slice(0, index),
+										binding,
+										...block.bindings.slice(index + 1),
+									],
+								})
+							}
+						/>
+						<button
+							onClick={() =>
+								setBlock({
+									...block,
+									bindings: [
+										...block.bindings.slice(0, index),
+										...block.bindings.slice(index + 1),
+									],
+								})
+							}
+						>
+							Delete variable
+						</button>
+					</>
+				);
+			})}
 			{block.body.map((statement, index) => {
+				let component: JSX.Element = null!;
 				if (statement.type === 'hook') {
-					return (
+					component = (
 						<NblaHookEditor
 							hook={statement}
 							setHook={(hook) => replaceStatementAtIndex(hook, index)}
-							deleteHook={() => deleteStatementAtIndex(index)}
 						/>
 					);
 				} else if (statement.type === 'expression') {
-					return (
-						<BaseRow direction="column">
-							<NblaExpressionEditor
-								expression={statement.expression}
-								setExpression={(expression) =>
-									replaceStatementAtIndex(
-										{type: 'expression', expression},
-										index
-									)
-								}
-							/>
-							<button onClick={() => deleteStatementAtIndex(index)}>
-								Delete
-							</button>
-						</BaseRow>
+					component = (
+						<NblaExpressionEditor
+							expression={statement.expression}
+							setExpression={(expression) =>
+								replaceStatementAtIndex({type: 'expression', expression}, index)
+							}
+						/>
+					);
+				} else if (statement.type === 'if') {
+					component = (
+						<NblaIfStatementEditor
+							statement={statement}
+							setStatement={(statement) =>
+								replaceStatementAtIndex(statement, index)
+							}
+						/>
 					);
 				}
-				return null;
+
+				return (
+					<div
+						style={
+							{
+								// borderTop: '1px solid white',
+								// borderBottom: '1px solid white',
+							}
+						}
+					>
+						{component}
+						<button
+							onClick={() => deleteStatementAtIndex(index)}
+							style={{marginTop: '1em'}}
+						>
+							Delete
+						</button>
+					</div>
+				);
 			})}
 			<BaseRow direction="row" spacing={1}>
 				<button
@@ -159,6 +211,44 @@ export default function NblaBlockEditor({
 					}
 				>
 					Set variable
+				</button>
+				<button
+					onClick={() => {
+						insertStatementAtIndex(
+							{
+								type: 'if',
+								condition: {
+									type: 'boolean',
+									value: true,
+								},
+								consequent: {
+									body: [],
+									bindings: [],
+								},
+							},
+							block.body.length
+						);
+					}}
+				>
+					Add If Statement
+				</button>
+				<button
+					onClick={() => {
+						setBlock({
+							...block,
+							bindings: [
+								...block.bindings,
+								{
+									type: 'string',
+									id: '__binding_' + block.bindings.length,
+									parameters: [],
+									label: 'My variable',
+								},
+							],
+						});
+					}}
+				>
+					Add Variable
 				</button>
 			</BaseRow>
 		</BaseRow>

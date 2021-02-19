@@ -1,15 +1,15 @@
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
-import {NbSetExpression} from './ASTTypes';
+import {NbAssignmentExpression} from './ASTTypes';
 import NblaExpressionEditor from './NblaExpressionEditor';
 import NblaIdentifierEditor from './NblaIdentifierEditor';
 
-export default function NblaSetExpressionEditor({
+export default function NblaAssignmentExpressionEditor({
 	expression,
 	setExpression,
 }: {
-	expression: NbSetExpression;
-	setExpression: (newValue: NbSetExpression) => void;
+	expression: NbAssignmentExpression;
+	setExpression: (newValue: NbAssignmentExpression) => void;
 }) {
 	return (
 		<BaseRow direction="column">
@@ -17,13 +17,10 @@ export default function NblaSetExpressionEditor({
 			<BaseRow direction="row" spacing={1}>
 				<NblaIdentifierEditor
 					id={expression.left.id}
-					setID={() =>
+					setID={(id) =>
 						setExpression({
 							...expression,
-							left: {
-								type: 'identifier',
-								id: expression.left.id,
-							},
+							left: {type: 'identifier', id},
 						})
 					}
 				/>

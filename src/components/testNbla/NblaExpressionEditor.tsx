@@ -2,7 +2,7 @@ import {NbExpression} from './ASTTypes';
 import NblaBinaryExpressionEditor from './NblaBinaryExpressionEditor';
 import NblaIdentifierEditor from './NblaIdentifierEditor';
 import NblaIntExpressionEditor from './NblaIntExpressionEditor';
-import NblaSetExpressionEditor from './NblaSetExpressionEditor';
+import NblaAssignmentExpressionEditor from './NblaAssignmentExpressionEditor';
 
 export default function NblaExpressionEditor({
 	expression,
@@ -35,7 +35,7 @@ export default function NblaExpressionEditor({
 			);
 		case 'set':
 			return (
-				<NblaSetExpressionEditor
+				<NblaAssignmentExpressionEditor
 					expression={expression}
 					setExpression={setExpression}
 				/>

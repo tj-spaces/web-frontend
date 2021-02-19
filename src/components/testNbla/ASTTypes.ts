@@ -109,7 +109,7 @@ export interface NbMemberExpression {
 	property: string;
 }
 
-export interface NbSetExpression {
+export interface NbAssignmentExpression {
 	type: 'set';
 	left: NbIdentifierExpression;
 	right: NbExpression;
@@ -141,4 +141,4 @@ export type NbExpression =
 	| NbCallExpression
 	| NbIdentifierExpression
 	| NbMemberExpression
-	| NbSetExpression;
+	| NbAssignmentExpression;
