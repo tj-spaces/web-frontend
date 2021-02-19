@@ -33,7 +33,7 @@ export default function NblaExpressionEditor({
 					setID={(id) => setExpression({type: 'identifier', id})}
 				/>
 			);
-		case 'set':
+		case 'assignment':
 			return (
 				<NblaAssignmentExpressionEditor
 					expression={expression}

@@ -110,7 +110,7 @@ export interface NbMemberExpression {
 }
 
 export interface NbAssignmentExpression {
-	type: 'set';
+	type: 'assignment';
 	left: NbIdentifierExpression;
 	right: NbExpression;
 }

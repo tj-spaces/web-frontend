@@ -38,7 +38,7 @@ const baseBinaryExpressionStatement: NbExpressionStatement = {
 const baseSetExpressionStatement: NbExpressionStatement = {
 	type: 'expression',
 	expression: {
-		type: 'set',
+		type: 'assignment',
 		left: {
 			type: 'identifier',
 			id: 'id_0',
