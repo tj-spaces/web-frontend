@@ -1,20 +1,23 @@
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
+import {NbIdentifierExpression} from './ASTTypes';
 
 export default function NblaIdentifierEditor({
-	id,
-	setID,
+	expression,
+	setExpression,
 }: {
-	id: string;
-	setID: (id: string) => void;
+	expression: NbIdentifierExpression;
+	setExpression: (id: NbIdentifierExpression) => void;
 }) {
 	return (
 		<BaseRow direction="column">
 			<BaseText variant="caption">Identifier</BaseText>
 			<input
 				type="text"
-				onChange={(evt) => setID(evt.target.value)}
-				value={id}
+				onChange={(evt) =>
+					setExpression({type: 'identifier', id: evt.target.value})
+				}
+				value={expression.id}
 			/>
 		</BaseRow>
 	);

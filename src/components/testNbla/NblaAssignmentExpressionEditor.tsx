@@ -3,6 +3,7 @@ import BaseText from '../base/BaseText';
 import {NbAssignmentExpression} from './ASTTypes';
 import NblaExpressionEditor from './NblaExpressionEditor';
 import NblaIdentifierEditor from './NblaIdentifierEditor';
+import NblaMemberExpressionEditor from './NblaMemberExpressionEditor';
 
 export default function NblaAssignmentExpressionEditor({
 	expression,
@@ -15,15 +16,17 @@ export default function NblaAssignmentExpressionEditor({
 		<BaseRow direction="column">
 			<BaseText variant="caption">Assigment</BaseText>
 			<BaseRow direction="row" spacing={1}>
-				<NblaIdentifierEditor
-					id={expression.left.id}
-					setID={(id) =>
-						setExpression({
-							...expression,
-							left: {type: 'identifier', id},
-						})
-					}
-				/>
+				{expression.left.type === 'identifier' ? (
+					<NblaIdentifierEditor
+						expression={expression.left}
+						setExpression={(left) => setExpression({...expression, left})}
+					></NblaIdentifierEditor>
+				) : (
+					<NblaMemberExpressionEditor
+						expression={expression.left}
+						setExpression={(left) => setExpression({...expression, left})}
+					/>
+				)}
 				{' = '}
 				<NblaExpressionEditor
 					expression={expression.right}

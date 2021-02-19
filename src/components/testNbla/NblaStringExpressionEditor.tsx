@@ -14,7 +14,7 @@ export default function NblaStringExpressionEditor({
 		<BaseRow direction="column">
 			<BaseText variant="caption">String</BaseText>
 			<input
-				type="number"
+				type="string"
 				onChange={(evt) =>
 					setExpression({type: 'string', value: evt.target.value})
 				}

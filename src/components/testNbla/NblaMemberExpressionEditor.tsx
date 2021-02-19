@@ -19,8 +19,10 @@ export default function NblaMemberExpressionEditor({
 				setExpression={(expr) => setExpression({...expression, of: expr})}
 			/>
 			<NblaIdentifierEditor
-				id={expression.property}
-				setID={(id) => setExpression({...expression, property: id})}
+				expression={{type: 'identifier', id: expression.property}}
+				setExpression={(newExpression) =>
+					setExpression({...expression, property: newExpression.id})
+				}
 			/>
 		</BaseRow>
 	);

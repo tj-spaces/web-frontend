@@ -111,7 +111,7 @@ export interface NbMemberExpression {
 
 export interface NbAssignmentExpression {
 	type: 'assignment';
-	left: NbIdentifierExpression;
+	left: NbIdentifierExpression | NbMemberExpression;
 	right: NbExpression;
 }
 
