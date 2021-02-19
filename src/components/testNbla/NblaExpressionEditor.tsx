@@ -10,6 +10,9 @@ import NblaStringExpressionEditor from './NblaStringExpressionEditor';
 import NblaMemberExpressionEditor from './NblaMemberExpressionEditor';
 import {defaultExpressions} from './DefaultValues';
 import BaseRow from '../base/BaseRow';
+import NblaHookExpressionEditor from './NblaHookExpressionEditor';
+import NblaFloatExpressionEditor from './NblaFloatExpressionEditor';
+import NblaItemExpressionEditor from './NblaItemExpressionEditor';
 
 export default function NblaExpressionEditor({
 	expression,
@@ -84,6 +87,29 @@ export default function NblaExpressionEditor({
 				/>
 			);
 			break;
+		case 'hook':
+			component = (
+				<NblaHookExpressionEditor
+					expression={expression}
+					setExpression={setExpression}
+				/>
+			);
+			break;
+		case 'float':
+			component = (
+				<NblaFloatExpressionEditor
+					expression={expression}
+					setExpression={setExpression}
+				/>
+			);
+			break;
+		case 'item':
+			component = (
+				<NblaItemExpressionEditor
+					expression={expression}
+					setExpression={setExpression}
+				/>
+			);
 	}
 
 	return (

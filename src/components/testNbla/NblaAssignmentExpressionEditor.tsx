@@ -14,7 +14,7 @@ export default function NblaAssignmentExpressionEditor({
 }) {
 	return (
 		<BaseRow direction="column">
-			<BaseText variant="caption">Assigment</BaseText>
+			<BaseText variant="caption">Assignment</BaseText>
 			<BaseRow direction="row" spacing={1}>
 				{expression.left.type === 'identifier' ? (
 					<NblaIdentifierEditor

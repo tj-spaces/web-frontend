@@ -24,19 +24,35 @@ export default function NblaCallExpressionEditor({
 				<BaseText variant="caption">Arguments</BaseText>
 				{expression.parameters.map((param, index) => {
 					return (
-						<NblaExpressionEditor
-							expression={param}
-							setExpression={(expr) =>
-								setExpression({
-									...expression,
-									parameters: [
-										...expression.parameters.slice(0, index),
-										expr,
-										...expression.parameters.slice(index + 1),
-									],
-								})
-							}
-						/>
+						<>
+							<NblaExpressionEditor
+								expression={param}
+								key={index}
+								setExpression={(expr) =>
+									setExpression({
+										...expression,
+										parameters: [
+											...expression.parameters.slice(0, index),
+											expr,
+											...expression.parameters.slice(index + 1),
+										],
+									})
+								}
+							/>
+							<button
+								onClick={() =>
+									setExpression({
+										...expression,
+										parameters: [
+											...expression.parameters.slice(0, index),
+											...expression.parameters.slice(index + 1),
+										],
+									})
+								}
+							>
+								Delete
+							</button>
+						</>
 					);
 				})}
 				<button
