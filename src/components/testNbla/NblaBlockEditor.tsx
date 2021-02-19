@@ -1,12 +1,8 @@
 import React, {useCallback} from 'react';
 import {createStylesheet} from '../../styles/createStylesheet';
 import BaseRow from '../base/BaseRow';
-import {
-	NbBlock,
-	NbExpressionStatement,
-	NbHookStatement,
-	NbStatement,
-} from './ASTTypes';
+import {NbBlock, NbStatement} from './ASTTypes';
+import {defaultStatements} from './DefaultValues';
 import NblaBindingEditor from './NblaBindingEditor';
 import NblaExpressionEditor from './NblaExpressionEditor';
 import NblaHookEditor from './NblaHookEditor';
@@ -18,46 +14,6 @@ const styles = createStylesheet({
 		borderLeft: '2px solid white',
 	},
 });
-
-const baseBinaryExpressionStatement: NbExpressionStatement = {
-	type: 'expression',
-	expression: {
-		type: 'binary',
-		left: {
-			type: 'int',
-			value: 1,
-		},
-		right: {
-			type: 'int',
-			value: 1,
-		},
-		operator: '+',
-	},
-};
-
-const baseSetExpressionStatement: NbExpressionStatement = {
-	type: 'expression',
-	expression: {
-		type: 'assignment',
-		left: {
-			type: 'identifier',
-			id: 'id_0',
-		},
-		right: {
-			type: 'int',
-			value: 0,
-		},
-	},
-};
-
-const baseHook: NbHookStatement = {
-	type: 'hook',
-	to: {
-		type: 'identifier',
-		id: 'hook_expression',
-	},
-	body: {body: [], bindings: []},
-};
 
 export default function NblaBlockEditor({
 	block,
@@ -184,46 +140,25 @@ export default function NblaBlockEditor({
 			})}
 			<BaseRow direction="row" spacing={1}>
 				<button
-					onClick={() => insertStatementAtIndex(baseHook, block.body.length)}
+					onClick={() =>
+						insertStatementAtIndex(defaultStatements.hook, block.body.length)
+					}
 				>
 					Add hook
 				</button>
 				<button
 					onClick={() =>
 						insertStatementAtIndex(
-							baseBinaryExpressionStatement,
+							defaultStatements.expression,
 							block.body.length
 						)
 					}
 				>
-					Add binary expression
-				</button>
-				<button
-					onClick={() =>
-						insertStatementAtIndex(
-							baseSetExpressionStatement,
-							block.body.length
-						)
-					}
-				>
-					Set variable
+					Add Expression
 				</button>
 				<button
 					onClick={() => {
-						insertStatementAtIndex(
-							{
-								type: 'if',
-								condition: {
-									type: 'boolean',
-									value: true,
-								},
-								consequent: {
-									body: [],
-									bindings: [],
-								},
-							},
-							block.body.length
-						);
+						insertStatementAtIndex(defaultStatements.if, block.body.length);
 					}}
 				>
 					Add If Statement
@@ -245,31 +180,6 @@ export default function NblaBlockEditor({
 					}}
 				>
 					Add Variable
-				</button>
-				<button
-					onClick={() => {
-						insertStatementAtIndex(
-							{
-								type: 'expression',
-								expression: {
-									type: 'call',
-									callee: {
-										type: 'identifier',
-										id: 'console.log',
-									},
-									parameters: [
-										{
-											type: 'string',
-											value: 'Hello world!',
-										},
-									],
-								},
-							},
-							block.body.length
-						);
-					}}
-				>
-					Add Function Call
 				</button>
 			</BaseRow>
 		</BaseRow>

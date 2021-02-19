@@ -8,6 +8,8 @@ import NblaBooleanExpressionEditor from './NblaBooleanExpressionEditor';
 import NblaCallExpressionEditor from './NblaCallExpressionEditor';
 import NblaStringExpressionEditor from './NblaStringExpressionEditor';
 import NblaMemberExpressionEditor from './NblaMemberExpressionEditor';
+import {defaultExpressions} from './DefaultValues';
+import BaseRow from '../base/BaseRow';
 
 export default function NblaExpressionEditor({
 	expression,
@@ -16,63 +18,86 @@ export default function NblaExpressionEditor({
 	expression: NbExpression;
 	setExpression: (newValue: NbExpression) => void;
 }) {
+	let component: JSX.Element = <span>{JSON.stringify(expression)}</span>;
 	switch (expression.type) {
 		case 'binary':
-			return (
+			component = (
 				<NblaBinaryExpressionEditor
 					expression={expression}
 					setExpression={setExpression}
 				/>
 			);
+			break;
 		case 'int':
-			return (
+			component = (
 				<NblaIntExpressionEditor
 					expression={expression}
 					setExpression={setExpression}
 				/>
 			);
+			break;
 		case 'boolean':
-			return (
+			component = (
 				<NblaBooleanExpressionEditor
 					expression={expression}
 					setExpression={setExpression}
 				/>
 			);
+			break;
 		case 'string':
-			return (
+			component = (
 				<NblaStringExpressionEditor
 					expression={expression}
 					setExpression={setExpression}
 				/>
 			);
+			break;
 		case 'identifier':
-			return (
+			component = (
 				<NblaIdentifierEditor
 					expression={expression}
 					setExpression={setExpression}
 				/>
 			);
+			break;
 		case 'assignment':
-			return (
+			component = (
 				<NblaAssignmentExpressionEditor
 					expression={expression}
 					setExpression={setExpression}
 				/>
 			);
+			break;
 		case 'call':
-			return (
+			component = (
 				<NblaCallExpressionEditor
 					expression={expression}
 					setExpression={setExpression}
 				/>
 			);
+			break;
 		case 'member':
-			return (
+			component = (
 				<NblaMemberExpressionEditor
 					expression={expression}
 					setExpression={setExpression}
 				/>
 			);
+			break;
 	}
-	return <span>{JSON.stringify(expression)}</span>;
+
+	return (
+		<BaseRow direction="column">
+			<select
+				value={expression.type}
+				// @ts-expect-error
+				onChange={(evt) => setExpression(defaultExpressions[evt.target.value])}
+			>
+				{Object.keys(defaultExpressions).map((name) => (
+					<option key={name}>{name}</option>
+				))}
+			</select>
+			{component}
+		</BaseRow>
+	);
 }
