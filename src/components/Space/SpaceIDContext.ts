@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import {createContext} from 'react';
 
 /**
  * Context containing the ID of the currently-selected space.

@@ -1,21 +1,23 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {connect, Room} from 'twilio-video';
-import SpaceIDContext from './SpaceIDContext';
 import joinSpace from '../../space/joinSpace';
-import SpaceManager from './SpaceManager';
+
 import SpaceContainer from './SpaceContainer';
+import SpaceIDContext from './SpaceIDContext';
+import SpaceManager from './SpaceManager';
+import SpaceManagerContext from './SpaceManagerContext';
 import SpaceMediaWrapper from './SpaceMediaWrapper';
 
 export default function Space({id}: {id: string}) {
 	const [twilioRoom, setTwilioRoom] = useState<Room | null>(null);
 	const connectionRef = useRef<WebSocket>();
-	const managerRef = useRef<SpaceManager>();
+	const [manager, setManager] = useState<SpaceManager | null>(null);
 
 	useEffect(() => {
 		(async () => {
 			const {connection, twilioGrant} = await joinSpace(id);
 			connectionRef.current = connection;
-			managerRef.current = new SpaceManager(connection);
+			setManager(new SpaceManager(connection));
 
 			const room = await connect(twilioGrant, {region: 'us1'});
 			setTwilioRoom(room);
@@ -32,20 +34,13 @@ export default function Space({id}: {id: string}) {
 	}, []);
 	*/
 
-	// const messages = useSpaceMessageSubscription(conn);
-	// const participants = useSpaceParticipantsSubscription(conn);
-
 	return (
 		<SpaceIDContext.Provider value={id}>
-			{/* <SpaceConnectionContext.Provider value={conn}> */}
-			{/* <SpaceParticipantsContext.Provider value={participants}> */}
-			{/* <SpaceMessagesContext.Provider value={messages}> */}
-			<SpaceMediaWrapper twilioRoom={twilioRoom}>
-				<SpaceContainer />
-			</SpaceMediaWrapper>
-			{/* </SpaceMessagesContext.Provider>
-			</SpaceParticipantsContext.Provider> */}
-			{/* </SpaceConnectionContext.Provider> */}
+			<SpaceManagerContext.Provider value={manager}>
+				<SpaceMediaWrapper twilioRoom={twilioRoom}>
+					<SpaceContainer />
+				</SpaceMediaWrapper>
+			</SpaceManagerContext.Provider>
 		</SpaceIDContext.Provider>
 	);
 }
