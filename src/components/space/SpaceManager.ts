@@ -24,7 +24,7 @@ export default class SpaceManager {
 
 	setWebsocket(connection: WebSocket) {
 		this.connection = connection;
-		this.connected = false;
+		this.connected = true;
 
 		this.connection.addEventListener(
 			'message',
@@ -40,8 +40,12 @@ export default class SpaceManager {
 
 		this.connection.addEventListener('close', () => {
 			// What to do if the connection closes?
-			this.connected = true;
+			this.connected = false;
 		});
+
+		if (this.outboundMessageQueue) {
+			this.sendQueuedMessages();
+		}
 	}
 
 	constructor() {
@@ -60,7 +64,6 @@ export default class SpaceManager {
 		this.setMoveDirection({x: 0, y: 0, z: 0});
 	}
 
-	// eslint-disable-next-line
 	private sendQueuedMessages() {
 		let msg;
 		while ((msg = this.outboundMessageQueue.shift()) != null) {
