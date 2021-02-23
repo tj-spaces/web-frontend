@@ -4,7 +4,6 @@ import getRootFontSize from '../../../lib/getRootFontSize';
 import {createStylesheet} from '../../../styles/createStylesheet';
 import SpaceMediaContext from '../SpaceMediaContext';
 import SpaceParticipantsContext from '../SpaceParticipantsContext';
-import SpaceViewLayoutContext from '../SpaceViewLayoutContext';
 import {spaceViewStyles} from '../SpaceViewStyles';
 import SpaceViewTilesLocalParticipant from './SpaceViewTilesLocalParticipant';
 import SpaceViewTilesRemoteParticipant from './SpaceViewTilesRemoteParticipant';
@@ -28,13 +27,10 @@ export default function SpaceViewTiles() {
 	const {twilioParticipants} = useContext(SpaceMediaContext) ?? {};
 	const [maxParticipantsPerRow, setMaxParticipantsPerRow] = useState(5);
 	const screenRef = useRef<HTMLDivElement | null>(null);
-	const layout = useContext(SpaceViewLayoutContext);
 
 	useLayoutEffect(() => {
 		const rootFontSize = getRootFontSize();
-		const spaceParticipantCircleSize = layout.expanded
-			? 10 * rootFontSize
-			: 7.5 * rootFontSize; // 10 rem
+		const spaceParticipantCircleSize = 10 * rootFontSize;
 		const columnGap = 2 * rootFontSize; // 1 rem
 		const width = screenRef.current?.clientWidth ?? window.innerWidth * 0.5;
 		const maxParticipantsPerRow = Math.floor(
@@ -43,7 +39,7 @@ export default function SpaceViewTiles() {
 
 		setMaxParticipantsPerRow(maxParticipantsPerRow);
 		return () => {};
-	}, [layout.expanded, participants]);
+	}, [participants]);
 
 	if (me == null) {
 		return <h1>Joining Space [ME]</h1>;

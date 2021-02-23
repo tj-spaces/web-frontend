@@ -1,7 +1,6 @@
 import React, {useContext, useRef} from 'react';
 import useLocalParticipant from '../../../hooks/useLocalParticipant';
 import SpaceParticipantsContext from '../SpaceParticipantsContext';
-import SpaceKeyboardMovementController from '../SpaceKeyboardMovementController';
 import SpaceMediaContext from '../SpaceMediaContext';
 import SpaceBottomLocalVideo from './SpaceView3DBottomLocalVideo';
 import SpaceView3DMinimap from './SpaceView3DMinimap';
@@ -34,7 +33,6 @@ export default function SpaceView3D() {
 			// This is needed so we can listen for keyboard events
 			tabIndex={0}
 		>
-			<SpaceKeyboardMovementController attach={environmentRef.current} />
 			{localParticipant && (
 				<SpatialAudioListener position={localParticipant.position} />
 			)}
