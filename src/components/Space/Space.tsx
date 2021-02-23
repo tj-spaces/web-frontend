@@ -11,13 +11,13 @@ import SpaceMediaWrapper from './SpaceMediaWrapper';
 export default function Space({id}: {id: string}) {
 	const [twilioRoom, setTwilioRoom] = useState<Room | null>(null);
 	const connectionRef = useRef<WebSocket>();
-	const [manager, setManager] = useState<SpaceManager | null>(null);
+	const managerRef = useRef<SpaceManager>(new SpaceManager());
 
 	useEffect(() => {
 		(async () => {
 			const {connection, twilioGrant} = await joinSpace(id);
 			connectionRef.current = connection;
-			setManager(new SpaceManager(connection));
+			managerRef.current.setWebsocket(connection);
 
 			const room = await connect(twilioGrant, {region: 'us1'});
 			setTwilioRoom(room);
@@ -36,7 +36,7 @@ export default function Space({id}: {id: string}) {
 
 	return (
 		<SpaceIDContext.Provider value={id}>
-			<SpaceManagerContext.Provider value={manager}>
+			<SpaceManagerContext.Provider value={managerRef.current}>
 				<SpaceMediaWrapper twilioRoom={twilioRoom}>
 					<SpaceContainer />
 				</SpaceMediaWrapper>

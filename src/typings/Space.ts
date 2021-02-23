@@ -18,11 +18,11 @@ export interface SpaceMessage {
 	/** Unique ID for this SpaceMessage */
 	id: string;
 	/** The ID of the message sender */
-	senderID: string;
+	sender_id: string;
 	/** Message text */
-	text: string;
+	content: string;
 	/** The message this message is replying to. If not present, it isn't replying to anything. */
-	replyTo?: string;
+	reply_to?: string;
 	/**
 	 * This is an easy way to see all the messages that have replied to this SpaceMessage.
 	 * This is not provided to us by the server. We must construct it based on the other messages we get.

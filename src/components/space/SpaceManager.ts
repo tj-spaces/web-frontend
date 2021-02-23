@@ -17,10 +17,15 @@ export default class SpaceManager {
 	spaceMetadata: SpaceMetadata = {};
 
 	private outboundMessageQueue: [string, any][] = [];
-	private isConnectionClosed: boolean = false;
+
+	private connection: WebSocket | null = null;
+	private connected: boolean = false;
 	chatEngine: SpaceChatEngine;
 
-	constructor(public readonly connection: WebSocket) {
+	setWebsocket(connection: WebSocket) {
+		this.connection = connection;
+		this.connected = false;
+
 		this.connection.addEventListener(
 			'message',
 			(message: MessageEvent<string>) => {
@@ -35,9 +40,11 @@ export default class SpaceManager {
 
 		this.connection.addEventListener('close', () => {
 			// What to do if the connection closes?
-			this.isConnectionClosed = true;
+			this.connected = true;
 		});
+	}
 
+	constructor() {
 		this.chatEngine = new SpaceChatEngine(this);
 	}
 
@@ -62,7 +69,7 @@ export default class SpaceManager {
 	}
 
 	send(event: string, data: any) {
-		if (!this.isConnectionClosed) {
+		if (this.connection) {
 			this.connection.send(event + ':' + JSON.stringify(data));
 		} else {
 			this.outboundMessageQueue.push([event, data]);

@@ -33,7 +33,7 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 
 	const onClickedSendMessage = useCallback(() => {
 		if (manager && messageTextRef.current?.value) {
-			manager.sendChatMessage(messageTextRef.current?.value);
+			manager.chatEngine.sendChatMessage(messageTextRef.current?.value);
 			messageTextRef.current.value = '';
 		}
 	}, [manager]);
