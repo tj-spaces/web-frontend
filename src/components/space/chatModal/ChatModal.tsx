@@ -5,7 +5,7 @@ import BaseButton from '../../base/BaseButton';
 import BaseModal from '../../base/BaseModal';
 import BaseRow from '../../base/BaseRow';
 import BaseText from '../../base/BaseText';
-import SpaceConnectionContext from '../SpaceConnectionContext';
+import SpaceManagerContext from '../SpaceManagerContext';
 import ChatMessageList from './ChatMessageList';
 import ReplyToMessageContext from './ReplyToMessageContext';
 
@@ -24,7 +24,7 @@ const styles = createStylesheet({
 });
 
 export default function ChatModal({onClose}: {onClose: () => void}) {
-	const conn = useContext(SpaceConnectionContext);
+	const manager = useContext(SpaceManagerContext);
 	const messageTextRef = useRef<HTMLInputElement>(null);
 	const [pressingEscape, setPressingEscape] = useState(false);
 	const [replyToMessage, setReplyToMessage] = useState<SpaceMessage | null>(
@@ -32,11 +32,11 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 	);
 
 	const onClickedSendMessage = useCallback(() => {
-		if (conn && messageTextRef.current?.value) {
-			conn.emit('message', messageTextRef.current?.value, replyToMessage?.id);
+		if (manager && messageTextRef.current?.value) {
+			manager.sendChatMessage(messageTextRef.current?.value);
 			messageTextRef.current.value = '';
 		}
-	}, [conn, replyToMessage?.id]);
+	}, [manager]);
 
 	return (
 		<BaseModal onClose={onClose}>

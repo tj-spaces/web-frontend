@@ -59,7 +59,8 @@ export type DisplayStatus =
 	| 'faster'
 	| 'slower'
 	| 'raised-hand'
-	| 'none';
+	| 'none'
+	| 'laughing';
 
 /**
  * An Participant in a space is anybody in the space that is either a guest or a user with an account.
