@@ -1,6 +1,7 @@
 import SpaceManager from './SpaceManager';
 import * as THREE from 'three';
 import {getModelURL, loadModel} from '../../lib/ModelStore';
+import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls';
 
 export default class PixelSpaceRenderer {
 	addCanvasResizeListeners = (canvas: HTMLCanvasElement) => {
@@ -37,6 +38,7 @@ export default class PixelSpaceRenderer {
 	private camera: THREE.PerspectiveCamera;
 	private cube: THREE.Mesh;
 	private obj: THREE.Group | null = null;
+	private controls: PointerLockControls;
 
 	constructor(canvas: HTMLCanvasElement, private spaceManager: SpaceManager) {
 		this.renderer = new THREE.WebGLRenderer({canvas});
@@ -69,6 +71,8 @@ export default class PixelSpaceRenderer {
 
 		this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 		this.camera.position.z = 250;
+		this.controls = new PointerLockControls(this.camera, canvas);
+		this.controls.lock();
 
 		{
 			const color = 0xffffff;
