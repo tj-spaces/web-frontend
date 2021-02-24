@@ -52,7 +52,6 @@ export default class PixelSpaceRenderer {
 		loadModel(
 			'https://nebulamodels.s3.amazonaws.com/models/sports_car/v0/fbx/audi-r8-red.fbx'
 		).then((obj) => {
-			console.log(obj);
 			obj.position.set(0, -1.5, -4);
 			obj.rotation.set(0, Math.PI / 4, 0);
 			this.scene.add(obj);
@@ -65,6 +64,7 @@ export default class PixelSpaceRenderer {
 		const aspect = 2; // the canvas default
 		const near = 0.1;
 		const far = 50;
+
 		this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
 		{

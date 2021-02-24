@@ -1,3 +1,4 @@
+import {Room} from 'twilio-video';
 import {
 	ChunkData,
 	ChunkPosition,
@@ -7,6 +8,7 @@ import {
 } from '../../typings/Space';
 import PixelSpaceRenderer from './PixelSpaceRenderer';
 import SpaceChatEngine from './SpaceChatEngine';
+import SpaceMediaEngine from './SpaceMediaEngine';
 
 /**
  * This manager class processes data about a cluster as it arrives.
@@ -24,6 +26,7 @@ export default class SpaceManager {
 
 	renderer: PixelSpaceRenderer | null = null;
 	chatEngine: SpaceChatEngine;
+	mediaEngine: SpaceMediaEngine;
 
 	setWebsocket(connection: WebSocket) {
 		this.connection = connection;
@@ -51,6 +54,10 @@ export default class SpaceManager {
 		}
 	}
 
+	setRoom(room: Room) {
+		this.mediaEngine.setTwilioRoom(room);
+	}
+
 	/**
 	 * NOTE: this resizes the canvas to fit to its parent element!
 	 * @param canvas The canvas.
@@ -62,6 +69,7 @@ export default class SpaceManager {
 
 	constructor(public readonly id: string) {
 		this.chatEngine = new SpaceChatEngine(this);
+		this.mediaEngine = new SpaceMediaEngine();
 	}
 
 	setStatus(status: DisplayStatus) {

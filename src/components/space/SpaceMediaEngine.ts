@@ -1,22 +1,47 @@
+import {useContext, useEffect, useState} from 'react';
 import * as twilio from 'twilio-video';
+import SpaceManagerContext from './SpaceManagerContext';
 // import {getLogger} from '../../lib/ClusterLogger';
 
 // const logger = getLogger('space/media');
+
+type AddParticipantListener = (participant: twilio.Participant) => void;
+type RemoveParticipantListener = (participant: twilio.Participant) => void;
 
 export default class SpaceMediaEngine {
 	private room: twilio.Room | null = null;
 
 	private participants = new Map<string, twilio.Participant>();
+	private addListeners = new Set<AddParticipantListener>();
+	private removeListeners = new Set<RemoveParticipantListener>();
 
 	private cameraEnabled = false;
 	private microphoneEnabled = false;
 
+	addAddParticipantListener(listener: AddParticipantListener) {
+		this.addListeners.add(listener);
+	}
+
+	addRemoveParticipantListener(listener: RemoveParticipantListener) {
+		this.removeListeners.add(listener);
+	}
+
+	removeAddParticipantListener(listener: AddParticipantListener) {
+		this.addListeners.delete(listener);
+	}
+
+	removeRemoveParticipantListener(listener: RemoveParticipantListener) {
+		this.removeListeners.delete(listener);
+	}
+
 	private addParticipant(participant: twilio.Participant) {
 		this.participants.set(participant.sid, participant);
+		this.addListeners.forEach((listener) => listener(participant));
 	}
 
 	private removeParticipant(participant: twilio.Participant) {
 		this.participants.delete(participant.sid);
+		this.removeListeners.forEach((listener) => listener(participant));
 	}
 
 	setTwilioRoom(room: twilio.Room) {
@@ -99,4 +124,41 @@ export default class SpaceMediaEngine {
 			this.room.disconnect();
 		}
 	}
+
+	getParticipants() {
+		return this.participants;
+	}
+}
+
+export function useTwilioParticipants() {
+	const manager = useContext(SpaceManagerContext);
+	const [participants, setParticipants] = useState<
+		Record<string, twilio.Participant>
+	>({});
+
+	useEffect(() => {
+		const addListener: AddParticipantListener = (p) => {
+			setParticipants((participants) => ({...participants, [p.identity]: p}));
+		};
+		const removeListener: RemoveParticipantListener = (p) => {
+			setParticipants(({[p.identity]: _, ...participants}) => participants);
+		};
+
+		manager.mediaEngine.addAddParticipantListener(addListener);
+		manager.mediaEngine.addRemoveParticipantListener(removeListener);
+
+		let participantMap: Record<string, twilio.Participant> = {};
+		manager.mediaEngine.getParticipants().forEach((value, key) => {
+			participantMap[key] = value;
+		});
+		setParticipants(participantMap);
+
+		return () => {
+			manager.mediaEngine.removeAddParticipantListener(addListener);
+			manager.mediaEngine.removeRemoveParticipantListener(removeListener);
+			setParticipants({});
+		};
+	}, [manager.mediaEngine]);
+
+	return participants;
 }
