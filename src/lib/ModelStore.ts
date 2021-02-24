@@ -1,13 +1,15 @@
-import * as GLTFLoader from 'three/examples/jsm/loaders/GLTFLoader';
+import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
 
-const savedModels: Record<string, GLTFLoader.GLTF> = {};
-const loader = new GLTFLoader.GLTFLoader();
+const savedModels: Record<string, THREE.Group> = {};
+const loader = new FBXLoader();
 
-export async function loadModel(url: string): Promise<GLTFLoader.GLTF> {
+export async function loadModel(url: string): Promise<THREE.Group> {
 	if (url in savedModels) {
 		return savedModels[url];
 	} else {
-		let result = await loader.loadAsync(url);
+		let result = await loader.loadAsync(url, (ev) => {
+			console.log('Model load status:', ev.loaded / ev.total);
+		});
 		savedModels[url] = result;
 		return result;
 	}

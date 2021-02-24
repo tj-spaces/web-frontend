@@ -1,5 +1,6 @@
 import SpaceManager from './SpaceManager';
 import * as THREE from 'three';
+import {loadModel} from '../../lib/ModelStore';
 
 export default class PixelSpaceRenderer {
 	addCanvasResizeListeners = (canvas: HTMLCanvasElement) => {
@@ -45,6 +46,17 @@ export default class PixelSpaceRenderer {
 		this.cube = new THREE.Mesh(geometry, material);
 
 		this.cube.position.set(0, 0, -2);
+
+		this.cube.visible = false;
+
+		loadModel(
+			'https://nebulamodels.s3.amazonaws.com/models/sports_car/v0/fbx/audi-r8-red.fbx'
+		).then((obj) => {
+			console.log(obj);
+			obj.position.set(0, -1.5, -4);
+			obj.rotation.set(0, Math.PI / 4, 0);
+			this.scene.add(obj);
+		});
 
 		this.scene.add(this.cube);
 		this.renderer.setAnimationLoop(this.render);
