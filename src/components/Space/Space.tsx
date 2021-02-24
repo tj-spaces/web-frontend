@@ -33,7 +33,7 @@ export default function Space({id}: {id: string}) {
 			connectionRef.current = connection;
 			managerRef.current.setWebsocket(connection);
 
-			setTwilioRoom(await connect(twilioGrant));
+			// setTwilioRoom(await connect(twilioGrant));
 		})();
 	}, [id]);
 
@@ -51,11 +51,7 @@ export default function Space({id}: {id: string}) {
 						</BaseText>
 					</div>
 
-					<canvas
-						ref={(ref) =>
-							managerRef.current.setCanvasContext(ref?.getContext('2d')!)
-						}
-					/>
+					<canvas ref={(ref) => ref && managerRef.current.setCanvas(ref)} />
 
 					{SPACE_VIEW_TYPE === '3d' ? <SpaceView3D /> : <SpaceViewTiles />}
 

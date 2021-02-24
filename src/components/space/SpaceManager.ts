@@ -51,8 +51,13 @@ export default class SpaceManager {
 		}
 	}
 
-	setCanvasContext(ctx: CanvasRenderingContext2D) {
-		this.renderer = new PixelSpaceRenderer(ctx, this);
+	/**
+	 * NOTE: this resizes the canvas to fit to its parent element!
+	 * @param canvas The canvas.
+	 */
+	setCanvas(canvas: HTMLCanvasElement) {
+		this.renderer = new PixelSpaceRenderer(canvas, this);
+		this.renderer.render();
 	}
 
 	constructor(public readonly id: string) {
