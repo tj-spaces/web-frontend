@@ -5,6 +5,7 @@ import {
 	SpaceMetadata,
 	SpaceParticipant,
 } from '../../typings/Space';
+import PixelSpaceRenderer from './PixelSpaceRenderer';
 import SpaceChatEngine from './SpaceChatEngine';
 
 /**
@@ -21,6 +22,7 @@ export default class SpaceManager {
 	private connection: WebSocket | null = null;
 	private connected: boolean = false;
 
+	renderer: PixelSpaceRenderer | null = null;
 	chatEngine: SpaceChatEngine;
 
 	setWebsocket(connection: WebSocket) {
@@ -47,6 +49,10 @@ export default class SpaceManager {
 		if (this.outboundMessageQueue) {
 			this.sendQueuedMessages();
 		}
+	}
+
+	setCanvasContext(ctx: CanvasRenderingContext2D) {
+		this.renderer = new PixelSpaceRenderer(ctx, this);
 	}
 
 	constructor(public readonly id: string) {
