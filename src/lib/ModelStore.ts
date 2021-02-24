@@ -14,7 +14,7 @@ export function getModelURL(
 
 export async function loadModel(
 	url: string,
-	type: 'fbx' | 'obj' = 'fbx'
+	type: 'fbx' | 'obj'
 ): Promise<THREE.Group> {
 	if (url in savedModels) {
 		return savedModels[url];

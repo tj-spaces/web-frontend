@@ -1,6 +1,6 @@
 import SpaceManager from './SpaceManager';
 import * as THREE from 'three';
-import {loadModel} from '../../lib/ModelStore';
+import {getModelURL, loadModel} from '../../lib/ModelStore';
 
 export default class PixelSpaceRenderer {
 	addCanvasResizeListeners = (canvas: HTMLCanvasElement) => {
@@ -36,6 +36,7 @@ export default class PixelSpaceRenderer {
 	private scene: THREE.Scene;
 	private camera: THREE.PerspectiveCamera;
 	private cube: THREE.Mesh;
+	private obj: THREE.Group | null = null;
 
 	constructor(canvas: HTMLCanvasElement, private spaceManager: SpaceManager) {
 		this.renderer = new THREE.WebGLRenderer({canvas});
@@ -49,11 +50,9 @@ export default class PixelSpaceRenderer {
 
 		this.cube.visible = false;
 
-		loadModel(
-			'https://nebulamodels.s3.amazonaws.com/models/sports_car/v0/fbx/audi-r8-red.fbx'
-		).then((obj) => {
-			obj.position.set(0, -1.5, -4);
-			obj.rotation.set(0, Math.PI / 4, 0);
+		loadModel(getModelURL('male02', '0', 'full', 'obj'), 'obj').then((obj) => {
+			obj.position.set(0, 0, 0);
+			this.obj = obj;
 			this.scene.add(obj);
 		});
 
@@ -63,9 +62,10 @@ export default class PixelSpaceRenderer {
 		const fov = 75;
 		const aspect = 2; // the canvas default
 		const near = 0.1;
-		const far = 50;
+		const far = 2000;
 
 		this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+		this.camera.position.z = 250;
 
 		{
 			const color = 0xffffff;
@@ -87,7 +87,14 @@ export default class PixelSpaceRenderer {
 	}
 
 	render = () => {
-		this.cube.rotateY(0.01);
+		// @ts-expect-error
+		window.camera = this.camera;
+
+		if (this.obj) {
+			this.obj.rotateY(0.01);
+		}
+
+		// this.cube.rotateY(0.01);
 
 		this.renderer.render(this.scene, this.camera);
 	};

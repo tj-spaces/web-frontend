@@ -48,7 +48,7 @@ export default function Space({id}: {id: string}) {
 
 				<canvas ref={(ref) => ref && managerRef.current.setCanvas(ref)} />
 
-				<SpaceViewTiles />
+				{/* <SpaceViewTiles /> */}
 
 				<BaseRow
 					direction="row"
