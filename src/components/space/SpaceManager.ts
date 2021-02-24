@@ -20,6 +20,7 @@ export default class SpaceManager {
 
 	private connection: WebSocket | null = null;
 	private connected: boolean = false;
+
 	chatEngine: SpaceChatEngine;
 
 	setWebsocket(connection: WebSocket) {
@@ -48,7 +49,7 @@ export default class SpaceManager {
 		}
 	}
 
-	constructor() {
+	constructor(public readonly id: string) {
 		this.chatEngine = new SpaceChatEngine(this);
 	}
 
@@ -72,7 +73,7 @@ export default class SpaceManager {
 	}
 
 	send(event: string, data: any) {
-		if (this.connection) {
+		if (this.connection && this.connected) {
 			this.connection.send(event + ':' + JSON.stringify(data));
 		} else {
 			this.outboundMessageQueue.push([event, data]);

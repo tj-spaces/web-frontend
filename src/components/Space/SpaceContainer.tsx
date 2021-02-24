@@ -6,7 +6,7 @@ import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import ChatModal from './chatModal/ChatModal';
 import SpaceDeviceControlButtons from './SpaceDeviceControlButtons';
-import CurrentSpaceContext from './SpaceIDContext';
+import SpaceManagerContext from './SpaceManagerContext';
 import SpaceView3D from './spaceView3D/SpaceView3D';
 import {spaceViewStyles} from './SpaceViewStyles';
 import SpaceViewTiles from './spaceViewTiles/SpaceViewTiles';
@@ -14,7 +14,8 @@ import SpaceViewTiles from './spaceViewTiles/SpaceViewTiles';
 const SPACE_VIEW_TYPE: 'tiles' | '3d' = '3d';
 
 export default function SpaceContainer() {
-	const spaceID = useContext(CurrentSpaceContext)!;
+	const manager = useContext(SpaceManagerContext);
+	const spaceID = manager.id;
 	const space = useSpace(spaceID);
 	const {user} = useContext(AuthContext);
 	const [chatModalOpen, setChatModalOpen] = useState(false);

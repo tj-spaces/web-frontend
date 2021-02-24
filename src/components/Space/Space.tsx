@@ -1,9 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {connect, Room} from 'twilio-video';
 import joinSpace from '../../space/joinSpace';
-
 import SpaceContainer from './SpaceContainer';
-import SpaceIDContext from './SpaceIDContext';
 import SpaceManager from './SpaceManager';
 import SpaceManagerContext from './SpaceManagerContext';
 import SpaceMediaWrapper from './SpaceMediaWrapper';
@@ -11,7 +9,7 @@ import SpaceMediaWrapper from './SpaceMediaWrapper';
 export default function Space({id}: {id: string}) {
 	const [twilioRoom, setTwilioRoom] = useState<Room | null>(null);
 	const connectionRef = useRef<WebSocket>();
-	const managerRef = useRef<SpaceManager>(new SpaceManager());
+	const managerRef = useRef<SpaceManager>(new SpaceManager(id));
 
 	useEffect(() => {
 		(async () => {
@@ -35,12 +33,10 @@ export default function Space({id}: {id: string}) {
 	*/
 
 	return (
-		<SpaceIDContext.Provider value={id}>
-			<SpaceManagerContext.Provider value={managerRef.current}>
-				<SpaceMediaWrapper twilioRoom={twilioRoom}>
-					<SpaceContainer />
-				</SpaceMediaWrapper>
-			</SpaceManagerContext.Provider>
-		</SpaceIDContext.Provider>
+		<SpaceManagerContext.Provider value={managerRef.current}>
+			<SpaceMediaWrapper twilioRoom={twilioRoom}>
+				<SpaceContainer />
+			</SpaceMediaWrapper>
+		</SpaceManagerContext.Provider>
 	);
 }
