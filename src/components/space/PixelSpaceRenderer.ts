@@ -50,11 +50,14 @@ export default class PixelSpaceRenderer {
 
 		this.cube.visible = false;
 
-		loadModel(getModelURL('male02', '0', 'full', 'obj'), 'obj').then((obj) => {
-			obj.position.set(0, 0, 0);
-			this.obj = obj;
-			this.scene.add(obj);
-		});
+		loadModel(getModelURL('ping_pong_table', '0', 'full', 'obj'), 'obj').then(
+			(obj) => {
+				obj.rotation.set(-Math.PI / 2, 0, Math.PI / 2);
+				obj.position.set(0, -50, 0);
+				this.obj = obj;
+				this.scene.add(obj);
+			}
+		);
 
 		this.scene.add(this.cube);
 		this.renderer.setAnimationLoop(this.render);
@@ -91,7 +94,7 @@ export default class PixelSpaceRenderer {
 		window.camera = this.camera;
 
 		if (this.obj) {
-			this.obj.rotateY(0.01);
+			this.obj.rotateZ(0.0025);
 		}
 
 		// this.cube.rotateY(0.01);
