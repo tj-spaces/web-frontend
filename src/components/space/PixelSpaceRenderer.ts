@@ -1,53 +1,82 @@
 import SpaceManager from './SpaceManager';
 import * as THREE from 'three';
-// import * as pixi from 'pixi.js';
-
-function addCanvasResizeListeners(canvas: HTMLCanvasElement) {
-	if (canvas.parentElement) {
-		const fitCanvasToParent = () => {
-			let {width, height} = canvas.parentElement!.getBoundingClientRect();
-			canvas.width = width;
-			canvas.height = height;
-		};
-
-		fitCanvasToParent();
-
-		canvas.parentElement.addEventListener('resize', fitCanvasToParent);
-	} else {
-		const fitCanvasToWindow = () => {
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
-		};
-
-		fitCanvasToWindow();
-
-		window.addEventListener('resize', fitCanvasToWindow);
-	}
-}
 
 export default class PixelSpaceRenderer {
-	// px: pixi.Application;
+	addCanvasResizeListeners = (canvas: HTMLCanvasElement) => {
+		if (canvas.parentElement) {
+			const fitCanvasToParent = () => {
+				let {width, height} = canvas.parentElement!.getBoundingClientRect();
+				canvas.width = width;
+				canvas.height = height;
 
-	private animating = false;
-	private r: THREE.WebGLRenderer;
-	private s: THREE.Scene;
-	private c: THREE.Camera;
-	private shouldStop = false;
+				this.camera.aspect = canvas.width / canvas.height;
+				this.camera.updateProjectionMatrix();
+			};
+
+			fitCanvasToParent();
+
+			canvas.parentElement.addEventListener('resize', fitCanvasToParent);
+		} else {
+			const fitCanvasToWindow = () => {
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+
+				this.camera.aspect = canvas.width / canvas.height;
+				this.camera.updateProjectionMatrix();
+			};
+
+			fitCanvasToWindow();
+
+			window.addEventListener('resize', fitCanvasToWindow);
+		}
+	};
+
+	private renderer: THREE.WebGLRenderer;
+	private scene: THREE.Scene;
+	private camera: THREE.PerspectiveCamera;
+	private cube: THREE.Mesh;
 
 	constructor(canvas: HTMLCanvasElement, private spaceManager: SpaceManager) {
-		addCanvasResizeListeners(canvas);
-		this.r = new THREE.WebGLRenderer({canvas});
-		this.r.xr.enabled = true;
-		this.s = new THREE.Scene();
+		this.renderer = new THREE.WebGLRenderer({canvas});
+		this.renderer.xr.enabled = true;
+		this.scene = new THREE.Scene();
 		const geometry = new THREE.BoxGeometry(1, 1, 1);
 		const material = new THREE.MeshPhongMaterial();
-		const cube = new THREE.Mesh(geometry, material);
-		this.s.add(cube);
-		this.r.setAnimationLoop(this.render);
-		this.c = new THREE.Camera();
+		this.cube = new THREE.Mesh(geometry, material);
+
+		this.cube.position.set(0, 0, -2);
+
+		this.scene.add(this.cube);
+		this.renderer.setAnimationLoop(this.render);
+
+		const fov = 75;
+		const aspect = 2; // the canvas default
+		const near = 0.1;
+		const far = 50;
+		this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+
+		{
+			const color = 0xffffff;
+			const intensity = 1;
+			const light = new THREE.DirectionalLight(color, intensity);
+			light.position.set(-1, 2, 4);
+			this.scene.add(light);
+		}
+
+		this.addCanvasResizeListeners(canvas);
+	}
+
+	setCameraPosition(x: number, y: number, z: number) {
+		this.camera.position.set(x, y, z);
+	}
+
+	setCameraRotation(x: number, y: number, z: number) {
+		this.camera.rotation.set(x, y, z);
 	}
 
 	render = () => {
-		this.r.render(this.s, this.c);
+		this.cube.rotateY(0.01);
+
+		this.renderer.render(this.scene, this.camera);
 	};
 }
