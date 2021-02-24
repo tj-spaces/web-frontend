@@ -5,13 +5,11 @@
 	"dependencies": {
 		"@types/axios": "^0.14.0",
 		"@types/node": "^14.14.20",
-		"@types/pixi.js": "^5.0.0",
 		"@types/query-string": "^6.3.0",
 		"@types/react-router-dom": "^5.1.7",
 		"@types/socket.io-client": "^1.4.35",
 		"@types/twilio-video": "^2.7.3",
 		"axios": "^0.21.1",
-		"pixi.js": "^5.3.7",
 		"proxima-react-sdk": "^0.0.1",
 		"query-string": "^6.13.8",
 		"queryshift": "^1.0.2",

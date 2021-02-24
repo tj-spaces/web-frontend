@@ -1,4 +1,5 @@
 import SpaceManager from './SpaceManager';
+import * as THREE from 'three';
 // import * as pixi from 'pixi.js';
 
 function addCanvasResizeListeners(canvas: HTMLCanvasElement) {
@@ -28,27 +29,25 @@ export default class PixelSpaceRenderer {
 	// px: pixi.Application;
 
 	private animating = false;
-	private ctx: WebGL2RenderingContext;
+	private r: THREE.WebGLRenderer;
+	private s: THREE.Scene;
+	private c: THREE.Camera;
 	private shouldStop = false;
 
 	constructor(canvas: HTMLCanvasElement, private spaceManager: SpaceManager) {
 		addCanvasResizeListeners(canvas);
-		this.ctx = canvas.getContext('webgl2')!;
-	}
-
-	stop() {
-		this.shouldStop = true;
-	}
-
-	shouldBeRendering() {
-		return !this.shouldStop;
+		this.r = new THREE.WebGLRenderer({canvas});
+		this.r.xr.enabled = true;
+		this.s = new THREE.Scene();
+		const geometry = new THREE.BoxGeometry(1, 1, 1);
+		const material = new THREE.MeshPhongMaterial();
+		const cube = new THREE.Mesh(geometry, material);
+		this.s.add(cube);
+		this.r.setAnimationLoop(this.render);
+		this.c = new THREE.Camera();
 	}
 
 	render = () => {
-		const gl = this.ctx;
-
-		if (!this.shouldStop) {
-			window.requestAnimationFrame(this.render);
-		}
+		this.r.render(this.s, this.c);
 	};
 }
