@@ -37,6 +37,7 @@ export default function SpaceView2DPixellated() {
 
 	useEffect(() => {
 		manager
+			.addListener('users', (users) => setParticipants(users))
 			.addListener('user_join', (user) => {
 				setParticipants((participants) => ({...participants, [user.id]: user}));
 			})
@@ -70,7 +71,7 @@ export default function SpaceView2DPixellated() {
 	}, [a, d, lastDirection]);
 
 	useEffect(() => {
-		manager.setMoveDirection({x: a ? -1 : d ? 1 : 0, y: s ? 1 : w ? -1 : 0});
+		manager.setMoveDirection({x: a ? -1 : d ? 1 : 0, y: s ? -1 : w ? 1 : 0});
 	}, [a, s, d, w, manager]);
 
 	const myPosition = myID ? participants[myID]?.position : undefined;
@@ -83,7 +84,9 @@ export default function SpaceView2DPixellated() {
 					<Tile src="/wood.jpg" position={tile.position} key={idx} />
 				))}
 				{Object.entries(participants).map(([id, participant]) => {
-					return <Peer position={participant.position} key={id} />;
+					return (
+						<Peer position={participant.position} key={id} me={id === myID} />
+					);
 				})}
 			</div>
 		</ViewerContext.Provider>
