@@ -1,9 +1,9 @@
 import {useContext, useEffect, useState} from 'react';
 import * as twilio from 'twilio-video';
 import SpaceManagerContext from './SpaceManagerContext';
-// import {getLogger} from '../../lib/ClusterLogger';
+import {getLogger} from '../../lib/ClusterLogger';
 
-// const logger = getLogger('space/media');
+const logger = getLogger('space/media');
 
 type AddParticipantListener = (participant: twilio.Participant) => void;
 type RemoveParticipantListener = (participant: twilio.Participant) => void;
@@ -111,6 +111,7 @@ export default class SpaceMediaEngine {
 
 	disconnect() {
 		if (this.room) {
+			logger.info('Disconnecting from Twilio room');
 			// Turn off all video/audio sending when the user leaves the room
 			this.room.localParticipant.audioTracks.forEach((publication) => {
 				publication.track.stop();

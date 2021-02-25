@@ -12,6 +12,9 @@ export default function Space() {
 		if (canvasRef.current) {
 			manager.setCanvas(canvasRef.current);
 		}
+		return () => {
+			manager.destroy();
+		};
 	}, [manager]);
 
 	return (

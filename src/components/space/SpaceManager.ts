@@ -1,4 +1,5 @@
 import {Room} from 'twilio-video';
+import {getLogger} from '../../lib/ClusterLogger';
 import {
 	ChunkData,
 	ChunkPosition,
@@ -9,6 +10,8 @@ import {
 import PixelSpaceRenderer from './PixelSpaceRenderer';
 import SpaceChatEngine from './SpaceChatEngine';
 import SpaceMediaEngine from './SpaceMediaEngine';
+
+const logger = getLogger('space');
 
 /**
  * This manager class processes data about a cluster as it arrives.
@@ -42,6 +45,10 @@ export default class SpaceManager {
 		}
 	}
 
+	/**
+	 * Adds primary event listeners to the Websocket
+	 * @param connection The websocket connected to the Space
+	 */
 	setWebsocket(connection: WebSocket) {
 		this.connection = connection;
 		this.connected = true;
@@ -69,6 +76,7 @@ export default class SpaceManager {
 	}
 
 	setRoom(room: Room) {
+		logger.info('Setting room to ' + room);
 		this.mediaEngine.setTwilioRoom(room);
 	}
 
@@ -101,6 +109,9 @@ export default class SpaceManager {
 		this.setMoveDirection({x: 0, y: 0, z: 0});
 	}
 
+	/**
+	 * Allows us to temporarily hold messages when our connection breaks
+	 */
 	private sendQueuedMessages() {
 		let msg;
 		while ((msg = this.outboundMessageQueue.shift()) != null) {
@@ -108,11 +119,24 @@ export default class SpaceManager {
 		}
 	}
 
+	/**
+	 * Sends an event in a consistent format to the server.
+	 * @param event The event type
+	 * @param data Related data for the event, which is then JSONified.
+	 */
 	send(event: string, data: any) {
 		if (this.connection && this.connected) {
 			this.connection.send(event + ':' + JSON.stringify(data));
 		} else {
 			this.outboundMessageQueue.push([event, data]);
 		}
+	}
+
+	/**
+	 * Removes event listeners and etc
+	 */
+	destroy() {
+		logger.info('Destroying connected components');
+		this.mediaEngine.disconnect();
 	}
 }
