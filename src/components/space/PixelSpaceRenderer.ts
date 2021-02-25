@@ -17,11 +17,14 @@ export default class PixelSpaceRenderer {
 
 				this.camera.aspect = canvas.width / canvas.height;
 				this.camera.updateProjectionMatrix();
+				this.renderer.setSize(canvas.width, canvas.height);
 			};
 
-			fitCanvasToParent();
+			// Must be in a setTimeout so React finishes rendering before running this method
+			// -- Michael
+			setTimeout(fitCanvasToParent, 0);
 
-			canvas.parentElement.addEventListener('resize', fitCanvasToParent);
+			window.addEventListener('resize', fitCanvasToParent);
 		} else {
 			const fitCanvasToWindow = () => {
 				canvas.width = window.innerWidth;
@@ -29,6 +32,7 @@ export default class PixelSpaceRenderer {
 
 				this.camera.aspect = canvas.width / canvas.height;
 				this.camera.updateProjectionMatrix();
+				this.renderer.setSize(canvas.width, canvas.height);
 			};
 
 			fitCanvasToWindow();

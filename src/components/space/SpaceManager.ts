@@ -62,8 +62,9 @@ export default class SpaceManager {
 	 * NOTE: this resizes the canvas to fit to its parent element!
 	 * @param canvas The canvas.
 	 */
-	setCanvas(canvas: HTMLCanvasElement) {
-		if (this.renderer == null) {
+	setCanvas(canvas: HTMLCanvasElement | null) {
+		if (canvas) {
+			console.log('Creating new using', canvas);
 			this.renderer = new PixelSpaceRenderer(canvas, this);
 			this.renderer.render();
 		}

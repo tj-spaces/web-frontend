@@ -1,8 +1,8 @@
 import {useParams} from 'react-router-dom';
-import Space from '../components/space/Space';
+import SpaceWrapper from '../components/space/SpaceWrapper';
 
 export default function SpacePage() {
 	const {spaceId} = useParams<{spaceId: string}>();
 
-	return <Space id={spaceId} />;
+	return <SpaceWrapper id={spaceId} />;
 }
