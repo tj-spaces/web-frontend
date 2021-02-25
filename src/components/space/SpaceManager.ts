@@ -54,8 +54,7 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 	} = {};
 
 	private handleWebsocketEvent(type: string, payload: string) {
-		console.log({type, payload});
-
+		console.log(type, payload);
 		let data = JSONBig({storeAsString: true}).parse(payload);
 		switch (type) {
 			case 'message':
@@ -65,9 +64,12 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 				this.emit('chat_history', data);
 				break;
 			case 'users':
+				this.participants = data;
 				this.emit('users', data);
 				break;
+			case 'me':
 			case 'user_join':
+				this.participants[data.id] = data;
 				this.participants[data.id] = data;
 				this.emit('user_join', data);
 				break;
@@ -76,6 +78,7 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 				this.emit('user_leave', data);
 				break;
 			case 'user_move':
+				console.log(data, this.participants);
 				this.participants[data.id].position = data.new_position;
 				this.emit('user_move', data);
 				break;
@@ -275,5 +278,6 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 	 */
 	destroy() {
 		logger.info('Destroying connected components');
+		this.connection?.close();
 	}
 }

@@ -8,7 +8,13 @@ export default class SpaceChatEngine {
 	private listeners = new Set<SpaceMessageListener>();
 	private messages: SpaceMessage[] = [];
 
-	constructor(private parent: SpaceManager) {}
+	constructor(private parent: SpaceManager) {
+		parent.addListener('message', this.receivedMessage);
+		parent.addListener(
+			'chat_history',
+			(messages) => (this.messages = messages)
+		);
+	}
 
 	getMessageList() {
 		return this.messages;
@@ -22,10 +28,10 @@ export default class SpaceChatEngine {
 		this.listeners.delete(listener);
 	}
 
-	receivedMessage(message: SpaceMessage) {
+	private receivedMessage = (message: SpaceMessage) => {
 		this.messages.push(message);
 		this.listeners.forEach((listener) => listener(message));
-	}
+	};
 
 	sendChatMessage(content: string, reply_to: number | null = null) {
 		this.parent.send('chat', {content, reply_to});

@@ -33,6 +33,7 @@ export default function SpaceView2DPixellated() {
 	const [participants, setParticipants] = useState<
 		Record<string, SpaceParticipant>
 	>({});
+	const [myID, setMyID] = useState<string>();
 
 	useEffect(() => {
 		manager
@@ -43,11 +44,19 @@ export default function SpaceView2DPixellated() {
 				setParticipants(({[user]: _, ...participants}) => participants);
 			})
 			.addListener('user_move', ({id, new_position}) => {
+				console.log({id, new_position});
 				setParticipants((participants) => ({
 					...participants,
 					[id]: {...participants[id], position: new_position},
 				}));
+			})
+			.addListener('auth', ({participant_id}) => {
+				setMyID(participant_id);
 			});
+
+		return () => {
+			manager.destroy();
+		};
 	}, [manager]);
 
 	const {a, s, d, w} = useKeyboardState(document.body);
@@ -58,14 +67,17 @@ export default function SpaceView2DPixellated() {
 		} else if (d && lastDirection === 'left') {
 			setLastDirection('right');
 		}
+	}, [a, d, lastDirection]);
 
-		manager.setMoveDirection({x: a ? -1 : d ? 1 : 0, y: s ? -1 : w ? 1 : 0});
-	}, [a, s, d, w, manager, lastDirection]);
+	useEffect(() => {
+		manager.setMoveDirection({x: a ? -1 : d ? 1 : 0, y: s ? 1 : w ? -1 : 0});
+	}, [a, s, d, w, manager]);
+
+	const myPosition = myID ? participants[myID]?.position : undefined;
+	const {x, y} = myPosition ?? {x: 0, y: 0};
 
 	return (
-		<ViewerContext.Provider
-			value={{position: {x: 0, y: 0}, zoom: 1, lastDirection}}
-		>
+		<ViewerContext.Provider value={{position: {x, y}, zoom: 1, lastDirection}}>
 			<div className={styles('viewport')}>
 				{tiles.map((tile, idx) => (
 					<Tile src="/wood.jpg" position={tile.position} key={idx} />
@@ -73,7 +85,6 @@ export default function SpaceView2DPixellated() {
 				{Object.entries(participants).map(([id, participant]) => {
 					return <Peer position={participant.position} key={id} />;
 				})}
-				<Peer position={{x: 0, y: 0}} me />
 			</div>
 		</ViewerContext.Provider>
 	);

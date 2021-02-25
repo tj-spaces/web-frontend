@@ -29,7 +29,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 			const {connection, twilioGrant} = await joinSpace(id);
 			connectionRef.current = connection;
 			managerRef.current.setWebsocket(connection);
-			connect(twilioGrant).then((room) => setTwilioRoom(room));
+			// connect(twilioGrant).then((room) => setTwilioRoom(room));
 		})();
 	}, [id]);
 
