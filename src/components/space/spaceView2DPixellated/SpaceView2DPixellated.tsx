@@ -45,10 +45,15 @@ export default function SpaceView2DPixellated() {
 				setParticipants(({[user]: _, ...participants}) => participants);
 			})
 			.addListener('user_move', ({id, new_position}) => {
-				console.log({id, new_position});
 				setParticipants((participants) => ({
 					...participants,
 					[id]: {...participants[id], position: new_position},
+				}));
+			})
+			.addListener('user_direction', ({id, direction}) => {
+				setParticipants((participants) => ({
+					...participants,
+					[id]: {...participants[id], moving_direction: direction},
 				}));
 			})
 			.addListener('auth', ({participant_id}) => {
@@ -85,7 +90,12 @@ export default function SpaceView2DPixellated() {
 				))}
 				{Object.entries(participants).map(([id, participant]) => {
 					return (
-						<Peer position={participant.position} key={id} me={id === myID} />
+						<Peer
+							direction={participant.moving_direction}
+							position={participant.position}
+							key={id}
+							me={id === myID}
+						/>
 					);
 				})}
 			</div>

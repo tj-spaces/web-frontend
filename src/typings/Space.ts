@@ -1,3 +1,4 @@
+import {Position2D} from '../components/space/spaceView2DPixellated/ViewerContext';
 import {WorldType} from './Types';
 
 export type SpaceVisibility = 'discoverable' | 'unlisted' | 'secret';
@@ -94,7 +95,7 @@ export interface SpaceParticipant {
 	 * The direction the participant is currently rotating
 	 */
 	rotating_direction: 0 | 1 | -1;
-	moving_direction: 0 | 1 | -1;
+	moving_direction: 'left' | 'right';
 }
 
 export interface SpaceMetadata {}

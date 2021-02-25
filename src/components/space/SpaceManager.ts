@@ -21,13 +21,17 @@ export interface SpaceEventMap {
 		id: string;
 		new_position: Position;
 	};
-	auth: {
-		space_id: string;
-		participant_id: string;
+	user_direction: {
+		id: string;
+		direction: 'left' | 'right';
 	};
 	users: Record<string, SpaceParticipant>;
 	message: SpaceMessage;
 	chat_history: SpaceMessage[];
+	auth: {
+		space_id: string;
+		participant_id: string;
+	};
 }
 
 /**
@@ -78,9 +82,12 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 				this.emit('user_leave', data);
 				break;
 			case 'user_move':
-				console.log(data, this.participants);
 				this.participants[data.id].position = data.new_position;
 				this.emit('user_move', data);
+				break;
+			case 'user_direction':
+				this.participants[data.id].moving_direction = data.direction;
+				this.emit('user_direction', data);
 				break;
 			case 'auth':
 				console.log('Received auth data:', data);
