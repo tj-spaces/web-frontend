@@ -1,4 +1,10 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {
+	useContext,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from 'react';
 import {connect} from 'twilio-video';
 import {useSpace} from '../../api/spaces';
 import joinSpace from '../../space/joinSpace';
@@ -7,18 +13,21 @@ import BaseButton from '../base/BaseButton';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import ChatModal from './chatModal/ChatModal';
+import {useFocusState} from './PixelSpaceRenderer';
 import SpaceDeviceControlButtons from './SpaceDeviceControlButtons';
 import SpaceManager from './SpaceManager';
 import SpaceManagerContext from './SpaceManagerContext';
-import SpaceView3D from './spaceView3D/SpaceView3D';
+import SpaceUnfocusedCover from './SpaceUnfocusedCover';
+// import SpaceView3D from './spaceView3D/SpaceView3D';
 import {spaceViewStyles} from './SpaceViewStyles';
-import SpaceViewTiles from './spaceViewTiles/SpaceViewTiles';
+// import SpaceViewTiles from './spaceViewTiles/SpaceViewTiles';
 
-const SPACE_VIEW_TYPE: 'pixel' | '3d' = 'pixel';
+// const SPACE_VIEW_TYPE: 'pixel' | '3d' = 'pixel';
 
 export default function Space({id}: {id: string}) {
 	const connectionRef = useRef<WebSocket>();
 	const managerRef = useRef<SpaceManager>(new SpaceManager(id));
+	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const space = useSpace(id);
 
 	const {user} = useContext(AuthContext);
@@ -33,6 +42,14 @@ export default function Space({id}: {id: string}) {
 		})();
 	}, [id]);
 
+	const focused = useFocusState(managerRef.current);
+
+	useLayoutEffect(() => {
+		if (canvasRef.current) {
+			managerRef.current.setCanvas(canvasRef.current);
+		}
+	}, []);
+
 	if (user == null) {
 		return <h1>Authenticating</h1>;
 	}
@@ -46,7 +63,9 @@ export default function Space({id}: {id: string}) {
 					</BaseText>
 				</div>
 
-				<canvas ref={(ref) => ref && managerRef.current.setCanvas(ref)} />
+				{!focused && <SpaceUnfocusedCover />}
+
+				<canvas ref={canvasRef} />
 
 				{/* <SpaceViewTiles /> */}
 

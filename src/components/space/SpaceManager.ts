@@ -63,8 +63,10 @@ export default class SpaceManager {
 	 * @param canvas The canvas.
 	 */
 	setCanvas(canvas: HTMLCanvasElement) {
-		this.renderer = new PixelSpaceRenderer(canvas, this);
-		this.renderer.render();
+		if (this.renderer == null) {
+			this.renderer = new PixelSpaceRenderer(canvas, this);
+			this.renderer.render();
+		}
 	}
 
 	constructor(public readonly id: string) {
