@@ -1,4 +1,3 @@
-import {Room} from 'twilio-video';
 import {getLogger} from '../../lib/ClusterLogger';
 import {
 	ChunkData,
@@ -15,7 +14,6 @@ import {
 } from '../../typings/Space';
 import PixelSpaceRenderer from './spaceView3D/PixelSpaceRenderer';
 import SpaceChatEngine from './SpaceChatEngine';
-import SpaceMediaEngine from './SpaceMediaEngine';
 
 const logger = getLogger('space');
 
@@ -35,7 +33,6 @@ export default class SpaceManager {
 
 	renderer: PixelSpaceRenderer | null = null;
 	chatEngine: SpaceChatEngine;
-	mediaEngine: SpaceMediaEngine;
 
 	private handleWebsocketEvent(type: string, payload: string) {
 		console.log({type, payload});
@@ -102,11 +99,6 @@ export default class SpaceManager {
 		}
 	}
 
-	setRoom(room: Room) {
-		logger.info('Setting room to ' + room);
-		this.mediaEngine.setTwilioRoom(room);
-	}
-
 	/**
 	 * NOTE: this resizes the canvas to fit to its parent element!
 	 * @param canvas The canvas.
@@ -121,7 +113,6 @@ export default class SpaceManager {
 
 	constructor(public readonly id: string) {
 		this.chatEngine = new SpaceChatEngine(this);
-		this.mediaEngine = new SpaceMediaEngine();
 	}
 
 	setStatus(status: DisplayStatus) {
@@ -164,6 +155,5 @@ export default class SpaceManager {
 	 */
 	destroy() {
 		logger.info('Destroying connected components');
-		this.mediaEngine.disconnect();
 	}
 }
