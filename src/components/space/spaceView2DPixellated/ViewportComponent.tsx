@@ -29,7 +29,7 @@ export default function ViewportComponent({
 	const style: CSSProperties = {
 		position: 'absolute',
 		left: `calc(50% + ${relativeXRem}rem)`,
-		top: `calc(50% + ${relativeYRem}rem)`,
+		top: `calc(50% - ${relativeYRem}rem)`,
 		transition: 'left 0.5s ease, top 0.5s ease',
 	};
 
