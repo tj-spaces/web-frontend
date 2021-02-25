@@ -34,23 +34,27 @@ export default function SpaceView3D() {
 			tabIndex={0}
 		>
 			{localParticipant && (
-				<SpatialAudioListener position={localParticipant.position} />
+				<SpatialAudioListener
+					position={localParticipant.position}
+					rotation={localParticipant.rotation}
+				/>
 			)}
 			<SpaceView3DMinimap
 				elements={Object.values(participants).map((participant) => ({
-					color: participant.accountID === me?.accountID ? 'blue' : 'red',
+					color: participant.id === me?.id ? 'blue' : 'red',
 					position: participant.position,
+					rotation: participant.rotation,
 				}))}
 				center={perspective}
 			/>
 			{Object.values(participants).map((participant) => {
-				if (participant.accountID !== me.accountID) {
-					const twilioParticipant = twilioParticipants?.[participant.accountID];
+				if (participant.id !== me.id) {
+					const twilioParticipant = twilioParticipants?.[participant.id];
 					return (
 						<SpaceParticipantRemote3D
 							twilioParticipant={twilioParticipant ?? null}
 							spacesParticipant={participant}
-							key={participant.accountID}
+							key={participant.id}
 						/>
 					);
 				} else {

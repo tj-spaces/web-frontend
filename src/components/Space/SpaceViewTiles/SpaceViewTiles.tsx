@@ -58,8 +58,8 @@ export default function SpaceViewTiles() {
 		<SpaceViewTilesLocalParticipant />,
 		<SpaceViewTilesLocalParticipant />,
 		...Object.values(participants).map((participant) => {
-			const twilioParticipant = twilioParticipants?.[participant.accountID];
-			const isLocal = participant.accountID === me.accountID;
+			const twilioParticipant = twilioParticipants?.[participant.id];
+			const isLocal = participant.id === me.id;
 			if (!isLocal) {
 				return (
 					<SpaceViewTilesRemoteParticipant

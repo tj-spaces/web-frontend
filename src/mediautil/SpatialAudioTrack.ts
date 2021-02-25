@@ -3,14 +3,16 @@ import {AudioTrack, AudioTrackPublication} from 'twilio-video';
 import useMediaStreamTrack from '../hooks/useMediaStreamTrack';
 import useTrack from '../hooks/useTrack';
 import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
-import {SpacePositionInfo} from '../typings/Space';
 import SpaceAudioContext from '../components/space/SpaceAudioContext';
+import {Position} from '../typings/Space';
 
 export default function SpatialAudioTrack({
 	position,
+	rotation,
 	publication,
 }: {
-	position: SpacePositionInfo;
+	position: Position;
+	rotation: number;
 	publication: AudioTrackPublication;
 }) {
 	const audioTrack = useTrack(publication) as AudioTrack;
@@ -40,13 +42,13 @@ export default function SpatialAudioTrack({
 	// [location, rotation]
 	useEffect(() => {
 		if (pannerNode.current) {
-			pannerNode.current.positionX.value = position.location.x;
-			pannerNode.current.positionY.value = position.location.y;
+			pannerNode.current.positionX.value = position.x;
+			pannerNode.current.positionY.value = position.y;
 
-			pannerNode.current.orientationX.value = Math.sin(position.rotation);
-			pannerNode.current.orientationZ.value = Math.cos(position.rotation);
+			pannerNode.current.orientationX.value = Math.sin(rotation);
+			pannerNode.current.orientationZ.value = Math.cos(rotation);
 		}
-	}, [position]);
+	}, [position, rotation]);
 
 	return null;
 }

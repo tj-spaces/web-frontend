@@ -1,22 +1,23 @@
 import {useContext, useEffect} from 'react';
-import {SpacePositionInfo} from '../typings/Space';
 import SpaceAudioContext from '../components/space/SpaceAudioContext';
+import {Position} from '../typings/Space';
 
 export default function SpatialAudioListener({
 	position,
+	rotation,
 }: {
-	position: SpacePositionInfo;
+	position: Position;
+	rotation: number;
 }) {
 	const {listener} = useContext(SpaceAudioContext);
-	const {location, rotation} = position;
 
 	useEffect(() => {
-		listener.positionX.value = location.x;
-		listener.positionZ.value = location.y;
+		listener.positionX.value = position.x;
+		listener.positionZ.value = position.z;
 
 		listener.forwardZ.value = Math.sin(rotation);
 		listener.forwardX.value = Math.cos(rotation);
-	}, [listener, location, rotation]);
+	}, [listener, position, rotation]);
 
 	return null;
 }

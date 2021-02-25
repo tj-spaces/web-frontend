@@ -4,6 +4,12 @@ import {
 	ChunkData,
 	ChunkPosition,
 	DisplayStatus,
+	IChatHistoryEvent,
+	IMessageEvent,
+	IUserJoinEvent,
+	IUserLeaveEvent,
+	IUserMoveEvent,
+	IUsersEvent,
 	SpaceMetadata,
 	SpaceParticipant,
 } from '../../typings/Space';
@@ -33,14 +39,35 @@ export default class SpaceManager {
 
 	private handleWebsocketEvent(type: string, payload: string) {
 		console.log({type, payload});
+		let parsed_payload;
 		switch (type) {
 			case 'message':
-				this.chatEngine.receivedMessage(JSON.parse(payload));
+				parsed_payload = JSON.parse(payload) as IMessageEvent;
+				this.chatEngine.receivedMessage(parsed_payload);
 				break;
 			case 'chat_history':
-				for (let msg of JSON.parse(payload)) {
+				for (let msg of JSON.parse(payload) as IChatHistoryEvent) {
 					this.chatEngine.receivedMessage(msg);
 				}
+				break;
+			case 'users':
+				parsed_payload = JSON.parse(payload) as IUsersEvent;
+				for (let id in parsed_payload) {
+					this.participants.set(id, parsed_payload[id]);
+				}
+				break;
+			case 'user_join':
+				parsed_payload = JSON.parse(payload) as IUserJoinEvent;
+				this.participants.set(parsed_payload.id, parsed_payload);
+				break;
+			case 'user_leave':
+				parsed_payload = JSON.parse(payload) as IUserLeaveEvent;
+				this.participants.delete(parsed_payload);
+				break;
+			case 'user_move':
+				parsed_payload = JSON.parse(payload) as IUserMoveEvent;
+				this.participants.get(parsed_payload.id)!.position =
+					parsed_payload.new_position;
 				break;
 		}
 	}

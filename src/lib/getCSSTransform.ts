@@ -1,5 +1,5 @@
 import {CSSProperties} from 'react';
-import {SpacePositionInfo} from '../typings/Space';
+import {Position} from '../typings/Space';
 
 const FOV = (Math.PI * 5) / 6;
 
@@ -7,16 +7,17 @@ const FOV = (Math.PI * 5) / 6;
  * Returns the CSS transform needed to render an item in 3D space from a given perspective
  */
 export default function getCSSTransform(
-	from: SpacePositionInfo,
-	to: SpacePositionInfo
+	from: Position,
+	from_rotation: number,
+	to: Position
 ): CSSProperties {
 	// For now, assumes a constant Y value
-	let xRelative = to.location.x - from.location.x;
-	let zRelative = to.location.z - from.location.z;
+	let xRelative = to.x - from.x;
+	let zRelative = to.z - from.z;
 
 	// We rotate to find out where the relative value is, with a ~rotation matrix~
-	let cos = Math.cos(from.rotation);
-	let sin = Math.sin(from.rotation);
+	let cos = Math.cos(from_rotation);
+	let sin = Math.sin(from_rotation);
 
 	let xRelativeRotated = cos * xRelative - sin * zRelative;
 	let zRelativeRotated = sin * xRelative + cos * zRelative;

@@ -27,7 +27,7 @@ export default function SpaceParticipantRemote3D({
 	spacesParticipant: SpaceParticipant;
 }) {
 	const publications = usePublications(twilioParticipant);
-	const {position} = spacesParticipant;
+	const {position, rotation} = spacesParticipant;
 
 	const audioTrackPublications = publications.filter(
 		(publication) => publication.kind === 'audio'
@@ -48,13 +48,18 @@ export default function SpaceParticipantRemote3D({
 
 	const spatialCSSTransform = getCSSTransform(
 		me?.position,
+		me?.rotation,
 		spacesParticipant.position
 	);
 
 	return (
 		<>
 			{audioTrackPublications.map((publication) => (
-				<SpatialAudioTrack position={position} publication={publication} />
+				<SpatialAudioTrack
+					position={position}
+					rotation={rotation}
+					publication={publication}
+				/>
 			))}
 			<div
 				style={spatialCSSTransform}

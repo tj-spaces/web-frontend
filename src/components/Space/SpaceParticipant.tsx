@@ -12,7 +12,7 @@ export default function SpaceParticipantBackground({
 	photoUrl?: string;
 	videoTrack?: VideoTrack | null;
 }) {
-	const initials = participant.displayName
+	const initials = participant.display_name
 		.split(' ')
 		.filter(Boolean)
 		.map((word) => word.slice(0, 1).toUpperCase());
@@ -20,7 +20,7 @@ export default function SpaceParticipantBackground({
 	return videoTrack ? (
 		<TwilioVideoElement track={videoTrack} />
 	) : photoUrl ? (
-		<img src={photoUrl} alt={participant.displayName} />
+		<img src={photoUrl} alt={participant.display_name} />
 	) : (
 		<h1>{initials}</h1>
 	);

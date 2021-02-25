@@ -1,9 +1,10 @@
 import {createStylesheet} from '../../../styles/createStylesheet';
-import {SpacePositionInfo} from '../../../typings/Space';
+import {Position} from '../../../typings/Space';
 
 export interface MinimapElement {
 	color: 'red' | 'blue';
-	position: SpacePositionInfo;
+	position: Position;
+	rotation: number;
 }
 
 export const styles = createStylesheet({
@@ -31,17 +32,17 @@ export function MinimapElementComponent({
 	relativeTo,
 }: {
 	item: MinimapElement;
-	relativeTo: SpacePositionInfo;
+	relativeTo: Position;
 }) {
-	const relativeX = item.position.location.x;
-	const relativeZ = item.position.location.z;
+	const relativeX = item.position.x;
+	const relativeZ = item.position.z;
 
 	return (
 		<div
 			className={styles('element')}
 			style={{
 				backgroundColor: item.color,
-				transform: `rotateZ(${item.position.rotation}rad)`,
+				transform: `rotateZ(${item.rotation}rad)`,
 				left: `${relativeX * 5 + 50}%`,
 				top: `${50 - relativeZ * 5}%`,
 			}}
@@ -56,7 +57,7 @@ export default function SpaceView3DMinimap({
 	center,
 }: {
 	elements: MinimapElement[];
-	center: SpacePositionInfo;
+	center: Position;
 }) {
 	return (
 		<div className={styles('minimap')}>

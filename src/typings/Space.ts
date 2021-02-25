@@ -30,29 +30,6 @@ export interface SpaceMessage {
 	replies?: SpaceMessage[];
 }
 
-/**
- * Where the user is in the space.
- * This is a 2D location, because as of now, the spaces are "2.5-dimensional" worlds
- */
-export interface SpaceLocation {
-	x: number;
-	y: number;
-	z: number;
-}
-
-export interface SpacePositionInfo {
-	/**
-	 * Where the user is in the space.
-	 * This is a 2D location, because as of now, the spaces are "2.5-dimensional" worlds
-	 */
-	location: SpaceLocation;
-
-	/**
-	 * The 2D rotation of the user
-	 */
-	rotation: number;
-}
-
 export type DisplayStatus =
 	| 'agree'
 	| 'disagree'
@@ -73,17 +50,17 @@ export interface SpaceParticipant {
 	 * If a user joins as a guest from the browser, this ID stays with them even if they
 	 * join different spaces. If a user joins as a registered user, this is just their account id.
 	 */
-	accountID: string;
+	id: string;
 
 	/**
 	 * Nickname to display for the user
 	 */
-	displayName: string;
+	display_name: string;
 
 	/**
 	 * Color of the user's avatar
 	 */
-	displayColor:
+	display_color:
 		| 'red'
 		| 'orange'
 		| 'yellow'
@@ -95,48 +72,29 @@ export interface SpaceParticipant {
 	/**
 	 * Anything from 'agree' to 'disagree' to 'go faster'
 	 */
-	displayStatus: DisplayStatus;
+	display_status: DisplayStatus;
 
-	/**
-	 * Whether the user has been granted permission to present
-	 */
-	canPresent: boolean;
+	can_present: boolean;
 
-	/**
-	 * Whether the user is allowed to turn on their microphone
-	 */
-	canActivateMicrophone: boolean;
+	can_activate_microphone: boolean;
 
-	/**
-	 * Whether the user is allowed to turn on their camera
-	 */
-	canActivateCamera: boolean;
+	can_activate_camera: boolean;
 
-	/**
-	 * Whether the user is an administrator
-	 */
-	isAdministrator: boolean;
+	is_administrator: boolean;
 
-	/**
-	 * Whether the user is a moderator
-	 */
-	isModerator: boolean;
+	is_moderator: boolean;
 
-	/**
-	 * Whether the user is currently presenting
-	 */
-	isPresenting: boolean;
+	is_presenting: boolean;
 
-	/**
-	 * Info about this user's location
-	 */
-	position: SpacePositionInfo;
+	position: Position;
+
+	rotation: number;
 
 	/**
 	 * The direction the participant is currently rotating
 	 */
-	rotatingDirection: 0 | 1 | -1;
-	movingDirection: 0 | 1 | -1;
+	rotating_direction: 0 | 1 | -1;
+	moving_direction: 0 | 1 | -1;
 }
 
 export interface SpaceMetadata {}
@@ -159,3 +117,43 @@ export interface ChunkData {
 	// A list of palette indexes, returned as a stream of binary data
 	blocks: Uint32Array;
 }
+
+export type Position = {
+	x: number;
+	y: number;
+	z: number;
+};
+
+/*
+ * OUTBOUND EVENTS
+ */
+
+export type OMoveEvent = {
+	x: number;
+	y: number;
+	z: number;
+};
+
+export type OChatMessageEvent = {
+	content: string;
+	reply_to: number | null;
+};
+
+/*
+ * INBOUND EVENTS
+ */
+
+export type IMessageEvent = SpaceMessage;
+
+export type IChatHistoryEvent = SpaceMessage[];
+
+export type IUsersEvent = Record<string, SpaceParticipant>;
+
+export type IUserJoinEvent = SpaceParticipant;
+
+export type IUserMoveEvent = {
+	id: string;
+	new_position: Position;
+};
+
+export type IUserLeaveEvent = string;
