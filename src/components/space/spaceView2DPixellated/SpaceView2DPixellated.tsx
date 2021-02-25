@@ -29,55 +29,43 @@ const styles = createStylesheet({
  */
 export default function SpaceView2DPixellated() {
 	const manager = useContext(SpaceManagerContext);
-	const [x, setX] = useState(0);
-	const [y, setY] = useState(0);
 	const [lastDirection, setLastDirection] = useState<'left' | 'right'>('right');
 	const [participants, setParticipants] = useState<
 		Record<string, SpaceParticipant>
 	>({});
 
 	useEffect(() => {
-		manager.addListener('user_join', (user) => {
-			setParticipants((participants) => ({...participants, [user.id]: user}));
-		});
-		manager.addListener('user_leave', (user) => {
-			setParticipants(({[user]: _, ...participants}) => participants);
-		});
-		manager.addListener('user_move', ({id, new_position}) => {
-			setParticipants((participants) => ({
-				...participants,
-				[id]: {...participants[id], position: new_position},
-			}));
-		});
+		manager
+			.addListener('user_join', (user) => {
+				setParticipants((participants) => ({...participants, [user.id]: user}));
+			})
+			.addListener('user_leave', (user) => {
+				setParticipants(({[user]: _, ...participants}) => participants);
+			})
+			.addListener('user_move', ({id, new_position}) => {
+				setParticipants((participants) => ({
+					...participants,
+					[id]: {...participants[id], position: new_position},
+				}));
+			});
 	}, [manager]);
 
 	const {a, s, d, w} = useKeyboardState(document.body);
 
 	useEffect(() => {
-		if (a) {
+		if (a && lastDirection === 'right') {
 			setLastDirection('left');
-			setX((x) => x - 1);
-		}
-	}, [a]);
-	useEffect(() => {
-		if (d) {
+		} else if (d && lastDirection === 'left') {
 			setLastDirection('right');
-			setX((x) => x + 1);
 		}
-	}, [d]);
-	useEffect(() => {
-		if (s) {
-			setY((y) => y + 1);
-		}
-	}, [s]);
-	useEffect(() => {
-		if (w) {
-			setY((y) => y - 1);
-		}
-	}, [w]);
+
+		manager.setMoveDirection({x: a ? -1 : d ? 1 : 0, y: s ? -1 : w ? 1 : 0});
+	}, [a, s, d, w, manager, lastDirection]);
 
 	return (
-		<ViewerContext.Provider value={{position: {x, y}, zoom: 1, lastDirection}}>
+		<ViewerContext.Provider
+			value={{position: {x: 0, y: 0}, zoom: 1, lastDirection}}
+		>
 			<div className={styles('viewport')}>
 				{tiles.map((tile, idx) => (
 					<Tile src="/wood.jpg" position={tile.position} key={idx} />
@@ -85,7 +73,7 @@ export default function SpaceView2DPixellated() {
 				{Object.entries(participants).map(([id, participant]) => {
 					return <Peer position={participant.position} key={id} />;
 				})}
-				<Peer position={{x, y}} me />
+				<Peer position={{x: 0, y: 0}} me />
 			</div>
 		</ViewerContext.Provider>
 	);

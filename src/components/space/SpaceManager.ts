@@ -10,6 +10,7 @@ import {
 } from '../../typings/Space';
 import Renderer from './spaceView3D/Renderer';
 import SpaceChatEngine from './SpaceChatEngine';
+import JSONBig from 'json-bigint';
 
 const logger = getLogger('space');
 
@@ -19,6 +20,10 @@ export interface SpaceEventMap {
 	user_move: {
 		id: string;
 		new_position: Position;
+	};
+	auth: {
+		space_id: string;
+		participant_id: string;
 	};
 	users: Record<string, SpaceParticipant>;
 	message: SpaceMessage;
@@ -42,34 +47,42 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 	renderer: Renderer | null = null;
 	chatEngine: SpaceChatEngine;
 
+	participantID: string | null = null;
+
 	private listeners_: {
 		[key in keyof SpaceEventMap]?: Set<(data: SpaceEventMap[key]) => void>;
 	} = {};
 
 	private handleWebsocketEvent(type: string, payload: string) {
 		console.log({type, payload});
-		let parsed = JSON.parse(payload);
+
+		let data = JSONBig({storeAsString: true}).parse(payload);
 		switch (type) {
 			case 'message':
-				this.emit('message', JSON.parse(payload));
+				this.emit('message', data);
 				break;
 			case 'chat_history':
-				this.emit('chat_history', JSON.parse(payload));
+				this.emit('chat_history', data);
 				break;
 			case 'users':
-				this.emit('users', JSON.parse(payload));
+				this.emit('users', data);
 				break;
 			case 'user_join':
-				this.participants[parsed.id] = parsed;
-				this.emit('user_join', parsed);
+				this.participants[data.id] = data;
+				this.emit('user_join', data);
 				break;
 			case 'user_leave':
-				delete this.participants[parsed];
-				this.emit('user_leave', parsed);
+				delete this.participants[data];
+				this.emit('user_leave', data);
 				break;
 			case 'user_move':
-				this.participants[parsed.id].position = parsed.new_position;
-				this.emit('user_move', parsed);
+				this.participants[data.id].position = data.new_position;
+				this.emit('user_move', data);
+				break;
+			case 'auth':
+				console.log('Received auth data:', data);
+				this.participantID = data.participantID;
+				this.emit('auth', data);
 				break;
 		}
 	}
@@ -129,7 +142,7 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 		}
 		// @ts-expect-error
 		this.listeners_[event]!.add(listener);
-		throw new Error('Method not implemented.');
+		return this;
 	}
 	on<K extends keyof SpaceEventMap>(
 		event: K,
