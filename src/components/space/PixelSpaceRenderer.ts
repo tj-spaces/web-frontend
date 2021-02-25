@@ -123,7 +123,6 @@ export default class PixelSpaceRenderer {
 		then we log the state correctly
 		*/
 		document.body.ownerDocument.addEventListener('pointerlockerror', () => {
-			console.log('Pointer lock error!!');
 			this.setFocused(false);
 		});
 
