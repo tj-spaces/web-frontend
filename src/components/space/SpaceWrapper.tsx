@@ -10,6 +10,7 @@ import SpaceDeviceControlButtons from './SpaceDeviceControlButtons';
 import SpaceManager from './SpaceManager';
 import SpaceManagerContext from './SpaceManagerContext';
 import SpaceMediaWrapper from './SpaceMediaWrapper';
+import SpaceView2DPixellated from './spaceView2DPixellated/SpaceView2DPixellated';
 import SpaceView3D from './spaceView3D/SpaceView3D';
 import {spaceViewStyles} from './SpaceViewStyles';
 // import SpaceViewTiles from './spaceViewTiles/SpaceViewTiles';
@@ -42,7 +43,12 @@ export default function SpaceWrapper({id}: {id: string}) {
 						</BaseText>
 					</div>
 
-					<SpaceView3D />
+					{space &&
+						(space.world_type === '3d-voxel' ? (
+							<SpaceView3D />
+						) : (
+							<SpaceView2DPixellated />
+						))}
 
 					<BaseRow
 						direction="row"

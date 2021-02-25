@@ -1,5 +1,5 @@
 import React, {useContext, useLayoutEffect, useRef} from 'react';
-import {useFocusState} from './PixelSpaceRenderer';
+import {useFocusState} from './Renderer';
 import SpaceManagerContext from '../SpaceManagerContext';
 import SpaceUnfocusedCover from './SpaceUnfocusedCover';
 

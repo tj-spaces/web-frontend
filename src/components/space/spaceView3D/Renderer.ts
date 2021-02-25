@@ -7,7 +7,7 @@ import {useState} from 'react';
 
 export type FocusChangedListener = (focused: boolean) => void;
 
-export default class PixelSpaceRenderer {
+export default class Renderer {
 	addCanvasResizeListeners = (canvas: HTMLCanvasElement) => {
 		if (canvas.parentElement) {
 			const fitCanvasToParent = () => {
