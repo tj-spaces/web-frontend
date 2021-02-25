@@ -118,6 +118,15 @@ export default class PixelSpaceRenderer {
 		this.camera.position.z = 250;
 		this.controls = new PointerLockControls(this.camera, canvas);
 
+		/*
+		If there is an error in achieving pointer lock (for example, attempting to reenter the game too quickly),
+		then we log the state correctly
+		*/
+		document.body.ownerDocument.addEventListener('pointerlockerror', () => {
+			console.log('Pointer lock error!!');
+			this.setFocused(false);
+		});
+
 		this.controls.addEventListener('unlock', () => {
 			// When the user presses the "escape" key
 			this.setFocused(false);
