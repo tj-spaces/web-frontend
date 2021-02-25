@@ -3,12 +3,8 @@ import {
 	ChunkData,
 	ChunkPosition,
 	DisplayStatus,
-	IChatHistoryEvent,
-	IMessageEvent,
-	IUserJoinEvent,
-	IUserLeaveEvent,
-	IUserMoveEvent,
-	IUsersEvent,
+	Position,
+	SpaceMessage,
 	SpaceMetadata,
 	SpaceParticipant,
 } from '../../typings/Space';
@@ -17,17 +13,23 @@ import SpaceChatEngine from './SpaceChatEngine';
 
 const logger = getLogger('space');
 
-export interface SpaceEvents {
-	user_join: number;
-	user_leave: number;
-	message: number;
+export interface SpaceEventMap {
+	user_join: SpaceParticipant;
+	user_leave: string;
+	user_move: {
+		id: string;
+		new_position: Position;
+	};
+	users: Record<string, SpaceParticipant>;
+	message: SpaceMessage;
+	chat_history: SpaceMessage[];
 }
 
 /**
  * This manager class processes data about a cluster as it arrives.
  */
 export default class SpaceManager implements NodeJS.EventEmitter {
-	participants = new Map<string, SpaceParticipant>();
+	participants: Record<string, SpaceParticipant> = {};
 
 	constructedWorldData = new Map<ChunkPosition, ChunkData>();
 	spaceMetadata: SpaceMetadata = {};
@@ -41,40 +43,33 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 	chatEngine: SpaceChatEngine;
 
 	private listeners_: {
-		[key in keyof SpaceEvents]?: Set<(data: SpaceEvents[key]) => void>;
+		[key in keyof SpaceEventMap]?: Set<(data: SpaceEventMap[key]) => void>;
 	} = {};
 
 	private handleWebsocketEvent(type: string, payload: string) {
 		console.log({type, payload});
-		let parsed_payload;
+		let parsed = JSON.parse(payload);
 		switch (type) {
 			case 'message':
-				parsed_payload = JSON.parse(payload) as IMessageEvent;
-				this.chatEngine.receivedMessage(parsed_payload);
+				this.emit('message', JSON.parse(payload));
 				break;
 			case 'chat_history':
-				for (let msg of JSON.parse(payload) as IChatHistoryEvent) {
-					this.chatEngine.receivedMessage(msg);
-				}
+				this.emit('chat_history', JSON.parse(payload));
 				break;
 			case 'users':
-				parsed_payload = JSON.parse(payload) as IUsersEvent;
-				for (let id in parsed_payload) {
-					this.participants.set(id, parsed_payload[id]);
-				}
+				this.emit('users', JSON.parse(payload));
 				break;
 			case 'user_join':
-				parsed_payload = JSON.parse(payload) as IUserJoinEvent;
-				this.participants.set(parsed_payload.id, parsed_payload);
+				this.participants[parsed.id] = parsed;
+				this.emit('user_join', parsed);
 				break;
 			case 'user_leave':
-				parsed_payload = JSON.parse(payload) as IUserLeaveEvent;
-				this.participants.delete(parsed_payload);
+				delete this.participants[parsed];
+				this.emit('user_leave', parsed);
 				break;
 			case 'user_move':
-				parsed_payload = JSON.parse(payload) as IUserMoveEvent;
-				this.participants.get(parsed_payload.id)!.position =
-					parsed_payload.new_position;
+				this.participants[parsed.id].position = parsed.new_position;
+				this.emit('user_move', parsed);
 				break;
 		}
 	}
@@ -125,49 +120,51 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 		this.chatEngine = new SpaceChatEngine(this);
 	}
 
-	addListener(
-		event: keyof SpaceEvents,
-		listener: (data: SpaceEvents[typeof event]) => void
+	addListener<K extends keyof SpaceEventMap>(
+		event: K,
+		listener: (data: SpaceEventMap[K]) => void
 	): this {
 		if (!(event in this.listeners_)) {
-			this.listeners_[event] = new Set();
+			this.listeners_[event] = new Set() as any;
 		}
+		// @ts-expect-error
 		this.listeners_[event]!.add(listener);
 		throw new Error('Method not implemented.');
 	}
-	on(
-		event: keyof SpaceEvents,
-		listener: (data: SpaceEvents[typeof event]) => void
+	on<K extends keyof SpaceEventMap>(
+		event: K,
+		listener: (data: SpaceEventMap[K]) => void
 	): this {
 		return this.addListener(event, listener);
 	}
-	once(
-		event: keyof SpaceEvents,
-		listener: (data: SpaceEvents[typeof event]) => void
+	once<K extends keyof SpaceEventMap>(
+		event: K,
+		listener: (data: SpaceEventMap[K]) => void
 	): this {
-		const l = (data: SpaceEvents[typeof event]) => {
+		const l = (data: SpaceEventMap[typeof event]) => {
 			listener(data);
 			this.removeListener(event, l);
 		};
 		throw this.addListener(event, l);
 	}
-	removeListener(
-		event: keyof SpaceEvents,
-		listener: (data: SpaceEvents[typeof event]) => void
+	removeListener<K extends keyof SpaceEventMap>(
+		event: K,
+		listener: (data: SpaceEventMap[K]) => void
 	): this {
 		if (event in this.listeners_) {
+			// @ts-expect-error
 			this.listeners_[event]?.delete(listener);
 		}
 		return this;
 	}
-	off(
-		event: keyof SpaceEvents,
-		listener: (data: SpaceEvents[typeof event]) => void
+	off<K extends keyof SpaceEventMap>(
+		event: K,
+		listener: (data: SpaceEventMap[K]) => void
 	): this {
 		this.removeListener(event, listener);
 		throw new Error('Method not implemented.');
 	}
-	removeAllListeners(event?: keyof SpaceEvents): this {
+	removeAllListeners(event?: keyof SpaceEventMap): this {
 		if (event) {
 			this.listeners_[event]?.clear();
 		} else {
@@ -182,24 +179,28 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 	getMaxListeners(): number {
 		throw new Error('Method not implemented.');
 	}
-	listeners(event: keyof SpaceEvents): Function[] {
+	listeners(event: keyof SpaceEventMap): Function[] {
 		if (event in this.listeners_) {
+			// @ts-expect-error
 			return Array.from(this.listeners_[event]!);
 		} else {
 			return [];
 		}
 	}
-	rawListeners(event: keyof SpaceEvents): Function[] {
+	rawListeners(event: keyof SpaceEventMap): Function[] {
 		throw new Error('Method not implemented.');
 	}
-	emit(event: keyof SpaceEvents, data: SpaceEvents[typeof event]): boolean {
+	emit<K extends keyof SpaceEventMap>(
+		event: K,
+		data: SpaceEventMap[K]
+	): boolean {
 		if (event in this.listeners_) {
-			this.listeners_[event]!.forEach((listener) => listener(data));
+			this.listeners_[event]!.forEach((listener: any) => listener(data));
 			return this.listeners_[event]!.size > 0;
 		}
 		return false;
 	}
-	listenerCount(event: keyof SpaceEvents): number {
+	listenerCount(event: keyof SpaceEventMap): number {
 		if (event in this.listeners_) {
 			return this.listeners_[event]!.size;
 		}
