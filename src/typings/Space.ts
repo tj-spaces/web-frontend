@@ -16,18 +16,18 @@ export interface Space {
 
 export interface SpaceMessage {
 	/** Unique ID for this SpaceMessage */
-	id: string;
+	id: number;
 	/** The ID of the message sender */
 	sender_id: string;
 	/** Message text */
 	content: string;
 	/** The message this message is replying to. If not present, it isn't replying to anything. */
-	reply_to?: string;
+	reply_to_id?: string;
 	/**
 	 * This is an easy way to see all the messages that have replied to this SpaceMessage.
 	 * This is not provided to us by the server. We must construct it based on the other messages we get.
 	 */
-	replies: SpaceMessage[];
+	replies?: SpaceMessage[];
 }
 
 /**
@@ -137,13 +137,6 @@ export interface SpaceParticipant {
 	 */
 	rotatingDirection: 0 | 1 | -1;
 	movingDirection: 0 | 1 | -1;
-}
-
-export interface SpaceMessage {
-	id: string;
-	senderID: string;
-	text: string;
-	replyTo?: string;
 }
 
 export interface SpaceMetadata {}

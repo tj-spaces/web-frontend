@@ -28,6 +28,20 @@ export default class SpaceManager {
 	chatEngine: SpaceChatEngine;
 	mediaEngine: SpaceMediaEngine;
 
+	private handleWebsocketEvent(type: string, payload: string) {
+		console.log({type, payload});
+		switch (type) {
+			case 'message':
+				this.chatEngine.receivedMessage(JSON.parse(payload));
+				break;
+			case 'chat_history':
+				for (let msg of JSON.parse(payload)) {
+					this.chatEngine.receivedMessage(msg);
+				}
+				break;
+		}
+	}
+
 	setWebsocket(connection: WebSocket) {
 		this.connection = connection;
 		this.connected = true;
@@ -40,7 +54,7 @@ export default class SpaceManager {
 					colonIndex > -1 ? message.data.slice(0, colonIndex) : message.data;
 				let payload = colonIndex > -1 ? message.data.slice(colonIndex + 1) : '';
 
-				console.log({data: message.data, type, payload});
+				this.handleWebsocketEvent(type, payload);
 			}
 		);
 

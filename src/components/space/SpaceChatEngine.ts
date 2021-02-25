@@ -22,13 +22,13 @@ export default class SpaceChatEngine {
 		this.listeners.delete(listener);
 	}
 
-	onMessage(message: SpaceMessage) {
+	receivedMessage(message: SpaceMessage) {
 		this.messages.push(message);
 		this.listeners.forEach((listener) => listener(message));
 	}
 
-	sendChatMessage(message: string) {
-		this.parent.send('chat', message);
+	sendChatMessage(content: string, reply_to: number | null = null) {
+		this.parent.send('chat', {content, reply_to});
 	}
 }
 

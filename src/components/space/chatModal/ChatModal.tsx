@@ -33,10 +33,13 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 
 	const onClickedSendMessage = useCallback(() => {
 		if (manager && messageTextRef.current?.value) {
-			manager.chatEngine.sendChatMessage(messageTextRef.current?.value);
+			manager.chatEngine.sendChatMessage(
+				messageTextRef.current?.value,
+				replyToMessage?.id ?? null
+			);
 			messageTextRef.current.value = '';
 		}
-	}, [manager]);
+	}, [manager, replyToMessage?.id]);
 
 	return (
 		<BaseModal onClose={onClose}>
@@ -50,7 +53,7 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 
 					{replyToMessage && (
 						<>
-							Replying to {replyToMessage.text}.{' '}
+							Replying to {replyToMessage.content}.{' '}
 							<BaseText onClick={() => setReplyToMessage(null)}>
 								[cancel]
 							</BaseText>
