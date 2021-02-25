@@ -1,6 +1,6 @@
-import SpaceManager from './SpaceManager';
+import SpaceManager from '../SpaceManager';
 import * as THREE from 'three';
-import {getModelURL, loadModel} from '../../lib/ModelStore';
+import {getModelURL, loadModel} from '../../../lib/ModelStore';
 import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls';
 import {useEffect} from 'react';
 import {useState} from 'react';

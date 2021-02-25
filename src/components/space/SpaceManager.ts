@@ -13,7 +13,7 @@ import {
 	SpaceMetadata,
 	SpaceParticipant,
 } from '../../typings/Space';
-import PixelSpaceRenderer from './PixelSpaceRenderer';
+import PixelSpaceRenderer from './spaceView3D/PixelSpaceRenderer';
 import SpaceChatEngine from './SpaceChatEngine';
 import SpaceMediaEngine from './SpaceMediaEngine';
 

@@ -1,6 +1,6 @@
 import {useContext} from 'react';
-import {createStylesheet} from '../../styles/createStylesheet';
-import SpaceManagerContext from './SpaceManagerContext';
+import {createStylesheet} from '../../../styles/createStylesheet';
+import SpaceManagerContext from '../SpaceManagerContext';
 
 const styles = createStylesheet({
 	cover: {
