@@ -12,15 +12,21 @@ import {
 	SpaceMetadata,
 	SpaceParticipant,
 } from '../../typings/Space';
-import PixelSpaceRenderer from './spaceView3D/PixelSpaceRenderer';
+import Renderer from './spaceView3D/Renderer';
 import SpaceChatEngine from './SpaceChatEngine';
 
 const logger = getLogger('space');
 
+export interface SpaceEvents {
+	user_join: number;
+	user_leave: number;
+	message: number;
+}
+
 /**
  * This manager class processes data about a cluster as it arrives.
  */
-export default class SpaceManager {
+export default class SpaceManager implements NodeJS.EventEmitter {
 	participants = new Map<string, SpaceParticipant>();
 
 	constructedWorldData = new Map<ChunkPosition, ChunkData>();
@@ -31,8 +37,12 @@ export default class SpaceManager {
 	private connection: WebSocket | null = null;
 	private connected: boolean = false;
 
-	renderer: PixelSpaceRenderer | null = null;
+	renderer: Renderer | null = null;
 	chatEngine: SpaceChatEngine;
+
+	private listeners_: {
+		[key in keyof SpaceEvents]?: Set<(data: SpaceEvents[key]) => void>;
+	} = {};
 
 	private handleWebsocketEvent(type: string, payload: string) {
 		console.log({type, payload});
@@ -106,7 +116,7 @@ export default class SpaceManager {
 	setCanvas(canvas: HTMLCanvasElement | null) {
 		if (canvas) {
 			console.log('Creating new using', canvas);
-			this.renderer = new PixelSpaceRenderer(canvas, this);
+			this.renderer = new Renderer(canvas, this);
 			this.renderer.render();
 		}
 	}
@@ -115,16 +125,112 @@ export default class SpaceManager {
 		this.chatEngine = new SpaceChatEngine(this);
 	}
 
+	addListener(
+		event: keyof SpaceEvents,
+		listener: (data: SpaceEvents[typeof event]) => void
+	): this {
+		if (!(event in this.listeners_)) {
+			this.listeners_[event] = new Set();
+		}
+		this.listeners_[event]!.add(listener);
+		throw new Error('Method not implemented.');
+	}
+	on(
+		event: keyof SpaceEvents,
+		listener: (data: SpaceEvents[typeof event]) => void
+	): this {
+		return this.addListener(event, listener);
+	}
+	once(
+		event: keyof SpaceEvents,
+		listener: (data: SpaceEvents[typeof event]) => void
+	): this {
+		const l = (data: SpaceEvents[typeof event]) => {
+			listener(data);
+			this.removeListener(event, l);
+		};
+		throw this.addListener(event, l);
+	}
+	removeListener(
+		event: keyof SpaceEvents,
+		listener: (data: SpaceEvents[typeof event]) => void
+	): this {
+		if (event in this.listeners_) {
+			this.listeners_[event]?.delete(listener);
+		}
+		return this;
+	}
+	off(
+		event: keyof SpaceEvents,
+		listener: (data: SpaceEvents[typeof event]) => void
+	): this {
+		this.removeListener(event, listener);
+		throw new Error('Method not implemented.');
+	}
+	removeAllListeners(event?: keyof SpaceEvents): this {
+		if (event) {
+			this.listeners_[event]?.clear();
+		} else {
+			// Memory leak? IDK
+			this.listeners_ = {};
+		}
+		return this;
+	}
+	setMaxListeners(n: number): this {
+		throw new Error('Method not implemented.');
+	}
+	getMaxListeners(): number {
+		throw new Error('Method not implemented.');
+	}
+	listeners(event: keyof SpaceEvents): Function[] {
+		if (event in this.listeners_) {
+			return Array.from(this.listeners_[event]!);
+		} else {
+			return [];
+		}
+	}
+	rawListeners(event: keyof SpaceEvents): Function[] {
+		throw new Error('Method not implemented.');
+	}
+	emit(event: keyof SpaceEvents, data: SpaceEvents[typeof event]): boolean {
+		if (event in this.listeners_) {
+			this.listeners_[event]!.forEach((listener) => listener(data));
+			return this.listeners_[event]!.size > 0;
+		}
+		return false;
+	}
+	listenerCount(event: keyof SpaceEvents): number {
+		if (event in this.listeners_) {
+			return this.listeners_[event]!.size;
+		}
+		return 0;
+	}
+	prependListener(
+		event: string | symbol,
+		listener: (...args: any[]) => void
+	): this {
+		throw new Error('Method not implemented.');
+	}
+	prependOnceListener(
+		event: string | symbol,
+		listener: (...args: any[]) => void
+	): this {
+		throw new Error('Method not implemented.');
+	}
+	eventNames(): (string | symbol)[] {
+		throw new Error('Method not implemented.');
+	}
+
 	setStatus(status: DisplayStatus) {
 		this.send('display-status', status);
 	}
 
-	setMoveDirection(direction: {x: 0 | 1 | -1; y: 0 | 1 | -1; z: 0 | 1 | -1}) {
+	setMoveDirection(direction: {x: 0 | 1 | -1; y: 0 | 1 | -1}) {
 		this.send('move', direction);
 	}
 
 	stopMoving() {
-		this.setMoveDirection({x: 0, y: 0, z: 0});
+		this.setMoveDirection({x: 0, y: 0});
 	}
 
 	/**
