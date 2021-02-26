@@ -1,7 +1,14 @@
-import "../styles/main.css";
+/** @jsximport 'theme-ui' */ 
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+import { ThemeProvider } from 'theme-ui'
+import Theme from '../styles/theme-ui'
+
+function App({ Component, pageProps }) {
+  return (
+    <ThemeProvider theme={Theme}>
+      <Component {...pageProps} />
+    </ThemeProvider>
+  )
 }
 
-export default MyApp;
+export default App

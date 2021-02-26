@@ -1,5 +1,7 @@
-import Head from "next/head";
+/** @jsximport 'theme-ui' */
+
+import { Box } from "theme-ui"
 
 export default function Home() {
-  return <div>Hello, world!</div>;
+  return <Box>Hello, world!</Box>
 }
