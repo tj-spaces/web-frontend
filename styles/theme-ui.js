@@ -43,12 +43,98 @@ const themeDark = {
     body: 1.5,
     heading: 1.125
   },
+  radii: {
+    none: 0,
+    sm: '.25rem',
+    default: '0.75rem',
+    lg: '1.0rem',
+    xl: '1.25rem',
+    full: '9999px',
+  },
   colors: {
     text: '#ffffff',
+    textOnLight: '#000',
     background: '#241b3a',
     primary: '#f6da86',
     secondary: '#d0e1d4',
-    muted: '#5b546b'
+    muted: '#5b546b',
+    lightBackground: '#5B546B',
+    red: '#F25F5C'
+  },
+  sizes: {
+      // ADD NAVBAR/OTHER SHARED SIZES HERE
+  },
+  buttons: {
+    primary: {
+      p: '12px',
+      fontWeight: 'bold',
+      color: 'textOnLight',
+      bg: 'primary',
+      cursor: 'pointer',
+      '&:hover': {
+        filter: 'brightness(0.9)',
+      },
+      borderRadius: 'default',
+    },
+    secondary: {
+      p: '12px',
+      fontWeight: 'bold',
+      color: 'black',
+      bg: 'secondary',
+      cursor: 'pointer',
+      '&:hover': {
+        filter: 'brightness(0.9)',
+      },
+      borderRadius: 'default',
+    },
+    square: {
+      height: '48px',
+      width: '48px',
+      p: '8px',
+      fontWeight: 'bold',
+      color: 'black',
+      bg: 'white',
+      cursor: 'pointer',
+      '&:hover': {
+        filter: 'brightness(0.9)',
+      },
+      borderRadius: 'default',
+    },
+    disabled: {
+      p: '12px',
+      fontWeight: 'bold',
+      color: 'white',
+      bg: '#8c7c4c',
+      borderRadius: 'ldefaultg',
+    },
+    roomTabsActive: {
+      p: '12px',
+      px: 4,
+      fontWeight: 'bold',
+      color: 'textOnLight',
+      bg: 'white',
+      cursor: 'pointer',
+      '&:hover': {
+        filter: 'brightness(0.9)',
+      },
+      borderRadius: 'default',
+      borderTopLeftRadius: '0',
+      borderBottomLeftRadius: '0' 
+    },
+    roomTabsInactive: {
+      p: '12px',
+      px: 4,
+      fontWeight: 'bold',
+      color: 'text',
+      bg: 'lightBackground',
+      cursor: 'pointer',
+      '&:hover': {
+        filter: 'brightness(0.9)',
+      },
+      borderRadius: 'default',
+      borderTopLeftRadius: '0',
+      borderBottomLeftRadius: '0' 
+    }
   },
   styles: {
     root: {
