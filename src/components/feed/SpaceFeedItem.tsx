@@ -15,7 +15,7 @@ import BaseButton from '../base/BaseButton';
 const styles = createStylesheet({
 	spaceFeedItem: {
 		minWidth: '30rem',
-		minHeight: '20rem',
+		// minHeight: '20rem',
 	},
 });
 
@@ -48,16 +48,13 @@ export default function SpaceFeedItem({space}: {space: Space}) {
 			<BaseText variant="secondary-title">
 				<Link to={'/spaces/' + space.id}>{space.name}</Link>
 			</BaseText>
-			<BaseRow direction="column" height="100%" spacing={1}>
+			<BaseRow direction="row" alignment="center" spacing={0.5}>
+				<BaseButton variant="theme" to={'/spaces/' + space.id}>
+					Join
+				</BaseButton>
 				<BaseText variant="list-item-title">Online:</BaseText>
-				<BaseText variant="body">Michael</BaseText>
-				<BaseText variant="body">Autin</BaseText>
-				<BaseText variant="body">Akash</BaseText>
-				<BaseText variant="body-semibold">and 1.3k more</BaseText>
+				<BaseText variant="body-semibold">1.3k</BaseText>
 			</BaseRow>
-			<BaseButton variant="theme" to={'/spaces/' + space.id}>
-				Join
-			</BaseButton>
 			<BaseText>
 				Hosted by{' '}
 				<Awaiting fetchStatus={hostFs}>

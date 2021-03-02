@@ -26,28 +26,28 @@ export default function Tabs() {
 			<BaseRow direction="row" spacing={1} justifyContent="center" rails={1}>
 				<BaseText
 					variant="list-item-title"
+					onClick={() => setTab('clusters')}
+					underline={tab === 'clusters'}
+					unselectable
+				>
+					Home
+				</BaseText>
+				<BaseText
+					variant="list-item-title"
 					onClick={() => setTab('explore')}
 					underline={tab === 'explore'}
 					unselectable
 				>
 					Explore
 				</BaseText>
-				<BaseText
+				{/* <BaseText
 					variant="list-item-title"
 					onClick={() => setTab('friends')}
 					underline={tab === 'friends'}
 					unselectable
 				>
 					Friends
-				</BaseText>
-				<BaseText
-					variant="list-item-title"
-					onClick={() => setTab('clusters')}
-					underline={tab === 'clusters'}
-					unselectable
-				>
-					Clusters
-				</BaseText>
+				</BaseText> */}
 			</BaseRow>
 
 			{tab === 'explore' ? (
