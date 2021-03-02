@@ -9,6 +9,10 @@
   width: 0.5rem;
 }
 
+::-webkit-scrollbar-corner {
+  background-color: var(--bg-primary);
+}
+
 ::-webkit-scrollbar-track {
   border-radius: 0.5rem;
 }
