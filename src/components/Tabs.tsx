@@ -16,7 +16,13 @@ export default function Tabs() {
 	let [tab, setTab] = useState<Tab>('explore');
 
 	return (
-		<BaseRow direction="column" alignment="center" width="100%">
+		<BaseRow
+			direction="column"
+			alignment="center"
+			width="100%"
+			height="100%"
+			overflow="scroll"
+		>
 			<BaseRow direction="row" spacing={1} justifyContent="center" rails={1}>
 				<BaseText
 					variant="list-item-title"
