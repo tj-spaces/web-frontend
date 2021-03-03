@@ -19,8 +19,9 @@ export default function ClusterPreview({cluster}: {cluster: Cluster}) {
 			backgroundColor="bgElevated"
 			rails={2}
 			spacing={1}
-			edges={1}
+			edges={2}
 			boxShadow
+			width="30rem"
 		>
 			<BaseText variant="list-item-title">
 				<Link to={'/clusters/' + cluster.id}>{cluster.name}</Link>
@@ -28,7 +29,7 @@ export default function ClusterPreview({cluster}: {cluster: Cluster}) {
 
 			<BaseButton
 				size="small"
-				variant="positive"
+				variant="theme"
 				onClick={() => joinThisCluster()}
 			>
 				Join

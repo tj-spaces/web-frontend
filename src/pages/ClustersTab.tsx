@@ -1,9 +1,10 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {getMyClusters} from '../api/clusters';
 import {FetchStatus} from '../api/FetchStatus';
 import Awaiting from '../components/Awaiting';
-import ClusterList from '../components/clusterList/ClusterList';
+import BaseRow from '../components/base/BaseRow';
 import CreateClusterButton from '../components/CreateClusterButton';
+import ClusterFeedItem from '../components/feed/ClusterFeedItem';
 import {Cluster} from '../typings/Cluster';
 
 export default function ClustersTab() {
@@ -23,11 +24,16 @@ export default function ClustersTab() {
 	}, []);
 
 	return (
-		<>
-			<CreateClusterButton />
+		<BaseRow direction="column" spacing={1}>
+			<BaseRow direction="row" justifyContent="center" width="100%">
+				<CreateClusterButton />
+			</BaseRow>
+
 			<Awaiting fetchStatus={fetchStatus}>
-				<ClusterList clusters={clusters} />
+				{clusters.map((cluster) => (
+					<ClusterFeedItem cluster={cluster} />
+				))}
 			</Awaiting>
-		</>
+		</BaseRow>
 	);
 }

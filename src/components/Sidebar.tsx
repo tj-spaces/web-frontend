@@ -1,7 +1,6 @@
 import React from 'react';
 import BaseRow from './base/BaseRow';
 import BaseText from './base/BaseText';
-import ClusterList from './clusterList/ClusterList';
 import FriendActivity from './friendActivity/FriendActivity';
 
 /**
@@ -14,7 +13,6 @@ export default function Sidebar() {
 			<BaseText variant="list-item-title">Online</BaseText>
 			<FriendActivity />
 			<BaseText variant="list-item-title">Active Groups</BaseText>
-			<ClusterList clusters={[]} />
 		</BaseRow>
 	);
 }
