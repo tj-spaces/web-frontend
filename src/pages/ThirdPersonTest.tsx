@@ -1,7 +1,8 @@
-import {Suspense, useEffect} from 'react';
+import {KeyboardEventHandler, Suspense, useEffect, useState} from 'react';
 import {Canvas, extend, useLoader, useThree} from 'react-three-fiber';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+import {Position} from '../typings/Space';
 
 function SushiTable() {
 	const table = useLoader(
@@ -9,7 +10,7 @@ function SushiTable() {
 		'https://nebulamodels.s3.amazonaws.com/models/sushi_table/model.gltf'
 	);
 	return (
-		<primitive object={table.scene} scale={[2, 2, 2]} position={[0, -2, 0]} />
+		<primitive object={table.scene} scale={[2, 2, 2]} position={[0, -1.9, 0]} />
 	);
 }
 
@@ -29,7 +30,44 @@ function Controls() {
 	return null;
 }
 
+function User({position}: {position: Position}) {
+	return (
+		<mesh position={[position.x, position.y, position.z]}>
+			<boxBufferGeometry attach="geometry" args={[1, 2, 0.5]} />
+			<meshLambertMaterial attach="material" color="#ff6666" />
+		</mesh>
+	);
+}
+
 export default function ThirdPersonTest() {
+	let [x, setX] = useState(0);
+	let [z, setZ] = useState(0);
+
+	useEffect(() => {
+		const listener = (ev: KeyboardEvent) => {
+			switch (ev.key) {
+				case 'a':
+					setX((x) => x - 1);
+					break;
+				case 'd':
+					setX((x) => x + 1);
+					break;
+				case 'w':
+					setZ((z) => z - 1);
+					break;
+				case 's':
+					setZ((z) => z + 1);
+					break;
+			}
+		};
+
+		window.addEventListener('keypress', listener);
+
+		return () => {
+			window.removeEventListener('keypress', listener);
+		};
+	}, []);
+
 	return (
 		<div style={{width: '100vw', height: '100vh'}}>
 			<Canvas camera={{position: [0, 0, 10]}}>
@@ -38,10 +76,11 @@ export default function ThirdPersonTest() {
 				</Suspense>
 				<ambientLight intensity={0.5} />
 				<Controls />
-				<mesh position={[0, 0, 0]}>
+				<mesh position={[0, -0.25, 0]}>
 					<boxBufferGeometry attach="geometry" args={[10, 0.5, 10]} />
-					<meshBasicMaterial attach="material" transparent opacity={0.5} />
+					<meshLambertMaterial attach="material" />
 				</mesh>
+				<User position={{x, y: 1, z}} />
 			</Canvas>
 		</div>
 	);
