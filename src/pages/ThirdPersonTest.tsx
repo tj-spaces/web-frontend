@@ -34,7 +34,14 @@ function Controls() {
 	return null;
 }
 
-function User({position}: {position: Position}) {
+function User({position, follow}: {position: Position; follow: boolean}) {
+	const {camera} = useThree();
+
+	useEffect(() => {
+		camera.position.set(position.x + 4, position.y + 2, position.z + 4);
+		camera.lookAt(position.x, position.y, position.z);
+	}, [camera, camera.position, position]);
+
 	return (
 		<mesh position={[position.x, position.y, position.z]}>
 			<boxBufferGeometry attach="geometry" args={[1, 2, 0.5]} />
@@ -75,17 +82,17 @@ export default function ThirdPersonTest() {
 
 	return (
 		<div style={{width: '100vw', height: '100vh'}}>
-			<Canvas camera={{position: [0, 0, 10]}}>
+			<Canvas camera={{position: [x, 10, z]}}>
 				<Suspense fallback="Loading model">
 					<SushiTable />
 				</Suspense>
 				<ambientLight intensity={0.5} />
-				<Controls />
+				{/* <Controls /> */}
 				<mesh position={[0, -0.25, 0]}>
 					<boxBufferGeometry attach="geometry" args={[10, 0.5, 10]} />
 					<meshLambertMaterial attach="material" />
 				</mesh>
-				<User position={{x, y: 1, z}} />
+				<User position={{x, y: 1, z}} follow />
 			</Canvas>
 		</div>
 	);
