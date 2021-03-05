@@ -21,6 +21,7 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const Logout = lazy(() => import('./pages/LogoutPage'));
 const SpacePage = lazy(() => import('./pages/SpacePage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
+const ThirdPersonTest = lazy(() => import('./pages/ThirdPersonTest'));
 
 function App() {
 	return (
@@ -37,6 +38,7 @@ function App() {
 										component={AuthorizationCallback}
 									/>
 									<Route path="/aframe" component={AFrameTest} />
+									<Route path="/tp" component={ThirdPersonTest} />
 									<Route path="/spaces/:spaceId" component={SpacePage} />
 									<Route path="/clusters/:clusterId" component={ClusterPage} />
 									<Route path="/login" exact component={LoginPage} />
