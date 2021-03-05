@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {connect, Room} from 'twilio-video';
 import {useSpace} from '../../api/spaces';
 import joinSpace from '../../space/joinSpace';
 import BaseButton from '../base/BaseButton';
@@ -22,11 +21,11 @@ export default function SpaceWrapper({id}: {id: string}) {
 	const managerRef = useRef<SpaceManager>(new SpaceManager(id));
 	const space = useSpace(id);
 	const [chatModalOpen, setChatModalOpen] = useState(false);
-	const [twilioRoom, setTwilioRoom] = useState<Room>();
+	// const [twilioRoom, setTwilioRoom] = useState<Room>();
 
 	useEffect(() => {
 		(async () => {
-			const {connection, twilioGrant} = await joinSpace(id);
+			const {connection} = await joinSpace(id);
 			connectionRef.current = connection;
 			managerRef.current.setWebsocket(connection);
 			// connect(twilioGrant).then((room) => setTwilioRoom(room));
@@ -35,7 +34,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	return (
 		<SpaceManagerContext.Provider value={managerRef.current}>
-			<SpaceMediaWrapper twilioRoom={twilioRoom ?? null}>
+			<SpaceMediaWrapper twilioRoom={null}>
 				<div className={spaceViewStyles('container')}>
 					<div className={spaceViewStyles('topHeading')}>
 						<BaseText variant="secondary-title" alignment="center">

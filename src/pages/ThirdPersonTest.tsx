@@ -1,10 +1,14 @@
-import {KeyboardEventHandler, Suspense, useEffect, useState} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import {Canvas, extend, useLoader, useThree} from 'react-three-fiber';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {Position} from '../typings/Space';
 
 function SushiTable() {
+	// Attribution: Aimi Sekiguchi
+	// https://poly.google.com/user/c6UmSrlqUaJ/
+	// TODO: Put attribution on page itself for actual release
+	// (Only developers see it right now so the attribution is in the code)
 	const table = useLoader(
 		GLTFLoader,
 		'https://nebulamodels.s3.amazonaws.com/models/sushi_table/model.gltf'
@@ -45,6 +49,7 @@ export default function ThirdPersonTest() {
 
 	useEffect(() => {
 		const listener = (ev: KeyboardEvent) => {
+			// TODO: Make these relative to the user's rotation
 			switch (ev.key) {
 				case 'a':
 					setX((x) => x - 1);
