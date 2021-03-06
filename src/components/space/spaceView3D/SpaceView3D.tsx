@@ -46,7 +46,7 @@ function User({position, me}: {position: Position; me: boolean}) {
 	}, [camera, camera.position, position]);
 
 	return (
-		<mesh position={[position.x, position.y, position.z]}>
+		<mesh position={[position.x, position.y + 1, position.z]}>
 			<boxBufferGeometry attach="geometry" args={[1, 2, 0.5]} />
 			<meshLambertMaterial
 				attach="material"
@@ -100,7 +100,7 @@ export default function SpaceView3D() {
 		manager.setMoveDirection({
 			x: a ? -1 : d ? 1 : 0,
 			y: 0,
-			z: s ? -1 : w ? 1 : 0,
+			z: s ? 1 : w ? -1 : 0,
 		});
 	}, [a, s, d, w, manager]);
 
