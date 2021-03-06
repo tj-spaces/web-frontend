@@ -249,12 +249,12 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 		this.send('display-status', status);
 	}
 
-	setMoveDirection(direction: {x: 0 | 1 | -1; y: 0 | 1 | -1}) {
+	setMoveDirection(direction: {x: 0 | 1 | -1; y: 0 | 1 | -1; z: 0 | 1 | -1}) {
 		this.send('move', direction);
 	}
 
 	stopMoving() {
-		this.setMoveDirection({x: 0, y: 0});
+		this.setMoveDirection({x: 0, y: 0, z: 0});
 	}
 
 	/**

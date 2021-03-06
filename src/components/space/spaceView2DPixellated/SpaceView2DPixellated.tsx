@@ -76,14 +76,20 @@ export default function SpaceView2DPixellated() {
 	}, [a, d, lastDirection]);
 
 	useEffect(() => {
-		manager.setMoveDirection({x: a ? -1 : d ? 1 : 0, y: s ? -1 : w ? 1 : 0});
+		manager.setMoveDirection({
+			x: a ? -1 : d ? 1 : 0,
+			y: 0,
+			z: s ? -1 : w ? 1 : 0,
+		});
 	}, [a, s, d, w, manager]);
 
 	const myPosition = myID ? participants[myID]?.position : undefined;
-	const {x, y} = myPosition ?? {x: 0, y: 0};
+	const {x, y: z} = myPosition ?? {x: 0, y: 0};
 
 	return (
-		<ViewerContext.Provider value={{position: {x, y}, zoom: 1, lastDirection}}>
+		<ViewerContext.Provider
+			value={{position: {x, y: z}, zoom: 1, lastDirection}}
+		>
 			<div className={styles('viewport')}>
 				{tiles.map((tile, idx) => (
 					<Tile src="/wood.jpg" position={tile.position} key={idx} />

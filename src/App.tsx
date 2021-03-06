@@ -14,14 +14,12 @@ const AuthorizationCallback = lazy(
 	() => import('./pages/AuthenticationCallback')
 );
 const AccountPage = lazy(() => import('./pages/AccountPage'));
-const AFrameTest = lazy(() => import('./components/Space_new'));
 const ClusterPage = lazy(() => import('./pages/ClusterPage'));
 const DefaultPage = lazy(() => import('./pages/DefaultPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const Logout = lazy(() => import('./pages/LogoutPage'));
 const SpacePage = lazy(() => import('./pages/SpacePage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
-const ThirdPersonTest = lazy(() => import('./pages/ThirdPersonTest'));
 
 function App() {
 	return (
@@ -37,8 +35,6 @@ function App() {
 										path="/auth/:provider/callback"
 										component={AuthorizationCallback}
 									/>
-									<Route path="/aframe" component={AFrameTest} />
-									<Route path="/tp" component={ThirdPersonTest} />
 									<Route path="/spaces/:spaceId" component={SpacePage} />
 									<Route path="/clusters/:clusterId" component={ClusterPage} />
 									<Route path="/login" exact component={LoginPage} />

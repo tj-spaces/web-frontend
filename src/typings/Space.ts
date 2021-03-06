@@ -1,4 +1,3 @@
-import {Position2D} from '../components/space/spaceView2DPixellated/ViewerContext';
 import {WorldType} from './Types';
 
 export type SpaceVisibility = 'discoverable' | 'unlisted' | 'secret';
