@@ -1,5 +1,5 @@
 import {useContext, useEffect, useRef} from 'react';
-import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
+// import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
 import SpaceAudioContext from '../components/space/SpaceAudioContext';
 import {Position} from '../typings/Space';
 
@@ -18,16 +18,15 @@ export default function SpatialAudioTrack({
 	// [audioContext, audioTrack]
 	useEffect(() => {
 		if (!audioContext) {
+			console.warn('AudioContext is NULL');
 			return;
 		}
 
 		let stream = new MediaStream([track]);
 		let audioSource = audioContext.createMediaStreamSource(stream);
-		pannerNode.current = new PannerNode(
-			audioContext,
-			defaultPannerNodeSettings
-		);
+		pannerNode.current = audioContext.createPanner();
 		audioSource.connect(pannerNode.current).connect(audioContext.destination);
+		console.log({audioSource, audioContext, pannerNode});
 
 		return () => {
 			audioSource.disconnect();

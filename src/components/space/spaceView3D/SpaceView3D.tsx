@@ -1,16 +1,15 @@
-import {useContext} from 'react';
-import SpaceManagerContext from '../SpaceManagerContext';
-
-import {Suspense, useEffect, useState} from 'react';
+import {Suspense, useContext, useEffect, useState} from 'react';
 import {Canvas, useLoader, useThree} from 'react-three-fiber';
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
-import {Position, SpaceParticipant} from '../../../typings/Space';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import useKeyboardState from '../../../hooks/useKeyboardState';
-import SpatialAudioTrack from '../../../mediautil/SpatialAudioTrack';
+import {useTracks} from '../../../mediautil/MediaConnector';
 import SpatialAudioListener from '../../../mediautil/SpatialAudioListener';
+import {Position, SpaceParticipant} from '../../../typings/Space';
+import SpaceAudioContext from '../SpaceAudioContext';
+import SpaceManagerContext from '../SpaceManagerContext';
+import SpaceRemoteAudio from '../SpaceRemoteAudio';
 import SpaceVoiceContext from '../SpaceVoiceContext';
-import {useTracks, VoiceServerLike} from '../../../mediautil/MediaConnector';
 
 function SushiTable() {
 	// Attribution: Aimi Sekiguchi
@@ -45,16 +44,12 @@ function User({
 	position,
 	me,
 	id,
-	voice,
 }: {
 	position: Position;
 	me: boolean;
 	id: string;
-	voice: VoiceServerLike | null;
 }) {
 	const {camera} = useThree();
-	const tracks = useTracks(voice, id);
-	console.log({tracks, voice, id});
 
 	useEffect(() => {
 		camera.position.set(position.x + 4, position.y + 2, position.z + 4);
@@ -63,18 +58,7 @@ function User({
 
 	return (
 		<>
-			{me ? (
-				<SpatialAudioListener position={position} rotation={0} />
-			) : (
-				tracks?.map((track) => (
-					<SpatialAudioTrack
-						position={position}
-						rotation={0}
-						track={track}
-						key={track.id}
-					/>
-				))
-			)}
+			{me && <SpatialAudioListener position={position} rotation={0} />}
 			<mesh position={[position.x, position.y + 1, position.z]}>
 				<boxBufferGeometry attach="geometry" args={[1, 2, 0.5]} />
 				<meshLambertMaterial
@@ -137,9 +121,22 @@ export default function SpaceView3D() {
 	const myPosition = myID ? participants[myID]?.position : undefined;
 	const {x, z} = myPosition ?? {x: 0, z: 0};
 	const voice = useContext(SpaceVoiceContext);
+	const audio = useContext(SpaceAudioContext);
 
 	return (
 		<div style={{width: '100vw', height: '100vh'}}>
+			{Object.entries(participants).map(([id, participant]) => {
+				if (id !== myID) {
+					return (
+						<SpaceRemoteAudio
+							userID={id}
+							position={participant.position}
+							key={id}
+						/>
+					);
+				}
+				return null;
+			})}
 			<Canvas camera={{position: [x, 10, z]}}>
 				<Suspense fallback="Loading model">
 					<SushiTable />
@@ -156,7 +153,6 @@ export default function SpaceView3D() {
 						key={id}
 						me={id === myID}
 						id={id}
-						voice={voice}
 					/>
 				))}
 			</Canvas>

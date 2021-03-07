@@ -58,7 +58,6 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 	} = {};
 
 	private handleWebsocketEvent(type: string, payload: string) {
-		console.log(type, payload);
 		let data = JSONBig({storeAsString: true}).parse(payload);
 		switch (type) {
 			case 'message':
