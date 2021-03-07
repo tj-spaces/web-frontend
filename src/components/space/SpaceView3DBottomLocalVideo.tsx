@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
 import {VideoTrack} from 'twilio-video';
-import {SpaceParticipant} from '../../../typings/Space';
-import SpaceMediaContext from '../SpaceMediaContext';
-import SpaceParticipantBackground from '../SpaceParticipant';
-import SpaceParticipantCircle from '../SpaceParticipantCircle';
-import {spaceViewStyles} from '../SpaceViewStyles';
+import {SpaceParticipant} from '../../typings/Space';
+import SpaceMediaContext from './SpaceMediaContext';
+import SpaceParticipantBackground from './SpaceParticipant';
+import SpaceParticipantCircle from './SpaceParticipantCircle';
+import {spaceViewStyles} from './SpaceViewStyles';
 
 /**
  * A /local/ Spaces participant. Updates the AudioContext listener position when it moves.

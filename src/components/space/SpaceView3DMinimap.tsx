@@ -1,5 +1,5 @@
-import {createStylesheet} from '../../../styles/createStylesheet';
-import {Position} from '../../../typings/Space';
+import {createStylesheet} from '../../styles/createStylesheet';
+import {Position} from '../../typings/Space';
 
 export interface MinimapElement {
 	color: 'red' | 'blue';
