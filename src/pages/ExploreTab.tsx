@@ -1,6 +1,6 @@
 import BaseText from '../components/base/BaseText';
 import FeedContainer from '../components/feed/FeedContainer';
-import TopicTagList from '../components/TopicTagList';
+import TopicTagList from '../components/topicTags/TopicTagList';
 
 export default function ExploreTab() {
 	return (

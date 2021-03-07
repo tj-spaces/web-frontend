@@ -1,5 +1,5 @@
-import {ITopicTag} from '../typings/Types';
-import BaseRow from './base/BaseRow';
+import {ITopicTag} from '../../typings/Types';
+import BaseRow from '../base/BaseRow';
 import TopicTag from './TopicTag';
 
 export default function TopicTagList({

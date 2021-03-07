@@ -1,9 +1,9 @@
-import React, {Suspense, useContext, useEffect, useState} from 'react';
+import React, {Suspense, useContext, useEffect} from 'react';
 import {Canvas, useLoader} from 'react-three-fiber';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import useKeyboardState from '../../hooks/useKeyboardState';
+import useMyID from '../../hooks/useMyID';
 import useParticipants from '../../hooks/useParticipants';
-import {SpaceParticipant} from '../../typings/Space';
 import Floor from './Floor';
 import SpaceManagerContext from './ManagerContext';
 import SpaceRemoteAudio from './RemoteAudio';
@@ -26,18 +26,8 @@ function SushiTable() {
 export default function Space() {
 	const manager = useContext(SpaceManagerContext);
 
+	const myID = useMyID();
 	const participants = useParticipants();
-	const [myID, setMyID] = useState<string>();
-
-	useEffect(() => {
-		manager.on('auth', ({participant_id}) => {
-			setMyID(participant_id);
-		});
-
-		return () => {
-			manager.destroy();
-		};
-	}, [manager]);
 
 	const {a, s, d, w} = useKeyboardState(document.body);
 

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useThree} from 'react-three-fiber/hooks';
+import {useThree} from 'react-three-fiber';
 import SpatialAudioListener from '../../mediautil/SpatialAudioListener';
 import {Position} from '../../typings/Space';
 
