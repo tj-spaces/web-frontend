@@ -1,3 +1,5 @@
+import {useEffect, useState} from 'react';
+
 interface VoiceServerEventMap {
 	addtrack: {
 		userID: string;
@@ -9,10 +11,26 @@ interface VoiceServerEventMap {
 	};
 }
 
+interface VoiceServerLike {
+	on<K extends keyof VoiceServerEventMap>(
+		event: K,
+		listener: (data: VoiceServerEventMap[K]) => void
+	): this;
+	off<K extends keyof VoiceServerEventMap>(
+		event: K,
+		listener?: (data: VoiceServerEventMap[K]) => void
+	): this;
+	emit<K extends keyof VoiceServerEventMap>(
+		event: K,
+		data: VoiceServerEventMap[K]
+	): boolean;
+	getUserTracks(userID: string): Set<MediaStreamTrack>;
+}
+
 /**
  * Basic class for handling a connection to a Voice server.
  */
-export class VoiceServer implements NodeJS.EventEmitter {
+export class VoiceServer implements VoiceServerLike {
 	private peer = new RTCPeerConnection();
 
 	/**
@@ -30,14 +48,14 @@ export class VoiceServer implements NodeJS.EventEmitter {
 	/**
 	 * Stores a map of [userID] -> MediaStreamTrack[].
 	 */
-	private tracksByUser: Record<string, MediaStreamTrack[]> = {};
+	private tracksByUser: Record<string, Set<MediaStreamTrack>> = {};
 
 	/**
-	 * If we receive a correlation between a track and a user before receiving the track,
-	 * then we store it here. When the track is added, we remove it from this map, and add
-	 * it to tracksByUser.
+	 * Map of [trackID] -> userID.
+	 *
+	 * Useful for if we receive a correlation between a track and a user before receiving the track.
 	 */
-	private deferredTrackCorrelations: Record<string, string> = {};
+	private trackToUser: Record<string, string> = {};
 
 	/**
 	 * The "voice server websocket."
@@ -76,6 +94,10 @@ export class VoiceServer implements NodeJS.EventEmitter {
 		);
 	}
 
+	getUserTracks(userID: string): Set<MediaStreamTrack> {
+		return userID in this.tracksByUser ? this.tracksByUser[userID] : new Set();
+	}
+
 	/**
 	 * Handles a new track received from the Voice server.
 	 * If the track is already correlated with a given user, we add
@@ -86,8 +108,8 @@ export class VoiceServer implements NodeJS.EventEmitter {
 		let track = event.track;
 		this.remoteTracks[track.id] = event.track;
 
-		if (track.id in this.deferredTrackCorrelations) {
-			let sourceUserID = this.deferredTrackCorrelations[track.id];
+		if (track.id in this.trackToUser) {
+			let sourceUserID = this.trackToUser[track.id];
 			this.correlateTrackWithUser(track.id, sourceUserID);
 		}
 
@@ -157,8 +179,26 @@ export class VoiceServer implements NodeJS.EventEmitter {
 	 * @param stream The MediaStream to add listeners to
 	 */
 	private addMediaStreamEventListeners = (stream: MediaStream) => {
-		//
+		stream.addEventListener('removetrack', (event) => {
+			this.removeRemoteTrack(event.track);
+		});
 	};
+
+	/**
+	 * Removes a remote track. If the track was correlated to a user,
+	 * then we emit the 'removetrack' event. Otherwise, no event is
+	 * emitted.
+	 * @param track The track to remove.
+	 */
+	private removeRemoteTrack(track: MediaStreamTrack) {
+		delete this.remoteTracks[track.id];
+		if (track.id in this.trackToUser) {
+			let userID = this.trackToUser[track.id];
+			delete this.trackToUser[track.id];
+			this.tracksByUser[userID].delete(track);
+			this.emit('removetrack', {userID, track});
+		}
+	}
 
 	/**
 	 * Handles the case that a track has not been received, but we already
@@ -168,23 +208,26 @@ export class VoiceServer implements NodeJS.EventEmitter {
 	 * @param userID The ID of the user
 	 */
 	private addDeferredTrackCorrelation = (trackID: string, userID: string) => {
-		this.deferredTrackCorrelations[trackID] = userID;
+		this.trackToUser[trackID] = userID;
 	};
 
 	/**
 	 * When we receive a track, we don't receive any other information about it.
 	 * This method is called when we receive a 'track_user' event from the Voice server
 	 * websocket: it's for correlating a track with a user.
+	 *
+	 * Emits the 'addtrack' event if we already have the MediaStreamTrack we need.
 	 * @param trackID The ID of the track
 	 * @param userID The ID of the user
 	 */
 	private correlateTrackWithUser = (trackID: string, userID: string) => {
 		if (trackID in this.remoteTracks) {
 			if (!(userID in this.tracksByUser)) {
-				this.tracksByUser[userID] = [];
+				this.tracksByUser[userID] = new Set();
 			}
 
-			this.tracksByUser[userID].push(this.remoteTracks[trackID]);
+			this.tracksByUser[userID].add(this.remoteTracks[trackID]);
+			this.emit('addtrack', {userID, track: this.remoteTracks[trackID]});
 		} else {
 			this.addDeferredTrackCorrelation(trackID, userID);
 		}
@@ -256,7 +299,7 @@ export class VoiceServer implements NodeJS.EventEmitter {
 			(data: VoiceServerEventMap[key]) => void
 		>;
 	} = {};
-	addListener<K extends keyof VoiceServerEventMap>(
+	on<K extends keyof VoiceServerEventMap>(
 		event: K,
 		listener: (data: VoiceServerEventMap[K]) => void
 	): this {
@@ -266,23 +309,7 @@ export class VoiceServer implements NodeJS.EventEmitter {
 		this.listeners_[event]!.add(listener);
 		return this;
 	}
-	on<K extends keyof VoiceServerEventMap>(
-		event: K,
-		listener: (data: VoiceServerEventMap[K]) => void
-	): this {
-		return this.addListener(event, listener);
-	}
-	once<K extends keyof VoiceServerEventMap>(
-		event: K,
-		listener: (data: VoiceServerEventMap[K]) => void
-	): this {
-		const l = (data: VoiceServerEventMap[typeof event]) => {
-			listener(data);
-			this.removeListener(event, l);
-		};
-		throw this.addListener(event, l);
-	}
-	removeListener<K extends keyof VoiceServerEventMap>(
+	off<K extends keyof VoiceServerEventMap>(
 		event: K,
 		listener: (data: VoiceServerEventMap[K]) => void
 	): this {
@@ -290,38 +317,6 @@ export class VoiceServer implements NodeJS.EventEmitter {
 			this.listeners_[event]?.delete(listener);
 		}
 		return this;
-	}
-	off<K extends keyof VoiceServerEventMap>(
-		event: K,
-		listener: (data: VoiceServerEventMap[K]) => void
-	): this {
-		this.removeListener(event, listener);
-		throw new Error('Method not implemented.');
-	}
-	removeAllListeners(event?: keyof VoiceServerEventMap): this {
-		if (event) {
-			this.listeners_[event]?.clear();
-		} else {
-			// Memory leak? IDK
-			this.listeners_ = {};
-		}
-		return this;
-	}
-	setMaxListeners(n: number): this {
-		throw new Error('Method not implemented.');
-	}
-	getMaxListeners(): number {
-		throw new Error('Method not implemented.');
-	}
-	listeners(event: keyof VoiceServerEventMap): Function[] {
-		if (event in this.listeners_) {
-			return Array.from(this.listeners_[event]!);
-		} else {
-			return [];
-		}
-	}
-	rawListeners(event: keyof VoiceServerEventMap): Function[] {
-		throw new Error('Method not implemented.');
 	}
 	emit<K extends keyof VoiceServerEventMap>(
 		event: K,
@@ -333,27 +328,6 @@ export class VoiceServer implements NodeJS.EventEmitter {
 		}
 		return false;
 	}
-	listenerCount(event: keyof VoiceServerEventMap): number {
-		if (event in this.listeners_) {
-			return this.listeners_[event]!.size;
-		}
-		return 0;
-	}
-	prependListener(
-		event: string | symbol,
-		listener: (...args: any[]) => void
-	): this {
-		throw new Error('Method not implemented.');
-	}
-	prependOnceListener(
-		event: string | symbol,
-		listener: (...args: any[]) => void
-	): this {
-		throw new Error('Method not implemented.');
-	}
-	eventNames(): (string | symbol)[] {
-		throw new Error('Method not implemented.');
-	}
 }
 
 /**
@@ -361,7 +335,7 @@ export class VoiceServer implements NodeJS.EventEmitter {
  * Also manages the uplink to the primary voice server: the one that we transmit
  * our voice data to.
  */
-export class VoiceServerCluster {
+export class VoiceServerCluster implements VoiceServerLike {
 	/**
 	 * The internal mapping of URLs to connections to Voice servers.
 	 */
@@ -371,8 +345,12 @@ export class VoiceServerCluster {
 	 * The URL of the server to transmit our voice data to.
 	 */
 	private primaryVoiceServerURL: string | null = null;
-
 	private localTracks = new Set<MediaStreamTrack>();
+	private tracksByUser: Record<string, Set<MediaStreamTrack>> = {};
+
+	getUserTracks(userID: string): Set<MediaStreamTrack> {
+		return userID in this.tracksByUser ? this.tracksByUser[userID] : new Set();
+	}
 
 	/**
 	 * Adds a voice server to the cluster.
@@ -380,7 +358,19 @@ export class VoiceServerCluster {
 	 */
 	addVoiceServer(url: string) {
 		if (!(url in this.nodes)) {
-			this.nodes[url] = new VoiceServer(url);
+			let server = new VoiceServer(url);
+			// Forward events
+			server.on('addtrack', (data) => {
+				this.tracksByUser[data.userID].add(data.track);
+				this.emit('addtrack', data);
+			});
+			server.on('removetrack', (data) => {
+				this.tracksByUser[data.userID].delete(data.track);
+				this.emit('removetrack', data);
+			});
+			this.nodes[url] = server;
+		} else {
+			console.warn('addVoiceServer() for existing URL');
 		}
 	}
 
@@ -418,4 +408,70 @@ export class VoiceServerCluster {
 		// Update the internal URL of the primary voice server
 		this.primaryVoiceServerURL = url;
 	}
+
+	private listeners_: {
+		[key in keyof VoiceServerEventMap]?: Set<
+			(data: VoiceServerEventMap[key]) => void
+		>;
+	} = {};
+	on<K extends keyof VoiceServerEventMap>(
+		event: K,
+		listener: (data: VoiceServerEventMap[K]) => void
+	): this {
+		if (!(event in this.listeners_)) {
+			this.listeners_[event] = new Set() as any;
+		}
+		this.listeners_[event]!.add(listener);
+		return this;
+	}
+	off<K extends keyof VoiceServerEventMap>(
+		event: K,
+		listener: (data: VoiceServerEventMap[K]) => void
+	): this {
+		if (event in this.listeners_) {
+			this.listeners_[event]?.delete(listener);
+		}
+		return this;
+	}
+	emit<K extends keyof VoiceServerEventMap>(
+		event: K,
+		data: VoiceServerEventMap[K]
+	): boolean {
+		if (event in this.listeners_) {
+			this.listeners_[event]!.forEach((listener: any) => listener(data));
+			return this.listeners_[event]!.size > 0;
+		}
+		return false;
+	}
+}
+
+/**
+ * React hook to use a given user's media tracks.
+ */
+export function useTracks(server: VoiceServerLike, userID: string) {
+	let [tracks, setTracks] = useState<MediaStreamTrack[]>();
+
+	useEffect(() => {
+		setTracks(Array.from(server.getUserTracks(userID)));
+
+		const onAddTrack = (data: VoiceServerEventMap['addtrack']) => {
+			setTracks((tracks) => (tracks ? [...tracks, data.track] : [data.track]));
+		};
+
+		const onRemoveTrack = (data: VoiceServerEventMap['removetrack']) => {
+			setTracks((tracks) =>
+				tracks ? tracks.filter((track) => track !== data.track) : []
+			);
+		};
+
+		server.on('addtrack', onAddTrack);
+		server.on('removetrack', onRemoveTrack);
+
+		return () => {
+			server.off('addtrack', onAddTrack);
+			server.off('removetrack', onRemoveTrack);
+		};
+	}, [server, userID]);
+
+	return tracks;
 }
