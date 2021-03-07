@@ -1,5 +1,5 @@
-import { createContext } from 'react';
+import {createContext} from 'react';
 
-const SpaceAudioContext = createContext<AudioContext>(null!);
+const SpaceAudioContext = createContext<AudioContext | null>(null);
 
 export default SpaceAudioContext;

@@ -9,14 +9,17 @@ export default function SpatialAudioListener({
 	position: Position;
 	rotation: number;
 }) {
-	const {listener} = useContext(SpaceAudioContext);
+	const audioContext = useContext(SpaceAudioContext);
+	const listener = audioContext?.listener;
 
 	useEffect(() => {
-		listener.positionX.value = position.x;
-		listener.positionZ.value = position.z;
+		if (listener) {
+			listener.positionX.value = position.x;
+			listener.positionZ.value = position.z;
 
-		listener.forwardZ.value = Math.sin(rotation);
-		listener.forwardX.value = Math.cos(rotation);
+			listener.forwardZ.value = Math.sin(rotation);
+			listener.forwardX.value = Math.cos(rotation);
+		}
 	}, [listener, position, rotation]);
 
 	return null;

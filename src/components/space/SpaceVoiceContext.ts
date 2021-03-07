@@ -1,6 +1,6 @@
 import {createContext} from 'react';
-import {VoiceServerCluster} from '../../mediautil/MediaConnector';
+import {VoiceServerLike} from '../../mediautil/MediaConnector';
 
-const SpaceVoiceContext = createContext<null | VoiceServerCluster>(null);
+const SpaceVoiceContext = createContext<null | VoiceServerLike>(null);
 
 export default SpaceVoiceContext;

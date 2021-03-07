@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 
-interface VoiceServerEventMap {
+export interface VoiceServerEventMap {
 	addtrack: {
 		userID: string;
 		track: MediaStreamTrack;
@@ -11,7 +11,7 @@ interface VoiceServerEventMap {
 	};
 }
 
-interface VoiceServerLike {
+export interface VoiceServerLike {
 	on<K extends keyof VoiceServerEventMap>(
 		event: K,
 		listener: (data: VoiceServerEventMap[K]) => void

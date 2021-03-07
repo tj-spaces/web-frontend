@@ -17,6 +17,10 @@ export default function SpatialAudioTrack({
 
 	// [audioContext, audioTrack]
 	useEffect(() => {
+		if (!audioContext) {
+			return;
+		}
+
 		let audioSource = audioContext.createMediaStreamSource(
 			new MediaStream([track])
 		);
