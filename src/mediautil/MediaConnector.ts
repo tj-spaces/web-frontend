@@ -80,10 +80,10 @@ export class VoiceServer {
 			this.correlateTrackWithUser(track.id, sourceUserID);
 		}
 
-		event.streams.forEach((mediaStream) => {
-			if (!this.handledMediaStreamIDs.has(mediaStream.id)) {
-				this.handledMediaStreamIDs.add(mediaStream.id);
-				mediaStream.addEventListener('removetrack', (event) => {});
+		event.streams.forEach((stream) => {
+			if (!this.handledMediaStreamIDs.has(stream.id)) {
+				this.handledMediaStreamIDs.add(stream.id);
+				this.addMediaStreamEventListeners(stream);
 			}
 		});
 	}
