@@ -1,7 +1,11 @@
+interface VoiceServerEventMap {
+	'add-user': undefined;
+}
+
 /**
  * Basic class for handling a connection to a Voice server.
  */
-export class VoiceServer {
+export class VoiceServer implements NodeJS.EventEmitter {
 	private peer = new RTCPeerConnection();
 
 	/**
@@ -230,5 +234,109 @@ export class VoiceServer {
 	removeLocalTrack(track: MediaStreamTrack) {
 		this.peer.removeTrack(this.localTracks[track.id]);
 		delete this.localTracks[track.id];
+	}
+
+	private listeners_: {
+		[key in keyof VoiceServerEventMap]?: Set<
+			(data: VoiceServerEventMap[key]) => void
+		>;
+	} = {};
+	addListener<K extends keyof VoiceServerEventMap>(
+		event: K,
+		listener: (data: VoiceServerEventMap[K]) => void
+	): this {
+		if (!(event in this.listeners_)) {
+			this.listeners_[event] = new Set() as any;
+		}
+		this.listeners_[event]!.add(listener);
+		return this;
+	}
+	on<K extends keyof VoiceServerEventMap>(
+		event: K,
+		listener: (data: VoiceServerEventMap[K]) => void
+	): this {
+		return this.addListener(event, listener);
+	}
+	once<K extends keyof VoiceServerEventMap>(
+		event: K,
+		listener: (data: VoiceServerEventMap[K]) => void
+	): this {
+		const l = (data: VoiceServerEventMap[typeof event]) => {
+			listener(data);
+			this.removeListener(event, l);
+		};
+		throw this.addListener(event, l);
+	}
+	removeListener<K extends keyof VoiceServerEventMap>(
+		event: K,
+		listener: (data: VoiceServerEventMap[K]) => void
+	): this {
+		if (event in this.listeners_) {
+			this.listeners_[event]?.delete(listener);
+		}
+		return this;
+	}
+	off<K extends keyof VoiceServerEventMap>(
+		event: K,
+		listener: (data: VoiceServerEventMap[K]) => void
+	): this {
+		this.removeListener(event, listener);
+		throw new Error('Method not implemented.');
+	}
+	removeAllListeners(event?: keyof VoiceServerEventMap): this {
+		if (event) {
+			this.listeners_[event]?.clear();
+		} else {
+			// Memory leak? IDK
+			this.listeners_ = {};
+		}
+		return this;
+	}
+	setMaxListeners(n: number): this {
+		throw new Error('Method not implemented.');
+	}
+	getMaxListeners(): number {
+		throw new Error('Method not implemented.');
+	}
+	listeners(event: keyof VoiceServerEventMap): Function[] {
+		if (event in this.listeners_) {
+			return Array.from(this.listeners_[event]!);
+		} else {
+			return [];
+		}
+	}
+	rawListeners(event: keyof VoiceServerEventMap): Function[] {
+		throw new Error('Method not implemented.');
+	}
+	emit<K extends keyof VoiceServerEventMap>(
+		event: K,
+		data: VoiceServerEventMap[K]
+	): boolean {
+		if (event in this.listeners_) {
+			this.listeners_[event]!.forEach((listener: any) => listener(data));
+			return this.listeners_[event]!.size > 0;
+		}
+		return false;
+	}
+	listenerCount(event: keyof VoiceServerEventMap): number {
+		if (event in this.listeners_) {
+			return this.listeners_[event]!.size;
+		}
+		return 0;
+	}
+	prependListener(
+		event: string | symbol,
+		listener: (...args: any[]) => void
+	): this {
+		throw new Error('Method not implemented.');
+	}
+	prependOnceListener(
+		event: string | symbol,
+		listener: (...args: any[]) => void
+	): this {
+		throw new Error('Method not implemented.');
+	}
+	eventNames(): (string | symbol)[] {
+		throw new Error('Method not implemented.');
 	}
 }
