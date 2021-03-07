@@ -18,25 +18,40 @@ const VOICE_SERVER_URL = 'ws://localhost:8080';
 
 export default function SpaceWrapper({id}: {id: string}) {
 	const connectionRef = useRef<WebSocket>();
-	const managerRef = useRef<SpaceManager>(new SpaceManager(id));
-	const voiceRef = useRef<VoiceServer>(new VoiceServer(VOICE_SERVER_URL));
-	const audioRef = useRef<AudioContext>(new AudioContext());
+	const [manager, setManager] = useState<SpaceManager>();
+	const [voice, setVoice] = useState<VoiceServer>();
+	const [audio, setAudio] = useState<AudioContext>();
 	const space = useSpace(id);
 	const [chatModalOpen, setChatModalOpen] = useState(false);
-	// const [twilioRoom, setTwilioRoom] = useState<Room>();
 
 	useEffect(() => {
+		setAudio(new AudioContext());
+		setVoice(new VoiceServer(VOICE_SERVER_URL));
+	}, []);
+
+	useEffect(() => {
+		let manager = new SpaceManager(id);
+		setManager(manager);
+
 		(async () => {
 			const {connection} = await joinSpace(id);
 			connectionRef.current = connection;
-			managerRef.current.setWebsocket(connection);
+			manager.setWebsocket(connection);
 		})();
+
+		return () => {
+			manager.destroy();
+		};
 	}, [id]);
 
+	if (!manager) {
+		return null;
+	}
+
 	return (
-		<SpaceManagerContext.Provider value={managerRef.current}>
-			<SpaceAudioContext.Provider value={audioRef.current}>
-				<SpaceVoiceContext.Provider value={voiceRef.current}>
+		<SpaceManagerContext.Provider value={manager}>
+			<SpaceAudioContext.Provider value={audio ?? null}>
+				<SpaceVoiceContext.Provider value={voice ?? null}>
 					<div className={spaceViewStyles('container')}>
 						<div className={spaceViewStyles('topHeading')}>
 							<BaseText variant="secondary-title" alignment="center">

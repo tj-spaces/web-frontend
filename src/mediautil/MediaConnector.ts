@@ -92,6 +92,10 @@ export class VoiceServer implements VoiceServerLike {
 			'message',
 			this.handleWebsocketMessageEvent.bind(this)
 		);
+
+		this.ws.addEventListener('error', (error) => {
+			console.error(`Error connecting to Voice server ${url}:`, error);
+		});
 	}
 
 	getUserTracks(userID: string): Set<MediaStreamTrack> {
