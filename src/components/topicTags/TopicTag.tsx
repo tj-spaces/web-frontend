@@ -1,5 +1,5 @@
-import colors from '../styles/colors';
-import {createStylesheet} from '../styles/createStylesheet';
+import colors from '../../styles/colors';
+import {createStylesheet} from '../../styles/createStylesheet';
 
 const styles = createStylesheet({
 	topicTag: {

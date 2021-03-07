@@ -1,12 +1,13 @@
-import {Suspense, useContext, useEffect, useState} from 'react';
-import {Canvas, useLoader, useThree} from 'react-three-fiber';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+import React, {Suspense, useContext, useEffect, useState} from 'react';
+import {Canvas, useLoader} from 'react-three-fiber';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import useKeyboardState from '../../hooks/useKeyboardState';
-import SpatialAudioListener from '../../mediautil/SpatialAudioListener';
-import {Position, SpaceParticipant} from '../../typings/Space';
+import useParticipants from '../../hooks/useParticipants';
+import {SpaceParticipant} from '../../typings/Space';
+import Floor from './Floor';
 import SpaceManagerContext from './ManagerContext';
 import SpaceRemoteAudio from './RemoteAudio';
+import UserModel from './UserModel';
 
 function SushiTable() {
 	// Attribution: Aimi Sekiguchi
@@ -22,83 +23,16 @@ function SushiTable() {
 	);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function Controls() {
-	const {
-		camera,
-		gl: {domElement},
-	} = useThree();
-
-	useEffect(() => {
-		let controls = new OrbitControls(camera, domElement);
-		return () => controls.dispose();
-	}, [camera, domElement]);
-
-	return null;
-}
-
-function User({
-	position,
-	me,
-	id,
-}: {
-	position: Position;
-	me: boolean;
-	id: string;
-}) {
-	const {camera} = useThree();
-
-	useEffect(() => {
-		camera.position.set(position.x + 4, position.y + 2, position.z + 4);
-		camera.lookAt(position.x, position.y, position.z);
-	}, [camera, camera.position, position]);
-
-	return (
-		<>
-			{me && <SpatialAudioListener position={position} rotation={0} />}
-			<mesh position={[position.x, position.y + 1, position.z]}>
-				<boxBufferGeometry attach="geometry" args={[1, 2, 0.5]} />
-				<meshLambertMaterial
-					attach="material"
-					color={me ? '#ff6666' : '#66ff66'}
-				/>
-			</mesh>
-		</>
-	);
-}
-
 export default function Space() {
 	const manager = useContext(SpaceManagerContext);
 
-	const [participants, setParticipants] = useState<
-		Record<string, SpaceParticipant>
-	>({});
+	const participants = useParticipants();
 	const [myID, setMyID] = useState<string>();
 
 	useEffect(() => {
-		manager
-			.on('users', (users) => setParticipants(users))
-			.on('user_join', (user) => {
-				setParticipants((participants) => ({...participants, [user.id]: user}));
-			})
-			.on('user_leave', (user) => {
-				setParticipants(({[user]: _, ...participants}) => participants);
-			})
-			.on('user_move', ({id, new_position}) => {
-				setParticipants((participants) => ({
-					...participants,
-					[id]: {...participants[id], position: new_position},
-				}));
-			})
-			.on('user_direction', ({id, direction}) => {
-				setParticipants((participants) => ({
-					...participants,
-					[id]: {...participants[id], moving_direction: direction},
-				}));
-			})
-			.on('auth', ({participant_id}) => {
-				setMyID(participant_id);
-			});
+		manager.on('auth', ({participant_id}) => {
+			setMyID(participant_id);
+		});
 
 		return () => {
 			manager.destroy();
@@ -120,30 +54,23 @@ export default function Space() {
 
 	return (
 		<div style={{width: '100vw', height: '100vh'}}>
-			{Object.entries(participants).map(([id, participant]) => {
-				if (id !== myID) {
-					return (
-						<SpaceRemoteAudio
-							userID={id}
-							position={participant.position}
-							key={id}
-						/>
-					);
-				}
-				return null;
-			})}
+			{Object.entries(participants).map(([id, participant]) =>
+				id !== myID ? (
+					<SpaceRemoteAudio
+						userID={id}
+						position={participant.position}
+						key={id}
+					/>
+				) : null
+			)}
 			<Canvas camera={{position: [x, 10, z]}}>
 				<Suspense fallback="Loading model">
 					<SushiTable />
 				</Suspense>
 				<ambientLight intensity={0.5} />
-				{/* <Controls /> */}
-				<mesh position={[0, -0.25, 0]}>
-					<boxBufferGeometry attach="geometry" args={[10, 0.5, 10]} />
-					<meshLambertMaterial attach="material" />
-				</mesh>
+				<Floor />
 				{Object.entries(participants).map(([id, participant]) => (
-					<User
+					<UserModel
 						position={participant.position}
 						key={id}
 						me={id === myID}

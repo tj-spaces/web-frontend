@@ -1,8 +1,8 @@
 import React from 'react';
 import {SpaceParticipant} from '../../typings/Space';
-import TwilioVideoElement from '../TwilioVideoElement';
+import BaseVideo from '../base/BaseVideo';
 
-export default function SpaceParticipantBackground({
+export default function Participant({
 	participant,
 	photoUrl,
 	videoTrack,
@@ -17,7 +17,7 @@ export default function SpaceParticipantBackground({
 		.map((word) => word.slice(0, 1).toUpperCase());
 
 	return videoTrack ? (
-		<TwilioVideoElement track={videoTrack} />
+		<BaseVideo track={videoTrack} />
 	) : photoUrl ? (
 		<img src={photoUrl} alt={participant.display_name} />
 	) : (
