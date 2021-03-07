@@ -448,10 +448,15 @@ export class VoiceServerCluster implements VoiceServerLike {
 /**
  * React hook to use a given user's media tracks.
  */
-export function useTracks(server: VoiceServerLike, userID: string) {
+export function useTracks(server: VoiceServerLike | null, userID: string) {
 	let [tracks, setTracks] = useState<MediaStreamTrack[]>();
 
 	useEffect(() => {
+		if (server == null) {
+			setTracks(undefined);
+			return;
+		}
+
 		setTracks(Array.from(server.getUserTracks(userID)));
 
 		const onAddTrack = (data: VoiceServerEventMap['addtrack']) => {

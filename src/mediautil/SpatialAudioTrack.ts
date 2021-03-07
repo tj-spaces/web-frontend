@@ -1,7 +1,4 @@
 import {useContext, useEffect, useRef} from 'react';
-import {AudioTrack, AudioTrackPublication} from 'twilio-video';
-import useMediaStreamTrack from '../hooks/useMediaStreamTrack';
-import useTrack from '../hooks/useTrack';
 import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
 import SpaceAudioContext from '../components/space/SpaceAudioContext';
 import {Position} from '../typings/Space';
@@ -9,35 +6,31 @@ import {Position} from '../typings/Space';
 export default function SpatialAudioTrack({
 	position,
 	rotation,
-	publication,
+	track,
 }: {
 	position: Position;
 	rotation: number;
-	publication: AudioTrackPublication;
+	track: MediaStreamTrack;
 }) {
-	const audioTrack = useTrack(publication) as AudioTrack;
 	const audioContext = useContext(SpaceAudioContext);
 	const pannerNode = useRef<PannerNode>();
-	const mediaStreamTrack = useMediaStreamTrack(audioTrack);
 
 	// [audioContext, audioTrack]
 	useEffect(() => {
-		if (mediaStreamTrack) {
-			let audioSource = audioContext.createMediaStreamSource(
-				new MediaStream([mediaStreamTrack])
-			);
-			pannerNode.current = new PannerNode(
-				audioContext,
-				defaultPannerNodeSettings
-			);
-			audioSource.connect(pannerNode.current).connect(audioContext.destination);
+		let audioSource = audioContext.createMediaStreamSource(
+			new MediaStream([track])
+		);
+		pannerNode.current = new PannerNode(
+			audioContext,
+			defaultPannerNodeSettings
+		);
+		audioSource.connect(pannerNode.current).connect(audioContext.destination);
 
-			return () => {
-				audioSource.disconnect();
-				pannerNode.current = undefined;
-			};
-		}
-	}, [audioContext, mediaStreamTrack]);
+		return () => {
+			audioSource.disconnect();
+			pannerNode.current = undefined;
+		};
+	}, [audioContext, track]);
 
 	// [location, rotation]
 	useEffect(() => {

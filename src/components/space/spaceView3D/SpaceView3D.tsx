@@ -7,6 +7,10 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {Position, SpaceParticipant} from '../../../typings/Space';
 import useKeyboardState from '../../../hooks/useKeyboardState';
+import SpatialAudioTrack from '../../../mediautil/SpatialAudioTrack';
+import SpatialAudioListener from '../../../mediautil/SpatialAudioListener';
+import SpaceVoiceContext from '../SpaceVoiceContext';
+import {useTracks} from '../../../mediautil/MediaConnector';
 
 function SushiTable() {
 	// Attribution: Aimi Sekiguchi
@@ -37,8 +41,18 @@ function Controls() {
 	return null;
 }
 
-function User({position, me}: {position: Position; me: boolean}) {
+function User({
+	position,
+	me,
+	id,
+}: {
+	position: Position;
+	me: boolean;
+	id: string;
+}) {
 	const {camera} = useThree();
+	const voice = useContext(SpaceVoiceContext);
+	const tracks = useTracks(voice, id);
 
 	useEffect(() => {
 		camera.position.set(position.x + 4, position.y + 2, position.z + 4);
@@ -46,13 +60,22 @@ function User({position, me}: {position: Position; me: boolean}) {
 	}, [camera, camera.position, position]);
 
 	return (
-		<mesh position={[position.x, position.y + 1, position.z]}>
-			<boxBufferGeometry attach="geometry" args={[1, 2, 0.5]} />
-			<meshLambertMaterial
-				attach="material"
-				color={me ? '#ff6666' : '#66ff66'}
-			/>
-		</mesh>
+		<>
+			{me ? (
+				<SpatialAudioListener position={position} rotation={0} />
+			) : (
+				tracks?.map((track) => (
+					<SpatialAudioTrack position={position} rotation={0} track={track} />
+				))
+			)}
+			<mesh position={[position.x, position.y + 1, position.z]}>
+				<boxBufferGeometry attach="geometry" args={[1, 2, 0.5]} />
+				<meshLambertMaterial
+					attach="material"
+					color={me ? '#ff6666' : '#66ff66'}
+				/>
+			</mesh>
+		</>
 	);
 }
 
@@ -120,7 +143,12 @@ export default function SpaceView3D() {
 					<meshLambertMaterial attach="material" />
 				</mesh>
 				{Object.entries(participants).map(([id, participant]) => (
-					<User position={participant.position} key={id} me={id === myID} />
+					<User
+						position={participant.position}
+						key={id}
+						me={id === myID}
+						id={id}
+					/>
 				))}
 			</Canvas>
 		</div>
