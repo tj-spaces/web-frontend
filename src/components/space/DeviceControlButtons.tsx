@@ -1,11 +1,7 @@
-import React, {useContext} from 'react';
 import BaseButton from '../base/BaseButton';
-import SpaceMediaContext from './SpaceMediaContext';
 
 export default function SpaceDeviceControlButtons() {
-	const media = useContext(SpaceMediaContext);
-
-	if (!media) return null;
+	let media = {muted: false, cameraEnabled: false} as any;
 
 	return (
 		<>

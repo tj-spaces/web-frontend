@@ -1,8 +1,8 @@
 import {useContext} from 'react';
 import {ClassProvider} from '../../../styles/createStylesheet';
 import BaseRow from '../../base/BaseRow';
-import {useMessages} from '../SpaceChatEngine';
-import SpaceManagerContext from '../SpaceManagerContext';
+import {useMessages} from '../ChatEngine';
+import SpaceManagerContext from '../ManagerContext';
 import ChatMessage from './ChatMessage';
 
 export default function ChatMessageList({xstyle}: {xstyle?: ClassProvider}) {

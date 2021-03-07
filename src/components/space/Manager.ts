@@ -8,8 +8,7 @@ import {
 	SpaceMetadata,
 	SpaceParticipant,
 } from '../../typings/Space';
-import Renderer from './spaceView3D/Renderer';
-import SpaceChatEngine from './SpaceChatEngine';
+import SpaceChatEngine from './ChatEngine';
 import JSONBig from 'json-bigint';
 
 const logger = getLogger('space');
@@ -48,7 +47,6 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 	private connection: WebSocket | null = null;
 	private connected: boolean = false;
 
-	renderer: Renderer | null = null;
 	chatEngine: SpaceChatEngine;
 
 	participantID: string | null = null;
@@ -123,18 +121,6 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 
 		if (this.outboundMessageQueue) {
 			this.sendQueuedMessages();
-		}
-	}
-
-	/**
-	 * NOTE: this resizes the canvas to fit to its parent element!
-	 * @param canvas The canvas.
-	 */
-	setCanvas(canvas: HTMLCanvasElement | null) {
-		if (canvas) {
-			console.log('Creating new using', canvas);
-			this.renderer = new Renderer(canvas, this);
-			this.renderer.render();
 		}
 	}
 

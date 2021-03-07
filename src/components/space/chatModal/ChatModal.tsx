@@ -5,7 +5,7 @@ import BaseButton from '../../base/BaseButton';
 import BaseModal from '../../base/BaseModal';
 import BaseRow from '../../base/BaseRow';
 import BaseText from '../../base/BaseText';
-import SpaceManagerContext from '../SpaceManagerContext';
+import SpaceManagerContext from '../ManagerContext';
 import ChatMessageList from './ChatMessageList';
 import ReplyToMessageContext from './ReplyToMessageContext';
 

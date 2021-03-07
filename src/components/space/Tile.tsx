@@ -1,18 +1,14 @@
 import React from 'react';
-import colors from '../../styles/colors';
 import {createStylesheet} from '../../styles/createStylesheet';
 
 export const styles = createStylesheet({
-	participantBubble: {
-		borderRadius: '100%',
-		width: '10rem',
-		height: '10rem',
+	participantTile: {
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: colors.bgElevated,
+		backgroundColor: 'var(--bg-elevated)',
 		textDecoration: 'none',
-		color: colors.textSecondary,
+		color: 'var(--text-primary)',
 		position: 'relative',
 		overflow: 'hidden',
 		subSelectors: {
@@ -22,32 +18,40 @@ export const styles = createStylesheet({
 			},
 		},
 	},
-	participantBubbleLocal: {
+	participantTileLocal: {
 		subSelectors: {
 			video: {
-				// Mirror our video
 				transform: 'scaleX(-1)',
 			},
 		},
 	},
-	participantBubbleRemote: {
-		// Center the participant
-		marginTop: '-5rem',
-		marginRight: '-5rem',
+	participantTileRemote: {
+		marginTop: '-50%',
+		marginRight: '-50%',
+	},
+	participantTileCondensed: {
+		width: '7.5rem',
+		height: '7.5rem',
+	},
+	participantTileExpanded: {
+		width: '10rem',
+		height: '10rem',
 	},
 });
 
-type Props = {
+export default function Tile({
+	children,
+	isLocal,
+}: {
 	children: React.ReactNode;
 	isLocal: boolean;
-};
-
-export default function SpaceParticipantCircle({children, isLocal}: Props) {
+}) {
 	return (
 		<div
 			className={styles(
-				'participantBubble',
-				isLocal ? 'participantBubbleLocal' : 'participantBubbleRemote'
+				'participantTile',
+				isLocal ? 'participantTileLocal' : 'participantTileRemote',
+				true ? 'participantTileExpanded' : 'participantTileCondensed'
 			)}
 		>
 			{children}

@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {SpaceMessage} from '../../typings/Space';
-import SpaceManager from './SpaceManager';
+import SpaceManager from './Manager';
 
 export type SpaceMessageListener = (message: SpaceMessage) => void;
 

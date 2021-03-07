@@ -2,14 +2,11 @@ import {Suspense, useContext, useEffect, useState} from 'react';
 import {Canvas, useLoader, useThree} from 'react-three-fiber';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
-import useKeyboardState from '../../../hooks/useKeyboardState';
-import {useTracks} from '../../../mediautil/MediaConnector';
-import SpatialAudioListener from '../../../mediautil/SpatialAudioListener';
-import {Position, SpaceParticipant} from '../../../typings/Space';
-import SpaceAudioContext from '../SpaceAudioContext';
-import SpaceManagerContext from '../SpaceManagerContext';
-import SpaceRemoteAudio from '../SpaceRemoteAudio';
-import SpaceVoiceContext from '../SpaceVoiceContext';
+import useKeyboardState from '../../hooks/useKeyboardState';
+import SpatialAudioListener from '../../mediautil/SpatialAudioListener';
+import {Position, SpaceParticipant} from '../../typings/Space';
+import SpaceManagerContext from './ManagerContext';
+import SpaceRemoteAudio from './RemoteAudio';
 
 function SushiTable() {
 	// Attribution: Aimi Sekiguchi
@@ -70,7 +67,7 @@ function User({
 	);
 }
 
-export default function SpaceView3D() {
+export default function Space() {
 	const manager = useContext(SpaceManagerContext);
 
 	const [participants, setParticipants] = useState<
@@ -120,8 +117,6 @@ export default function SpaceView3D() {
 
 	const myPosition = myID ? participants[myID]?.position : undefined;
 	const {x, z} = myPosition ?? {x: 0, z: 0};
-	const voice = useContext(SpaceVoiceContext);
-	const audio = useContext(SpaceAudioContext);
 
 	return (
 		<div style={{width: '100vw', height: '100vh'}}>

@@ -1,21 +1,71 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import {useSpace} from '../../api/spaces';
 import {VoiceServer} from '../../mediautil/MediaConnector';
 import joinSpace from '../../space/joinSpace';
+import {createStylesheet} from '../../styles/createStylesheet';
 import AuthContext from '../AuthContext';
 import BaseButton from '../base/BaseButton';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import ChatModal from './chatModal/ChatModal';
+import SpaceDeviceControlButtons from './DeviceControlButtons';
+import SpaceManager from './Manager';
+import SpaceManagerContext from './ManagerContext';
+import Space from './Space';
 import SpaceAudioContext from './SpaceAudioContext';
-import SpaceDeviceControlButtons from './SpaceDeviceControlButtons';
-import SpaceManager from './SpaceManager';
-import SpaceManagerContext from './SpaceManagerContext';
-import SpaceView3D from './spaceView3D/SpaceView3D';
-import {spaceViewStyles} from './SpaceViewStyles';
-import SpaceVoiceContext from './SpaceVoiceContext';
+import SpaceVoiceContext from './VoiceContext';
 
 const VOICE_SERVER_URL = 'ws://localhost:8080/websocket';
+
+const styles = createStylesheet({
+	container: {
+		position: 'absolute',
+		minWidth: '100%',
+		height: '100vh',
+		bottom: '0px',
+		left: '0px',
+		right: '0px',
+		zIndex: 1,
+	},
+	/**
+	 * The top heading. Currently only stores the space topic.
+	 */
+	topHeading: {
+		backgroundColor: 'var(--bg-secondary)',
+
+		position: 'absolute',
+		top: '0px',
+		left: '0px',
+		right: '0px',
+		height: '5em',
+		paddingTop: '1em',
+		paddingBottom: '1em',
+		textAlign: 'center',
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		subSelectors: {
+			i: {
+				cursor: 'pointer',
+				fontSize: '3rem',
+				marginRight: '1.5rem',
+			},
+		},
+	},
+	/**
+	 * The mute/unmute, disable/enable camera, and Leave Space buttons container
+	 */
+	bottomButtons: {
+		backgroundColor: 'var(--bg-secondary)',
+
+		height: '5em',
+		position: 'absolute',
+		bottom: '0px',
+		left: '0px',
+		right: '0px',
+	},
+});
 
 export default function SpaceWrapper({id}: {id: string}) {
 	const connectionRef = useRef<WebSocket>();
@@ -83,14 +133,14 @@ export default function SpaceWrapper({id}: {id: string}) {
 		<SpaceManagerContext.Provider value={manager}>
 			<SpaceAudioContext.Provider value={audio ?? null}>
 				<SpaceVoiceContext.Provider value={voice ?? null}>
-					<div className={spaceViewStyles('container')}>
-						<div className={spaceViewStyles('topHeading')}>
+					<div className={styles('container')}>
+						<div className={styles('topHeading')}>
 							<BaseText variant="secondary-title" alignment="center">
 								{space ? space.name : 'Loading Space'}
 							</BaseText>
 						</div>
 
-						<SpaceView3D />
+						<Space />
 
 						<BaseRow
 							direction="row"
@@ -98,7 +148,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 							alignment="center"
 							spacing={1}
 							rails={2}
-							xstyle={spaceViewStyles.bottomButtons}
+							xstyle={styles.bottomButtons}
 						>
 							<BaseButton onClick={() => setChatModalOpen(true)}>
 								Chat

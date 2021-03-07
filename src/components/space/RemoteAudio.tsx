@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {useTracks} from '../../mediautil/MediaConnector';
 import SpatialAudioTrack from '../../mediautil/SpatialAudioTrack';
 import {Position} from '../../typings/Space';
-import SpaceVoiceContext from './SpaceVoiceContext';
+import SpaceVoiceContext from './VoiceContext';
 
 export default function SpaceRemoteAudio({
 	userID,
