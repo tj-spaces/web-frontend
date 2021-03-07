@@ -14,7 +14,7 @@ import SpaceView3D from './spaceView3D/SpaceView3D';
 import {spaceViewStyles} from './SpaceViewStyles';
 import SpaceVoiceContext from './SpaceVoiceContext';
 
-const VOICE_SERVER_URL = 'ws://localhost:8080';
+const VOICE_SERVER_URL = 'ws://localhost:8080/websocket';
 
 export default function SpaceWrapper({id}: {id: string}) {
 	const connectionRef = useRef<WebSocket>();
@@ -26,8 +26,37 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	useEffect(() => {
 		setAudio(new AudioContext());
-		setVoice(new VoiceServer(VOICE_SERVER_URL));
+
+		let voice = new VoiceServer(VOICE_SERVER_URL);
+		setVoice(voice);
+
+		return () => {
+			voice.disconnect();
+		};
 	}, []);
+
+	useEffect(() => {
+		if (voice) {
+			navigator.getUserMedia(
+				{audio: true},
+				(stream) => {
+					stream.getTracks().forEach((track) => {
+						voice?.addLocalTrack(track);
+					});
+				},
+				(error) => {
+					console.error('ERROR when adding local track:', error);
+				}
+			);
+		}
+	}, [voice]);
+
+	useEffect(() => {
+		voice?.joinRoom(id);
+		return () => {
+			// TODO: Add room leaving code
+		};
+	}, [id, voice]);
 
 	useEffect(() => {
 		let manager = new SpaceManager(id);
