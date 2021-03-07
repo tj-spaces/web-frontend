@@ -1,5 +1,12 @@
 interface VoiceServerEventMap {
-	'add-user': undefined;
+	addtrack: {
+		userID: string;
+		track: MediaStreamTrack;
+	};
+	removetrack: {
+		userID: string;
+		track: MediaStreamTrack;
+	};
 }
 
 /**
@@ -213,6 +220,14 @@ export class VoiceServer implements NodeJS.EventEmitter {
 	};
 
 	/**
+	 * Closes the connection to the websocket and the peer.
+	 */
+	disconnect() {
+		this.ws.close();
+		this.peer.close();
+	}
+
+	/**
 	 * Joins a room with a given ID by sending a request to the Voice server.
 	 * @param id The ID of the room to join
 	 */
@@ -338,5 +353,69 @@ export class VoiceServer implements NodeJS.EventEmitter {
 	}
 	eventNames(): (string | symbol)[] {
 		throw new Error('Method not implemented.');
+	}
+}
+
+/**
+ * Manages connections to several voice servers, for example during a webinar.
+ * Also manages the uplink to the primary voice server: the one that we transmit
+ * our voice data to.
+ */
+export class VoiceServerCluster {
+	/**
+	 * The internal mapping of URLs to connections to Voice servers.
+	 */
+	private nodes: Record<string, VoiceServer> = {};
+
+	/**
+	 * The URL of the server to transmit our voice data to.
+	 */
+	private primaryVoiceServerURL: string | null = null;
+
+	private localTracks = new Set<MediaStreamTrack>();
+
+	/**
+	 * Adds a voice server to the cluster.
+	 * @param url The URL of the voice server
+	 */
+	addVoiceServer(url: string) {
+		if (!(url in this.nodes)) {
+			this.nodes[url] = new VoiceServer(url);
+		}
+	}
+
+	/**
+	 * Disconnects from and removes a voice server from the cluster.
+	 * @param url The URL of the voice server
+	 */
+	removeVoiceServer(url: string) {
+		if (url in this.nodes) {
+			this.nodes[url].disconnect();
+			delete this.nodes[url];
+		}
+	}
+
+	/**
+	 * Sets the primary voice server: the server to use when transmitting OUR
+	 * voice data. All other voice servers in the cluster are only for listening.
+	 * @param url The URL of the primary voice server to use
+	 */
+	setPrimaryVoiceServer(url: string) {
+		if (!(url in this.nodes)) {
+			throw new Error('Voice server not added: ' + url);
+		}
+
+		if (this.primaryVoiceServerURL != null) {
+			// Stop transmitting tracks to the previous primary voice server.
+			let previous = this.nodes[this.primaryVoiceServerURL];
+
+			this.localTracks.forEach((track) => previous.removeLocalTrack(track));
+		}
+
+		let current = this.nodes[url];
+		// Add the tracks to the new server
+		this.localTracks.forEach((track) => current.addLocalTrack(track));
+		// Update the internal URL of the primary voice server
+		this.primaryVoiceServerURL = url;
 	}
 }
