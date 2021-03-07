@@ -1,14 +1,15 @@
-import { useRef, useLayoutEffect } from 'react';
-import { VideoTrack } from 'twilio-video';
+import {useRef, useLayoutEffect} from 'react';
 
-export default function TwilioVideoElement({ track }: { track: VideoTrack }) {
+export default function TwilioVideoElement({track}: {track: MediaStreamTrack}) {
 	const ref = useRef<HTMLVideoElement>(null);
 
 	// Attach to the video ref after the video is rendered to the screen
 	useLayoutEffect(() => {
 		if (track) {
-			track.attach(ref.current!);
-			ref.current!.play();
+			if (ref.current) {
+				ref.current.srcObject = new MediaStream([track]);
+				ref.current.play();
+			}
 		}
 	}, [track]);
 

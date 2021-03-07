@@ -1,5 +1,4 @@
 import React from 'react';
-import {VideoTrack} from 'twilio-video';
 import {SpaceParticipant} from '../../typings/Space';
 import TwilioVideoElement from '../TwilioVideoElement';
 
@@ -10,7 +9,7 @@ export default function SpaceParticipantBackground({
 }: {
 	participant: SpaceParticipant;
 	photoUrl?: string;
-	videoTrack?: VideoTrack | null;
+	videoTrack?: MediaStreamTrack;
 }) {
 	const initials = participant.display_name
 		.split(' ')

@@ -9,15 +9,12 @@ export default class SpaceChatEngine {
 	private messages: SpaceMessage[] = [];
 
 	constructor(private parent: SpaceManager) {
-		parent.addListener('message', this.receivedMessage);
-		parent.addListener(
-			'chat_history',
-			(messages) => (this.messages = messages)
-		);
+		parent.on('message', this.receivedMessage);
+		parent.on('chat_history', (messages) => (this.messages = messages));
 	}
 
-	getMessageList() {
-		return this.messages;
+	getMessages() {
+		return this.messages.slice();
 	}
 
 	addMessageListener(listener: SpaceMessageListener) {
@@ -39,22 +36,20 @@ export default class SpaceChatEngine {
 }
 
 export function useMessages(engine: SpaceChatEngine) {
-	const [messages, setMessages] = useState<SpaceMessage[]>(
-		engine.getMessageList()
-	);
+	const [messages, setMessages] = useState<SpaceMessage[]>();
 
 	useEffect(() => {
-		setMessages(engine.getMessageList());
+		setMessages(engine.getMessages());
 
 		const listener = (message: SpaceMessage) => {
-			setMessages((messages) => [...messages, message]);
+			setMessages((messages) => [...messages!, message]);
 		};
 
 		engine.addMessageListener(listener);
 
 		return () => {
-			setMessages([]);
 			engine.removeMessageListener(listener);
+			setMessages(undefined);
 		};
 	}, [engine]);
 

@@ -36,7 +36,7 @@ export interface SpaceEventMap {
 /**
  * This manager class processes data about a cluster as it arrives.
  */
-export default class SpaceManager implements NodeJS.EventEmitter {
+export default class SpaceManager {
 	participants: Record<string, SpaceParticipant> = {};
 
 	constructedWorldData = new Map<ChunkPosition, ChunkData>();
@@ -128,7 +128,7 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 		this.chatEngine = new SpaceChatEngine(this);
 	}
 
-	addListener<K extends keyof SpaceEventMap>(
+	on<K extends keyof SpaceEventMap>(
 		event: K,
 		listener: (data: SpaceEventMap[K]) => void
 	): this {
@@ -139,23 +139,8 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 		this.listeners_[event]!.add(listener);
 		return this;
 	}
-	on<K extends keyof SpaceEventMap>(
-		event: K,
-		listener: (data: SpaceEventMap[K]) => void
-	): this {
-		return this.addListener(event, listener);
-	}
-	once<K extends keyof SpaceEventMap>(
-		event: K,
-		listener: (data: SpaceEventMap[K]) => void
-	): this {
-		const l = (data: SpaceEventMap[typeof event]) => {
-			listener(data);
-			this.removeListener(event, l);
-		};
-		throw this.addListener(event, l);
-	}
-	removeListener<K extends keyof SpaceEventMap>(
+
+	off<K extends keyof SpaceEventMap>(
 		event: K,
 		listener: (data: SpaceEventMap[K]) => void
 	): this {
@@ -165,39 +150,7 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 		}
 		return this;
 	}
-	off<K extends keyof SpaceEventMap>(
-		event: K,
-		listener: (data: SpaceEventMap[K]) => void
-	): this {
-		this.removeListener(event, listener);
-		throw new Error('Method not implemented.');
-	}
-	removeAllListeners(event?: keyof SpaceEventMap): this {
-		if (event) {
-			this.listeners_[event]?.clear();
-		} else {
-			// Memory leak? IDK
-			this.listeners_ = {};
-		}
-		return this;
-	}
-	setMaxListeners(n: number): this {
-		throw new Error('Method not implemented.');
-	}
-	getMaxListeners(): number {
-		throw new Error('Method not implemented.');
-	}
-	listeners(event: keyof SpaceEventMap): Function[] {
-		if (event in this.listeners_) {
-			// @ts-expect-error
-			return Array.from(this.listeners_[event]!);
-		} else {
-			return [];
-		}
-	}
-	rawListeners(event: keyof SpaceEventMap): Function[] {
-		throw new Error('Method not implemented.');
-	}
+
 	emit<K extends keyof SpaceEventMap>(
 		event: K,
 		data: SpaceEventMap[K]
@@ -207,27 +160,6 @@ export default class SpaceManager implements NodeJS.EventEmitter {
 			return this.listeners_[event]!.size > 0;
 		}
 		return false;
-	}
-	listenerCount(event: keyof SpaceEventMap): number {
-		if (event in this.listeners_) {
-			return this.listeners_[event]!.size;
-		}
-		return 0;
-	}
-	prependListener(
-		event: string | symbol,
-		listener: (...args: any[]) => void
-	): this {
-		throw new Error('Method not implemented.');
-	}
-	prependOnceListener(
-		event: string | symbol,
-		listener: (...args: any[]) => void
-	): this {
-		throw new Error('Method not implemented.');
-	}
-	eventNames(): (string | symbol)[] {
-		throw new Error('Method not implemented.');
 	}
 
 	setStatus(status: DisplayStatus) {

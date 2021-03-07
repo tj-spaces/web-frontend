@@ -27,13 +27,7 @@ export const styles = createStylesheet({
 	},
 });
 
-export function MinimapElementComponent({
-	item,
-	relativeTo,
-}: {
-	item: MinimapElement;
-	relativeTo: Position;
-}) {
+export function MinimapElementComponent({item}: {item: MinimapElement}) {
 	const relativeX = item.position.x;
 	const relativeZ = item.position.z;
 
@@ -54,21 +48,13 @@ export function MinimapElementComponent({
 
 export default function SpaceView3DMinimap({
 	elements,
-	center,
 }: {
 	elements: MinimapElement[];
-	center: Position;
 }) {
 	return (
 		<div className={styles('minimap')}>
 			{elements.map((element, index) => {
-				return (
-					<MinimapElementComponent
-						item={element}
-						key={index}
-						relativeTo={center}
-					/>
-				);
+				return <MinimapElementComponent item={element} key={index} />;
 			})}
 		</div>
 	);

@@ -9,13 +9,12 @@ export default function ChatMessageList({xstyle}: {xstyle?: ClassProvider}) {
 	const manager = useContext(SpaceManagerContext);
 	const messages = useMessages(manager.chatEngine);
 
-	console.log(messages);
-
 	return (
 		<BaseRow direction="column" overflow="scroll" width="100%" xstyle={xstyle}>
-			{messages.map((message) => (
-				<ChatMessage message={message} key={message.id} />
-			))}
+			{messages &&
+				messages.map((message) => (
+					<ChatMessage message={message} key={message.id} />
+				))}
 		</BaseRow>
 	);
 }

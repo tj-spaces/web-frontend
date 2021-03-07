@@ -77,26 +77,26 @@ export default function Space() {
 
 	useEffect(() => {
 		manager
-			.addListener('users', (users) => setParticipants(users))
-			.addListener('user_join', (user) => {
+			.on('users', (users) => setParticipants(users))
+			.on('user_join', (user) => {
 				setParticipants((participants) => ({...participants, [user.id]: user}));
 			})
-			.addListener('user_leave', (user) => {
+			.on('user_leave', (user) => {
 				setParticipants(({[user]: _, ...participants}) => participants);
 			})
-			.addListener('user_move', ({id, new_position}) => {
+			.on('user_move', ({id, new_position}) => {
 				setParticipants((participants) => ({
 					...participants,
 					[id]: {...participants[id], position: new_position},
 				}));
 			})
-			.addListener('user_direction', ({id, direction}) => {
+			.on('user_direction', ({id, direction}) => {
 				setParticipants((participants) => ({
 					...participants,
 					[id]: {...participants[id], moving_direction: direction},
 				}));
 			})
-			.addListener('auth', ({participant_id}) => {
+			.on('auth', ({participant_id}) => {
 				setMyID(participant_id);
 			});
 
