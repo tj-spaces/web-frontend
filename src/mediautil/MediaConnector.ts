@@ -40,6 +40,8 @@ export class VoiceServer implements VoiceServerLike {
 	 */
 	private localTracks: Record<string, RTCRtpSender> = {};
 
+	private remoteTracksByStream: Record<string, Set<MediaStreamTrack>> = {};
+
 	/**
 	 * Stores a map of [trackID] -> MediaStreamTrack
 	 */
@@ -51,11 +53,11 @@ export class VoiceServer implements VoiceServerLike {
 	private tracksByUser: Record<string, Set<MediaStreamTrack>> = {};
 
 	/**
-	 * Map of [trackID] -> userID.
+	 * Map of [mediaStreamID] -> userID.
 	 *
-	 * Useful for if we receive a correlation between a track and a user before receiving the track.
+	 * Useful for if we receive a correlation between a stream and a user before receiving the track.
 	 */
-	private trackToUser: Record<string, string> = {};
+	private streamToUser: Record<string, string> = {};
 
 	/**
 	 * The "voice server websocket."
@@ -76,7 +78,13 @@ export class VoiceServer implements VoiceServerLike {
 	 */
 	private handledMediaStreamIDs = new Set<string>();
 
-	constructor(url: string) {
+	private userID: string;
+	readonly url: string;
+
+	constructor(url: string, userID: string) {
+		this.userID = userID;
+		this.url = url;
+
 		this.peer.addEventListener('track', this.handlePeerTrackEvent.bind(this));
 
 		this.peer.addEventListener(
@@ -110,19 +118,31 @@ export class VoiceServer implements VoiceServerLike {
 	 */
 	private handlePeerTrackEvent(event: RTCTrackEvent) {
 		let track = event.track;
-		this.remoteTracks[track.id] = event.track;
+		let stream = event.streams[0];
 
-		if (track.id in this.trackToUser) {
-			let sourceUserID = this.trackToUser[track.id];
-			this.correlateTrackWithUser(track.id, sourceUserID);
+		console.log('Received track:', event);
+
+		if (!(stream.id in this.remoteTracksByStream)) {
+			this.remoteTracksByStream[stream.id] = new Set();
 		}
 
-		event.streams.forEach((stream) => {
-			if (!this.handledMediaStreamIDs.has(stream.id)) {
-				this.handledMediaStreamIDs.add(stream.id);
-				this.addMediaStreamEventListeners(stream);
-			}
-		});
+		this.remoteTracksByStream[stream.id].add(track);
+
+		let userID = stream.id.slice('user_'.length);
+		this.addTrackToUser(userID, track);
+
+		if (!this.handledMediaStreamIDs.has(stream.id)) {
+			this.handledMediaStreamIDs.add(stream.id);
+			this.addMediaStreamEventListeners(stream);
+		}
+	}
+
+	private addTrackToUser(userID: string, track: MediaStreamTrack) {
+		if (!(userID in this.tracksByUser)) {
+			this.tracksByUser[userID] = new Set();
+		}
+		this.tracksByUser[userID].add(track);
+		this.emit('addtrack', {userID, track});
 	}
 
 	/**
@@ -140,6 +160,7 @@ export class VoiceServer implements VoiceServerLike {
 	 * Sends the list of queued messages, if there are any.
 	 */
 	private handleWebsocketOpenEvent() {
+		this.ws.send(JSON.stringify({event: 'auth', data: this.userID}));
 		this.sendQueuedMessages();
 	}
 
@@ -166,9 +187,14 @@ export class VoiceServer implements VoiceServerLike {
 					this.peer.addIceCandidate(candidate);
 					break;
 
-				case 'track_source':
-					let [trackID, userID] = msg.data.split(':');
-					this.correlateTrackWithUser(trackID, userID);
+				case 'stream_source':
+					let [streamID, userID] = msg.data.split(': ');
+					this.streamToUser[streamID] = userID;
+					if (streamID in this.remoteTracksByStream) {
+						this.remoteTracksByStream[streamID].forEach((track) => {
+							this.emit('addtrack', {userID, track});
+						});
+					}
 					break;
 			}
 		} catch (error) {
@@ -196,9 +222,9 @@ export class VoiceServer implements VoiceServerLike {
 	 */
 	private removeRemoteTrack(track: MediaStreamTrack) {
 		delete this.remoteTracks[track.id];
-		if (track.id in this.trackToUser) {
-			let userID = this.trackToUser[track.id];
-			delete this.trackToUser[track.id];
+		if (track.id in this.streamToUser) {
+			let userID = this.streamToUser[track.id];
+			delete this.streamToUser[track.id];
 			this.tracksByUser[userID].delete(track);
 			this.emit('removetrack', {userID, track});
 		}
@@ -212,29 +238,7 @@ export class VoiceServer implements VoiceServerLike {
 	 * @param userID The ID of the user
 	 */
 	private addDeferredTrackCorrelation = (trackID: string, userID: string) => {
-		this.trackToUser[trackID] = userID;
-	};
-
-	/**
-	 * When we receive a track, we don't receive any other information about it.
-	 * This method is called when we receive a 'track_user' event from the Voice server
-	 * websocket: it's for correlating a track with a user.
-	 *
-	 * Emits the 'addtrack' event if we already have the MediaStreamTrack we need.
-	 * @param trackID The ID of the track
-	 * @param userID The ID of the user
-	 */
-	private correlateTrackWithUser = (trackID: string, userID: string) => {
-		if (trackID in this.remoteTracks) {
-			if (!(userID in this.tracksByUser)) {
-				this.tracksByUser[userID] = new Set();
-			}
-
-			this.tracksByUser[userID].add(this.remoteTracks[trackID]);
-			this.emit('addtrack', {userID, track: this.remoteTracks[trackID]});
-		} else {
-			this.addDeferredTrackCorrelation(trackID, userID);
-		}
+		this.streamToUser[trackID] = userID;
 	};
 
 	/**
@@ -286,8 +290,8 @@ export class VoiceServer implements VoiceServerLike {
 	 * Starts transmitting this track to the Voice server.
 	 * @param track The track to add
 	 */
-	addLocalTrack(track: MediaStreamTrack) {
-		this.localTracks[track.id] = this.peer.addTrack(track);
+	addLocalTrack(track: MediaStreamTrack, stream: MediaStream) {
+		this.localTracks[track.id] = this.peer.addTrack(track, stream);
 	}
 
 	/**
@@ -349,8 +353,13 @@ export class VoiceServerCluster implements VoiceServerLike {
 	 * The URL of the server to transmit our voice data to.
 	 */
 	private primaryVoiceServerURL: string | null = null;
-	private localTracks = new Set<MediaStreamTrack>();
+	private localTracks = new Set<[MediaStreamTrack, MediaStream]>();
 	private tracksByUser: Record<string, Set<MediaStreamTrack>> = {};
+
+	private userID: string;
+	constructor(userID: string) {
+		this.userID = userID;
+	}
 
 	getUserTracks(userID: string): Set<MediaStreamTrack> {
 		return userID in this.tracksByUser ? this.tracksByUser[userID] : new Set();
@@ -362,7 +371,7 @@ export class VoiceServerCluster implements VoiceServerLike {
 	 */
 	addVoiceServer(url: string) {
 		if (!(url in this.nodes)) {
-			let server = new VoiceServer(url);
+			let server = new VoiceServer(url, this.userID);
 			// Forward events
 			server.on('addtrack', (data) => {
 				this.tracksByUser[data.userID].add(data.track);
@@ -403,12 +412,14 @@ export class VoiceServerCluster implements VoiceServerLike {
 			// Stop transmitting tracks to the previous primary voice server.
 			let previous = this.nodes[this.primaryVoiceServerURL];
 
-			this.localTracks.forEach((track) => previous.removeLocalTrack(track));
+			this.localTracks.forEach(([track]) => previous.removeLocalTrack(track));
 		}
 
 		let current = this.nodes[url];
 		// Add the tracks to the new server
-		this.localTracks.forEach((track) => current.addLocalTrack(track));
+		this.localTracks.forEach(([track, stream]) =>
+			current.addLocalTrack(track, stream)
+		);
 		// Update the internal URL of the primary voice server
 		this.primaryVoiceServerURL = url;
 	}
@@ -462,12 +473,15 @@ export function useTracks(server: VoiceServerLike | null, userID: string) {
 		}
 
 		setTracks(Array.from(server.getUserTracks(userID)));
+		console.log('initial tracks:', server.getUserTracks(userID));
 
 		const onAddTrack = (data: VoiceServerEventMap['addtrack']) => {
+			console.log('track was added:', data);
 			setTracks((tracks) => (tracks ? [...tracks, data.track] : [data.track]));
 		};
 
 		const onRemoveTrack = (data: VoiceServerEventMap['removetrack']) => {
+			console.log('track was removed:', data);
 			setTracks((tracks) =>
 				tracks ? tracks.filter((track) => track !== data.track) : []
 			);

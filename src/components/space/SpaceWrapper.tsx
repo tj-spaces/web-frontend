@@ -1,7 +1,8 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useSpace} from '../../api/spaces';
 import {VoiceServer} from '../../mediautil/MediaConnector';
 import joinSpace from '../../space/joinSpace';
+import AuthContext from '../AuthContext';
 import BaseButton from '../base/BaseButton';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
@@ -21,19 +22,20 @@ export default function SpaceWrapper({id}: {id: string}) {
 	const [manager, setManager] = useState<SpaceManager>();
 	const [voice, setVoice] = useState<VoiceServer>();
 	const [audio, setAudio] = useState<AudioContext>();
+	const auth = useContext(AuthContext);
 	const space = useSpace(id);
 	const [chatModalOpen, setChatModalOpen] = useState(false);
 
 	useEffect(() => {
 		setAudio(new AudioContext());
 
-		let voice = new VoiceServer(VOICE_SERVER_URL);
+		let voice = new VoiceServer(VOICE_SERVER_URL, auth.user!.id);
 		setVoice(voice);
 
 		return () => {
 			voice.disconnect();
 		};
-	}, []);
+	}, [auth.user]);
 
 	useEffect(() => {
 		if (voice) {
@@ -41,7 +43,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 				{audio: true},
 				(stream) => {
 					stream.getTracks().forEach((track) => {
-						voice?.addLocalTrack(track);
+						voice?.addLocalTrack(track, stream);
 					});
 				},
 				(error) => {

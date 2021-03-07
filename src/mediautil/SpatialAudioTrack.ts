@@ -21,9 +21,8 @@ export default function SpatialAudioTrack({
 			return;
 		}
 
-		let audioSource = audioContext.createMediaStreamSource(
-			new MediaStream([track])
-		);
+		let stream = new MediaStream([track]);
+		let audioSource = audioContext.createMediaStreamSource(stream);
 		pannerNode.current = new PannerNode(
 			audioContext,
 			defaultPannerNodeSettings

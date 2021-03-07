@@ -10,7 +10,7 @@ import useKeyboardState from '../../../hooks/useKeyboardState';
 import SpatialAudioTrack from '../../../mediautil/SpatialAudioTrack';
 import SpatialAudioListener from '../../../mediautil/SpatialAudioListener';
 import SpaceVoiceContext from '../SpaceVoiceContext';
-import {useTracks} from '../../../mediautil/MediaConnector';
+import {useTracks, VoiceServerLike} from '../../../mediautil/MediaConnector';
 
 function SushiTable() {
 	// Attribution: Aimi Sekiguchi
@@ -45,14 +45,16 @@ function User({
 	position,
 	me,
 	id,
+	voice,
 }: {
 	position: Position;
 	me: boolean;
 	id: string;
+	voice: VoiceServerLike | null;
 }) {
 	const {camera} = useThree();
-	const voice = useContext(SpaceVoiceContext);
 	const tracks = useTracks(voice, id);
+	console.log({tracks, voice, id});
 
 	useEffect(() => {
 		camera.position.set(position.x + 4, position.y + 2, position.z + 4);
@@ -65,7 +67,12 @@ function User({
 				<SpatialAudioListener position={position} rotation={0} />
 			) : (
 				tracks?.map((track) => (
-					<SpatialAudioTrack position={position} rotation={0} track={track} />
+					<SpatialAudioTrack
+						position={position}
+						rotation={0}
+						track={track}
+						key={track.id}
+					/>
 				))
 			)}
 			<mesh position={[position.x, position.y + 1, position.z]}>
@@ -129,6 +136,7 @@ export default function SpaceView3D() {
 
 	const myPosition = myID ? participants[myID]?.position : undefined;
 	const {x, z} = myPosition ?? {x: 0, z: 0};
+	const voice = useContext(SpaceVoiceContext);
 
 	return (
 		<div style={{width: '100vw', height: '100vh'}}>
@@ -148,6 +156,7 @@ export default function SpaceView3D() {
 						key={id}
 						me={id === myID}
 						id={id}
+						voice={voice}
 					/>
 				))}
 			</Canvas>
