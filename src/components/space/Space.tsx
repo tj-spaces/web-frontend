@@ -4,9 +4,10 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import useKeyboardState from '../../hooks/useKeyboardState';
 import useMyID from '../../hooks/useMyID';
 import useParticipants from '../../hooks/useParticipants';
+import SpatialAudioListener from '../../mediautil/SpatialAudioListener';
 import Floor from './Floor';
 import SpaceManagerContext from './ManagerContext';
-import SpaceRemoteAudio from './RemoteAudio';
+import RemoteAudio from './RemoteAudio';
 import UserModel from './UserModel';
 
 function SushiTable() {
@@ -44,13 +45,13 @@ export default function Space() {
 
 	return (
 		<div style={{width: '100vw', height: '100vh'}}>
+			<SpatialAudioListener
+				position={myPosition ?? {x: 0, y: 0, z: 0}}
+				rotation={0}
+			/>
 			{Object.entries(participants).map(([id, participant]) =>
 				id !== myID ? (
-					<SpaceRemoteAudio
-						userID={id}
-						position={participant.position}
-						key={id}
-					/>
+					<RemoteAudio userID={id} position={participant.position} key={id} />
 				) : null
 			)}
 			<Canvas camera={{position: [x, 10, z]}}>

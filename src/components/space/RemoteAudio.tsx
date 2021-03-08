@@ -4,7 +4,7 @@ import SpatialAudioTrack from '../../mediautil/SpatialAudioTrack';
 import {Position} from '../../typings/Space';
 import SpaceVoiceContext from './VoiceContext';
 
-export default function SpaceRemoteAudio({
+export default function RemoteAudio({
 	userID,
 	position,
 }: {

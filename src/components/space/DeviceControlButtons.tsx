@@ -1,6 +1,6 @@
 import BaseButton from '../base/BaseButton';
 
-export default function SpaceDeviceControlButtons() {
+export default function DeviceControlButtons() {
 	let media = {muted: false, cameraEnabled: false} as any;
 
 	return (

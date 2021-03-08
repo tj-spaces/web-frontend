@@ -8,7 +8,7 @@ import BaseButton from '../base/BaseButton';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import ChatModal from './chatModal/ChatModal';
-import SpaceDeviceControlButtons from './DeviceControlButtons';
+import DeviceControlButtons from './DeviceControlButtons';
 import SpaceManager from './Manager';
 import SpaceManagerContext from './ManagerContext';
 import Space from './Space';
@@ -77,7 +77,9 @@ export default function SpaceWrapper({id}: {id: string}) {
 	const [chatModalOpen, setChatModalOpen] = useState(false);
 
 	useEffect(() => {
-		setAudio(new AudioContext());
+		setTimeout(() => {
+			setAudio(new AudioContext());
+		}, 5000);
 
 		let voice = new VoiceServer(VOICE_SERVER_URL, auth.user!.id);
 		setVoice(voice);
@@ -104,10 +106,12 @@ export default function SpaceWrapper({id}: {id: string}) {
 	}, [voice]);
 
 	useEffect(() => {
-		voice?.joinRoom(id);
-		return () => {
-			// TODO: Add room leaving code
-		};
+		if (voice) {
+			voice.joinRoom(id);
+			return () => {
+				// TODO: Add room leaving code
+			};
+		}
 	}, [id, voice]);
 
 	useEffect(() => {
@@ -160,7 +164,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 							<BaseButton to="..">Leave</BaseButton>
 
-							<SpaceDeviceControlButtons />
+							<DeviceControlButtons />
 						</BaseRow>
 					</div>
 				</SpaceVoiceContext.Provider>

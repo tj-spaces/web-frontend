@@ -1,6 +1,5 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {useThree} from 'react-three-fiber';
-import SpatialAudioListener from '../../mediautil/SpatialAudioListener';
 import {Position} from '../../typings/Space';
 
 export default function UserModel({
@@ -20,15 +19,12 @@ export default function UserModel({
 	}, [camera, camera.position, position]);
 
 	return (
-		<>
-			{me && <SpatialAudioListener position={position} rotation={0} />}
-			<mesh position={[position.x, position.y + 1, position.z]}>
-				<boxBufferGeometry attach="geometry" args={[1, 2, 0.5]} />
-				<meshLambertMaterial
-					attach="material"
-					color={me ? '#ff6666' : '#66ff66'}
-				/>
-			</mesh>
-		</>
+		<mesh position={[position.x, position.y + 1, position.z]}>
+			<boxBufferGeometry attach="geometry" args={[1, 2, 0.5]} />
+			<meshLambertMaterial
+				attach="material"
+				color={me ? '#ff6666' : '#66ff66'}
+			/>
+		</mesh>
 	);
 }

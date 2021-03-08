@@ -46,11 +46,7 @@ export function MinimapElementComponent({item}: {item: MinimapElement}) {
 	);
 }
 
-export default function SpaceView3DMinimap({
-	elements,
-}: {
-	elements: MinimapElement[];
-}) {
+export default function Minimap({elements}: {elements: MinimapElement[]}) {
 	return (
 		<div className={styles('minimap')}>
 			{elements.map((element, index) => {
