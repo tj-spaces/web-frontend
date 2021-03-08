@@ -1,5 +1,6 @@
 import {useContext, useEffect, useRef, useState} from 'react';
 import {useSpace} from '../../api/spaces';
+import {getLogger} from '../../lib/ClusterLogger';
 import {VoiceServer} from '../../mediautil/MediaConnector';
 import joinSpace from '../../space/joinSpace';
 import {createStylesheet} from '../../styles/createStylesheet';
@@ -65,6 +66,8 @@ const styles = createStylesheet({
 	},
 });
 
+const logger = getLogger('space/wrapper');
+
 export default function SpaceWrapper({id}: {id: string}) {
 	const connectionRef = useRef<WebSocket>();
 	const [manager, setManager] = useState<SpaceManager>();
@@ -90,7 +93,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 					});
 				},
 				(error) => {
-					console.error('ERROR when adding local track:', error);
+					logger.error({event: 'get_user_media', error});
 				}
 			);
 		}

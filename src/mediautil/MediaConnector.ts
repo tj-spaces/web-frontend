@@ -1,4 +1,7 @@
 import {useEffect, useState} from 'react';
+import {getLogger} from '../lib/ClusterLogger';
+
+const logger = getLogger('space/media');
 
 export interface VoiceServerEventMap {
 	addtrack: {
@@ -106,11 +109,11 @@ export class VoiceServer implements VoiceServerLike {
 		);
 
 		this.ws.addEventListener('error', (error) => {
-			console.error(`Error connecting to Voice server ${url}:`, error);
+			logger.error({event: 'websocket_connect', error, url});
 		});
 
 		this.ws.addEventListener('close', () => {
-			console.log('Websocket was closed');
+			logger.info({event: 'websocket_close'});
 		});
 	}
 
@@ -128,7 +131,7 @@ export class VoiceServer implements VoiceServerLike {
 		let track = event.track;
 		let stream = event.streams[0];
 
-		console.log('Received track:', event);
+		logger.info({event: 'receive_track', data: event});
 
 		if (!(stream.id in this.remoteTracksByStream)) {
 			this.remoteTracksByStream[stream.id] = new Set();
@@ -168,7 +171,7 @@ export class VoiceServer implements VoiceServerLike {
 	 * Sends the list of queued messages, if there are any.
 	 */
 	private handleWebsocketOpenEvent() {
-		console.log('opened connection');
+		logger.info({event: 'websocket_open_success'});
 		this.ws.send(JSON.stringify({event: 'auth', data: this.userID}));
 		this.sendQueuedMessages();
 	}
@@ -207,7 +210,7 @@ export class VoiceServer implements VoiceServerLike {
 					break;
 			}
 		} catch (error) {
-			console.error('Failed to parse data for message: ', event.data);
+			logger.error({event: 'parse_websocket_message', error, data: event.data});
 		}
 	}
 
@@ -259,7 +262,10 @@ export class VoiceServer implements VoiceServerLike {
 			if (this.ws.readyState === this.ws.OPEN) {
 				this.ws.send(message);
 			} else {
-				console.warn('sendQueuedMessages(): WebSocket is not open');
+				logger.warn({
+					event: 'send_queued_messages',
+					warning: 'Websocket is not open',
+				});
 				break;
 			}
 		}
@@ -392,7 +398,7 @@ export class VoiceServerCluster implements VoiceServerLike {
 			});
 			this.nodes[url] = server;
 		} else {
-			console.warn('addVoiceServer() for existing URL');
+			logger.warn({event: 'add_voice_server', warning: 'URL already added'});
 		}
 	}
 
@@ -482,15 +488,15 @@ export function useTracks(server: VoiceServerLike | null, userID: string) {
 		}
 
 		setTracks(Array.from(server.getUserTracks(userID)));
-		console.log('initial tracks:', server.getUserTracks(userID));
+		logger.debug({label: 'initial_tracks', data: server.getUserTracks(userID)});
 
 		const onAddTrack = (data: VoiceServerEventMap['addtrack']) => {
-			console.log('track was added:', data);
+			logger.debug({label: 'add_track', data});
 			setTracks((tracks) => (tracks ? [...tracks, data.track] : [data.track]));
 		};
 
 		const onRemoveTrack = (data: VoiceServerEventMap['removetrack']) => {
-			console.log('track was removed:', data);
+			logger.debug({label: 'remove_track', data});
 			setTracks((tracks) =>
 				tracks ? tracks.filter((track) => track !== data.track) : []
 			);

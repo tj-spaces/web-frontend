@@ -1,9 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {getIncomingFriendRequests} from '../../api/friends';
+import {getLogger} from '../../lib/ClusterLogger';
 import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import BaseModal from '../base/BaseModal';
 import BaseText from '../base/BaseText';
 import IncomingFriendRequestsList from './IncomingFriendRequestsList';
+
+const logger = getLogger('loader/incoming-friend-requests');
 
 export default function IncomingFriendRequestsListContainer() {
 	let [incomingFriendRequests, setIncomingFriendRequests] = useState<
@@ -17,7 +20,7 @@ export default function IncomingFriendRequestsListContainer() {
 
 	useEffect(() => {
 		getIncomingFriendRequests().then((requests) => {
-			console.log('Loaded friend requests: ', requests);
+			logger.debug({event: 'Loaded friend requests', data: requests});
 			setIncomingFriendRequests(requests);
 		});
 	}, []);

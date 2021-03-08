@@ -87,7 +87,7 @@ export default class SpaceManager {
 				this.emit('user_direction', data);
 				break;
 			case 'auth':
-				console.log('Received auth data:', data);
+				logger.debug({event: 'authenticated', data});
 				this.participantID = data.participantID;
 				this.emit('auth', data);
 				break;

@@ -1,8 +1,11 @@
 import {useContext, useEffect, useRef} from 'react';
 // import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
 import SpaceAudioContext from '../components/space/SpaceAudioContext';
+import {getLogger} from '../lib/ClusterLogger';
 import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
 import {Position} from '../typings/Space';
+
+const logger = getLogger('space/spatial-audio');
 
 export default function SpatialAudioTrack({
 	position,
@@ -19,7 +22,10 @@ export default function SpatialAudioTrack({
 	// [audioContext, audioTrack]
 	useEffect(() => {
 		if (!audioContext) {
-			console.warn('AudioContext is NULL');
+			logger.warn({
+				event: 'create_panner_node',
+				warning: 'AudioContext is null',
+			});
 			return;
 		}
 

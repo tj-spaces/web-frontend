@@ -7,11 +7,15 @@ export type LogCategory =
 	| 'space/participants'
 	| 'space/connection'
 	| 'space/media'
+	| 'space/wrapper'
 	| 'space/participant-bubble'
 	| 'space/2d/local-participant'
 	| 'space/2d/remote-participant'
 	| 'space/3d/local-participant'
 	| 'space/3d/remote-participant'
+	| 'space/spatial-audio'
+	| 'loader/incoming-friend-requests'
+	| 'loader/model-loader'
 	| 'api'
 	| 'stylesheet';
 

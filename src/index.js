@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './App';
-import { getLogger } from './lib/ClusterLogger';
+import {getLogger} from './lib/ClusterLogger';
 import reportWebVitals from './reportWebVitals';
 
 console.log(`
@@ -18,6 +18,8 @@ Best,
   Michael
   myfatemi04@gmail.com
 `);
+
+console.log(process.env);
 
 ReactDOM.render(
 	<React.StrictMode>

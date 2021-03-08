@@ -1,5 +1,6 @@
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
 import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
+import {getLogger} from './ClusterLogger';
 
 const savedModels: Record<string, THREE.Group> = {};
 
@@ -12,6 +13,8 @@ export function getModelURL(
 	return `https://nebulamodels.s3.amazonaws.com/models/${id}/v${version}_${resolution}.${format}`;
 }
 
+const logger = getLogger('loader/model-loader');
+
 export async function loadModel(
 	url: string,
 	type: 'fbx' | 'obj'
@@ -23,7 +26,7 @@ export async function loadModel(
 			case 'fbx': {
 				const loader = new FBXLoader();
 				const result = await loader.loadAsync(url, (ev) => {
-					console.log('Model load status:', ev.loaded / ev.total);
+					logger.info({event: 'progress', data: ev.loaded / ev.total});
 				});
 				savedModels[url] = result;
 				return result;
@@ -31,7 +34,7 @@ export async function loadModel(
 			case 'obj': {
 				const loader = new OBJLoader();
 				const result = await loader.loadAsync(url, (ev) => {
-					console.log('Model load status:', ev.loaded / ev.total);
+					logger.info({event: 'progress', data: ev.loaded / ev.total});
 				});
 				savedModels[url] = result;
 				return result;
