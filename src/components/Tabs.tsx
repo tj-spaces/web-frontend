@@ -13,7 +13,7 @@ type Tab = 'explore' | 'friends' | 'clusters';
  * of the selected tab.
  */
 export default function Tabs() {
-	let [tab, setTab] = useState<Tab>('explore');
+	let [tab, setTab] = useState<Tab>('clusters');
 
 	return (
 		<BaseRow
@@ -30,7 +30,7 @@ export default function Tabs() {
 					underline={tab === 'clusters'}
 					unselectable
 				>
-					Home
+					My Groups
 				</BaseText>
 				<BaseText
 					variant="list-item-title"

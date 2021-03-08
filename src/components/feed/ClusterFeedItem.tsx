@@ -5,7 +5,13 @@ import BaseButton from '../base/BaseButton';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 
-export default function ClusterPreview({cluster}: {cluster: Cluster}) {
+export default function ClusterPreview({
+	cluster,
+	joined = false,
+}: {
+	cluster: Cluster;
+	joined?: boolean;
+}) {
 	const joinThisCluster = () => {
 		joinCluster(cluster.id).then(() => {
 			window.location.href = '/clusters/' + cluster.id;
@@ -26,14 +32,22 @@ export default function ClusterPreview({cluster}: {cluster: Cluster}) {
 			<BaseText variant="list-item-title">
 				<Link to={'/clusters/' + cluster.id}>{cluster.name}</Link>
 			</BaseText>
-
-			<BaseButton
-				size="small"
-				variant="theme"
-				onClick={() => joinThisCluster()}
-			>
-				Join
-			</BaseButton>
+			<BaseText>
+				Last active <b>now</b>
+			</BaseText>
+			{joined ? (
+				<BaseButton
+					size="small"
+					variant="theme"
+					onClick={() => joinThisCluster()}
+				>
+					Join
+				</BaseButton>
+			) : (
+				<BaseButton size="small" variant="theme" to={'/clusters/' + cluster.id}>
+					Enter
+				</BaseButton>
+			)}
 		</BaseRow>
 	);
 }
