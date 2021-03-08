@@ -6,5 +6,5 @@ export const defaultPannerNodeSettings: PannerOptions = {
 	coneOuterGain: 0.3,
 	maxDistance: 10000, // Arbitrary units
 	refDistance: 1,
-	rolloffFactor: 3, // How quickly the sound gets quieter
+	rolloffFactor: 2, // How quickly the sound gets quieter
 };
