@@ -43,13 +43,17 @@ export function useSpace(id: string) {
 	return useStoredValue(spaceStore, id);
 }
 
+export interface JoinSpaceData {
+	code: string;
+	voiceURL: string;
+	simulationURL: string;
+}
+
 /**
  *
  * @param id The ID of the space to fetch the join code for
  */
-export async function getSpaceJoinCode(
-	id: string
-): Promise<{code: string; twilioGrant: string}> {
+export async function getSpaceJoinCode(id: string): Promise<JoinSpaceData> {
 	const result = await makeAPIGetCall(`/api/spaces/${id}/join`);
 	return result.data.data;
 }

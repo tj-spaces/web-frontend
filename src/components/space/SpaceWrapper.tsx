@@ -15,8 +15,6 @@ import Space from './Space';
 import SpaceAudioContext from './SpaceAudioContext';
 import SpaceVoiceContext from './VoiceContext';
 
-const VOICE_SERVER_URL = 'ws://localhost:8080/websocket';
-
 const styles = createStylesheet({
 	container: {
 		position: 'absolute',
@@ -80,14 +78,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 		setTimeout(() => {
 			setAudio(new AudioContext());
 		}, 5000);
-
-		let voice = new VoiceServer(VOICE_SERVER_URL, auth.user!.id);
-		setVoice(voice);
-
-		return () => {
-			voice.disconnect();
-		};
-	}, [auth.user]);
+	}, []);
 
 	useEffect(() => {
 		if (voice) {
@@ -115,19 +106,30 @@ export default function SpaceWrapper({id}: {id: string}) {
 	}, [id, voice]);
 
 	useEffect(() => {
+		if (voice) {
+			return () => {
+				voice.disconnect();
+			};
+		}
+	}, [voice]);
+
+	useEffect(() => {
 		let manager = new SpaceManager(id);
 		setManager(manager);
 
 		(async () => {
-			const {connection} = await joinSpace(id);
+			const {connection, voiceURL} = await joinSpace(id);
 			connectionRef.current = connection;
 			manager.setWebsocket(connection);
+
+			let voice = new VoiceServer(voiceURL, auth.user!.id);
+			setVoice(voice);
 		})();
 
 		return () => {
 			manager.destroy();
 		};
-	}, [id]);
+	}, [auth.user, id]);
 
 	if (!manager) {
 		return null;

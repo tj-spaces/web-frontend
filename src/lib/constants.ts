@@ -1,4 +1,4 @@
-export const __DEV__ = process.env.NODE_ENV !== 'production';
+export const __DEV__ = false; //process.env.NODE_ENV !== 'production';
 
 export const API_SERVER_URL = __DEV__
 	? 'http://localhost:5000/'

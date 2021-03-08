@@ -82,6 +82,10 @@ export class VoiceServer implements VoiceServerLike {
 	readonly url: string;
 
 	constructor(url: string, userID: string) {
+		if (!url.startsWith('ws://')) {
+			url = 'ws://' + url + '/websocket';
+		}
+
 		this.userID = userID;
 		this.url = url;
 
@@ -103,6 +107,10 @@ export class VoiceServer implements VoiceServerLike {
 
 		this.ws.addEventListener('error', (error) => {
 			console.error(`Error connecting to Voice server ${url}:`, error);
+		});
+
+		this.ws.addEventListener('close', () => {
+			console.log('Websocket was closed');
 		});
 	}
 
@@ -160,6 +168,7 @@ export class VoiceServer implements VoiceServerLike {
 	 * Sends the list of queued messages, if there are any.
 	 */
 	private handleWebsocketOpenEvent() {
+		console.log('opened connection');
 		this.ws.send(JSON.stringify({event: 'auth', data: this.userID}));
 		this.sendQueuedMessages();
 	}
