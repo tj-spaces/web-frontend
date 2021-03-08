@@ -1,4 +1,4 @@
-export const __DEV__ = false; //process.env.NODE_ENV !== 'production';
+export const __DEV__ = process.env.NODE_ENV !== 'production';
 
 export const API_SERVER_URL = __DEV__
 	? 'http://localhost:5000'
@@ -6,4 +6,3 @@ export const API_SERVER_URL = __DEV__
 export const UI_SERVER_URL = __DEV__
 	? 'http://localhost:3000'
 	: 'https://www.joinnebula.co';
-export const SIM_SERVER_URL = 'ws://localhost:7000';
