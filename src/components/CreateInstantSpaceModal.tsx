@@ -1,4 +1,10 @@
-import React, {useState} from 'react';
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
+import {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {createSpace} from '../api/spaces';
 import {FetchStatus} from '../api/FetchStatus';

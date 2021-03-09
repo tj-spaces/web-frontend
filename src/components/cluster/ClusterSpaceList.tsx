@@ -1,5 +1,11 @@
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
 import {AssertionError} from 'assert';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {Link} from 'react-router-dom';
 import {createStylesheet} from '../../styles/createStylesheet';
 import hoverableLightBox from '../../styles/hoverableLightBox';

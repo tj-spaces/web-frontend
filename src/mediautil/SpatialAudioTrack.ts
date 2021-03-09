@@ -1,5 +1,10 @@
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
 import {useContext, useEffect, useRef} from 'react';
-// import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
 import SpaceAudioContext from '../components/space/SpaceAudioContext';
 import {getLogger} from '../lib/ClusterLogger';
 import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';

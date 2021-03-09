@@ -1,3 +1,9 @@
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
 import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
 import {getLogger} from './ClusterLogger';

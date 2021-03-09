@@ -1,4 +1,10 @@
-import React, {useCallback} from 'react';
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
+import {useCallback} from 'react';
 import {createStylesheet} from '../../styles/createStylesheet';
 import BaseRow from '../base/BaseRow';
 import {NbBlock, NbStatement} from './ASTTypes';

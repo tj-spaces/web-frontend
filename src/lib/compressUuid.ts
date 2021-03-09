@@ -1,3 +1,9 @@
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
 // Changes from a string like "d6a89c1e-219e-45a3-bc05-662ccab87645" to a shorter, base-36 string
 export function compressUuid(uuid: string) {
 	return uuid

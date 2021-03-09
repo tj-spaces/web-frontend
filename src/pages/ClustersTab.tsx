@@ -1,4 +1,10 @@
-import React, {useEffect, useState} from 'react';
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
+import {useEffect, useState} from 'react';
 import {getMyClusters} from '../api/clusters';
 import {FetchStatus} from '../api/FetchStatus';
 import Awaiting from '../components/Awaiting';
@@ -31,7 +37,7 @@ export default function ClustersTab() {
 
 			<Awaiting fetchStatus={fetchStatus}>
 				{clusters.map((cluster) => (
-					<ClusterFeedItem cluster={cluster} />
+					<ClusterFeedItem cluster={cluster} joined />
 				))}
 			</Awaiting>
 		</BaseRow>

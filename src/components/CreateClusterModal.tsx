@@ -1,3 +1,9 @@
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
 import {createRef, useCallback, useState} from 'react';
 import {Redirect} from 'react-router-dom';
 import {createCluster} from '../api/clusters';

@@ -1,3 +1,9 @@
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
 import camelize from '../lib/camelize';
 import hyphenate from '../lib/hyphenate';
 
@@ -5,7 +11,10 @@ function toString(value: string | null) {
 	return value == null ? '' : String(value);
 }
 
-export default function getStyleProperty(element: HTMLElement, property: string) {
+export default function getStyleProperty(
+	element: HTMLElement,
+	property: string
+) {
 	if (window.getComputedStyle) {
 		let computedStyle = window.getComputedStyle(element, null);
 		if (computedStyle) {

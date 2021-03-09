@@ -1,3 +1,9 @@
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
 import {useEffect, useRef} from 'react';
 import boxShadow from '../../styles/boxShadow';
 import {stylex, createStylesheet} from '../../styles/createStylesheet';

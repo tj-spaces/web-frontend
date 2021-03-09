@@ -1,4 +1,10 @@
-import React, {Suspense, useContext, useEffect} from 'react';
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
+import {Suspense, useContext, useEffect} from 'react';
 import {Canvas, useLoader} from 'react-three-fiber';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import useKeyboardState from '../../hooks/useKeyboardState';

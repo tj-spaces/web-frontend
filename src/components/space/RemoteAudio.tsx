@@ -1,4 +1,10 @@
-import React, {useContext} from 'react';
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
+import {useContext} from 'react';
 import {useTracks} from '../../mediautil/MediaConnector';
 import SpatialAudioTrack from '../../mediautil/SpatialAudioTrack';
 import {Position} from '../../typings/Space';

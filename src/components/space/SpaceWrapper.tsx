@@ -1,3 +1,9 @@
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
 import {useContext, useEffect, useRef, useState} from 'react';
 import {useSpace} from '../../api/spaces';
 import {getLogger} from '../../lib/ClusterLogger';

@@ -1,4 +1,10 @@
-import { stylex, createStylesheet } from '../../styles/createStylesheet';
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
+import {stylex, createStylesheet} from '../../styles/createStylesheet';
 
 type DivProps = JSX.IntrinsicElements['div'];
 
@@ -9,10 +15,10 @@ const variantStyles = createStylesheet({
 		position: 'relative',
 		width: '100%',
 		height: '100%',
-		overflowY: 'auto'
+		overflowY: 'auto',
 	},
 	baseScrollerHorizontal: {
-		flexDirection: 'row'
+		flexDirection: 'row',
 	},
 	default: {
 		display: 'flex',
@@ -20,24 +26,24 @@ const variantStyles = createStylesheet({
 		overflowX: 'hidden',
 		overflowY: 'hidden',
 		position: 'relative',
-		zIndex: 0
+		zIndex: 0,
 	},
 	hideScrollbar: {
 		scrollbarWidth: 'none',
 		pseudoSelectors: {
 			'::-webkit-scrollbar': {
-				display: 'none'
-			}
-		}
-	}
+				display: 'none',
+			},
+		},
+	},
 });
 
 const railPaddingStyles = createStylesheet({
 	none: {},
 	railPadding: {
 		paddingLeft: '1rem',
-		paddingRight: '1rem'
-	}
+		paddingRight: '1rem',
+	},
 });
 
 export default function BaseScrollableArea({

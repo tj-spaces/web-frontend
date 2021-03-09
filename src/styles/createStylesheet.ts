@@ -1,5 +1,11 @@
-import { CSSProperties } from 'react';
-import { getLogger } from '../lib/ClusterLogger';
+/*
+  Copyright (C) Michael Fatemi - All Rights Reserved.
+  Unauthorized copying of this file via any medium is strictly prohibited.
+  Proprietary and confidential.
+  Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
+*/
+import {CSSProperties} from 'react';
+import {getLogger} from '../lib/ClusterLogger';
 
 function createStyleTag() {
 	const tag = document.createElement('style');
@@ -10,7 +16,7 @@ function createStyleTag() {
 	return tag;
 }
 
-const classCache: { [key: string]: string } = {};
+const classCache: {[key: string]: string} = {};
 const generatedClassNames = new Set<string>();
 
 const hyphenate = (str: string) => {
@@ -46,7 +52,7 @@ function generateClassName(length: number = 8) {
 	return result;
 }
 
-export type StylesheetDefinition = { [className: string]: StylesheetProperties };
+export type StylesheetDefinition = {[className: string]: StylesheetProperties};
 export interface StylesheetProperties extends CSSProperties {
 	extends?: ClassProvider[];
 	subSelectors?: {
@@ -54,7 +60,10 @@ export interface StylesheetProperties extends CSSProperties {
 	};
 }
 
-export function createClasses(properties: StylesheetProperties, subSelectors: string = '') {
+export function createClasses(
+	properties: StylesheetProperties,
+	subSelectors: string = ''
+) {
 	let innerHTML = '';
 	// map of property name to property class
 	let classes: Record<string, string | Record<string, string>> = {};
@@ -62,7 +71,10 @@ export function createClasses(properties: StylesheetProperties, subSelectors: st
 		if (name === 'subSelectors') {
 			for (let [nestedSubSelector, props] of Object.entries(value)) {
 				// This is a nested StylesheetProperties
-				let result = createClasses(props as StylesheetProperties, subSelectors + nestedSubSelector);
+				let result = createClasses(
+					props as StylesheetProperties,
+					subSelectors + nestedSubSelector
+				);
 				innerHTML += result.innerHTML;
 				classes[nestedSubSelector] = result.classes as Record<string, string>;
 			}
@@ -93,7 +105,7 @@ export function createClasses(properties: StylesheetProperties, subSelectors: st
 			classes[name] = className;
 		}
 	}
-	return { innerHTML, classes };
+	return {innerHTML, classes};
 }
 
 let buildTimeoutHandle: NodeJS.Timeout | null = null;
@@ -102,15 +114,25 @@ let queuedClassesCount = 0;
 
 const logger = getLogger('stylesheet');
 
-export type FunctionalStylesheet<T> = { [key in keyof T]: ClassProvider } &
-	((...classnames: (keyof T | null | undefined | false | { [key in keyof T]: boolean })[]) => string);
+export type FunctionalStylesheet<T> = {[key in keyof T]: ClassProvider} &
+	((
+		...classnames: (
+			| keyof T
+			| null
+			| undefined
+			| false
+			| {[key in keyof T]: boolean}
+		)[]
+	) => string);
 
-export function createStylesheet<T extends StylesheetDefinition>(styles: T): FunctionalStylesheet<T> {
+export function createStylesheet<T extends StylesheetDefinition>(
+	styles: T
+): FunctionalStylesheet<T> {
 	let innerHTML = '';
 	// @ts-ignore
-	const newStyles: { [key in keyof T]: ClassProvider } = {};
+	const newStyles: {[key in keyof T]: ClassProvider} = {};
 	for (let [cls, props] of Object.entries(styles)) {
-		let { classes, innerHTML: newInnerHTML } = createClasses(props);
+		let {classes, innerHTML: newInnerHTML} = createClasses(props);
 		innerHTML += newInnerHTML;
 		// @ts-ignore
 		newStyles[cls] = classes;
@@ -172,7 +194,9 @@ export interface ClassProvider {
 	[key: string]: string | Record<string, string>;
 }
 
-export function dedupe(providers: (ClassProvider | ClassProvider[] | false | null | undefined)[]) {
+export function dedupe(
+	providers: (ClassProvider | ClassProvider[] | false | null | undefined)[]
+) {
 	providers = providers.reverse();
 	const styles: ClassProvider = {};
 
@@ -201,14 +225,18 @@ export function dedupe(providers: (ClassProvider | ClassProvider[] | false | nul
 	return styles;
 }
 
-export function stylex(...providers: (ClassProvider | false | null | undefined)[]) {
+export function stylex(
+	...providers: (ClassProvider | false | null | undefined)[]
+) {
 	var deduped = dedupe(providers);
 	var classes = '';
 
 	for (let propertyName in deduped) {
 		if (Boolean(deduped[propertyName])) {
 			if (typeof deduped[propertyName] === 'string') {
-				classes += classes ? ' ' + deduped[propertyName] : deduped[propertyName];
+				classes += classes
+					? ' ' + deduped[propertyName]
+					: deduped[propertyName];
 			} else if (typeof deduped[propertyName] === 'object') {
 				let nestedClasses = deduped[propertyName];
 
