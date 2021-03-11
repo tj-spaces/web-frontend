@@ -25,8 +25,6 @@ Best,
   myfatemi04@gmail.com
 `);
 
-console.log(process.env);
-
 ReactDOM.render(
 	<React.StrictMode>
 		<App />

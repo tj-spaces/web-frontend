@@ -91,8 +91,9 @@ export class VoiceServer implements VoiceServerLike {
 	readonly url: string;
 
 	constructor(url: string, userID: string) {
-		if (!url.startsWith('ws://')) {
-			url = 'ws://' + url + '/websocket';
+		const wssRegex = /^wss?:\/\//;
+		if (!wssRegex.test(url)) {
+			url = 'wss://' + url + '/websocket';
 		}
 
 		this.userID = userID;
