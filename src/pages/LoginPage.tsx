@@ -15,11 +15,11 @@ import {
 } from '../lib/getAuthorizationUrl';
 
 export default function LoginPage() {
-	document.title = 'Log In';
+	document.title = 'Log In | Nebula';
 
 	return (
 		<Fullscreen>
-			<BaseText variant="primary-title">Spaces</BaseText>
+			<BaseText variant="primary-title">Nebula</BaseText>
 			<BaseRow direction="column" alignment="center">
 				<BaseText variant="secondary-title">Log In</BaseText>
 				<BaseText variant="body">
