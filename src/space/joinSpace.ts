@@ -10,7 +10,7 @@ export default async function joinSpace(
 	id: string
 ): Promise<{connection: WebSocket; voiceURL: string; simulationURL: string}> {
 	const {code, voiceURL, simulationURL} = await getSpaceJoinCode(id);
-	const ws = new WebSocket('ws://' + simulationURL);
+	const ws = new WebSocket('wss://' + simulationURL);
 
 	return new Promise((resolve, reject) => {
 		ws.onopen = () => {
