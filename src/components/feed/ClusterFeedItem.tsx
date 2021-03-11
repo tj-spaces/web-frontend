@@ -41,7 +41,7 @@ export default function ClusterPreview({
 			<BaseText>
 				Last active <b>now</b>
 			</BaseText>
-			{joined ? (
+			{!joined ? (
 				<BaseButton
 					size="small"
 					variant="theme"
