@@ -6,7 +6,11 @@
 */
 export const __DEV__ = process.env.NODE_ENV !== 'production';
 
-export const USE_DEV_API_SERVER = false; // = __DEV__
+export const USE_DEV_API_SERVER = __DEV__;
+
+export const USE_DEV_VOICE_SERVER = __DEV__;
+
+export const USE_DEV_SIMULATION_SERVER = __DEV__;
 
 export const API_SERVER_URL = USE_DEV_API_SERVER
 	? 'http://localhost:5000'

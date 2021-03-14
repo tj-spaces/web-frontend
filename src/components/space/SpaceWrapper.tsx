@@ -79,31 +79,48 @@ export default function SpaceWrapper({id}: {id: string}) {
 	const [manager, setManager] = useState<SpaceManager>();
 	const [voice, setVoice] = useState<VoiceServer>();
 	const [audio, setAudio] = useState<AudioContext>();
+
+	// Whether or not the user has allowed user media to be sent
+	const [allowUserMedia] = useState(true);
+	const [userMedia, setUserMedia] = useState<MediaStream>();
+	const [chatModalOpen, setChatModalOpen] = useState(false);
+	const [connectionStatus, setConnectionStatus] = useState<
+		null | 'connecting' | 'connected' | 'errored'
+	>(null);
 	const auth = useContext(AuthContext);
 	const space = useSpace(id);
-	const [chatModalOpen, setChatModalOpen] = useState(false);
 
+	// []: Listen for gestures to start the AudioContext
 	useEffect(() => {
-		setTimeout(() => {
-			setAudio(new AudioContext());
-		}, 5000);
+		const listener = () => setAudio(new AudioContext());
+		window.addEventListener('mousemove', listener);
+		return () => window.removeEventListener('mousemove', listener);
 	}, []);
 
 	useEffect(() => {
-		if (voice) {
+		if (allowUserMedia) {
 			navigator.getUserMedia(
 				{audio: true},
-				(stream) => {
-					stream.getTracks().forEach((track) => {
-						voice?.addLocalTrack(track, stream);
-					});
-				},
-				(error) => {
-					logger.error({event: 'get_user_media', error});
-				}
+				(stream) => setUserMedia(stream),
+				(error) => logger.error({event: 'get_user_media', error})
 			);
 		}
-	}, [voice]);
+	}, [allowUserMedia]);
+
+	useEffect(() => {
+		if (voice) {
+			if (userMedia) {
+				userMedia.getTracks().forEach((track) => {
+					voice.addLocalTrack(track, userMedia);
+				});
+
+				return () =>
+					userMedia.getTracks().forEach((track) => {
+						voice.removeLocalTrack(track);
+					});
+			}
+		}
+	}, [voice, userMedia]);
 
 	useEffect(() => {
 		if (voice) {
@@ -116,9 +133,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	useEffect(() => {
 		if (voice) {
-			return () => {
-				voice.disconnect();
-			};
+			return () => voice.disconnect();
 		}
 	}, [voice]);
 
@@ -126,14 +141,18 @@ export default function SpaceWrapper({id}: {id: string}) {
 		let manager = new SpaceManager(id);
 		setManager(manager);
 
-		(async () => {
-			const {connection, voiceURL} = await joinSpace(id);
-			connectionRef.current = connection;
-			manager.setWebsocket(connection);
+		setConnectionStatus('connecting');
 
-			let voice = new VoiceServer(voiceURL, auth.user!.id);
-			setVoice(voice);
-		})();
+		joinSpace(id)
+			.then(({connection, voiceURL, simulationURL}) => {
+				connectionRef.current = connection;
+				manager.setWebsocket(connection);
+
+				let voice = new VoiceServer(voiceURL, auth.user!.id);
+				setVoice(voice);
+				setConnectionStatus('connected');
+			})
+			.catch(() => setConnectionStatus('errored'));
 
 		return () => {
 			manager.destroy();
@@ -155,7 +174,26 @@ export default function SpaceWrapper({id}: {id: string}) {
 							</BaseText>
 						</div>
 
-						<Space />
+						{connectionStatus === 'errored' && (
+							<BaseRow
+								direction="column"
+								alignment="center"
+								justifyContent="center"
+								height="100%"
+							>
+								<BaseText variant="secondary-title">
+									Couldn't connect.{' '}
+								</BaseText>
+								<BaseButton
+									variant="positive"
+									onClick={() => window.location.reload()}
+								>
+									Retry
+								</BaseButton>
+							</BaseRow>
+						)}
+
+						{connectionStatus === 'connected' && <Space />}
 
 						<BaseRow
 							direction="row"

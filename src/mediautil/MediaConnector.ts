@@ -280,7 +280,7 @@ export class VoiceServer implements VoiceServerLike {
 
 	/**
 	 * Serializes an event and a payload as a WebSocket event, and sends it
-	 * to the Voice server.
+	 * to the Voice server. If the Websocket isn't ready, it's sent to the queue.
 	 * @param event The event (string)
 	 * @param data The data (string, most of the time a JSON string)
 	 */
