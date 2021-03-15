@@ -20,8 +20,10 @@ export default function UserModel({
 	const {camera} = useThree();
 
 	useEffect(() => {
-		camera.position.set(position.x, position.y + 2, position.z);
-	}, [camera, camera.position, position]);
+		if (me) {
+			camera.position.set(position.x, position.y + 2, position.z);
+		}
+	}, [camera, camera.position, me, position]);
 
 	return (
 		<mesh position={[position.x, position.y + 1, position.z]}>
