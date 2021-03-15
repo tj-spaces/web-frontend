@@ -90,7 +90,11 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	// []: Listen for gestures to start the AudioContext
 	useEffect(() => {
-		const listener = () => setAudio(new AudioContext());
+		const listener = () => {
+			setAudio(new AudioContext());
+			window.removeEventListener('mousemove', listener);
+		};
+
 		window.addEventListener('mousemove', listener);
 		return () => window.removeEventListener('mousemove', listener);
 	}, []);
