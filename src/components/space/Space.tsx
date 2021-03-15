@@ -95,6 +95,7 @@ export default function Space() {
 				{Object.entries(participants).map(([id, participant]) => (
 					<UserModel
 						position={participant.position}
+						rotation={participant.rotation}
 						key={id}
 						me={id === myID}
 						id={id}
