@@ -19,7 +19,7 @@ export default async function joinSpace(
 		? 'localhost:7000'
 		: joinInfo.simulationURL;
 
-	const voiceURL = USE_DEV_VOICE_SERVER ? 'localhost:8080' : joinInfo.voiceURL;
+	const voiceURL = USE_DEV_VOICE_SERVER ? 'localhost:443' : joinInfo.voiceURL;
 	const ws = new WebSocket(
 		(DISABLE_DEV_SIMULATION_SERVER_SSL ? 'ws' : 'wss') + '://' + simulationURL
 	);

@@ -4,7 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useContext, useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {useSpace} from '../../api/spaces';
 import {getLogger} from '../../lib/ClusterLogger';
 import {VoiceServer} from '../../mediautil/MediaConnector';
@@ -75,7 +75,6 @@ const styles = createStylesheet({
 const logger = getLogger('space/wrapper');
 
 export default function SpaceWrapper({id}: {id: string}) {
-	const connectionRef = useRef<WebSocket>();
 	const [manager, setManager] = useState<SpaceManager>();
 	const [voice, setVoice] = useState<VoiceServer>();
 	const [audio, setAudio] = useState<AudioContext>();
@@ -145,7 +144,6 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 		joinSpace(id)
 			.then(({connection, voiceURL, simulationURL}) => {
-				connectionRef.current = connection;
 				manager.setWebsocket(connection);
 
 				let voice = new VoiceServer(voiceURL, auth.user!.id);

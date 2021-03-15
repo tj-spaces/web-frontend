@@ -33,10 +33,8 @@ export interface SpaceEventMap {
 	users: Record<string, SpaceParticipant>;
 	message: SpaceMessage;
 	chat_history: SpaceMessage[];
-	auth: {
-		space_id: string;
-		participant_id: string;
-	};
+	authenticated: string;
+	disconnected: void;
 }
 
 /**
@@ -95,9 +93,13 @@ export default class SpaceManager {
 			case 'auth':
 				logger.debug({event: 'authenticated', data});
 				this.participantID = data.participantID;
-				this.emit('auth', data);
+				this.emit('authenticated', data.participantID);
 				break;
 		}
+	}
+
+	isAuthenticated() {
+		return this.participantID != null;
 	}
 
 	/**
@@ -106,7 +108,6 @@ export default class SpaceManager {
 	 */
 	setWebsocket(connection: WebSocket) {
 		this.connection = connection;
-		this.connected = true;
 
 		this.connection.addEventListener(
 			'message',
@@ -122,7 +123,7 @@ export default class SpaceManager {
 
 		this.connection.addEventListener('close', () => {
 			// What to do if the connection closes?
-			this.connected = false;
+			this.emit('disconnected', undefined);
 		});
 
 		if (this.outboundMessageQueue) {
@@ -196,7 +197,10 @@ export default class SpaceManager {
 	 * @param data Related data for the event, which is then JSONified.
 	 */
 	send(event: string, data: any) {
-		if (this.connection && this.connected) {
+		if (
+			this.connection &&
+			this.connection.readyState === this.connection.OPEN
+		) {
 			this.connection.send(event + ':' + JSON.stringify(data));
 		} else {
 			this.outboundMessageQueue.push([event, data]);

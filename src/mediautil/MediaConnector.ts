@@ -313,6 +313,7 @@ export class VoiceServer implements VoiceServerLike {
 	 * @param track The track to add
 	 */
 	addLocalTrack(track: MediaStreamTrack, stream: MediaStream) {
+		logger.info({event: 'add_local_track', track});
 		this.localTracks[track.id] = this.peer.addTrack(track, stream);
 	}
 
