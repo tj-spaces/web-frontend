@@ -8,14 +8,17 @@ import {useState, useEffect, useContext} from 'react';
 import SimulationServerContext from '../components/space/SimulationServerContext';
 
 export default function useMyID() {
-	const manager = useContext(SimulationServerContext);
+	const simulation = useContext(SimulationServerContext);
 	const [myID, setMyID] = useState<string>();
 
 	useEffect(() => {
-		manager.on('authenticated', (participantID) => {
+		if (simulation.participantID) {
+			setMyID(simulation.participantID);
+		}
+		simulation.on('authenticated', (participantID) => {
 			setMyID(participantID);
 		});
-	}, [manager]);
+	}, [simulation]);
 
 	return myID;
 }

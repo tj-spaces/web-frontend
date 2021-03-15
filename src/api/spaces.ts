@@ -4,6 +4,10 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
+import {
+	USE_DEV_SIMULATION_SERVER,
+	USE_DEV_VOICE_SERVER,
+} from '../lib/constants';
 import {Store, useStoredValue} from '../store/store';
 import {Space, SpaceVisibility} from '../typings/Space';
 import {WorldType} from '../typings/Types';
@@ -50,7 +54,7 @@ export function useSpace(id: string) {
 }
 
 export interface JoinSpaceData {
-	code: string;
+	token: string;
 	voiceURL: string;
 	simulationURL: string;
 }
@@ -59,7 +63,15 @@ export interface JoinSpaceData {
  *
  * @param id The ID of the space to fetch the join code for
  */
-export async function getSpaceJoinCode(id: string): Promise<JoinSpaceData> {
+export async function getSpaceServerURLs(id: string): Promise<JoinSpaceData> {
 	const result = await makeAPIGetCall(`/api/spaces/${id}/join`);
-	return result.data.data;
+	const joinInfo = result.data.data;
+
+	return {
+		voiceURL: USE_DEV_VOICE_SERVER ? 'localhost:443' : joinInfo.voiceURL,
+		simulationURL: USE_DEV_SIMULATION_SERVER
+			? 'localhost:7000'
+			: joinInfo.simulationURL,
+		token: joinInfo.code,
+	};
 }

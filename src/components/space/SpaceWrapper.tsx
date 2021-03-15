@@ -5,10 +5,9 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useContext, useEffect, useState} from 'react';
-import {useSpace} from '../../api/spaces';
+import {getSpaceServerURLs, useSpace} from '../../api/spaces';
 import {getLogger} from '../../lib/ClusterLogger';
 import {VoiceServer} from '../../mediautil/MediaConnector';
-import joinSpace from '../../space/joinSpace';
 import {createStylesheet} from '../../styles/createStylesheet';
 import AuthContext from '../AuthContext';
 import BaseButton from '../base/BaseButton';
@@ -139,9 +138,9 @@ export default function SpaceWrapper({id}: {id: string}) {
 	useEffect(() => {
 		setConnectionStatus('connecting');
 
-		joinSpace(id)
-			.then(({voiceURL, simulationURL}) => {
-				let simulation = new SimulationServer(id, simulationURL);
+		getSpaceServerURLs(id)
+			.then(({voiceURL, simulationURL, token}) => {
+				let simulation = new SimulationServer(id, simulationURL, token);
 				simulation.on('connected', () => setConnectionStatus('connected'));
 				setSimulation(simulation);
 

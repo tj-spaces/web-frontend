@@ -95,7 +95,6 @@ export default class SimulationServer {
 			case 'me':
 			case 'user_join':
 				this.participants[data.id] = data;
-				this.participants[data.id] = data;
 				this.emit('user_join', data);
 				break;
 			case 'user_leave':
@@ -112,8 +111,8 @@ export default class SimulationServer {
 				break;
 			case 'auth':
 				logger.debug({event: 'authenticated', data});
-				this.participantID = data.participantID;
-				this.emit('authenticated', data.participantID);
+				this.participantID = data.participant_id;
+				this.emit('authenticated', data.participant_id);
 				break;
 		}
 	}
@@ -126,7 +125,7 @@ export default class SimulationServer {
 		return this.participantID != null;
 	}
 
-	constructor(id: string, host: string) {
+	constructor(id: string, host: string, token: string) {
 		this.spaceID = id;
 		this.host = host;
 		this.connection = new WebSocket(
@@ -134,6 +133,7 @@ export default class SimulationServer {
 		);
 
 		this.connection.addEventListener('open', () => {
+			this.connection?.send('connect:' + token);
 			this.emit('connected', undefined);
 		});
 
