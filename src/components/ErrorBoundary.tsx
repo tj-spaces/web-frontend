@@ -5,6 +5,7 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import React from 'react';
+import {reportError} from '../api/analytics';
 import Fullscreen from './base/BaseFullscreen';
 
 export default class ErrorBoundary extends React.Component {
@@ -19,6 +20,11 @@ export default class ErrorBoundary extends React.Component {
 	}
 	componentDidCatch(error: any) {
 		console.error('Error:', error);
+	}
+	componentDidUpdate() {
+		if (this.state.error) {
+			reportError(this.state.error);
+		}
 	}
 	render() {
 		if (this.state.error) {
