@@ -5,15 +5,15 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useContext} from 'react';
+import {useMessages} from '../../../hooks/useMessages';
 import {ClassProvider} from '../../../styles/createStylesheet';
 import BaseRow from '../../base/BaseRow';
-import {useMessages} from '../ChatEngine';
 import SpaceManagerContext from '../ManagerContext';
 import ChatMessage from './ChatMessage';
 
 export default function ChatMessageList({xstyle}: {xstyle?: ClassProvider}) {
 	const manager = useContext(SpaceManagerContext);
-	const messages = useMessages(manager.chatEngine);
+	const messages = useMessages(manager);
 
 	return (
 		<BaseRow direction="column" overflow="scroll" width="100%" xstyle={xstyle}>

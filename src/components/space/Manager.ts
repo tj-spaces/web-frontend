@@ -6,15 +6,11 @@
 */
 import {getLogger} from '../../lib/ClusterLogger';
 import {
-	ChunkData,
-	ChunkPosition,
 	DisplayStatus,
 	Position,
 	SpaceMessage,
-	SpaceMetadata,
 	SpaceParticipant,
 } from '../../typings/Space';
-import SpaceChatEngine from './ChatEngine';
 import JSONBig from 'json-bigint';
 
 const logger = getLogger('space');
@@ -42,30 +38,33 @@ export interface SpaceEventMap {
  */
 export default class SpaceManager {
 	participants: Record<string, SpaceParticipant> = {};
-
-	constructedWorldData = new Map<ChunkPosition, ChunkData>();
-	spaceMetadata: SpaceMetadata = {};
+	participantID: string | null = null;
 
 	private outboundMessageQueue: [string, any][] = [];
-
 	private connection: WebSocket | null = null;
-	private connected: boolean = false;
-
-	chatEngine: SpaceChatEngine;
-
-	participantID: string | null = null;
+	private messages: SpaceMessage[] = [];
 
 	private listeners_: {
 		[key in keyof SpaceEventMap]?: Set<(data: SpaceEventMap[key]) => void>;
 	} = {};
 
+	sendChatMessage(content: string, reply_to: number | null = null) {
+		this.send('chat', {content, reply_to});
+	}
+
+	getMessages() {
+		return this.messages.slice();
+	}
+
 	private handleWebsocketEvent(type: string, payload: string) {
 		let data = JSONBig({storeAsString: true}).parse(payload);
 		switch (type) {
 			case 'message':
+				this.messages.push(data);
 				this.emit('message', data);
 				break;
 			case 'chat_history':
+				this.messages = data;
 				this.emit('chat_history', data);
 				break;
 			case 'users':
@@ -131,9 +130,7 @@ export default class SpaceManager {
 		}
 	}
 
-	constructor(public readonly id: string) {
-		this.chatEngine = new SpaceChatEngine(this);
-	}
+	constructor(public readonly id: string) {}
 
 	on<K extends keyof SpaceEventMap>(
 		event: K,
