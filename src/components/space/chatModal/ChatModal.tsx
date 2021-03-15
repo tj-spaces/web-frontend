@@ -11,7 +11,7 @@ import BaseButton from '../../base/BaseButton';
 import BaseModal from '../../base/BaseModal';
 import BaseRow from '../../base/BaseRow';
 import BaseText from '../../base/BaseText';
-import SpaceManagerContext from '../ManagerContext';
+import SimulationServerContext from '../SimulationServerContext';
 import ChatMessageList from './ChatMessageList';
 import ReplyToMessageContext from './ReplyToMessageContext';
 
@@ -30,7 +30,7 @@ const styles = createStylesheet({
 });
 
 export default function ChatModal({onClose}: {onClose: () => void}) {
-	const space = useContext(SpaceManagerContext);
+	const space = useContext(SimulationServerContext);
 	const messageTextRef = useRef<HTMLInputElement>(null);
 	const [pressingEscape, setPressingEscape] = useState(false);
 	const [replyToMessage, setReplyToMessage] = useState<SpaceMessage | null>(

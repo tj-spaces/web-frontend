@@ -5,8 +5,8 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {createContext} from 'react';
-import SpaceManager from './Manager';
+import SimulationServer from './SimulationServer';
 
-const SpaceManagerContext = createContext<SpaceManager>(null!);
+const SimulationServerContext = createContext<SimulationServer>(null!);
 
-export default SpaceManagerContext;
+export default SimulationServerContext;

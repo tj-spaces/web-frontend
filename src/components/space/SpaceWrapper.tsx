@@ -16,8 +16,8 @@ import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import ChatModal from './chatModal/ChatModal';
 import DeviceControlButtons from './DeviceControlButtons';
-import SpaceManager from './Manager';
-import SpaceManagerContext from './ManagerContext';
+import SimulationServer from './SimulationServer';
+import SimulationServerContext from './SimulationServerContext';
 import Space from './Space';
 import SpaceAudioContext from './SpaceAudioContext';
 import SpaceVoiceContext from './VoiceContext';
@@ -75,7 +75,7 @@ const styles = createStylesheet({
 const logger = getLogger('space/wrapper');
 
 export default function SpaceWrapper({id}: {id: string}) {
-	const [manager, setManager] = useState<SpaceManager>();
+	const [manager, setManager] = useState<SimulationServer>();
 	const [voice, setVoice] = useState<VoiceServer>();
 	const [audio, setAudio] = useState<AudioContext>();
 
@@ -137,14 +137,14 @@ export default function SpaceWrapper({id}: {id: string}) {
 	}, [voice]);
 
 	useEffect(() => {
-		let manager = new SpaceManager(id);
-		setManager(manager);
+		let simulationServer = new SimulationServer(id);
+		setManager(simulationServer);
 
 		setConnectionStatus('connecting');
 
 		joinSpace(id)
 			.then(({connection, voiceURL, simulationURL}) => {
-				manager.setWebsocket(connection);
+				simulationServer.setWebsocket(connection);
 
 				let voice = new VoiceServer(voiceURL, auth.user!.id);
 				setVoice(voice);
@@ -153,7 +153,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 			.catch(() => setConnectionStatus('errored'));
 
 		return () => {
-			manager.destroy();
+			simulationServer.destroy();
 		};
 	}, [auth.user, id]);
 
@@ -162,7 +162,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 	}
 
 	return (
-		<SpaceManagerContext.Provider value={manager}>
+		<SimulationServerContext.Provider value={manager}>
 			<SpaceAudioContext.Provider value={audio ?? null}>
 				<SpaceVoiceContext.Provider value={voice ?? null}>
 					<div className={styles('container')}>
@@ -216,6 +216,6 @@ export default function SpaceWrapper({id}: {id: string}) {
 					</div>
 				</SpaceVoiceContext.Provider>
 			</SpaceAudioContext.Provider>
-		</SpaceManagerContext.Provider>
+		</SimulationServerContext.Provider>
 	);
 }

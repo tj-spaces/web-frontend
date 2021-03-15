@@ -34,11 +34,21 @@ export interface SpaceEventMap {
 }
 
 /**
+ * Specifies a velocity in each direction.
+ */
+export interface MovementDirection {
+	x: 0 | 1 | -1;
+	y: 0 | 1 | -1;
+	z: 0 | 1 | -1;
+}
+
+/**
  * This manager class processes data about a cluster as it arrives.
  */
-export default class SpaceManager {
+export default class SimulationServer {
 	participants: Record<string, SpaceParticipant> = {};
 	participantID: string | null = null;
+	readonly spaceID: string;
 
 	private outboundMessageQueue: [string, any][] = [];
 	private connection: WebSocket | null = null;
@@ -130,7 +140,9 @@ export default class SpaceManager {
 		}
 	}
 
-	constructor(public readonly id: string) {}
+	constructor(id: string) {
+		this.spaceID = id;
+	}
 
 	on<K extends keyof SpaceEventMap>(
 		event: K,
@@ -166,14 +178,25 @@ export default class SpaceManager {
 		return false;
 	}
 
+	/**
+	 * Sends a message to the server requesting that the user be displayed with a certain status.
+	 * @param status The status to display
+	 */
 	setStatus(status: DisplayStatus) {
 		this.send('display-status', status);
 	}
 
-	setMoveDirection(direction: {x: 0 | 1 | -1; y: 0 | 1 | -1; z: 0 | 1 | -1}) {
+	/**
+	 * Sends a message to the server requesting to start moving in a direction.
+	 * @param direction The direction to move in.
+	 */
+	setMoveDirection(direction: MovementDirection) {
 		this.send('move', direction);
 	}
 
+	/**
+	 * Sets the velocity in each direction to 0.
+	 */
 	stopMoving() {
 		this.setMoveDirection({x: 0, y: 0, z: 0});
 	}

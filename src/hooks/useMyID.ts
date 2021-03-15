@@ -5,10 +5,10 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useState, useEffect, useContext} from 'react';
-import SpaceManagerContext from '../components/space/ManagerContext';
+import SimulationServerContext from '../components/space/SimulationServerContext';
 
 export default function useMyID() {
-	const manager = useContext(SpaceManagerContext);
+	const manager = useContext(SimulationServerContext);
 	const [myID, setMyID] = useState<string>();
 
 	useEffect(() => {

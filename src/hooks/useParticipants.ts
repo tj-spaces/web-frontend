@@ -5,11 +5,11 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useContext, useEffect, useState} from 'react';
-import SpaceManagerContext from '../components/space/ManagerContext';
+import SimulationServerContext from '../components/space/SimulationServerContext';
 import {SpaceParticipant} from '../typings/Space';
 
 export default function useParticipants() {
-	const manager = useContext(SpaceManagerContext);
+	const manager = useContext(SimulationServerContext);
 	const [participants, setParticipants] = useState<
 		Record<string, SpaceParticipant>
 	>({});

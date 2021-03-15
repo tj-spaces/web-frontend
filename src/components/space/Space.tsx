@@ -12,7 +12,7 @@ import useMyID from '../../hooks/useMyID';
 import useParticipants from '../../hooks/useParticipants';
 import SpatialAudioListener from '../../mediautil/SpatialAudioListener';
 import Floor from './Floor';
-import SpaceManagerContext from './ManagerContext';
+import SimulationServerContext from './SimulationServerContext';
 import RemoteAudio from './RemoteAudio';
 import UserModel from './UserModel';
 
@@ -31,7 +31,7 @@ function SushiTable() {
 }
 
 export default function Space() {
-	const manager = useContext(SpaceManagerContext);
+	const manager = useContext(SimulationServerContext);
 
 	const myID = useMyID();
 	const participants = useParticipants();

@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
-import SpaceManager from '../components/space/Manager';
+import SimulationServer from '../components/space/SimulationServer';
 import {SpaceMessage} from '../typings/Space';
 
-export function useMessages(space: SpaceManager) {
+export function useMessages(space: SimulationServer) {
 	const [messages, setMessages] = useState<SpaceMessage[]>();
 
 	useEffect(() => {

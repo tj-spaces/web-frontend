@@ -8,11 +8,11 @@ import {useContext} from 'react';
 import {useMessages} from '../../../hooks/useMessages';
 import {ClassProvider} from '../../../styles/createStylesheet';
 import BaseRow from '../../base/BaseRow';
-import SpaceManagerContext from '../ManagerContext';
+import SimulationServerContext from '../SimulationServerContext';
 import ChatMessage from './ChatMessage';
 
 export default function ChatMessageList({xstyle}: {xstyle?: ClassProvider}) {
-	const manager = useContext(SpaceManagerContext);
+	const manager = useContext(SimulationServerContext);
 	const messages = useMessages(manager);
 
 	return (
