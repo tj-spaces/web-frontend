@@ -12,9 +12,10 @@ import useMyID from '../../hooks/useMyID';
 import useParticipants from '../../hooks/useParticipants';
 import SpatialAudioListener from '../../mediautil/SpatialAudioListener';
 import Floor from './Floor';
-import SimulationServerContext from './SimulationServerContext';
 import RemoteAudio from './RemoteAudio';
+import SimulationServerContext from './SimulationServerContext';
 import UserModel from './UserModel';
+import {PointerLockControls} from '@react-three/drei';
 
 function SushiTable() {
 	// Attribution: Aimi Sekiguchi
@@ -47,7 +48,6 @@ export default function Space() {
 	}, [a, s, d, w, manager]);
 
 	const myPosition = myID ? participants[myID]?.position : undefined;
-	const {x, z} = myPosition ?? {x: 0, z: 0};
 
 	return (
 		<div style={{width: '100vw', height: '100vh'}}>
@@ -60,7 +60,8 @@ export default function Space() {
 					<RemoteAudio userID={id} position={participant.position} key={id} />
 				) : null
 			)}
-			<Canvas camera={{position: [x, 10, z]}}>
+			<Canvas>
+				<PointerLockControls onPointerMove={() => {}} />
 				<Suspense fallback="Loading model">
 					<SushiTable />
 				</Suspense>

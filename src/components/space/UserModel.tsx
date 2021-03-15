@@ -20,8 +20,7 @@ export default function UserModel({
 	const {camera} = useThree();
 
 	useEffect(() => {
-		camera.position.set(position.x + 4, position.y + 2, position.z + 4);
-		camera.lookAt(position.x, position.y, position.z);
+		camera.position.set(position.x, position.y + 2, position.z);
 	}, [camera, camera.position, position]);
 
 	return (
