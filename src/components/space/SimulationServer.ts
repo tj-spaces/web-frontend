@@ -39,9 +39,9 @@ export interface SpaceEventMap {
  * Specifies a velocity in each direction.
  */
 export interface MovementDirection {
-	x: 0 | 1 | -1;
-	y: 0 | 1 | -1;
-	z: 0 | 1 | -1;
+	x: number;
+	y: number;
+	z: number;
 }
 
 /**

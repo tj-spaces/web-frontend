@@ -4,7 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {Suspense, useContext, useEffect} from 'react';
+import {Suspense, useContext, useEffect, useRef} from 'react';
 import {Canvas, useLoader} from 'react-three-fiber';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import useKeyboardState from '../../hooks/useKeyboardState';
@@ -37,13 +37,34 @@ export default function Space() {
 	const myID = useMyID();
 	const participants = useParticipants();
 
-	const {a, s, d, w} = useKeyboardState(document.body);
+	const {a = false, s = false, d = false, w = false} = useKeyboardState(
+		document.body
+	);
+	const rotation = useRef<number>(0);
 
 	useEffect(() => {
+		// console.log(rotation.current);
+
+		// A and D move left and right (-X and +X)
+		// W and S move forward and backward (-Z and +Z)
+
+		// Take this vector and rotate it by `rotation.current` degrees.
+
+		let relativeX = -a + +d;
+		let relativeZ = -s + +w;
+
+		let dx =
+			relativeX * Math.cos(rotation.current) -
+			relativeZ * Math.sin(rotation.current);
+
+		let dz =
+			relativeX * Math.sin(rotation.current) +
+			relativeZ * Math.cos(rotation.current);
+
 		manager.setMoveDirection({
-			x: a ? -1 : d ? 1 : 0,
+			x: dx,
 			y: 0,
-			z: s ? 1 : w ? -1 : 0,
+			z: -dz,
 		});
 	}, [a, s, d, w, manager]);
 
@@ -61,7 +82,11 @@ export default function Space() {
 				) : null
 			)}
 			<Canvas>
-				<PointerLockControls onPointerMove={() => {}} />
+				<PointerLockControls
+					onUpdate={(controls) =>
+						(rotation.current = controls.getObject().rotation.z)
+					}
+				/>
 				<Suspense fallback="Loading model">
 					<SushiTable />
 				</Suspense>
