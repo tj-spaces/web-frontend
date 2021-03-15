@@ -12,8 +12,8 @@ export default function useMyID() {
 	const [myID, setMyID] = useState<string>();
 
 	useEffect(() => {
-		manager.on('auth', ({participant_id}) => {
-			setMyID(participant_id);
+		manager.on('authenticated', (participantID) => {
+			setMyID(participantID);
 		});
 	}, [manager]);
 
