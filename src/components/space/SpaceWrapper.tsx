@@ -75,7 +75,7 @@ const styles = createStylesheet({
 const logger = getLogger('space/wrapper');
 
 export default function SpaceWrapper({id}: {id: string}) {
-	const [manager, setManager] = useState<SimulationServer>();
+	const [simulation, setSimulation] = useState<SimulationServer>();
 	const [voice, setVoice] = useState<VoiceServer>();
 	const [audio, setAudio] = useState<AudioContext>();
 
@@ -137,32 +137,26 @@ export default function SpaceWrapper({id}: {id: string}) {
 	}, [voice]);
 
 	useEffect(() => {
-		let simulationServer = new SimulationServer(id);
-		setManager(simulationServer);
-
 		setConnectionStatus('connecting');
 
 		joinSpace(id)
-			.then(({connection, voiceURL, simulationURL}) => {
-				simulationServer.setWebsocket(connection);
+			.then(({voiceURL, simulationURL}) => {
+				let simulation = new SimulationServer(id, simulationURL);
+				simulation.on('connected', () => setConnectionStatus('connected'));
+				setSimulation(simulation);
 
 				let voice = new VoiceServer(voiceURL, auth.user!.id);
 				setVoice(voice);
-				setConnectionStatus('connected');
 			})
 			.catch(() => setConnectionStatus('errored'));
-
-		return () => {
-			simulationServer.destroy();
-		};
 	}, [auth.user, id]);
 
-	if (!manager) {
+	if (!simulation) {
 		return null;
 	}
 
 	return (
-		<SimulationServerContext.Provider value={manager}>
+		<SimulationServerContext.Provider value={simulation}>
 			<SpaceAudioContext.Provider value={audio ?? null}>
 				<SpaceVoiceContext.Provider value={voice ?? null}>
 					<div className={styles('container')}>

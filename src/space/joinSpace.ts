@@ -6,33 +6,22 @@
 */
 import {getSpaceJoinCode} from '../api/spaces';
 import {
-	DISABLE_DEV_SIMULATION_SERVER_SSL,
 	USE_DEV_SIMULATION_SERVER,
 	USE_DEV_VOICE_SERVER,
 } from '../lib/constants';
 
 export default async function joinSpace(
 	id: string
-): Promise<{connection: WebSocket; voiceURL: string; simulationURL: string}> {
+): Promise<{voiceURL: string; simulationURL: string}> {
 	const joinInfo = await getSpaceJoinCode(id);
 	const simulationURL = USE_DEV_SIMULATION_SERVER
 		? 'localhost:7000'
 		: joinInfo.simulationURL;
 
 	const voiceURL = USE_DEV_VOICE_SERVER ? 'localhost:443' : joinInfo.voiceURL;
-	const ws = new WebSocket(
-		(DISABLE_DEV_SIMULATION_SERVER_SSL ? 'ws' : 'wss') + '://' + simulationURL
-	);
 
-	return new Promise((resolve, reject) => {
-		ws.onopen = () => {
-			ws.send('connect:' + joinInfo.code);
-			resolve({
-				connection: ws,
-				voiceURL,
-				simulationURL,
-			});
-		};
-		ws.onerror = reject;
-	});
+	return {
+		voiceURL,
+		simulationURL,
+	};
 }

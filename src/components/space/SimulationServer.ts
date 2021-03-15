@@ -12,6 +12,7 @@ import {
 	SpaceParticipant,
 } from '../../typings/Space';
 import JSONBig from 'json-bigint';
+import {DISABLE_DEV_SIMULATION_SERVER_SSL} from '../../lib/constants';
 
 const logger = getLogger('space');
 
@@ -31,6 +32,7 @@ export interface SpaceEventMap {
 	chat_history: SpaceMessage[];
 	authenticated: string;
 	disconnected: void;
+	connected: void;
 }
 
 /**
@@ -48,7 +50,16 @@ export interface MovementDirection {
 export default class SimulationServer {
 	participants: Record<string, SpaceParticipant> = {};
 	participantID: string | null = null;
+
+	/**
+	 * The ID of the space.
+	 */
 	readonly spaceID: string;
+
+	/**
+	 * The address of the host simulation server.
+	 */
+	readonly host: string;
 
 	private outboundMessageQueue: [string, any][] = [];
 	private connection: WebSocket | null = null;
@@ -66,7 +77,7 @@ export default class SimulationServer {
 		return this.messages.slice();
 	}
 
-	private handleWebsocketEvent(type: string, payload: string) {
+	private handleEvent(type: string, payload: string) {
 		let data = JSONBig({storeAsString: true}).parse(payload);
 		switch (type) {
 			case 'message':
@@ -107,16 +118,24 @@ export default class SimulationServer {
 		}
 	}
 
+	/**
+	 *
+	 * @returns Whether the user is authenticated or not.
+	 */
 	isAuthenticated() {
 		return this.participantID != null;
 	}
 
-	/**
-	 * Adds primary event listeners to the Websocket
-	 * @param connection The websocket connected to the Space
-	 */
-	setWebsocket(connection: WebSocket) {
-		this.connection = connection;
+	constructor(id: string, host: string) {
+		this.spaceID = id;
+		this.host = host;
+		this.connection = new WebSocket(
+			(DISABLE_DEV_SIMULATION_SERVER_SSL ? 'ws' : 'wss') + '://' + host
+		);
+
+		this.connection.addEventListener('open', () => {
+			this.emit('connected', undefined);
+		});
 
 		this.connection.addEventListener(
 			'message',
@@ -126,7 +145,7 @@ export default class SimulationServer {
 					colonIndex > -1 ? message.data.slice(0, colonIndex) : message.data;
 				let payload = colonIndex > -1 ? message.data.slice(colonIndex + 1) : '';
 
-				this.handleWebsocketEvent(type, payload);
+				this.handleEvent(type, payload);
 			}
 		);
 
@@ -134,14 +153,6 @@ export default class SimulationServer {
 			// What to do if the connection closes?
 			this.emit('disconnected', undefined);
 		});
-
-		if (this.outboundMessageQueue) {
-			this.sendQueuedMessages();
-		}
-	}
-
-	constructor(id: string) {
-		this.spaceID = id;
 	}
 
 	on<K extends keyof SpaceEventMap>(
