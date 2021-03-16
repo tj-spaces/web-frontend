@@ -10,11 +10,12 @@ import {getClusterMembers, useCluster} from '../../api/clusters';
 import usePromiseStatus from '../../hooks/usePromiseStatus';
 import {createStylesheet} from '../../styles/createStylesheet';
 import BaseRow from '../base/BaseRow';
-import ClusterSettingsTab from './tabs/ClusterSettingsTab';
+import BaseText from '../base/BaseText';
 import ClusterSidebar from './ClusterSidebar';
 import ClusterTabContext, {ClusterTab} from './ClusterTabContext';
 import CurrentClusterContext from './CurrentClusterContext';
 import ClusterHubTab from './tabs/ClusterHubTab';
+import ClusterSettingsTab from './tabs/ClusterSettingsTab';
 
 const styles = createStylesheet({
 	clusterContent: {
