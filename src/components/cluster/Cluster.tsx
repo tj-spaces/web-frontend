@@ -14,6 +14,7 @@ import BaseText from '../base/BaseText';
 import UserListRow from '../UserListRow';
 import ClusterSettingsModal from './ClusterSettingsModal';
 import ClusterSidebar from './ClusterSidebar';
+import ClusterTabContext, {ClusterTab} from './ClusterTabContext';
 import CurrentClusterContext from './CurrentClusterContext';
 
 const styles = createStylesheet({
@@ -36,6 +37,7 @@ export default function Cluster({id}: {id: string}) {
 	const {status: membersFs, value: members} = usePromiseStatus(promise.current);
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 	const [isSidebarOpen] = useState(true);
+	const [tab, setTab] = useState<ClusterTab>('hub');
 
 	if (cluster == null) {
 		return null;
@@ -43,36 +45,34 @@ export default function Cluster({id}: {id: string}) {
 
 	return (
 		<CurrentClusterContext.Provider value={cluster}>
-			{isSettingsOpen && (
-				<ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />
-			)}
+			<ClusterTabContext.Provider value={{tab, setTab}}>
+				{isSettingsOpen && (
+					<ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />
+				)}
 
-			<BaseRow
-				direction="row"
-				rails={1}
-				backgroundColor="bgSecondary"
-				width="100%"
-				height="100%"
-			>
-				<ClusterSidebar
-					sections={[]}
-					clusterName={cluster.name}
-					isOpen={isSidebarOpen}
-				/>
-				<div className={styles('clusterContent')}>
-					<BaseText variant="primary-title" alignment="center">
-						wave to your friends and get the party started!
-					</BaseText>
-					<BaseRow direction="column" alignment="center" spacing={1}>
-						<BaseText variant="secondary-title">Members</BaseText>
-						<Awaiting fetchStatus={membersFs}>
-							{members?.map((member) => (
-								<UserListRow user={member} />
-							))}
-						</Awaiting>
-					</BaseRow>
-				</div>
-			</BaseRow>
+				<BaseRow
+					direction="row"
+					rails={1}
+					backgroundColor="bgSecondary"
+					width="100%"
+					height="100%"
+				>
+					<ClusterSidebar clusterName={cluster.name} isOpen={isSidebarOpen} />
+					<div className={styles('clusterContent')}>
+						<BaseText variant="primary-title" alignment="center">
+							wave to your friends and get the party started!
+						</BaseText>
+						<BaseRow direction="column" alignment="center" spacing={1}>
+							<BaseText variant="secondary-title">Members</BaseText>
+							<Awaiting fetchStatus={membersFs}>
+								{members?.map((member) => (
+									<UserListRow user={member} />
+								))}
+							</Awaiting>
+						</BaseRow>
+					</div>
+				</BaseRow>
+			</ClusterTabContext.Provider>
 		</CurrentClusterContext.Provider>
 	);
 }
