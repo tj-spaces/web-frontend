@@ -19,17 +19,30 @@ const styles = createStylesheet({
 			},
 		},
 	},
+	selected: {
+		backgroundColor: colors.bgPrimary,
+		subSelectors: {
+			':hover': {
+				backgroundColor: colors.bgPrimary,
+			},
+		},
+	},
 });
 
 export default function SidebarItem({
 	children,
+	selected,
 	onClick = () => {},
 }: {
 	children: React.ReactNode;
+	selected: boolean;
 	onClick?: () => void;
 }) {
 	return (
-		<div className={styles('sidebarItem')} onClick={onClick}>
+		<div
+			className={styles('sidebarItem', selected && 'selected')}
+			onClick={onClick}
+		>
 			{children}
 		</div>
 	);
