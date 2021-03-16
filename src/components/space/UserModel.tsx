@@ -29,13 +29,11 @@ export default function UserModel({
 
 	return (
 		<mesh
-			position={[position.x, position.y + 1, position.z]}
-			rotation={[0, rotation, 0]}
+			position={[position.x, position.y + 2, position.z]}
+			// Vertical rotations must be made along the Z axis, because we rotate by pi/2 on the X axis.
+			rotation={[Math.PI / 2, 0, rotation ?? 0]}
 		>
-			<planeBufferGeometry
-				attach="geometry"
-				parameters={{width: 1, height: 1, widthSegments: 1, heightSegments: 1}}
-			/>
+			<cylinderBufferGeometry attach="geometry" args={[0.5, 0.5, 0.125, 64]} />
 			<meshLambertMaterial
 				attach="material"
 				color={me ? '#ff6666' : '#66ff66'}
