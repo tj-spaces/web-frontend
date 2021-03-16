@@ -4,7 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useContext, useEffect, useState} from 'react';
+import {useCallback, useContext, useEffect, useState} from 'react';
 import {getSpaceServerURLs, useSpace} from '../../api/spaces';
 import {getLogger} from '../../lib/ClusterLogger';
 import {VoiceServer} from '../../mediautil/MediaConnector';
@@ -73,6 +73,10 @@ const styles = createStylesheet({
 
 const logger = getLogger('space/wrapper');
 
+// Check if it's possible to getUserMedia. This will be undefined if it's not possible
+const getUserMedia =
+	navigator.getUserMedia || navigator.mediaDevices.getUserMedia;
+
 export default function SpaceWrapper({id}: {id: string}) {
 	const [simulation, setSimulation] = useState<SimulationServer>();
 	const [voice, setVoice] = useState<VoiceServer>();
@@ -85,6 +89,13 @@ export default function SpaceWrapper({id}: {id: string}) {
 	const [connectionStatus, setConnectionStatus] = useState<
 		null | 'connecting' | 'connected' | 'errored'
 	>(null);
+	const [currentMessage, __setCurrentMessage] = useState<string>();
+
+	const setCurrentMessage = useCallback((message: string, time: number) => {
+		__setCurrentMessage(message);
+		setTimeout(() => __setCurrentMessage(undefined), time);
+	}, []);
+
 	const auth = useContext(AuthContext);
 	const space = useSpace(id);
 
@@ -101,13 +112,21 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	useEffect(() => {
 		if (allowUserMedia) {
-			navigator.getUserMedia(
-				{audio: true},
-				(stream) => setUserMedia(stream),
-				(error) => logger.error({event: 'get_user_media', error})
-			);
+			if (getUserMedia) {
+				getUserMedia.call(
+					navigator,
+					{audio: true},
+					(stream) => setUserMedia(stream),
+					(error) => {
+						logger.error({event: 'get_user_media', error});
+						setCurrentMessage('Unable to access microphone', 10000);
+					}
+				);
+			} else {
+				setCurrentMessage('Unable to access microphone', 10000);
+			}
 		}
-	}, [allowUserMedia]);
+	}, [allowUserMedia, setCurrentMessage]);
 
 	useEffect(() => {
 		if (voice) {
@@ -168,6 +187,17 @@ export default function SpaceWrapper({id}: {id: string}) {
 								{space ? space.name : 'Loading Space'}
 							</BaseText>
 						</div>
+
+						{currentMessage && (
+							<BaseRow
+								direction="column"
+								alignment="center"
+								justifyContent="center"
+								height="100%"
+							>
+								<BaseText variant="secondary-title">{currentMessage}</BaseText>
+							</BaseRow>
+						)}
 
 						{connectionStatus === 'errored' && (
 							<BaseRow
