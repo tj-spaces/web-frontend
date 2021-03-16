@@ -65,9 +65,45 @@ function PromiseRejectionDescriptor({error}: {error: PromiseRejectionEvent}) {
 		return <ErrorDescriptor error={error.reason} />;
 	}
 
+	switch (typeof error.reason) {
+		case 'bigint':
+		case 'string':
+		case 'number':
+		case 'boolean':
+			return (
+				<span>
+					Reason: <code>{error.reason}</code>
+				</span>
+			);
+		case 'object':
+			return (
+				<span>
+					Reason: <code>{JSON.stringify(error.reason)}</code>
+				</span>
+			);
+		case 'function':
+			return (
+				<span>
+					Reason: <code>[Function]</code>
+				</span>
+			);
+		case 'symbol':
+			return (
+				<span>
+					Reason: <code>{error.reason.toString()}</code>
+				</span>
+			);
+		case 'undefined':
+			return (
+				<span>
+					Reason: <code>undefined</code>
+				</span>
+			);
+	}
+
 	return (
 		<>
-			Code: <code>{error.reason}</code>
+			Code: <code>[invalid code]</code>
 		</>
 	);
 }
