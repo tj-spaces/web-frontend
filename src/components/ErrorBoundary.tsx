@@ -23,7 +23,18 @@ export default class ErrorBoundary extends React.Component {
 	}
 	componentDidUpdate() {
 		if (this.state.error) {
-			reportError(this.state.error);
+			reportError(this.state.error)
+				.then(() =>
+					console.log('Error was successfully reported:', this.state.error)
+				)
+				.catch((err) =>
+					console.log(
+						'Error',
+						this.state.error,
+						'was unsuccessfully reported because',
+						err
+					)
+				);
 		}
 	}
 	render() {
