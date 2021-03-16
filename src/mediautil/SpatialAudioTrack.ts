@@ -57,7 +57,7 @@ export default function SpatialAudioTrack({
 	useEffect(() => {
 		if (pannerNode.current) {
 			pannerNode.current.positionX.value = position.x;
-			pannerNode.current.positionY.value = position.y;
+			pannerNode.current.positionZ.value = position.z;
 
 			pannerNode.current.orientationX.value = Math.sin(rotation);
 			pannerNode.current.orientationZ.value = Math.cos(rotation);
