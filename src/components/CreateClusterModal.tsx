@@ -19,7 +19,7 @@ import BaseText from './base/BaseText';
 /**
  * Renders a modal where a user can choose the name and visibility of a cluster.
  */
-export default function ClusterCreateModal({onClose}: {onClose: () => void}) {
+export default function CreateClusterModal({onClose}: {onClose: () => void}) {
 	const nameRef = createRef<HTMLInputElement>();
 
 	const [isClusterCreating, setIsClusterCreating] = useState<boolean>(false);
@@ -35,7 +35,7 @@ export default function ClusterCreateModal({onClose}: {onClose: () => void}) {
 		if (nameRef.current) {
 			const name = nameRef.current.value;
 			if (!name) {
-				alert('No space name');
+				alert('No cluster name');
 				return;
 			} else {
 				setIsClusterCreating(true);
@@ -54,7 +54,7 @@ export default function ClusterCreateModal({onClose}: {onClose: () => void}) {
 	return (
 		<BaseModal onClose={onClose}>
 			<BaseRow direction="column" spacing={1}>
-				<BaseText variant="secondary-title">Create Cluster</BaseText>
+				<BaseText variant="secondary-title">Create Group</BaseText>
 				<BaseRow direction="column" alignment="start">
 					<BaseText variant="caption">Name</BaseText>
 					<input
@@ -90,18 +90,10 @@ export default function ClusterCreateModal({onClose}: {onClose: () => void}) {
 				<BaseRow direction="row" spacing={1} rails={1} alignment="center">
 					{!isClusterCreating ? (
 						<>
-							<BaseButton
-								onClick={() => onClose()}
-								size="small"
-								style={{flex: 1}}
-							>
+							<BaseButton onClick={onClose} size="small" style={{flex: 1}}>
 								Back
 							</BaseButton>
-							<BaseButton
-								onClick={() => create()}
-								size="small"
-								style={{flex: 1}}
-							>
+							<BaseButton onClick={create} size="small" style={{flex: 1}}>
 								Create
 							</BaseButton>
 						</>

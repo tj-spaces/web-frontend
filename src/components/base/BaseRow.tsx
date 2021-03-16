@@ -8,9 +8,9 @@ import {borderRadiusStyles} from '../../styles/borderRadius';
 import boxShadowStyles from '../../styles/boxShadow';
 import {backgroundColors as backgroundColorStyles} from '../../styles/colors';
 import {
-	stylex,
-	createStylesheet,
 	ClassProvider,
+	createStylesheet,
+	stylex,
 } from '../../styles/createStylesheet';
 import {columnEdgeStyles, rowEdgeStyles} from '../../styles/edges';
 import {
@@ -19,7 +19,7 @@ import {
 	justifyContentStyles,
 } from '../../styles/flex';
 import positionStyles from '../../styles/position';
-import {rowRails, colRails} from '../../styles/rails';
+import {colRails, rowRails} from '../../styles/rails';
 import {
 	spaceBetweenFlexColumnItems,
 	spaceBetweenFlexRowItems,

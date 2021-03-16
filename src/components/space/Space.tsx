@@ -4,6 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
+import {PointerLockControls} from '@react-three/drei';
 import {Suspense, useContext, useEffect, useRef} from 'react';
 import {Canvas, useLoader} from 'react-three-fiber';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
@@ -15,7 +16,6 @@ import Floor from './Floor';
 import RemoteAudio from './RemoteAudio';
 import SimulationServerContext from './SimulationServerContext';
 import UserModel from './UserModel';
-import {PointerLockControls} from '@react-three/drei';
 
 function SushiTable() {
 	// Attribution: Aimi Sekiguchi

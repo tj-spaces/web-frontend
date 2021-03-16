@@ -60,7 +60,7 @@ export function makeAPIPostCall(url: string, data?: any) {
 					localStorage.removeItem('session_id');
 					window.location.pathname = '/';
 				} else {
-					reject(new APIError(url, error.response.data.error));
+					reject(new APIError(url, error.response?.data?.error));
 				}
 			});
 	});

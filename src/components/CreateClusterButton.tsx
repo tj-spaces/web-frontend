@@ -23,7 +23,7 @@ export default function CreateClusterButton() {
 				size="small"
 				onClick={() => setModalOpen(true)}
 			>
-				Create a Cluster
+				Create a Group
 			</BaseButton>
 		</>
 	);

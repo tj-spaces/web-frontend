@@ -4,11 +4,10 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useEffect, useState} from 'react';
+import {useRef, useState} from 'react';
 import {getClusterMembers, useCluster} from '../../api/clusters';
-import {FetchStatus} from '../../api/FetchStatus';
+import usePromiseStatus from '../../hooks/usePromiseStatus';
 import {createStylesheet} from '../../styles/createStylesheet';
-import {PublicUserInfo} from '../../typings/PublicUserInfo';
 import Awaiting from '../Awaiting';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
@@ -33,22 +32,10 @@ const styles = createStylesheet({
  */
 export default function Cluster({id}: {id: string}) {
 	const cluster = useCluster(id);
-	const [members, setMembers] = useState<PublicUserInfo[]>([]);
-	const [membersFs, setMembersFs] = useState<FetchStatus>(null);
+	const promise = useRef(getClusterMembers(id));
+	const {status: membersFs, value: members} = usePromiseStatus(promise.current);
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 	const [isSidebarOpen] = useState(true);
-
-	useEffect(() => {
-		setMembersFs('loading');
-		(async () => {
-			try {
-				setMembers(await getClusterMembers(id));
-				setMembersFs('loaded');
-			} catch (err) {
-				setMembersFs('errored');
-			}
-		})();
-	}, [id]);
 
 	if (cluster == null) {
 		return null;
@@ -79,7 +66,7 @@ export default function Cluster({id}: {id: string}) {
 					<BaseRow direction="column" alignment="center" spacing={1}>
 						<BaseText variant="secondary-title">Members</BaseText>
 						<Awaiting fetchStatus={membersFs}>
-							{members.map((member) => (
+							{members?.map((member) => (
 								<UserListRow user={member} />
 							))}
 						</Awaiting>
