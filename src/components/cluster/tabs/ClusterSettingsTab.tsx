@@ -5,6 +5,7 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useCallback} from 'react';
+import {reportError} from '../../../api/analytics';
 import {deleteCluster} from '../../../api/clusters';
 import {Cluster} from '../../../typings/Cluster';
 import BaseButton from '../../base/BaseButton';
@@ -15,7 +16,13 @@ import BaseRow from '../../base/BaseRow';
  */
 export default function ClusterSettingsTab({cluster}: {cluster: Cluster}) {
 	const deleteCluster_ = useCallback(() => {
-		deleteCluster(cluster.id);
+		deleteCluster(cluster.id)
+			.then(() => {
+				window.location.pathname = '/';
+			})
+			.catch((error) => {
+				reportError(error).catch(() => {});
+			});
 	}, [cluster.id]);
 
 	return (
@@ -30,7 +37,7 @@ export default function ClusterSettingsTab({cluster}: {cluster: Cluster}) {
 								size="small"
 								variant="negative"
 							>
-								Delete Cluster
+								Delete Group
 							</BaseButton>
 						</td>
 					</tr>
