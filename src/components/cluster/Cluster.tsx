@@ -5,6 +5,7 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useRef, useState} from 'react';
+import {reportError} from '../../api/analytics';
 import {getClusterMembers, useCluster} from '../../api/clusters';
 import usePromiseStatus from '../../hooks/usePromiseStatus';
 import {createStylesheet} from '../../styles/createStylesheet';
@@ -31,15 +32,26 @@ const styles = createStylesheet({
  * It also holds the button for displaying or hiding the settings.
  */
 export default function Cluster({id}: {id: string}) {
-	const cluster = useCluster(id);
-	const promise = useRef(getClusterMembers(id));
+	const clusterResponse = useCluster(id);
+	const promise = useRef(() => getClusterMembers(id));
 	const {status: membersFs, value: members} = usePromiseStatus(promise.current);
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 	const [isSidebarOpen] = useState(true);
 
-	if (cluster == null) {
+	if (clusterResponse == null) {
 		return null;
 	}
+
+	if ('error' in clusterResponse) {
+		reportError(clusterResponse.error);
+		return (
+			<BaseText variant="primary-title" alignment="center">
+				Error
+			</BaseText>
+		);
+	}
+
+	const cluster = clusterResponse.value;
 
 	return (
 		<CurrentClusterContext.Provider value={cluster}>
