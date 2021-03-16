@@ -5,6 +5,7 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useEffect, useState} from 'react';
+import {reportError} from '../api/analytics';
 
 export type NullStatus = {
 	status: null;
@@ -33,7 +34,7 @@ export type PromiseStatus<T> =
 	| ErroredStatus;
 
 export default function usePromiseStatus<T>(
-	promise: Promise<T>
+	factory: () => Promise<T>
 ): PromiseStatus<T> {
 	let [status, setStatus] = useState<null | 'loading' | 'loaded' | 'errored'>(
 		null
@@ -42,15 +43,16 @@ export default function usePromiseStatus<T>(
 
 	useEffect(() => {
 		setStatus('loading');
-		promise
+		factory()
 			.then((value) => {
 				setValue(value);
 				setStatus('loaded');
 			})
-			.catch(() => {
+			.catch((error) => {
+				reportError(error);
 				setStatus('errored');
 			});
-	}, [promise]);
+	}, [factory]);
 
 	// @ts-expect-error
 	return {status, value};

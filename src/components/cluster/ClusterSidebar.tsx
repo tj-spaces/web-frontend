@@ -4,12 +4,14 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
+import {useContext} from 'react';
 import {Link} from 'react-router-dom';
 import colors from '../../styles/colors';
 import {createStylesheet} from '../../styles/createStylesheet';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import SidebarItem from '../SidebarItem';
+import ClusterTabContext from './ClusterTabContext';
 
 export type ClusterSidebarSectionItem =
 	| {
@@ -47,17 +49,13 @@ export interface ClusterSidebarSection {
 
 export default function ClusterSidebar({
 	clusterName,
-	sections,
-	selectedItemType,
-	selectedItemID,
 	isOpen,
 }: {
 	clusterName: string;
-	sections: ClusterSidebarSection[];
-	selectedItemType?: 'space' | 'post-channel' | 'text-channel';
-	selectedItemID?: string;
 	isOpen: boolean;
 }) {
+	const {tab, setTab} = useContext(ClusterTabContext);
+
 	if (!isOpen) {
 		return null;
 	}
@@ -68,12 +66,33 @@ export default function ClusterSidebar({
 				<BaseText variant="secondary-title">{clusterName}</BaseText>
 				<Link to="/">Home</Link>
 			</div>
-			<SidebarItem>Hub</SidebarItem>
-			<SidebarItem>Posts</SidebarItem>
-			<SidebarItem>Members</SidebarItem>
-			<SidebarItem>Spaces</SidebarItem>
-			<SidebarItem>Text Channels</SidebarItem>
-			<SidebarItem>Settings</SidebarItem>
+			<SidebarItem selected={tab === 'hub'} onClick={() => setTab('hub')}>
+				Hub
+			</SidebarItem>
+			<SidebarItem selected={tab === 'posts'} onClick={() => setTab('posts')}>
+				Posts
+			</SidebarItem>
+			<SidebarItem
+				selected={tab === 'members'}
+				onClick={() => setTab('members')}
+			>
+				Members
+			</SidebarItem>
+			<SidebarItem selected={tab === 'spaces'} onClick={() => setTab('spaces')}>
+				Spaces
+			</SidebarItem>
+			<SidebarItem
+				selected={tab === 'text-channels'}
+				onClick={() => setTab('text-channels')}
+			>
+				Text Channels
+			</SidebarItem>
+			<SidebarItem
+				selected={tab === 'settings'}
+				onClick={() => setTab('settings')}
+			>
+				Settings
+			</SidebarItem>
 		</BaseRow>
 	);
 }

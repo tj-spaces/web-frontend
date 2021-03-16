@@ -19,5 +19,5 @@ export async function reportError(error: any) {
 		};
 	}
 
-	return makeAPIPostCall('/analytics/error', {error: data});
+	return makeAPIPostCall('/analytics/error', {error: data}).catch(() => {});
 }

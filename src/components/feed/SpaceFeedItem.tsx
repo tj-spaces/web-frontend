@@ -31,7 +31,7 @@ const styles = createStylesheet({
  * you click on the name of the space (which is in larger font), you are taken to the space.
  */
 export default function SpaceFeedItem({space}: {space: Space}) {
-	const promise = useRef(
+	const promise = useRef(() =>
 		space.creator_id
 			? getPublicUser(space.creator_id)
 			: getCluster(space.cluster_id!)
