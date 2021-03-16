@@ -8,14 +8,12 @@ import {useRef, useState} from 'react';
 import {getClusterMembers, useCluster} from '../../api/clusters';
 import usePromiseStatus from '../../hooks/usePromiseStatus';
 import {createStylesheet} from '../../styles/createStylesheet';
-import Awaiting from '../Awaiting';
 import BaseRow from '../base/BaseRow';
-import BaseText from '../base/BaseText';
-import UserListRow from '../UserListRow';
-import ClusterSettingsModal from './ClusterSettingsModal';
+import ClusterSettingsTab from './tabs/ClusterSettingsTab';
 import ClusterSidebar from './ClusterSidebar';
 import ClusterTabContext, {ClusterTab} from './ClusterTabContext';
 import CurrentClusterContext from './CurrentClusterContext';
+import ClusterHubTab from './tabs/ClusterHubTab';
 
 const styles = createStylesheet({
 	clusterContent: {
@@ -35,7 +33,6 @@ export default function Cluster({id}: {id: string}) {
 	const cluster = useCluster(id);
 	const promise = useRef(getClusterMembers(id));
 	const {status: membersFs, value: members} = usePromiseStatus(promise.current);
-	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 	const [isSidebarOpen] = useState(true);
 	const [tab, setTab] = useState<ClusterTab>('hub');
 
@@ -46,10 +43,6 @@ export default function Cluster({id}: {id: string}) {
 	return (
 		<CurrentClusterContext.Provider value={cluster}>
 			<ClusterTabContext.Provider value={{tab, setTab}}>
-				{isSettingsOpen && (
-					<ClusterSettingsModal onClose={() => setIsSettingsOpen(false)} />
-				)}
-
 				<BaseRow
 					direction="row"
 					rails={1}
@@ -59,17 +52,13 @@ export default function Cluster({id}: {id: string}) {
 				>
 					<ClusterSidebar clusterName={cluster.name} isOpen={isSidebarOpen} />
 					<div className={styles('clusterContent')}>
-						<BaseText variant="primary-title" alignment="center">
-							wave to your friends and get the party started!
-						</BaseText>
-						<BaseRow direction="column" alignment="center" spacing={1}>
-							<BaseText variant="secondary-title">Members</BaseText>
-							<Awaiting fetchStatus={membersFs}>
-								{members?.map((member) => (
-									<UserListRow user={member} />
-								))}
-							</Awaiting>
-						</BaseRow>
+						{tab === 'hub' ? (
+							<ClusterHubTab members={members} membersFs={membersFs} />
+						) : tab === 'settings' ? (
+							<ClusterSettingsTab cluster={cluster} />
+						) : (
+							<h1 style={{textAlign: 'center'}}>Tab under construction</h1>
+						)}
 					</div>
 				</BaseRow>
 			</ClusterTabContext.Provider>

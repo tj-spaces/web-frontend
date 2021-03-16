@@ -20,7 +20,12 @@ const styles = createStylesheet({
 		},
 	},
 	selected: {
-		backgroundColor: colors.bgSecondary,
+		backgroundColor: colors.bgPrimary,
+		subSelectors: {
+			':hover': {
+				backgroundColor: colors.bgPrimary,
+			},
+		},
 	},
 });
 
@@ -35,7 +40,7 @@ export default function SidebarItem({
 }) {
 	return (
 		<div
-			className={styles(selected && 'selected', 'sidebarItem')}
+			className={styles('sidebarItem', selected && 'selected')}
 			onClick={onClick}
 		>
 			{children}
