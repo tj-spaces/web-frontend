@@ -9,20 +9,25 @@ import {reportError} from '../api/analytics';
 import Fullscreen from './base/BaseFullscreen';
 
 export default class ErrorBoundary extends React.Component {
-	state = {
+	state:
+		| {error: Error; type: 'error'}
+		| {error: PromiseRejectionEvent; type: 'rejection'}
+		| {error: null; type: 'none'} = {
 		error: null,
+		type: 'none',
 	};
 	static getDerivedStateFromError(error: any) {
-		return {error};
+		return {error, type: 'error'};
 	}
 	componentDidMount() {
-		window.onunhandledrejection = (error: any) => this.setState({error});
+		window.onunhandledrejection = (error: any) =>
+			this.setState({error, type: 'rejection'});
 	}
 	componentDidCatch(error: any) {
 		console.error('Error:', error);
 	}
 	componentDidUpdate() {
-		if (this.state.error) {
+		if (this.state.type !== 'none') {
 			reportError(this.state.error)
 				.then(() =>
 					console.log('Error was successfully reported:', this.state.error)
@@ -38,18 +43,41 @@ export default class ErrorBoundary extends React.Component {
 		}
 	}
 	render() {
-		if (this.state.error) {
+		if (this.state.type !== 'none') {
 			return (
 				<Fullscreen>
-					<h1>There's been an error</h1>
-					<p>
-						Our developers are working to fix it as soon as possible! Send us an
-						email at dev@dev.net if the error persists.
-					</p>
+					<h1>Error</h1>
+					{this.state.type === 'rejection' ? (
+						<PromiseRejectionDescriptor error={this.state.error} />
+					) : (
+						<ErrorDescriptor error={this.state.error} />
+					)}
 				</Fullscreen>
 			);
 		} else {
 			return this.props.children;
 		}
 	}
+}
+
+function PromiseRejectionDescriptor({error}: {error: PromiseRejectionEvent}) {
+	if (error.reason instanceof Error) {
+		return <ErrorDescriptor error={error.reason} />;
+	}
+
+	return (
+		<>
+			Code: <code>{error.reason}</code>
+		</>
+	);
+}
+
+function ErrorDescriptor({error}: {error: Error}) {
+	return (
+		<>
+			Type: <code>{error.name}</code>
+			<br />
+			Message: <code>{error.message}</code>
+		</>
+	);
 }
