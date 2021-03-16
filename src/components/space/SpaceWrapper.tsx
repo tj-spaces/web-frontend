@@ -69,6 +69,16 @@ const styles = createStylesheet({
 		left: '0px',
 		right: '0px',
 	},
+	/**
+	 * Message
+	 */
+	message: {
+		position: 'absolute',
+		top: '50%',
+		width: '100%',
+		textAlign: 'center',
+		zIndex: 1,
+	},
 });
 
 const logger = getLogger('space/wrapper');
@@ -189,14 +199,9 @@ export default function SpaceWrapper({id}: {id: string}) {
 						</div>
 
 						{currentMessage && (
-							<BaseRow
-								direction="column"
-								alignment="center"
-								justifyContent="center"
-								height="100%"
-							>
-								<BaseText variant="secondary-title">{currentMessage}</BaseText>
-							</BaseRow>
+							<BaseText variant="secondary-title" xstyle={styles.message}>
+								{currentMessage}
+							</BaseText>
 						)}
 
 						{connectionStatus === 'errored' && (
