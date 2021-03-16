@@ -44,6 +44,7 @@ const styles = createStylesheet({
 		height: '5em',
 		paddingTop: '1em',
 		paddingBottom: '1em',
+		zIndex: 1,
 		textAlign: 'center',
 		display: 'flex',
 		flexDirection: 'row',
