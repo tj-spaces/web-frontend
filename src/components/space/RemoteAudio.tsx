@@ -21,14 +21,17 @@ export default function RemoteAudio({
 	const tracks = useTracks(voice, userID);
 	return (
 		<>
-			{tracks?.map((track) => (
-				<SpatialAudioTrack
-					position={position}
-					rotation={0}
-					track={track}
-					key={track.id}
-				/>
-			))}
+			{tracks?.map(
+				(track) =>
+					track.kind === 'audio' && (
+						<SpatialAudioTrack
+							position={position}
+							rotation={0}
+							track={track}
+							key={track.id}
+						/>
+					)
+			)}
 		</>
 	);
 }

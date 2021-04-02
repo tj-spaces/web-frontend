@@ -126,7 +126,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 		if (allowUserMedia) {
 			if (getUserMedia) {
 				getUserMedia(
-					{audio: true},
+					{audio: true, video: true},
 					(stream) => setUserMedia(stream),
 					(error) => {
 						logger.error({event: 'get_user_media', error});
