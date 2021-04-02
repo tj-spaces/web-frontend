@@ -195,7 +195,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 					<div className={styles('container')}>
 						<div className={styles('topHeading')}>
 							<BaseText variant="secondary-title" alignment="center">
-								{space ? space.name : 'Loading Space'}
+								{space && 'value' in space ? space.value.name : 'Loading'}
 							</BaseText>
 						</div>
 
