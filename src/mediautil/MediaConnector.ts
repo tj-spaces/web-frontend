@@ -494,8 +494,6 @@ export function useTracks(server: VoiceServerLike | null, userID: string) {
 	const {user} = useContext(AuthContext);
 	const localStream = useContext(LocalWebcamContext);
 
-	useEffect(() => void console.log(localStream), [localStream]);
-
 	useEffect(() => {
 		if (userID === user?.id) {
 			// Then these are our local tracks

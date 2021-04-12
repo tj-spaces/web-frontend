@@ -11,10 +11,14 @@ import useKeyboardState from '../../hooks/useKeyboardState';
 import useMyID from '../../hooks/useMyID';
 import useParticipants from '../../hooks/useParticipants';
 import SpatialAudioListener from '../../mediautil/SpatialAudioListener';
+import AuthContext from '../AuthContext';
 import Floor from './Floor';
+import LocalWebcamContext from './LocalWebcamContext';
 import RemoteAudio from './RemoteAudio';
 import SimulationServerContext from './SimulationServerContext';
+import SpaceAudioContext from './SpaceAudioContext';
 import UserModel from './UserModel';
+import SpaceVoiceContext from './VoiceContext';
 
 function SushiTable() {
 	// Attribution: Aimi Sekiguchi
@@ -69,6 +73,14 @@ export default function Space() {
 
 	const myPosition = myID ? participants[myID]?.position : undefined;
 
+	// Because 'Canvas' creates a new React renderer, contexts cannot be shared, unfortunately
+	// So we need to pass them in manually
+	const auth = useContext(AuthContext);
+	const simulation = useContext(SimulationServerContext);
+	const userMedia = useContext(LocalWebcamContext);
+	const audio = useContext(SpaceAudioContext);
+	const voice = useContext(SpaceVoiceContext);
+
 	return (
 		<div style={{width: '100vw', height: '100vh'}}>
 			<SpatialAudioListener
@@ -81,20 +93,30 @@ export default function Space() {
 				) : null
 			)}
 			<Canvas>
-				<Suspense fallback="Loading model">
-					<SushiTable />
-				</Suspense>
-				<ambientLight intensity={0.5} />
-				<Floor />
-				{Object.entries(participants).map(([id, participant]) => (
-					<UserModel
-						position={participant.position}
-						rotation={participant.rotation}
-						key={id}
-						me={id === myID}
-						id={id}
-					/>
-				))}
+				<AuthContext.Provider value={auth}>
+					<SimulationServerContext.Provider value={simulation}>
+						<LocalWebcamContext.Provider value={userMedia}>
+							<SpaceAudioContext.Provider value={audio ?? null}>
+								<SpaceVoiceContext.Provider value={voice ?? null}>
+									<Suspense fallback="Loading model">
+										<SushiTable />
+									</Suspense>
+									<ambientLight intensity={0.5} />
+									<Floor />
+									{Object.entries(participants).map(([id, participant]) => (
+										<UserModel
+											position={participant.position}
+											rotation={participant.rotation}
+											key={id}
+											me={id === myID}
+											id={id}
+										/>
+									))}
+								</SpaceVoiceContext.Provider>
+							</SpaceAudioContext.Provider>
+						</LocalWebcamContext.Provider>
+					</SimulationServerContext.Provider>
+				</AuthContext.Provider>
 			</Canvas>
 		</div>
 	);
