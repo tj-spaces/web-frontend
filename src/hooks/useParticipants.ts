@@ -9,15 +9,15 @@ import SimulationServerContext from '../components/space/SimulationServerContext
 import {SpaceParticipant} from '../typings/Space';
 
 export default function useParticipants() {
-	const manager = useContext(SimulationServerContext);
+	const simulationServer = useContext(SimulationServerContext);
 	const [participants, setParticipants] = useState<
 		Record<string, SpaceParticipant>
 	>({});
 
 	useEffect(() => {
-		setParticipants(manager.participants);
+		setParticipants(simulationServer.participants);
 
-		manager
+		simulationServer
 			.on('users', (users) => setParticipants(users))
 			.on('user_join', (user) => {
 				setParticipants((participants) => ({...participants, [user.id]: user}));
@@ -37,7 +37,7 @@ export default function useParticipants() {
 					[id]: {...participants[id], moving_direction: direction},
 				}));
 			});
-	}, [manager]);
+	}, [simulationServer]);
 
 	return participants;
 }

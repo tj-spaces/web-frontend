@@ -68,7 +68,7 @@ export async function getSpaceServerURLs(id: string): Promise<JoinSpaceData> {
 	const joinInfo = result.data.data;
 
 	return {
-		voiceURL: USE_DEV_VOICE_SERVER ? 'localhost:443' : joinInfo.voiceURL,
+		voiceURL: USE_DEV_VOICE_SERVER ? 'localhost' : joinInfo.voiceURL,
 		simulationURL: USE_DEV_SIMULATION_SERVER
 			? 'localhost:7000'
 			: joinInfo.simulationURL,

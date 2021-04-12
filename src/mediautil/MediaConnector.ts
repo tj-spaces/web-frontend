@@ -4,8 +4,11 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
+import AuthContext from '../components/AuthContext';
+import LocalWebcamContext from '../components/space/LocalWebcamContext';
 import {getLogger} from '../lib/ClusterLogger';
+import {USE_VOICE_SERVER_SSL} from '../lib/constants';
 
 const logger = getLogger('space/media');
 
@@ -93,7 +96,7 @@ export class VoiceServer implements VoiceServerLike {
 	constructor(url: string, userID: string) {
 		const wssRegex = /^wss?:\/\//;
 		if (!wssRegex.test(url)) {
-			url = 'wss://' + url + '/websocket';
+			url = (USE_VOICE_SERVER_SSL ? 'wss://' : 'ws://') + url + '/websocket';
 		}
 
 		this.userID = userID;
@@ -211,7 +214,7 @@ export class VoiceServer implements VoiceServerLike {
 					this.streamToUser[streamID] = userID;
 					if (streamID in this.remoteTracksByStream) {
 						this.remoteTracksByStream[streamID].forEach((track) => {
-							this.emit('addtrack', {userID, track});
+							// this.emit('addtrack', {userID, track});
 						});
 					}
 					break;
@@ -487,9 +490,24 @@ export class VoiceServerCluster implements VoiceServerLike {
  * React hook to use a given user's media tracks.
  */
 export function useTracks(server: VoiceServerLike | null, userID: string) {
-	let [tracks, setTracks] = useState<MediaStreamTrack[]>();
+	const [tracks, setTracks] = useState<MediaStreamTrack[]>();
+	const {user} = useContext(AuthContext);
+	const localStream = useContext(LocalWebcamContext);
+
+	useEffect(() => void console.log(localStream), [localStream]);
 
 	useEffect(() => {
+		if (userID === user?.id) {
+			// Then these are our local tracks
+			if (localStream) {
+				setTracks(localStream.getTracks());
+			} else {
+				setTracks(undefined);
+			}
+
+			return;
+		}
+
 		if (server == null) {
 			setTracks(undefined);
 			return;
@@ -517,7 +535,7 @@ export function useTracks(server: VoiceServerLike | null, userID: string) {
 			server.off('addtrack', onAddTrack);
 			server.off('removetrack', onRemoveTrack);
 		};
-	}, [server, userID]);
+	}, [localStream, server, user?.id, userID]);
 
 	return tracks;
 }

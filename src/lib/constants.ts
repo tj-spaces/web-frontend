@@ -14,6 +14,8 @@ export const USE_DEV_SIMULATION_SERVER = __DEV__;
 
 export const DISABLE_DEV_SIMULATION_SERVER_SSL = __DEV__;
 
+export const USE_VOICE_SERVER_SSL = false;
+
 export const API_SERVER_URL = USE_DEV_API_SERVER
 	? 'http://localhost:5000'
 	: 'https://api.joinnebula.co';

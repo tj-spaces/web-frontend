@@ -4,7 +4,6 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {PointerLockControls} from '@react-three/drei';
 import {Suspense, useContext, useEffect, useRef} from 'react';
 import {Canvas, useLoader} from 'react-three-fiber';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
@@ -82,11 +81,6 @@ export default function Space() {
 				) : null
 			)}
 			<Canvas>
-				<PointerLockControls
-					onUpdate={(controls) =>
-						(rotation.current = controls.getObject().rotation.z)
-					}
-				/>
 				<Suspense fallback="Loading model">
 					<SushiTable />
 				</Suspense>
