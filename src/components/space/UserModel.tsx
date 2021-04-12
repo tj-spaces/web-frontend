@@ -48,10 +48,27 @@ export default function UserModel({
 	useEffect(() => {
 		if (videoElement) {
 			if (videoTracks.length > 0) {
-				videoElement.srcObject = new MediaStream(videoTracks);
+				if (!videoElement.srcObject) {
+					const stream = new MediaStream(videoTracks);
+					// videoElement.muted = false;
+					videoElement.srcObject = stream;
+					if (videoElement.paused) {
+						videoElement.play();
+					}
+				} else {
+					let obj = videoElement.srcObject as MediaStream;
+					// Clear the current tracks
+					obj.getTracks().forEach((track) => {
+						obj.removeTrack(track);
+					});
+					// Add the new tracks
+					for (let track of videoTracks) {
+						obj.addTrack(track);
+					}
+				}
 			}
 		}
-	}, [allTracks, videoElement, videoTracks]);
+	}, [videoElement, videoTracks]);
 
 	return (
 		<mesh
@@ -63,10 +80,16 @@ export default function UserModel({
 			<planeBufferGeometry attach="geometry" args={[1, 1]} />
 			<meshBasicMaterial
 				attach="material"
-				color={me ? '#ff6666' : '#66ff66'}
+				// color={me ? '#ff6666' : '#66ff66'}
 				side={THREE.DoubleSide}
+				flatShading
 			>
-				<videoTexture attach="map" args={[videoElement]} />
+				<videoTexture
+					attach="map"
+					args={[videoElement]}
+					wrapS={THREE.RepeatWrapping}
+					wrapT={THREE.RepeatWrapping}
+				/>
 			</meshBasicMaterial>
 		</mesh>
 	);
