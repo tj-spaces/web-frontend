@@ -9,6 +9,7 @@ import {useThree} from 'react-three-fiber';
 import * as THREE from 'three';
 import {useTracks} from '../../mediautil/MediaConnector';
 import {Position} from '../../typings/Space';
+import PointOfViewContext from './PointOfViewContext';
 import SpaceVoiceContext from './VoiceContext';
 
 export default function UserModel({
@@ -29,22 +30,29 @@ export default function UserModel({
 	const videoTracks = (allTracks ?? []).filter(
 		(track) => track.kind === 'video'
 	);
+	const pov = useContext(PointOfViewContext);
 
+	// Camera positioning
 	useEffect(() => {
 		if (me) {
-			let offset = {
-				x: Math.sin(rotation),
-				z: Math.cos(rotation),
-			};
-			camera.position.set(
-				position.x + offset.x * 2,
-				position.y + 4,
-				position.z + offset.z * 6
-			);
-			camera.rotation.set(-Math.PI / 8, rotation, 0);
+			if (pov === 'third-person') {
+				let offset = {
+					x: Math.sin(rotation),
+					z: Math.cos(rotation),
+				};
+				camera.position.set(
+					position.x + offset.x * 2,
+					position.y + 4,
+					position.z + offset.z * 6
+				);
+				camera.rotation.set(-Math.PI / 8, rotation, 0);
+			} else {
+				camera.position.set(position.x, position.y + 2, position.z);
+			}
 		}
-	}, [camera, camera.position, me, position, rotation]);
+	}, [camera, camera.position, me, position, pov, rotation]);
 
+	// Video element
 	useEffect(() => {
 		if (videoElement) {
 			if (videoTracks.length > 0) {
@@ -78,19 +86,24 @@ export default function UserModel({
 		>
 			{/* <cylinderBufferGeometry attach="geometry" args={[0.5, 0.5, 0.125, 64]} /> */}
 			<planeBufferGeometry attach="geometry" args={[1, 1]} />
-			<meshBasicMaterial
-				attach="material"
-				// color={me ? '#ff6666' : '#66ff66'}
-				side={THREE.DoubleSide}
-				flatShading
-			>
-				<videoTexture
-					attach="map"
-					args={[videoElement]}
-					wrapS={THREE.RepeatWrapping}
-					wrapT={THREE.RepeatWrapping}
-				/>
-			</meshBasicMaterial>
+			{
+				// Don't display my own avatar if in first person
+				!(me && pov === 'first-person') && (
+					<meshBasicMaterial
+						attach="material"
+						// color={me ? '#ff6666' : '#66ff66'}
+						side={THREE.DoubleSide}
+						flatShading
+					>
+						<videoTexture
+							attach="map"
+							args={[videoElement]}
+							wrapS={THREE.RepeatWrapping}
+							wrapT={THREE.RepeatWrapping}
+						/>
+					</meshBasicMaterial>
+				)
+			}
 		</mesh>
 	);
 }

@@ -4,6 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
+import {PointerLockControls} from '@react-three/drei';
 import {Suspense, useContext, useEffect, useRef} from 'react';
 import {Canvas, useLoader} from 'react-three-fiber';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
@@ -14,6 +15,7 @@ import SpatialAudioListener from '../../mediautil/SpatialAudioListener';
 import AuthContext from '../AuthContext';
 import Floor from './Floor';
 import LocalWebcamContext from './LocalWebcamContext';
+import PointOfViewContext from './PointOfViewContext';
 import RemoteAudio from './RemoteAudio';
 import SimulationServerContext from './SimulationServerContext';
 import SpaceAudioContext from './SpaceAudioContext';
@@ -98,20 +100,27 @@ export default function Space() {
 						<LocalWebcamContext.Provider value={userMedia}>
 							<SpaceAudioContext.Provider value={audio ?? null}>
 								<SpaceVoiceContext.Provider value={voice ?? null}>
-									<Suspense fallback="Loading model">
-										<SushiTable />
-									</Suspense>
-									<ambientLight intensity={0.5} />
-									<Floor />
-									{Object.entries(participants).map(([id, participant]) => (
-										<UserModel
-											position={participant.position}
-											rotation={participant.rotation}
-											key={id}
-											me={id === myID}
-											id={id}
+									<PointOfViewContext.Provider value="first-person">
+										<PointerLockControls
+											onUpdate={(controls) =>
+												(rotation.current = controls.getObject().rotation.z)
+											}
 										/>
-									))}
+										<Suspense fallback="Loading model">
+											<SushiTable />
+										</Suspense>
+										<ambientLight intensity={0.5} />
+										<Floor />
+										{Object.entries(participants).map(([id, participant]) => (
+											<UserModel
+												position={participant.position}
+												rotation={participant.rotation}
+												key={id}
+												me={id === myID}
+												id={id}
+											/>
+										))}
+									</PointOfViewContext.Provider>
 								</SpaceVoiceContext.Provider>
 							</SpaceAudioContext.Provider>
 						</LocalWebcamContext.Provider>
