@@ -516,7 +516,17 @@ export function useTracks(server: VoiceServerLike | null, userID: string) {
 
 		const onAddTrack = (data: VoiceServerEventMap['addtrack']) => {
 			logger.debug({label: 'add_track', data});
-			setTracks((tracks) => (tracks ? [...tracks, data.track] : [data.track]));
+			setTracks((tracks) => {
+				if (!tracks) {
+					return [data.track];
+				}
+				for (let track of tracks) {
+					if (track.id === data.track.id) {
+						return tracks;
+					}
+				}
+				return [...tracks, data.track];
+			});
 		};
 
 		const onRemoveTrack = (data: VoiceServerEventMap['removetrack']) => {
