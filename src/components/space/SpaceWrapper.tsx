@@ -15,6 +15,7 @@ import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import ChatModal from './chatModal/ChatModal';
 import DeviceControlButtons from './DeviceControlButtons';
+import DeviceControlContext from './DeviceControlContext';
 import SimulationServer from './SimulationServer';
 import SimulationServerContext from './SimulationServerContext';
 import Space from './Space';
@@ -105,6 +106,8 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	const auth = useContext(AuthContext);
 	const space = useSpace(id);
+	const [cameraEnabled, setCameraEnabled] = useState<boolean>(true);
+	const [micEnabled, setMicEnabled] = useState<boolean>(true);
 
 	// []: Listen for gestures to start the AudioContext
 	useEffect(() => {
@@ -157,63 +160,70 @@ export default function SpaceWrapper({id}: {id: string}) {
 	return (
 		<SimulationServerContext.Provider value={simulation}>
 			<SpaceAudioContext.Provider value={audio ?? null}>
-				<VoiceWrapper spaceID={id} userMedia={userMedia} voiceURL={voiceURL}>
-					<div className={styles('container')}>
-						<div className={styles('topHeading')}>
-							<BaseText variant="secondary-title" alignment="center">
-								{space && 'value' in space ? space.value.name : 'Loading'}
-							</BaseText>
-						</div>
-
-						{currentMessage && (
-							<BaseText variant="secondary-title" xstyle={styles.message}>
-								{currentMessage}
-							</BaseText>
-						)}
-
-						{connectionStatus === 'errored' && (
-							<BaseRow
-								direction="column"
-								alignment="center"
-								justifyContent="center"
-								height="100%"
-							>
-								<BaseText variant="secondary-title">
-									Couldn't connect.{' '}
+				<DeviceControlContext.Provider value={{cameraEnabled, micEnabled}}>
+					<VoiceWrapper spaceID={id} userMedia={userMedia} voiceURL={voiceURL}>
+						<div className={styles('container')}>
+							<div className={styles('topHeading')}>
+								<BaseText variant="secondary-title" alignment="center">
+									{space && 'value' in space ? space.value.name : 'Loading'}
 								</BaseText>
-								<BaseButton
-									variant="positive"
-									onClick={() => window.location.reload()}
-								>
-									Retry
-								</BaseButton>
-							</BaseRow>
-						)}
+							</div>
 
-						{connectionStatus === 'connected' && <Space />}
-
-						<BaseRow
-							direction="row"
-							justifyContent="center"
-							alignment="center"
-							spacing={1}
-							rails={2}
-							xstyle={styles.bottomButtons}
-						>
-							<BaseButton onClick={() => setChatModalOpen(true)}>
-								Chat
-							</BaseButton>
-
-							{chatModalOpen && (
-								<ChatModal onClose={() => setChatModalOpen(false)} />
+							{currentMessage && (
+								<BaseText variant="secondary-title" xstyle={styles.message}>
+									{currentMessage}
+								</BaseText>
 							)}
 
-							<BaseButton to="..">Leave</BaseButton>
+							{connectionStatus === 'errored' && (
+								<BaseRow
+									direction="column"
+									alignment="center"
+									justifyContent="center"
+									height="100%"
+								>
+									<BaseText variant="secondary-title">
+										Couldn't connect.{' '}
+									</BaseText>
+									<BaseButton
+										variant="positive"
+										onClick={() => window.location.reload()}
+									>
+										Retry
+									</BaseButton>
+								</BaseRow>
+							)}
 
-							<DeviceControlButtons />
-						</BaseRow>
-					</div>
-				</VoiceWrapper>
+							{connectionStatus === 'connected' && <Space />}
+
+							<BaseRow
+								direction="row"
+								justifyContent="center"
+								alignment="center"
+								spacing={1}
+								rails={2}
+								xstyle={styles.bottomButtons}
+							>
+								<BaseButton onClick={() => setChatModalOpen(true)}>
+									Chat
+								</BaseButton>
+
+								{chatModalOpen && (
+									<ChatModal onClose={() => setChatModalOpen(false)} />
+								)}
+
+								<BaseButton to="..">Leave</BaseButton>
+
+								<DeviceControlButtons
+									cameraEnabled={cameraEnabled}
+									setCameraEnabled={setCameraEnabled}
+									micEnabled={micEnabled}
+									setMicEnabled={setMicEnabled}
+								/>
+							</BaseRow>
+						</div>
+					</VoiceWrapper>
+				</DeviceControlContext.Provider>
 			</SpaceAudioContext.Provider>
 		</SimulationServerContext.Provider>
 	);

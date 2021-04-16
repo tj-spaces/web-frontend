@@ -324,8 +324,11 @@ export class VoiceServer implements VoiceServerLike {
 	 * Stops transmitting this track to the Voice server.
 	 */
 	removeLocalTrack(track: MediaStreamTrack) {
-		this.peer.removeTrack(this.localTracks[track.id]);
-		delete this.localTracks[track.id];
+		if (track.id in this.localTracks) {
+			logger.info({event: 'remove_local_track', track});
+			this.peer.removeTrack(this.localTracks[track.id]);
+			delete this.localTracks[track.id];
+		}
 	}
 
 	private listeners_: {
