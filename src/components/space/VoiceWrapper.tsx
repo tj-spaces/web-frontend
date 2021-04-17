@@ -18,7 +18,7 @@ export default function VoiceWrapper({
 }) {
 	const [voice, setVoice] = useState<VoiceServer>();
 	const {user} = useContext(AuthContext);
-	const {micEnabled} = useContext(DeviceControlContext);
+	const {cameraEnabled, micEnabled} = useContext(DeviceControlContext);
 
 	// Enable or disable the microphone
 	useEffect(() => {
@@ -38,6 +38,25 @@ export default function VoiceWrapper({
 			}
 		}
 	}, [micEnabled, userMedia, voice]);
+
+	// Enable or disable the camera
+	useEffect(() => {
+		if (userMedia && voice) {
+			if (cameraEnabled) {
+				userMedia.getTracks().forEach((track) => {
+					if (track.kind === 'video') {
+						voice.addLocalTrack(track, userMedia);
+					}
+				});
+			} else {
+				userMedia.getTracks().forEach((track) => {
+					if (track.kind === 'video') {
+						voice.removeLocalTrack(track);
+					}
+				});
+			}
+		}
+	}, [cameraEnabled, userMedia, voice]);
 
 	useEffect(() => {
 		if (user?.id && voiceURL) {

@@ -109,7 +109,8 @@ export default function SpaceWrapper({id}: {id: string}) {
 	const [cameraEnabled, setCameraEnabled] = useState<boolean>(true);
 	const [micEnabled, setMicEnabled] = useState<boolean>(true);
 
-	// []: Listen for gestures to start the AudioContext
+	// TODO: Create a way to tell if the user should be prompted for audio
+	// Listen for gestures to start the AudioContext
 	useEffect(() => {
 		const listener = () => {
 			setAudio(new AudioContext());
@@ -119,6 +120,17 @@ export default function SpaceWrapper({id}: {id: string}) {
 		window.addEventListener('mousemove', listener);
 		return () => window.removeEventListener('mousemove', listener);
 	}, []);
+
+	// Close the userMedia stream when it isn't being used anymore
+	useEffect(() => {
+		return () => {
+			userMedia?.getTracks().forEach((track) => {
+				if (track.readyState !== 'ended') {
+					track.stop();
+				}
+			});
+		};
+	}, [userMedia]);
 
 	useEffect(() => {
 		setConnectionStatus('connecting');
