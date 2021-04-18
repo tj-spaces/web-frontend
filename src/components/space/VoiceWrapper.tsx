@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {VoiceServer} from '../../mediautil/MediaConnector';
+import {VoiceServer} from '../../media/VoiceServer';
 import AuthContext from '../AuthContext';
 import DeviceControlContext from './DeviceControlContext';
 import LocalWebcamContext from './LocalWebcamContext';

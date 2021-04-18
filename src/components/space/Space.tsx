@@ -11,7 +11,7 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import useKeyboardState from '../../hooks/useKeyboardState';
 import useMyID from '../../hooks/useMyID';
 import useParticipants from '../../hooks/useParticipants';
-import SpatialAudioListener from '../../mediautil/SpatialAudioListener';
+import SpatialAudioListener from '../../media/SpatialAudioListener';
 import AuthContext from '../AuthContext';
 import Floor from './Floor';
 import LocalWebcamContext from './LocalWebcamContext';

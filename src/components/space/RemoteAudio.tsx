@@ -5,8 +5,8 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useContext} from 'react';
-import {useTracks} from '../../mediautil/MediaConnector';
-import SpatialAudioTrack from '../../mediautil/SpatialAudioTrack';
+import {useTracks} from '../../media/VoiceServer';
+import SpatialAudioTrack from '../../media/SpatialAudioTrack';
 import {Position} from '../../typings/Space';
 import SpaceVoiceContext from './VoiceContext';
 

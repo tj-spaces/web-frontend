@@ -5,7 +5,7 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {createContext} from 'react';
-import {VoiceServerLike} from '../../mediautil/MediaConnector';
+import {VoiceServerLike} from '../../media/VoiceServer';
 
 const SpaceVoiceContext = createContext<null | VoiceServerLike>(null);
 
