@@ -40,7 +40,7 @@ export const styles = createStylesheet({
 
 export const variantStyles = createStylesheet({
 	wide: {
-		minWidth: '512px',
+		minWidth: '100ch',
 	},
 });
 
@@ -48,10 +48,12 @@ export default function BaseModal({
 	children,
 	variant = 'wide',
 	onClose,
+	closable = true,
 }: {
 	children: React.ReactNode;
 	variant?: 'wide';
 	onClose: () => void;
+	closable?: boolean;
 }) {
 	const fgRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
@@ -72,13 +74,15 @@ export default function BaseModal({
 				ref={fgRef}
 				className={stylex(styles.modalForeground, variantStyles[variant])}
 			>
-				<BaseText
-					variant="body"
-					xstyle={styles.modalCloseButton}
-					onClick={() => onClose()}
-				>
-					Close
-				</BaseText>
+				{closable && (
+					<BaseText
+						variant="body"
+						xstyle={styles.modalCloseButton}
+						onClick={() => onClose()}
+					>
+						Close
+					</BaseText>
+				)}
 				{children}
 			</div>
 		</div>
