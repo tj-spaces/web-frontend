@@ -4,7 +4,7 @@
  */
 export default function closeUserMedia(
 	userMedia: MediaStream,
-	{audio = true, video = true}: {audio: boolean; video: boolean}
+	{audio = true, video = true}: {audio?: boolean; video?: boolean}
 ) {
 	userMedia?.getTracks().forEach((track) => {
 		if (

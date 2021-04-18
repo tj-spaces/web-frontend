@@ -8,6 +8,7 @@ import {useCallback, useContext, useEffect, useState} from 'react';
 import {getSpaceServerURLs, useSpace} from '../../api/spaces';
 import {getLogger} from '../../lib/ClusterLogger';
 import getUserMedia from '../../lib/getUserMedia';
+import closeUserMedia from '../../lib/rtc/closeUserMedia';
 import {createStylesheet} from '../../styles/createStylesheet';
 import AuthContext from '../AuthContext';
 import BaseButton from '../base/BaseButton';
@@ -16,6 +17,7 @@ import BaseText from '../base/BaseText';
 import ChatModal from './chatModal/ChatModal';
 import DeviceControlButtons from './DeviceControlButtons';
 import DeviceControlContext from './DeviceControlContext';
+import EnterPreparationModal from './EnterPreparationModal';
 import SimulationServer from './SimulationServer';
 import SimulationServerContext from './SimulationServerContext';
 import Space from './Space';
@@ -89,12 +91,15 @@ export default function SpaceWrapper({id}: {id: string}) {
 	const [simulation, setSimulation] = useState<SimulationServer>();
 	const [audio, setAudio] = useState<AudioContext>();
 
-	// Whether or not the user has allowed user media to be sent
-	const [allowUserMedia] = useState(true);
 	const [chatModalOpen, setChatModalOpen] = useState(false);
 	const [connectionStatus, setConnectionStatus] = useState<
 		null | 'connecting' | 'connected' | 'errored'
 	>(null);
+
+	/**
+	 * 'ready' is true when a user has chosen their settings before entering a Space.
+	 */
+	const [ready, setReady] = useState(false);
 	const [currentMessage, __setCurrentMessage] = useState<string>();
 	const [userMedia, setUserMedia] = useState<MediaStream | null>(null);
 	const [voiceURL, setVoiceURL] = useState<string>();
@@ -109,27 +114,11 @@ export default function SpaceWrapper({id}: {id: string}) {
 	const [cameraEnabled, setCameraEnabled] = useState<boolean>(true);
 	const [micEnabled, setMicEnabled] = useState<boolean>(true);
 
-	// TODO: Create a way to tell if the user should be prompted for audio
-	// Listen for gestures to start the AudioContext
-	useEffect(() => {
-		const listener = () => {
-			setAudio(new AudioContext());
-			window.removeEventListener('mousemove', listener);
-		};
-
-		window.addEventListener('mousemove', listener);
-		return () => window.removeEventListener('mousemove', listener);
-	}, []);
-
 	// Close the userMedia stream when it isn't being used anymore
 	useEffect(() => {
-		return () => {
-			userMedia?.getTracks().forEach((track) => {
-				if (track.readyState !== 'ended') {
-					track.stop();
-				}
-			});
-		};
+		if (userMedia) {
+			return () => closeUserMedia(userMedia, {});
+		}
 	}, [userMedia]);
 
 	useEffect(() => {
@@ -147,7 +136,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 	}, [auth.user, id]);
 
 	useEffect(() => {
-		if (allowUserMedia) {
+		if (ready) {
 			const onGetUserMediaError = () =>
 				setCurrentMessage('Microphone is Disabled', 10000);
 			if (getUserMedia) {
@@ -163,7 +152,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 				onGetUserMediaError();
 			}
 		}
-	}, [allowUserMedia, setCurrentMessage]);
+	}, [ready, setCurrentMessage]);
 
 	if (!simulation) {
 		return null;
@@ -173,68 +162,83 @@ export default function SpaceWrapper({id}: {id: string}) {
 		<SimulationServerContext.Provider value={simulation}>
 			<SpaceAudioContext.Provider value={audio ?? null}>
 				<DeviceControlContext.Provider value={{cameraEnabled, micEnabled}}>
-					<VoiceWrapper spaceID={id} userMedia={userMedia} voiceURL={voiceURL}>
-						<div className={styles('container')}>
-							<div className={styles('topHeading')}>
-								<BaseText variant="secondary-title" alignment="center">
-									{space && 'value' in space ? space.value.name : 'Loading'}
-								</BaseText>
-							</div>
-
-							{currentMessage && (
-								<BaseText variant="secondary-title" xstyle={styles.message}>
-									{currentMessage}
-								</BaseText>
-							)}
-
-							{connectionStatus === 'errored' && (
-								<BaseRow
-									direction="column"
-									alignment="center"
-									justifyContent="center"
-									height="100%"
-								>
-									<BaseText variant="secondary-title">
-										Couldn't connect.{' '}
+					{!ready ? (
+						<EnterPreparationModal
+							setCameraEnabled={setCameraEnabled}
+							setMicEnabled={setMicEnabled}
+							onReady={() => {
+								setReady(true);
+								setAudio(new AudioContext());
+							}}
+						/>
+					) : (
+						<VoiceWrapper
+							spaceID={id}
+							userMedia={userMedia}
+							voiceURL={voiceURL}
+						>
+							<div className={styles('container')}>
+								<div className={styles('topHeading')}>
+									<BaseText variant="secondary-title" alignment="center">
+										{space && 'value' in space ? space.value.name : 'Loading'}
 									</BaseText>
-									<BaseButton
-										variant="positive"
-										onClick={() => window.location.reload()}
-									>
-										Retry
-									</BaseButton>
-								</BaseRow>
-							)}
+								</div>
 
-							{connectionStatus === 'connected' && <Space />}
-
-							<BaseRow
-								direction="row"
-								justifyContent="center"
-								alignment="center"
-								spacing={1}
-								rails={2}
-								xstyle={styles.bottomButtons}
-							>
-								<BaseButton onClick={() => setChatModalOpen(true)}>
-									Chat
-								</BaseButton>
-
-								{chatModalOpen && (
-									<ChatModal onClose={() => setChatModalOpen(false)} />
+								{currentMessage && (
+									<BaseText variant="secondary-title" xstyle={styles.message}>
+										{currentMessage}
+									</BaseText>
 								)}
 
-								<BaseButton to="..">Leave</BaseButton>
+								{connectionStatus === 'errored' && (
+									<BaseRow
+										direction="column"
+										alignment="center"
+										justifyContent="center"
+										height="100%"
+									>
+										<BaseText variant="secondary-title">
+											Couldn't connect.{' '}
+										</BaseText>
+										<BaseButton
+											variant="positive"
+											onClick={() => window.location.reload()}
+										>
+											Retry
+										</BaseButton>
+									</BaseRow>
+								)}
 
-								<DeviceControlButtons
-									cameraEnabled={cameraEnabled}
-									setCameraEnabled={setCameraEnabled}
-									micEnabled={micEnabled}
-									setMicEnabled={setMicEnabled}
-								/>
-							</BaseRow>
-						</div>
-					</VoiceWrapper>
+								{connectionStatus === 'connected' && <Space />}
+
+								<BaseRow
+									direction="row"
+									justifyContent="center"
+									alignment="center"
+									spacing={1}
+									rails={2}
+									xstyle={styles.bottomButtons}
+								>
+									<BaseButton onClick={() => setChatModalOpen(true)}>
+										Chat
+									</BaseButton>
+
+									{chatModalOpen && (
+										<ChatModal onClose={() => setChatModalOpen(false)} />
+									)}
+
+									<BaseButton to="..">Leave</BaseButton>
+
+									<DeviceControlButtons
+										cameraEnabled={cameraEnabled}
+										setCameraEnabled={setCameraEnabled}
+										micEnabled={micEnabled}
+										setMicEnabled={setMicEnabled}
+									/>
+								</BaseRow>
+							</div>
+						</VoiceWrapper>
+					)}
 				</DeviceControlContext.Provider>
 			</SpaceAudioContext.Provider>
 		</SimulationServerContext.Provider>
