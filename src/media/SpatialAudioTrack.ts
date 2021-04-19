@@ -5,7 +5,7 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useContext, useEffect, useRef} from 'react';
-import SpaceAudioContext from '../components/space/SpaceAudioContext';
+import SpaceMediaContext from '../components/space/SpaceMediaContext';
 import {getLogger} from '../lib/ClusterLogger';
 import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
 import {Position} from '../typings/Space';
@@ -21,7 +21,7 @@ export default function SpatialAudioTrack({
 	rotation: number;
 	track: MediaStreamTrack;
 }) {
-	const audioContext = useContext(SpaceAudioContext);
+	const {audioContext} = useContext(SpaceMediaContext);
 	const pannerNode = useRef<PannerNode>();
 
 	// [audioContext, audioTrack]

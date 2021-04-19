@@ -4,37 +4,30 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
+import {useContext} from 'react';
 import BaseButton from '../base/BaseButton';
+import SpaceMediaContext from './SpaceMediaContext';
 
-export default function DeviceControlButtons({
-	cameraEnabled,
-	setCameraEnabled,
-	micEnabled,
-	setMicEnabled,
-}: {
-	cameraEnabled: boolean;
-	setCameraEnabled(enabled: boolean): void;
-	micEnabled: boolean;
-	setMicEnabled(enabled: boolean): void;
-}) {
+export default function DeviceControlButtons() {
+	const {localDevicesSDK, localDevices} = useContext(SpaceMediaContext);
 	return (
 		<>
-			{!micEnabled ? (
-				<BaseButton onClick={() => setMicEnabled(true)}>
+			{!localDevices.micEnabled ? (
+				<BaseButton onClick={() => localDevicesSDK.setMicEnabled(true)}>
 					<i className="fas fa-microphone-slash"></i>
 				</BaseButton>
 			) : (
-				<BaseButton onClick={() => setMicEnabled(false)}>
+				<BaseButton onClick={() => localDevicesSDK.setMicEnabled(false)}>
 					<i className="fas fa-microphone"></i>
 				</BaseButton>
 			)}
 
-			{cameraEnabled ? (
-				<BaseButton onClick={() => setCameraEnabled(false)}>
+			{localDevices.cameraEnabled ? (
+				<BaseButton onClick={() => localDevicesSDK.setCameraEnabled(false)}>
 					<i className="fas fa-video"></i>
 				</BaseButton>
 			) : (
-				<BaseButton onClick={() => setCameraEnabled(true)}>
+				<BaseButton onClick={() => localDevicesSDK.setCameraEnabled(true)}>
 					<i className="fas fa-video-slash"></i>
 				</BaseButton>
 			)}

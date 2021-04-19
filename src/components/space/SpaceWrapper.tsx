@@ -4,7 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useCallback, useContext, useEffect, useState} from 'react';
+import {useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import {getSpaceServerURLs, useSpace} from '../../api/spaces';
 import {getLogger} from '../../lib/ClusterLogger';
 import getUserMedia from '../../lib/getUserMedia';
@@ -16,12 +16,11 @@ import BaseText from '../base/BaseText';
 import ChatModal from './chatModal/ChatModal';
 import DeviceControlButtons from './DeviceControlButtons';
 import EnterPreparationModal from './EnterPreparationModal';
+import LocalDevicesSDK from './LocalDevicesSDK';
 import SimulationServer from './SimulationServer';
 import SimulationServerContext from './SimulationServerContext';
 import Space from './Space';
-import SpaceAudioContext from './SpaceAudioContext';
-import SpaceMediaState from './SpaceMediaState';
-import SpaceMediaStateContext from './SpaceMediaStateContext';
+import SpaceMediaStateProvider from './SpaceMediaProvider';
 import VoiceWrapper from './VoiceWrapper';
 
 const logger = getLogger('space/wrapper');
@@ -91,9 +90,9 @@ const styles = createStylesheet({
 });
 
 export default function SpaceWrapper({id}: {id: string}) {
+	const localDevicesSDK = useMemo(() => new LocalDevicesSDK(), []);
 	const [simulation, setSimulation] = useState<SimulationServer>();
-	const [audio, setAudio] = useState<AudioContext>();
-
+	const [audio, setAudio] = useState<AudioContext | null>(null);
 	const [chatModalOpen, setChatModalOpen] = useState(false);
 	const [connectionStatus, setConnectionStatus] = useState<
 		null | 'connecting' | 'connected' | 'errored'
@@ -104,9 +103,6 @@ export default function SpaceWrapper({id}: {id: string}) {
 	 */
 	const [ready, setReady] = useState(false);
 	const [currentMessage, __setCurrentMessage] = useState<string>();
-	const [mediaState, setMediaState] = useState<SpaceMediaState>(
-		new SpaceMediaState()
-	);
 	const [voiceURL, setVoiceURL] = useState<string>();
 
 	const setCurrentMessage = useCallback((message: string, time: number) => {
@@ -116,17 +112,10 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	const auth = useContext(AuthContext);
 	const space = useSpace(id);
-	const [cameraEnabled, setCameraEnabled] = useState<boolean>(true);
-	const [micEnabled, setMicEnabled] = useState<boolean>(true);
 
-	// Close the userMedia stream when it isn't being used anymore
 	useEffect(() => {
-		if (mediaState.localStream) {
-			return () => {
-				mediaState.closeLocalStream();
-			};
-		}
-	}, [mediaState]);
+		return () => localDevicesSDK.closeMediaStream();
+	}, [localDevicesSDK]);
 
 	useEffect(() => {
 		setConnectionStatus('connecting');
@@ -149,7 +138,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 			if (getUserMedia) {
 				getUserMedia(
 					{audio: true, video: true},
-					(stream) => setMediaState((state) => state.setLocalStream(stream)),
+					(stream) => localDevicesSDK.setMediaStream(stream),
 					(error) => {
 						logger.error({event: 'get_user_media', error});
 						onGetUserMediaError();
@@ -159,7 +148,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 				onGetUserMediaError();
 			}
 		}
-	}, [ready, setCurrentMessage]);
+	}, [localDevicesSDK, ready, setCurrentMessage]);
 
 	if (!simulation) {
 		return null;
@@ -167,93 +156,80 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	return (
 		<SimulationServerContext.Provider value={simulation}>
-			<SpaceMediaStateContext.Provider value={mediaState}>
-				<SpaceAudioContext.Provider value={audio ?? null}>
-					{!ready ? (
-						<EnterPreparationModal
-							setCameraEnabled={(enabled) =>
-								setMediaState((state) => state.setCameraEnabled(enabled))
-							}
-							setMicEnabled={(enabled) =>
-								setMediaState((state) => state.setMicEnabled(enabled))
-							}
-							onReady={() => {
-								setReady(true);
-								setAudio(new AudioContext());
-							}}
-						/>
-					) : (
-						<VoiceWrapper
-							spaceID={id}
-							userMedia={mediaState.localStream}
-							voiceURL={voiceURL}
-						>
-							<div className={styles('container')}>
-								<div className={styles('topHeading')}>
-									<BaseText variant="secondary-title" alignment="center">
-										{space && 'value' in space ? space.value.name : 'Loading'}
-									</BaseText>
-								</div>
-
-								<div className={styles('content')}>
-									{currentMessage && (
-										<BaseText variant="secondary-title" xstyle={styles.message}>
-											{currentMessage}
-										</BaseText>
-									)}
-
-									{connectionStatus === 'errored' && (
-										<BaseRow
-											direction="column"
-											alignment="center"
-											justifyContent="center"
-											height="100%"
-										>
-											<BaseText variant="secondary-title">
-												Couldn't connect.{' '}
-											</BaseText>
-											<BaseButton
-												variant="positive"
-												onClick={() => window.location.reload()}
-											>
-												Retry
-											</BaseButton>
-										</BaseRow>
-									)}
-
-									{connectionStatus === 'connected' && <Space />}
-								</div>
-
-								<BaseRow
-									direction="row"
-									justifyContent="center"
-									alignment="center"
-									spacing={1}
-									rails={2}
-									xstyle={styles.bottomButtons}
-								>
-									<BaseButton onClick={() => setChatModalOpen(true)}>
-										Chat
-									</BaseButton>
-
-									{chatModalOpen && (
-										<ChatModal onClose={() => setChatModalOpen(false)} />
-									)}
-
-									<BaseButton to="..">Leave</BaseButton>
-
-									<DeviceControlButtons
-										cameraEnabled={cameraEnabled}
-										setCameraEnabled={setCameraEnabled}
-										micEnabled={micEnabled}
-										setMicEnabled={setMicEnabled}
-									/>
-								</BaseRow>
+			<SpaceMediaStateProvider
+				localDevicesSDK={localDevicesSDK}
+				audioContext={audio}
+				voiceServer={null}
+			>
+				{!ready ? (
+					<EnterPreparationModal
+						onReady={() => {
+							setReady(true);
+							setAudio(new AudioContext());
+						}}
+					/>
+				) : (
+					<VoiceWrapper spaceID={id} voiceURL={voiceURL}>
+						<div className={styles('container')}>
+							<div className={styles('topHeading')}>
+								<BaseText variant="secondary-title" alignment="center">
+									{space && 'value' in space ? space.value.name : 'Loading'}
+								</BaseText>
 							</div>
-						</VoiceWrapper>
-					)}
-				</SpaceAudioContext.Provider>
-			</SpaceMediaStateContext.Provider>
+
+							<div className={styles('content')}>
+								{currentMessage && (
+									<BaseText variant="secondary-title" xstyle={styles.message}>
+										{currentMessage}
+									</BaseText>
+								)}
+
+								{connectionStatus === 'errored' && (
+									<BaseRow
+										direction="column"
+										alignment="center"
+										justifyContent="center"
+										height="100%"
+									>
+										<BaseText variant="secondary-title">
+											Couldn't connect.{' '}
+										</BaseText>
+										<BaseButton
+											variant="positive"
+											onClick={() => window.location.reload()}
+										>
+											Retry
+										</BaseButton>
+									</BaseRow>
+								)}
+
+								{connectionStatus === 'connected' && <Space />}
+							</div>
+
+							<BaseRow
+								direction="row"
+								justifyContent="center"
+								alignment="center"
+								spacing={1}
+								rails={2}
+								xstyle={styles.bottomButtons}
+							>
+								<BaseButton onClick={() => setChatModalOpen(true)}>
+									Chat
+								</BaseButton>
+
+								{chatModalOpen && (
+									<ChatModal onClose={() => setChatModalOpen(false)} />
+								)}
+
+								<BaseButton to="..">Leave</BaseButton>
+
+								<DeviceControlButtons />
+							</BaseRow>
+						</div>
+					</VoiceWrapper>
+				)}
+			</SpaceMediaStateProvider>
 		</SimulationServerContext.Provider>
 	);
 }

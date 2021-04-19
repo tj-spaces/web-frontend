@@ -6,7 +6,7 @@
 */
 import {useContext, useEffect, useState} from 'react';
 import AuthContext from '../components/AuthContext';
-import LocalWebcamContext from '../components/space/LocalWebcamContext';
+import SpaceMediaContext from '../components/space/SpaceMediaContext';
 import {getLogger} from '../lib/ClusterLogger';
 import {USE_VOICE_SERVER_SSL} from '../lib/constants';
 
@@ -495,13 +495,15 @@ export class VoiceServerCluster implements VoiceServerLike {
 export function useTracks(server: VoiceServerLike | null, userID: string) {
 	const [tracks, setTracks] = useState<MediaStreamTrack[]>();
 	const {user} = useContext(AuthContext);
-	const localStream = useContext(LocalWebcamContext);
+	const {
+		localDevices: {mediaStream},
+	} = useContext(SpaceMediaContext);
 
 	useEffect(() => {
 		if (userID === user?.id) {
 			// Then these are our local tracks
-			if (localStream) {
-				setTracks(localStream.getTracks());
+			if (mediaStream) {
+				setTracks(mediaStream.getTracks());
 			} else {
 				setTracks(undefined);
 			}
@@ -546,7 +548,7 @@ export function useTracks(server: VoiceServerLike | null, userID: string) {
 			server.off('addtrack', onAddTrack);
 			server.off('removetrack', onRemoveTrack);
 		};
-	}, [localStream, server, user?.id, userID]);
+	}, [mediaStream, server, user?.id, userID]);
 
 	return tracks;
 }

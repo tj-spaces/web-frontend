@@ -1,62 +1,61 @@
 import {useContext, useEffect, useState} from 'react';
 import {VoiceServer} from '../../media/VoiceServer';
 import AuthContext from '../AuthContext';
-import LocalWebcamContext from './LocalWebcamContext';
-import SpaceMediaStateContext from './SpaceMediaStateContext';
+import SpaceMediaContext from './SpaceMediaContext';
 import SpaceVoiceContext from './VoiceContext';
 
 export default function VoiceWrapper({
 	children,
 	spaceID: id,
-	userMedia,
 	voiceURL,
 }: {
 	children: React.ReactNode;
 	spaceID: string;
-	userMedia: MediaStream | null;
 	voiceURL?: string;
 }) {
 	const [voice, setVoice] = useState<VoiceServer>();
 	const {user} = useContext(AuthContext);
-	const {cameraEnabled, micEnabled} = useContext(SpaceMediaStateContext);
+	const {
+		localDevices: {cameraEnabled, micEnabled, mediaStream},
+	} = useContext(SpaceMediaContext);
 
 	// Enable or disable the microphone
 	useEffect(() => {
-		if (userMedia && voice) {
+		if (mediaStream && voice) {
 			if (micEnabled) {
-				userMedia.getTracks().forEach((track) => {
+				mediaStream.getTracks().forEach((track) => {
 					if (track.kind === 'audio') {
-						voice.addLocalTrack(track, userMedia);
+						voice.addLocalTrack(track, mediaStream);
 					}
 				});
 			} else {
-				userMedia.getTracks().forEach((track) => {
+				mediaStream.getTracks().forEach((track) => {
 					if (track.kind === 'audio') {
 						voice.removeLocalTrack(track);
 					}
 				});
 			}
 		}
-	}, [micEnabled, userMedia, voice]);
+	}, [micEnabled, mediaStream, voice]);
 
 	// Enable or disable the camera
 	useEffect(() => {
-		if (userMedia && voice) {
+		if (mediaStream && voice) {
 			if (cameraEnabled) {
-				userMedia.getTracks().forEach((track) => {
+				mediaStream.getTracks().forEach((track) => {
 					if (track.kind === 'video') {
-						voice.addLocalTrack(track, userMedia);
+						voice.addLocalTrack(track, mediaStream);
 					}
 				});
 			} else {
-				userMedia.getTracks().forEach((track) => {
+				mediaStream.getTracks().forEach((track) => {
 					if (track.kind === 'video') {
 						voice.removeLocalTrack(track);
 					}
 				});
 			}
 		}
-	}, [cameraEnabled, userMedia, voice]);
+	}, [cameraEnabled, mediaStream, voice]);
 
 	useEffect(() => {
 		if (user?.id && voiceURL) {
@@ -84,10 +83,8 @@ export default function VoiceWrapper({
 	}, [voice]);
 
 	return (
-		<LocalWebcamContext.Provider value={userMedia}>
-			<SpaceVoiceContext.Provider value={voice ?? null}>
-				{children}
-			</SpaceVoiceContext.Provider>
-		</LocalWebcamContext.Provider>
+		<SpaceVoiceContext.Provider value={voice ?? null}>
+			{children}
+		</SpaceVoiceContext.Provider>
 	);
 }

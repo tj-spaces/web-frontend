@@ -14,11 +14,10 @@ import useParticipants from '../../hooks/useParticipants';
 import SpatialAudioListener from '../../media/SpatialAudioListener';
 import AuthContext from '../AuthContext';
 import Floor from './Floor';
-import LocalWebcamContext from './LocalWebcamContext';
 import PointOfViewContext from './PointOfViewContext';
 import RemoteAudio from './RemoteAudio';
 import SimulationServerContext from './SimulationServerContext';
-import SpaceAudioContext from './SpaceAudioContext';
+import SpaceMediaContext from './SpaceMediaContext';
 import UserModel from './UserModel';
 import SpaceVoiceContext from './VoiceContext';
 
@@ -79,8 +78,7 @@ export default function Space() {
 	// So we need to pass them in manually
 	const auth = useContext(AuthContext);
 	const simulation = useContext(SimulationServerContext);
-	const userMedia = useContext(LocalWebcamContext);
-	const audio = useContext(SpaceAudioContext);
+	const mediaState = useContext(SpaceMediaContext);
 	const voice = useContext(SpaceVoiceContext);
 
 	return (
@@ -97,33 +95,31 @@ export default function Space() {
 			<Canvas>
 				<AuthContext.Provider value={auth}>
 					<SimulationServerContext.Provider value={simulation}>
-						<LocalWebcamContext.Provider value={userMedia}>
-							<SpaceAudioContext.Provider value={audio ?? null}>
-								<SpaceVoiceContext.Provider value={voice ?? null}>
-									<PointOfViewContext.Provider value="first-person">
-										<PointerLockControls
-											onUpdate={(controls) =>
-												(rotation.current = controls.getObject().rotation.z)
-											}
+						<SpaceMediaContext.Provider value={mediaState}>
+							<SpaceVoiceContext.Provider value={voice ?? null}>
+								<PointOfViewContext.Provider value="first-person">
+									<PointerLockControls
+										onUpdate={(controls) =>
+											(rotation.current = controls.getObject().rotation.z)
+										}
+									/>
+									<Suspense fallback="Loading model">
+										<SushiTable />
+									</Suspense>
+									<ambientLight intensity={0.5} />
+									<Floor />
+									{Object.entries(participants).map(([id, participant]) => (
+										<UserModel
+											position={participant.position}
+											rotation={participant.rotation}
+											key={id}
+											me={id === myID}
+											id={id}
 										/>
-										<Suspense fallback="Loading model">
-											<SushiTable />
-										</Suspense>
-										<ambientLight intensity={0.5} />
-										<Floor />
-										{Object.entries(participants).map(([id, participant]) => (
-											<UserModel
-												position={participant.position}
-												rotation={participant.rotation}
-												key={id}
-												me={id === myID}
-												id={id}
-											/>
-										))}
-									</PointOfViewContext.Provider>
-								</SpaceVoiceContext.Provider>
-							</SpaceAudioContext.Provider>
-						</LocalWebcamContext.Provider>
+									))}
+								</PointOfViewContext.Provider>
+							</SpaceVoiceContext.Provider>
+						</SpaceMediaContext.Provider>
 					</SimulationServerContext.Provider>
 				</AuthContext.Provider>
 			</Canvas>

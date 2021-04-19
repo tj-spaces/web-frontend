@@ -43,6 +43,17 @@ export default class LocalDevicesSDK {
 		this.state = this.state.set('mediaStream', stream);
 	}
 
+	closeMediaStream() {
+		const mediaStream = this.state.mediaStream;
+		if (mediaStream) {
+			mediaStream.getTracks().forEach((track) => {
+				track.stop();
+			});
+		}
+
+		this.state = this.state.set('mediaStream', null);
+	}
+
 	addListener(listener: LocalDevicesStateListener) {
 		this.listeners.add(listener);
 		return {
