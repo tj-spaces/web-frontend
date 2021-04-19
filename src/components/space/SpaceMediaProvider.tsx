@@ -4,7 +4,7 @@ import LocalDevicesSDK, {LocalDevicesState} from './LocalDevicesSDK';
 import SpaceMediaState from './SpaceMediaState';
 import SpaceMediaContext from './SpaceMediaContext';
 
-export default function SpaceMediaStateProvider({
+export default function SpaceMediaProvider({
 	children,
 	localDevicesSDK,
 	audioContext,
@@ -30,11 +30,12 @@ export default function SpaceMediaStateProvider({
 	const mediaState: SpaceMediaState = useMemo(
 		() =>
 			new SpaceMediaState({
+				localDevicesSDK,
 				localDevices: localDevicesState,
 				audioContext,
 				voiceServer,
 			}),
-		[audioContext, localDevicesState, voiceServer]
+		[audioContext, localDevicesSDK, localDevicesState, voiceServer]
 	);
 
 	return (

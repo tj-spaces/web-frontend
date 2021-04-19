@@ -20,7 +20,7 @@ import LocalDevicesSDK from './LocalDevicesSDK';
 import SimulationServer from './SimulationServer';
 import SimulationServerContext from './SimulationServerContext';
 import Space from './Space';
-import SpaceMediaStateProvider from './SpaceMediaProvider';
+import SpaceMediaProvider from './SpaceMediaProvider';
 import VoiceWrapper from './VoiceWrapper';
 
 const logger = getLogger('space/wrapper');
@@ -156,7 +156,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	return (
 		<SimulationServerContext.Provider value={simulation}>
-			<SpaceMediaStateProvider
+			<SpaceMediaProvider
 				localDevicesSDK={localDevicesSDK}
 				audioContext={audio}
 				voiceServer={null}
@@ -229,7 +229,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 						</div>
 					</VoiceWrapper>
 				)}
-			</SpaceMediaStateProvider>
+			</SpaceMediaProvider>
 		</SimulationServerContext.Provider>
 	);
 }

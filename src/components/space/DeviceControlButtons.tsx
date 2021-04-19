@@ -10,6 +10,7 @@ import SpaceMediaContext from './SpaceMediaContext';
 
 export default function DeviceControlButtons() {
 	const {localDevicesSDK, localDevices} = useContext(SpaceMediaContext);
+	console.log(localDevicesSDK, localDevices);
 	return (
 		<>
 			{!localDevices.micEnabled ? (
