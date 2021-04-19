@@ -1,8 +1,8 @@
 import {useContext, useEffect, useState} from 'react';
 import {VoiceServer} from '../../media/VoiceServer';
 import AuthContext from '../AuthContext';
-import DeviceControlContext from './DeviceControlContext';
 import LocalWebcamContext from './LocalWebcamContext';
+import SpaceMediaStateContext from './SpaceMediaStateContext';
 import SpaceVoiceContext from './VoiceContext';
 
 export default function VoiceWrapper({
@@ -18,7 +18,7 @@ export default function VoiceWrapper({
 }) {
 	const [voice, setVoice] = useState<VoiceServer>();
 	const {user} = useContext(AuthContext);
-	const {cameraEnabled, micEnabled} = useContext(DeviceControlContext);
+	const {cameraEnabled, micEnabled} = useContext(SpaceMediaStateContext);
 
 	// Enable or disable the microphone
 	useEffect(() => {

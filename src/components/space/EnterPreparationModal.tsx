@@ -3,7 +3,7 @@ import BaseButton from '../base/BaseButton';
 import BaseModal from '../base/BaseModal';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
-import DeviceControlContext from './DeviceControlContext';
+import SpaceMediaStateContext from './SpaceMediaStateContext';
 
 /**
  * This is a modal shown where you can choose to enable or disable your camera and microphone
@@ -18,7 +18,7 @@ export default function EnterPreparationModal({
 	setMicEnabled(enabled: boolean): void;
 	onReady(): void;
 }) {
-	const {cameraEnabled, micEnabled} = useContext(DeviceControlContext);
+	const {cameraEnabled, micEnabled} = useContext(SpaceMediaStateContext);
 	return (
 		<BaseModal onClose={() => {}} closable={false}>
 			<BaseRow direction="column" spacing={2}>

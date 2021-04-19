@@ -8,7 +8,6 @@ import {useCallback, useContext, useEffect, useState} from 'react';
 import {getSpaceServerURLs, useSpace} from '../../api/spaces';
 import {getLogger} from '../../lib/ClusterLogger';
 import getUserMedia from '../../lib/getUserMedia';
-import closeUserMedia from '../../lib/rtc/closeUserMedia';
 import {createStylesheet} from '../../styles/createStylesheet';
 import AuthContext from '../AuthContext';
 import BaseButton from '../base/BaseButton';
@@ -16,12 +15,13 @@ import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import ChatModal from './chatModal/ChatModal';
 import DeviceControlButtons from './DeviceControlButtons';
-import DeviceControlContext from './DeviceControlContext';
 import EnterPreparationModal from './EnterPreparationModal';
 import SimulationServer from './SimulationServer';
 import SimulationServerContext from './SimulationServerContext';
 import Space from './Space';
 import SpaceAudioContext from './SpaceAudioContext';
+import SpaceMediaState from './SpaceMediaState';
+import SpaceMediaStateContext from './SpaceMediaStateContext';
 import VoiceWrapper from './VoiceWrapper';
 
 const logger = getLogger('space/wrapper');
@@ -104,7 +104,9 @@ export default function SpaceWrapper({id}: {id: string}) {
 	 */
 	const [ready, setReady] = useState(false);
 	const [currentMessage, __setCurrentMessage] = useState<string>();
-	const [userMedia, setUserMedia] = useState<MediaStream | null>(null);
+	const [mediaState, setMediaState] = useState<SpaceMediaState>(
+		new SpaceMediaState()
+	);
 	const [voiceURL, setVoiceURL] = useState<string>();
 
 	const setCurrentMessage = useCallback((message: string, time: number) => {
@@ -119,10 +121,12 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	// Close the userMedia stream when it isn't being used anymore
 	useEffect(() => {
-		if (userMedia) {
-			return () => closeUserMedia(userMedia, {});
+		if (mediaState.localStream) {
+			return () => {
+				mediaState.closeLocalStream();
+			};
 		}
-	}, [userMedia]);
+	}, [mediaState]);
 
 	useEffect(() => {
 		setConnectionStatus('connecting');
@@ -145,7 +149,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 			if (getUserMedia) {
 				getUserMedia(
 					{audio: true, video: true},
-					(stream) => setUserMedia(stream),
+					(stream) => setMediaState((state) => state.setLocalStream(stream)),
 					(error) => {
 						logger.error({event: 'get_user_media', error});
 						onGetUserMediaError();
@@ -163,12 +167,16 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	return (
 		<SimulationServerContext.Provider value={simulation}>
-			<SpaceAudioContext.Provider value={audio ?? null}>
-				<DeviceControlContext.Provider value={{cameraEnabled, micEnabled}}>
+			<SpaceMediaStateContext.Provider value={mediaState}>
+				<SpaceAudioContext.Provider value={audio ?? null}>
 					{!ready ? (
 						<EnterPreparationModal
-							setCameraEnabled={setCameraEnabled}
-							setMicEnabled={setMicEnabled}
+							setCameraEnabled={(enabled) =>
+								setMediaState((state) => state.setCameraEnabled(enabled))
+							}
+							setMicEnabled={(enabled) =>
+								setMediaState((state) => state.setMicEnabled(enabled))
+							}
 							onReady={() => {
 								setReady(true);
 								setAudio(new AudioContext());
@@ -177,7 +185,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 					) : (
 						<VoiceWrapper
 							spaceID={id}
-							userMedia={userMedia}
+							userMedia={mediaState.localStream}
 							voiceURL={voiceURL}
 						>
 							<div className={styles('container')}>
@@ -244,8 +252,8 @@ export default function SpaceWrapper({id}: {id: string}) {
 							</div>
 						</VoiceWrapper>
 					)}
-				</DeviceControlContext.Provider>
-			</SpaceAudioContext.Provider>
+				</SpaceAudioContext.Provider>
+			</SpaceMediaStateContext.Provider>
 		</SimulationServerContext.Provider>
 	);
 }
