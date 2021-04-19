@@ -30,10 +30,8 @@ const styles = createStylesheet({
 	container: {
 		position: 'absolute',
 		minWidth: '100%',
-		height: '100vh',
-		bottom: '0px',
-		left: '0px',
-		right: '0px',
+		height: '100%',
+		inset: '0px',
 		zIndex: 1,
 	},
 	/**
@@ -74,6 +72,11 @@ const styles = createStylesheet({
 		bottom: '0px',
 		left: '0px',
 		right: '0px',
+	},
+	content: {
+		height: '100%',
+		top: '5em',
+		bottom: '5em',
 	},
 	/**
 	 * Message
@@ -184,32 +187,34 @@ export default function SpaceWrapper({id}: {id: string}) {
 									</BaseText>
 								</div>
 
-								{currentMessage && (
-									<BaseText variant="secondary-title" xstyle={styles.message}>
-										{currentMessage}
-									</BaseText>
-								)}
-
-								{connectionStatus === 'errored' && (
-									<BaseRow
-										direction="column"
-										alignment="center"
-										justifyContent="center"
-										height="100%"
-									>
-										<BaseText variant="secondary-title">
-											Couldn't connect.{' '}
+								<div className={styles('content')}>
+									{currentMessage && (
+										<BaseText variant="secondary-title" xstyle={styles.message}>
+											{currentMessage}
 										</BaseText>
-										<BaseButton
-											variant="positive"
-											onClick={() => window.location.reload()}
-										>
-											Retry
-										</BaseButton>
-									</BaseRow>
-								)}
+									)}
 
-								{connectionStatus === 'connected' && <Space />}
+									{connectionStatus === 'errored' && (
+										<BaseRow
+											direction="column"
+											alignment="center"
+											justifyContent="center"
+											height="100%"
+										>
+											<BaseText variant="secondary-title">
+												Couldn't connect.{' '}
+											</BaseText>
+											<BaseButton
+												variant="positive"
+												onClick={() => window.location.reload()}
+											>
+												Retry
+											</BaseButton>
+										</BaseRow>
+									)}
+
+									{connectionStatus === 'connected' && <Space />}
+								</div>
 
 								<BaseRow
 									direction="row"

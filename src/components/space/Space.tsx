@@ -84,7 +84,7 @@ export default function Space() {
 	const voice = useContext(SpaceVoiceContext);
 
 	return (
-		<div style={{width: '100vw', height: '100vh'}}>
+		<div style={{width: '100%', height: '100%'}}>
 			<SpatialAudioListener
 				position={myPosition ?? {x: 0, y: 0, z: 0}}
 				rotation={0}
