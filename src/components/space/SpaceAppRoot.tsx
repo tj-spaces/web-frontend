@@ -4,21 +4,20 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {getSpaceServerURLs, useSpace} from '../../api/spaces';
 // import {getLogger} from '../../lib/ClusterLogger';
 import {createStylesheet} from '../../styles/createStylesheet';
-import AuthContext from '../AuthContext';
+import {useCurrentUser} from '../AuthHooks';
 import BaseButton from '../base/BaseButton';
 import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
-import ChatModal from './chatModal/ChatModal';
-import DeviceControlButtons from './DeviceControlButtons';
 import EnterPreparationModal from './EnterPreparationModal';
 import LocalDevicesProvider from './LocalDevicesProvider';
 import SimulationServer from './SimulationServer';
 import SimulationServerContext from './SimulationServerContext';
 import Space from './Space';
+import {SpaceFooter} from './SpaceFooter';
 import SpaceMediaProvider from './SpaceMediaProvider';
 import UserSettingsProvider from './UserSettingsProvider';
 import VoiceProvider from './VoiceProvider';
@@ -60,18 +59,6 @@ const styles = createStylesheet({
 			},
 		},
 	},
-	/**
-	 * The mute/unmute, disable/enable camera, and Leave Space buttons container
-	 */
-	bottomButtons: {
-		backgroundColor: 'var(--bg-secondary)',
-
-		height: '5em',
-		position: 'absolute',
-		bottom: '0px',
-		left: '0px',
-		right: '0px',
-	},
 	content: {
 		position: 'absolute',
 		left: '0px',
@@ -94,7 +81,6 @@ const styles = createStylesheet({
 export default function SpaceAppRoot({id}: {id: string}) {
 	const [simulation, setSimulation] = useState<SimulationServer>();
 	const [audio, setAudio] = useState<AudioContext | null>(null);
-	const [chatModalOpen, setChatModalOpen] = useState(false);
 	const [connectionStatus, setConnectionStatus] = useState<
 		null | 'connecting' | 'connected' | 'errored'
 	>(null);
@@ -111,7 +97,7 @@ export default function SpaceAppRoot({id}: {id: string}) {
 	// 	setTimeout(() => __setCurrentMessage(undefined), time);
 	// }, []);
 
-	const auth = useContext(AuthContext);
+	const user = useCurrentUser();
 	const space = useSpace(id);
 
 	useEffect(() => {
@@ -126,7 +112,7 @@ export default function SpaceAppRoot({id}: {id: string}) {
 				setVoiceURL(voiceURL);
 			})
 			.catch(() => setConnectionStatus('errored'));
-	}, [auth.user, id]);
+	}, [user, id]);
 
 	if (!simulation) {
 		return null;
@@ -185,26 +171,7 @@ export default function SpaceAppRoot({id}: {id: string}) {
 										{connectionStatus === 'connected' && <Space />}
 									</div>
 
-									<BaseRow
-										direction="row"
-										justifyContent="center"
-										alignment="center"
-										spacing={1}
-										rails={2}
-										xstyle={styles.bottomButtons}
-									>
-										<BaseButton onClick={() => setChatModalOpen(true)}>
-											Chat
-										</BaseButton>
-
-										{chatModalOpen && (
-											<ChatModal onClose={() => setChatModalOpen(false)} />
-										)}
-
-										<BaseButton to="..">Leave</BaseButton>
-
-										<DeviceControlButtons />
-									</BaseRow>
+									<SpaceFooter />
 								</div>
 							</VoiceProvider>
 						)}
