@@ -5,8 +5,16 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {createContext} from 'react';
-import SimulationServer from './SimulationServer';
+import ChatSDK from './ChatSDK';
+import SimulationServerSDK from './SimulationServerSDK';
+import SimulationServerState from './SimulationServerState';
 
-const SimulationServerContext = createContext<SimulationServer>(null!);
+const SimulationServerContext = createContext<{
+	simulationState: SimulationServerState;
+	simulationSDK: SimulationServerSDK;
+}>({
+	simulationSDK: new SimulationServerSDK(new ChatSDK()),
+	simulationState: new SimulationServerState(),
+});
 
 export default SimulationServerContext;

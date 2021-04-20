@@ -100,7 +100,6 @@ export interface SpaceParticipant {
 	 * The direction the participant is currently rotating
 	 */
 	rotating_direction: 0 | 1 | -1;
-	moving_direction: 'left' | 'right';
 }
 
 export interface SpaceMetadata {}

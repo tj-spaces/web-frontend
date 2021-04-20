@@ -30,7 +30,7 @@ const styles = createStylesheet({
 });
 
 export default function ChatModal({onClose}: {onClose: () => void}) {
-	const space = useContext(SimulationServerContext);
+	const {simulationSDK} = useContext(SimulationServerContext);
 	const messageTextRef = useRef<HTMLInputElement>(null);
 	const [pressingEscape, setPressingEscape] = useState(false);
 	const [replyToMessage, setReplyToMessage] = useState<SpaceMessage | null>(
@@ -38,14 +38,14 @@ export default function ChatModal({onClose}: {onClose: () => void}) {
 	);
 
 	const onClickedSendMessage = useCallback(() => {
-		if (space && messageTextRef.current?.value) {
-			space.sendChatMessage(
+		if (messageTextRef.current?.value) {
+			simulationSDK.sendChatMessage(
 				messageTextRef.current?.value,
 				replyToMessage?.id ?? null
 			);
 			messageTextRef.current.value = '';
 		}
-	}, [space, replyToMessage?.id]);
+	}, [replyToMessage?.id, simulationSDK]);
 
 	return (
 		<BaseModal onClose={onClose}>

@@ -5,17 +5,16 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {PointerLockControls} from '@react-three/drei';
-import React, {Suspense, useContext, useEffect, useRef, useState} from 'react';
+import {Suspense, useContext, useEffect, useRef, useState} from 'react';
 import {Canvas, useLoader} from 'react-three-fiber';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import useKeyboardState from '../../hooks/useKeyboardState';
-import useMyID from '../../hooks/useMyID';
-import useParticipants from '../../hooks/useParticipants';
 import SpatialAudioListener from '../../media/SpatialAudioListener';
 import AuthContext from '../AuthContext';
 import Floor from './Floor';
 import PointOfViewContext from './PointOfViewContext';
 import RemoteAudio from './RemoteAudio';
+import {useMyAnonymousID, useParticipants} from './SimulationHooks';
 import SimulationServerContext from './SimulationServerContext';
 import SpaceMediaContext from './SpaceMediaContext';
 import UserModel from './UserModel';
@@ -36,9 +35,9 @@ function SushiTable() {
 }
 
 export default function Space() {
-	const manager = useContext(SimulationServerContext);
+	const {simulationSDK} = useContext(SimulationServerContext);
 
-	const myID = useMyID();
+	const myID = useMyAnonymousID();
 	const participants = useParticipants();
 
 	const {a = false, s = false, d = false, w = false} = useKeyboardState(
@@ -65,14 +64,14 @@ export default function Space() {
 			relativeX * Math.sin(rotation.current) +
 			relativeZ * Math.cos(rotation.current);
 
-		manager.setMoveDirection({
+		simulationSDK.setMoveDirection({
 			x: dx,
 			y: 0,
 			z: -dz,
 		});
-	}, [a, s, d, w, manager]);
+	}, [a, s, d, w, simulationSDK]);
 
-	const myPosition = myID ? participants[myID]?.position : undefined;
+	const myPosition = myID ? participants.get(myID)?.position : undefined;
 
 	// Because 'Canvas' creates a new React renderer, contexts cannot be shared, unfortunately
 	// So we need to pass them in manually
@@ -91,7 +90,7 @@ export default function Space() {
 				position={myPosition ?? {x: 0, y: 0, z: 0}}
 				rotation={0}
 			/>
-			{Object.entries(participants).map(([id, participant]) =>
+			{participants.forEach((participant, id) =>
 				id !== myID ? (
 					<RemoteAudio userID={id} position={participant.position} key={id} />
 				) : null
@@ -113,7 +112,7 @@ export default function Space() {
 									</Suspense>
 									<ambientLight intensity={0.5} />
 									<Floor />
-									{Object.entries(participants).map(([id, participant]) => (
+									{participants.map((participant, id) => (
 										<UserModel
 											position={participant.position}
 											rotation={participant.rotation}

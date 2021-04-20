@@ -12,8 +12,7 @@ import {useCurrentUser} from '../AuthHooks';
 import BaseText from '../base/BaseText';
 import EnterPreparationModal from './EnterPreparationModal';
 import LocalDevicesProvider from './LocalDevicesProvider';
-import SimulationServer from './SimulationServer';
-import SimulationServerContext from './SimulationServerContext';
+import SimulationServerProvider from './SimulationServerProvider';
 import Space from './Space';
 import SpaceConnectionErrored from './SpaceConnectionErrored';
 import SpaceFooter from './SpaceFooter';
@@ -69,11 +68,10 @@ const styles = createStylesheet({
 });
 
 export default function SpaceAppRoot({id}: {id: string}) {
-	const [simulation, setSimulation] = useState<SimulationServer>();
 	const [audio, setAudio] = useState<AudioContext | null>(null);
 	const [connectionStatus, setConnectionStatus] = useState<
 		null | 'connecting' | 'connected' | 'errored'
-	>(null);
+	>('connected');
 
 	/**
 	 * 'ready' is true when a user has chosen their settings before entering a Space.
@@ -81,6 +79,7 @@ export default function SpaceAppRoot({id}: {id: string}) {
 	const [ready, setReady] = useState(false);
 	const [currentMessage] = useState<string>();
 	const [voiceURL, setVoiceURL] = useState<string>();
+	const [simulationURL, setSimulationURL] = useState<string>();
 
 	// const setCurrentMessage = useCallback((message: string, time: number) => {
 	// 	__setCurrentMessage(message);
@@ -95,21 +94,14 @@ export default function SpaceAppRoot({id}: {id: string}) {
 
 		getSpaceServerURLs(id)
 			.then(({voiceURL, simulationURL, token}) => {
-				let simulation = new SimulationServer(id, simulationURL, token);
-				simulation.on('connected', () => setConnectionStatus('connected'));
-
-				setSimulation(simulation);
+				setSimulationURL(simulationURL);
 				setVoiceURL(voiceURL);
 			})
 			.catch(() => setConnectionStatus('errored'));
 	}, [user, id]);
 
-	if (!simulation) {
-		return null;
-	}
-
 	return (
-		<SimulationServerContext.Provider value={simulation}>
+		<SimulationServerProvider simulationURL={simulationURL}>
 			<UserSettingsProvider>
 				<LocalDevicesProvider>
 					<SpaceMediaProvider audioContext={audio} voiceServer={null}>
@@ -149,6 +141,6 @@ export default function SpaceAppRoot({id}: {id: string}) {
 					</SpaceMediaProvider>
 				</LocalDevicesProvider>
 			</UserSettingsProvider>
-		</SimulationServerContext.Provider>
+		</SimulationServerProvider>
 	);
 }

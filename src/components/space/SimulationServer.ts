@@ -13,6 +13,7 @@ import {
 } from '../../typings/Space';
 import JSONBig from 'json-bigint';
 import {DISABLE_DEV_SIMULATION_SERVER_SSL} from '../../lib/constants';
+import ChatSDK from './ChatSDK';
 
 const logger = getLogger('space');
 
@@ -106,7 +107,7 @@ export default class SimulationServer {
 				this.emit('user_move', data);
 				break;
 			case 'user_direction':
-				this.participants[data.id].moving_direction = data.direction;
+				// this.participants[data.id].moving_direction = data.direction;
 				this.emit('user_direction', data);
 				break;
 			case 'auth':
@@ -125,9 +126,7 @@ export default class SimulationServer {
 		return this.participantID != null;
 	}
 
-	constructor(id: string, host: string, token: string) {
-		this.spaceID = id;
-		this.host = host;
+	connect(host: string, token: string) {
 		this.connection = new WebSocket(
 			(DISABLE_DEV_SIMULATION_SERVER_SSL ? 'ws' : 'wss') + '://' + host
 		);
@@ -153,6 +152,12 @@ export default class SimulationServer {
 			// What to do if the connection closes?
 			this.emit('disconnected', undefined);
 		});
+	}
+
+	constructor(id: string, host: string, token: string, chatSDK: ChatSDK) {
+		this.spaceID = id;
+		this.host = host;
+		this.connect(host, token);
 	}
 
 	on<K extends keyof SpaceEventMap>(
