@@ -5,7 +5,7 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {PointerLockControls} from '@react-three/drei';
-import {Suspense, useContext, useEffect, useRef} from 'react';
+import React, {Suspense, useContext, useEffect, useRef, useState} from 'react';
 import {Canvas, useLoader} from 'react-three-fiber';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import useKeyboardState from '../../hooks/useKeyboardState';
@@ -80,9 +80,13 @@ export default function Space() {
 	const simulation = useContext(SimulationServerContext);
 	const mediaState = useContext(SpaceMediaContext);
 	const voice = useContext(VoiceContext);
+	const [canvas, setCanvas] = useState<HTMLDivElement>();
 
 	return (
-		<div style={{width: '100%', height: '100%'}}>
+		<div
+			style={{width: '100%', height: '100%'}}
+			ref={(div) => setCanvas(div || undefined)}
+		>
 			<SpatialAudioListener
 				position={myPosition ?? {x: 0, y: 0, z: 0}}
 				rotation={0}
@@ -102,6 +106,7 @@ export default function Space() {
 										onUpdate={(controls) =>
 											(rotation.current = controls.getObject().rotation.z)
 										}
+										domElement={canvas}
 									/>
 									<Suspense fallback="Loading model">
 										<SushiTable />

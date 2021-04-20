@@ -73,7 +73,9 @@ const styles = createStylesheet({
 		right: '0px',
 	},
 	content: {
-		height: '100%',
+		position: 'absolute',
+		left: '0px',
+		right: '0px',
 		top: '5em',
 		bottom: '5em',
 	},
