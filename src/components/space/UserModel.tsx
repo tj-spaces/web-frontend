@@ -7,10 +7,9 @@
 import {useContext, useEffect, useState} from 'react';
 import {useThree} from 'react-three-fiber';
 import * as THREE from 'three';
-import {useTracks} from '../../media/VoiceEndpoint';
 import {Position} from '../../typings/Space';
 import PointOfViewContext from './PointOfViewContext';
-import SpaceVoiceContext from './VoiceContext';
+import {useUserTracks} from './VoiceHooks';
 
 export default function UserModel({
 	position,
@@ -25,11 +24,7 @@ export default function UserModel({
 }) {
 	const {camera} = useThree();
 	const [videoElement] = useState(() => document.createElement('video'));
-	const voiceServer = useContext(SpaceVoiceContext);
-	const allTracks = useTracks(voiceServer, id);
-	const videoTracks = (allTracks ?? []).filter(
-		(track) => track.kind === 'video'
-	);
+	const videoTracks = useUserTracks(id, 'video');
 	const pov = useContext(PointOfViewContext);
 
 	// Camera positioning

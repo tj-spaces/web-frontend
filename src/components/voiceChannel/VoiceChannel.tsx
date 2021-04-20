@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {VoiceEndpoint} from '../../media/VoiceEndpoint';
+import {VoiceEndpointManager} from '../../media/VoiceEndpoint';
 import AuthContext from '../AuthContext';
 
 export type VoiceChannelParticipant = {
@@ -16,12 +16,12 @@ export default function VoiceChannel({channelID}: {channelID: string}) {
 	// 	{}
 	// );
 	const {user} = useContext(AuthContext);
-	const [, setVoiceServer] = useState<VoiceEndpoint>();
+	const [, setVoiceServer] = useState<VoiceEndpointManager>();
 
 	// Set up the VoiceServer connection
 	useEffect(() => {
 		if (user) {
-			let server = new VoiceEndpoint('localhost', user.id);
+			let server = new VoiceEndpointManager('localhost', user.id);
 			setVoiceServer(server);
 
 			navigator.mediaDevices.getUserMedia({audio: true}).then((mediastream) => {

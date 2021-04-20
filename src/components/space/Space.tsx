@@ -19,7 +19,7 @@ import RemoteAudio from './RemoteAudio';
 import SimulationServerContext from './SimulationServerContext';
 import SpaceMediaContext from './SpaceMediaContext';
 import UserModel from './UserModel';
-import SpaceVoiceContext from './VoiceContext';
+import VoiceContext from './VoiceContext';
 
 function SushiTable() {
 	// Attribution: Aimi Sekiguchi
@@ -79,7 +79,7 @@ export default function Space() {
 	const auth = useContext(AuthContext);
 	const simulation = useContext(SimulationServerContext);
 	const mediaState = useContext(SpaceMediaContext);
-	const voice = useContext(SpaceVoiceContext);
+	const voice = useContext(VoiceContext);
 
 	return (
 		<div style={{width: '100%', height: '100%'}}>
@@ -96,7 +96,7 @@ export default function Space() {
 				<AuthContext.Provider value={auth}>
 					<SimulationServerContext.Provider value={simulation}>
 						<SpaceMediaContext.Provider value={mediaState}>
-							<SpaceVoiceContext.Provider value={voice ?? null}>
+							<VoiceContext.Provider value={voice ?? null}>
 								<PointOfViewContext.Provider value="first-person">
 									<PointerLockControls
 										onUpdate={(controls) =>
@@ -118,7 +118,7 @@ export default function Space() {
 										/>
 									))}
 								</PointOfViewContext.Provider>
-							</SpaceVoiceContext.Provider>
+							</VoiceContext.Provider>
 						</SpaceMediaContext.Provider>
 					</SimulationServerContext.Provider>
 				</AuthContext.Provider>

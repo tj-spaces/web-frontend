@@ -1,7 +1,7 @@
 import {useEffect, useMemo, useState} from 'react';
-import SpaceVoiceContext from './VoiceContext';
+import VoiceContext from './VoiceContext';
 import VoiceSDK from './VoiceSDK';
-import {VoiceState} from './VoiceState';
+import VoiceState from './VoiceState';
 
 export default function VoiceProvider({
 	children,
@@ -22,6 +22,13 @@ export default function VoiceProvider({
 	}, [voiceSDK]);
 
 	useEffect(() => {
+		if (voiceURL) {
+			voiceSDK.addVoiceEndpoint(voiceURL);
+			return () => voiceSDK.removeVoiceEndpoint(voiceURL);
+		}
+	}, [voiceSDK, voiceURL]);
+
+	useEffect(() => {
 		//
 	}, [voiceSDK, spaceID]);
 
@@ -29,8 +36,8 @@ export default function VoiceProvider({
 	// TODO: add joining room
 
 	return (
-		<SpaceVoiceContext.Provider value={voiceState}>
+		<VoiceContext.Provider value={{voiceState, voiceSDK}}>
 			{children}
-		</SpaceVoiceContext.Provider>
+		</VoiceContext.Provider>
 	);
 }

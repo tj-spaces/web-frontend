@@ -1,5 +1,5 @@
-import {VoiceServerLike} from '../../media/VoiceEndpoint';
-import {VoiceState} from './VoiceState';
+import VoiceEndpoint from './VoiceEndpoint';
+import VoiceState from './VoiceState';
 
 export type VoiceStateListener = (newState: VoiceState) => void;
 
@@ -29,11 +29,71 @@ export default class VoiceSDK {
 		};
 	}
 
-	addVoiceEndpoint(endpointId: string, endpoint: VoiceServerLike) {
+	addVoiceEndpoint(endpointId: string) {
+		let endpoint = new VoiceEndpoint(endpointId, this);
 		this.state = this.state.addVoiceEndpoint(endpointId, endpoint);
 	}
 
 	removeVoiceEndpoint(endpointId: string) {
 		this.state = this.state.removeVoiceEndpoint(endpointId);
+	}
+
+	addStreamToUser(userId: string, stream: MediaStream) {
+		const rtcUser = this.state.rtcUsers.get(userId);
+		if (!rtcUser) {
+			throw new Error('RTCUser not found: ' + userId);
+		}
+
+		this.state = this.state.set(
+			'rtcUsers',
+			this.state.rtcUsers.set(userId, rtcUser.addStream(stream))
+		);
+	}
+
+	deleteStreamFromUser(userId: string, stream: MediaStream) {
+		const rtcUser = this.state.rtcUsers.get(userId);
+		if (!rtcUser) {
+			throw new Error('RTCUser not found: ' + userId);
+		}
+
+		this.state = this.state.set(
+			'rtcUsers',
+			this.state.rtcUsers.set(userId, rtcUser.removeStream(stream))
+		);
+	}
+
+	addTrack(track: MediaStreamTrack) {
+		this.state = this.state.set(
+			'tracks',
+			this.state.tracks.set(track.id, track)
+		);
+	}
+
+	removeTrack(track: MediaStreamTrack) {
+		this.state = this.state.set('tracks', this.state.tracks.delete(track.id));
+	}
+
+	addTrackIDToUser(userId: string, trackId: string) {
+		const rtcUser = this.state.rtcUsers.get(userId);
+		if (!rtcUser) {
+			throw new Error('RTCUser not found: ' + userId);
+		}
+
+		this.state = this.state.set(
+			'rtcUsers',
+			this.state.rtcUsers.set(userId, rtcUser.addTrackID(trackId))
+		);
+	}
+
+	removeTrackIDFromUser(userId: string, trackId: string) {
+		const rtcUser = this.state.rtcUsers.get(userId);
+		if (!rtcUser) {
+			throw new Error('RTCUser not found: ' + userId);
+		}
+
+		this.state = this.state.set(
+			'rtcUsers',
+			this.state.rtcUsers.set(userId, rtcUser.removeTrackID(trackId))
+		);
 	}
 }

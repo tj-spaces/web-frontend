@@ -4,6 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
+// import {Map, Set} from 'immutable';
 import {useContext, useEffect, useState} from 'react';
 import AuthContext from '../components/AuthContext';
 import SpaceMediaContext from '../components/space/SpaceMediaContext';
@@ -39,10 +40,18 @@ export interface VoiceServerLike {
 	getUserTracks(userID: string): Set<MediaStreamTrack>;
 }
 
+export type VoiceEndpointState = {
+	peer: RTCPeerConnection;
+	ws: WebSocket | null;
+	localTracks: Map<string, RTCRtpSender>;
+	streamToTrackIDs: Map<string, Set<string>>;
+	tracks: Map<string, MediaStreamTrack>;
+};
+
 /**
  * Basic class for handling a connection to a Voice server.
  */
-export class VoiceEndpoint implements VoiceServerLike {
+export class VoiceEndpointManager implements VoiceServerLike {
 	private peer = new RTCPeerConnection();
 
 	/**
@@ -376,7 +385,7 @@ export class VoiceServerCluster implements VoiceServerLike {
 	/**
 	 * The internal mapping of URLs to connections to Voice servers.
 	 */
-	private nodes: Record<string, VoiceEndpoint> = {};
+	private nodes: Record<string, VoiceEndpointManager> = {};
 
 	/**
 	 * The URL of the server to transmit our voice data to.
@@ -400,7 +409,7 @@ export class VoiceServerCluster implements VoiceServerLike {
 	 */
 	addVoiceServer(url: string) {
 		if (!(url in this.nodes)) {
-			let server = new VoiceEndpoint(url, this.userID);
+			let server = new VoiceEndpointManager(url, this.userID);
 			// Forward events
 			server.on('addtrack', (data) => {
 				this.tracksByUser[data.userID].add(data.track);

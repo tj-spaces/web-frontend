@@ -4,11 +4,9 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useContext} from 'react';
-import {useTracks} from '../../media/VoiceEndpoint';
 import SpatialAudioTrack from '../../media/SpatialAudioTrack';
 import {Position} from '../../typings/Space';
-import SpaceVoiceContext from './VoiceContext';
+import {useUserStreams} from './VoiceHooks';
 
 export default function RemoteAudio({
 	userID,
@@ -17,20 +15,25 @@ export default function RemoteAudio({
 	userID: string;
 	position: Position;
 }) {
-	const voice = useContext(SpaceVoiceContext);
-	const tracks = useTracks(voice, userID);
+	const streams = useUserStreams(userID);
+
+	if (!streams) {
+		return null;
+	}
+
 	return (
 		<>
-			{tracks?.map(
-				(track) =>
-					track.kind === 'audio' && (
+			{streams.map((stream) =>
+				stream
+					.getAudioTracks()
+					.map((track) => (
 						<SpatialAudioTrack
 							position={position}
 							rotation={0}
 							track={track}
 							key={track.id}
 						/>
-					)
+					))
 			)}
 		</>
 	);

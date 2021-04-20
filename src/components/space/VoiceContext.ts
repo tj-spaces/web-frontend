@@ -5,8 +5,17 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {createContext} from 'react';
-import {VoiceState} from './VoiceState';
+import VoiceSDK from './VoiceSDK';
+import VoiceState from './VoiceState';
 
-const SpaceVoiceContext = createContext<VoiceState>(new VoiceState());
+export type VoiceContextProps = {
+	voiceState: VoiceState;
+	voiceSDK: VoiceSDK;
+};
 
-export default SpaceVoiceContext;
+const VoiceContext = createContext<VoiceContextProps>({
+	voiceState: new VoiceState(),
+	voiceSDK: new VoiceSDK(),
+});
+
+export default VoiceContext;
