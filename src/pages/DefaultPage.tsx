@@ -4,8 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useContext} from 'react';
-import AuthContext from '../components/AuthContext';
+import {useIsLoggedIn} from '../components/AuthHooks';
 import HomePage from './HomePage';
 import LoginPage from './LoginPage';
 
@@ -14,8 +13,8 @@ import LoginPage from './LoginPage';
  * and if you are logged in, it renders the homepage.
  */
 export default function DefaultPage() {
-	const auth = useContext(AuthContext);
-	if (!auth.isLoggedIn) {
+	const loggedIn = useIsLoggedIn();
+	if (!loggedIn) {
 		return <LoginPage />;
 	} else {
 		return <HomePage />;

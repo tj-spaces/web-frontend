@@ -5,7 +5,7 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useContext} from 'react';
-import AuthContext from '../components/AuthContext';
+import {useCurrentUser} from '../components/AuthHooks';
 import BaseRow from '../components/base/BaseRow';
 import BaseText from '../components/base/BaseText';
 import Navbar from '../components/Navbar';
@@ -29,7 +29,7 @@ const styles = createStylesheet({
  * A page where a user can configure their account, update their username, delete their account, etc.
  */
 export default function AccountPage() {
-	const {user} = useContext(AuthContext);
+	const user = useCurrentUser();
 	const streamerMode = useContext(StreamerModeContext);
 	if (user == null) {
 		throw new Error('AuthContext should catch this');

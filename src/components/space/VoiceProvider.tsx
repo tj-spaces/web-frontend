@@ -1,5 +1,5 @@
-import {useContext, useEffect, useMemo, useState} from 'react';
-import AuthContext from '../AuthContext';
+import {useEffect, useMemo, useState} from 'react';
+import {useCurrentUser} from '../AuthHooks';
 import {useLocalTracks, useUserMediaStream} from './LocalDevicesHooks';
 import VoiceContext from './VoiceContext';
 import VoiceSDK from './VoiceSDK';
@@ -16,7 +16,7 @@ export default function VoiceProvider({
 }) {
 	const voiceSDK = useMemo(() => new VoiceSDK(), []);
 	const [voiceState, setVoiceState] = useState(new VoiceState());
-	const {user} = useContext(AuthContext);
+	const user = useCurrentUser();
 
 	// Listen to changes to the voice state from the SDK
 	useEffect(() => {

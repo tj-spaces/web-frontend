@@ -7,12 +7,11 @@
 import {Link, Redirect, useLocation, useParams} from 'react-router-dom';
 import {createSession} from '../api/api';
 import * as qs from 'query-string';
-import {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import Fullscreen from '../components/base/BaseFullscreen';
-import AuthContext from '../components/AuthContext';
 import {FetchStatus} from '../api/FetchStatus';
-import React from 'react';
 import Awaiting from '../components/Awaiting';
+import {useRefreshAuthState} from '../components/AuthHooks';
 
 const LoginError = () => (
 	<Fullscreen>
@@ -38,7 +37,7 @@ export function AuthorizationCallback() {
 
 	const {provider} = useParams<{provider: string}>();
 	const {code} = qs.parse(useLocation().search);
-	const {refreshAuthState} = useContext(AuthContext);
+	const refreshAuthState = useRefreshAuthState();
 	const [fetchStatus, setFetchStatus] = useState<FetchStatus>(null);
 
 	useEffect(() => {
