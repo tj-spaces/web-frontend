@@ -37,7 +37,7 @@ export default function ClustersTab() {
 
 			<Awaiting fetchStatus={fetchStatus}>
 				{clusters.map((cluster) => (
-					<ClusterFeedItem cluster={cluster} joined />
+					<ClusterFeedItem cluster={cluster} joined key={cluster.id} />
 				))}
 			</Awaiting>
 		</BaseRow>

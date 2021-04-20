@@ -19,7 +19,7 @@ type Tab = 'explore' | 'friends' | 'clusters';
  * of the selected tab.
  */
 export default function Tabs() {
-	let [tab, setTab] = useState<Tab>('clusters');
+	let [tab, setTab] = useState<Tab>('explore');
 
 	return (
 		<BaseRow
@@ -32,19 +32,19 @@ export default function Tabs() {
 			<BaseRow direction="row" spacing={1} justifyContent="center" rails={1}>
 				<BaseText
 					variant="list-item-title"
-					onClick={() => setTab('clusters')}
-					underline={tab === 'clusters'}
-					unselectable
-				>
-					My Groups
-				</BaseText>
-				<BaseText
-					variant="list-item-title"
 					onClick={() => setTab('explore')}
 					underline={tab === 'explore'}
 					unselectable
 				>
 					Explore
+				</BaseText>
+				<BaseText
+					variant="list-item-title"
+					onClick={() => setTab('clusters')}
+					underline={tab === 'clusters'}
+					unselectable
+				>
+					My Groups
 				</BaseText>
 				{/* <BaseText
 					variant="list-item-title"
