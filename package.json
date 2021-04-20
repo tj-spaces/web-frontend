@@ -3,6 +3,8 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
+		"@material-ui/core": "^4.11.3",
+		"@material-ui/icons": "^4.11.2",
 		"@react-three/drei": "^3.11.0",
 		"@types/axios": "^0.14.0",
 		"@types/immutable": "^3.8.7",

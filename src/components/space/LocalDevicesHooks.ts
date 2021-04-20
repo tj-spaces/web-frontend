@@ -4,9 +4,9 @@ import LocalDevicesContext from './LocalDevicesContext';
 export function useUserMediaStream() {
 	const {localDevicesState} = useContext(LocalDevicesContext);
 
-	return useMemo(() => {
-		return localDevicesState.userMedia;
-	}, [localDevicesState]);
+	return useMemo(() => localDevicesState.userMedia, [
+		localDevicesState.userMedia,
+	]);
 }
 
 export function useLocalTracks(kind?: 'audio' | 'video') {
@@ -23,4 +23,16 @@ export function useLocalTracks(kind?: 'audio' | 'video') {
 			return localDevicesState.getLocalTracks();
 		}
 	}, [localDevicesState, kind]);
+}
+
+export function useHasLocalVideo() {
+	return useContext(
+		LocalDevicesContext
+	).localDevicesState.hasLocalVideoTracks();
+}
+
+export function useHasLocalAudio() {
+	return useContext(
+		LocalDevicesContext
+	).localDevicesState.hasLocalAudioTracks();
 }

@@ -33,6 +33,8 @@ export default class LocalDevicesSDK {
 	}
 
 	setUserMedia(stream: MediaStream | null) {
+		console.log('Set user media to', stream);
+
 		let state = this.state
 			.set('userMedia', stream)
 			.clearUserAudioTracks()
