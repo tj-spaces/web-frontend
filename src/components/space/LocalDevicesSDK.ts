@@ -33,6 +33,15 @@ export default class LocalDevicesSDK {
 		this.listeners.forEach((listener) => listener(this.state));
 	}
 
+	addListener(listener: LocalDevicesStateListener) {
+		this.listeners.add(listener);
+		return {
+			remove: () => {
+				this.listeners.delete(listener);
+			},
+		};
+	}
+
 	setCameraEnabled(enabled: boolean) {
 		this.state = this.state.set('cameraEnabled', enabled);
 
@@ -76,14 +85,5 @@ export default class LocalDevicesSDK {
 		}
 
 		this.state = this.state.set('mediaStream', null);
-	}
-
-	addListener(listener: LocalDevicesStateListener) {
-		this.listeners.add(listener);
-		return {
-			remove: () => {
-				this.listeners.delete(listener);
-			},
-		};
 	}
 }

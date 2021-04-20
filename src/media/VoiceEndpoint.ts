@@ -42,7 +42,7 @@ export interface VoiceServerLike {
 /**
  * Basic class for handling a connection to a Voice server.
  */
-export class VoiceServer implements VoiceServerLike {
+export class VoiceEndpoint implements VoiceServerLike {
 	private peer = new RTCPeerConnection();
 
 	/**
@@ -376,7 +376,7 @@ export class VoiceServerCluster implements VoiceServerLike {
 	/**
 	 * The internal mapping of URLs to connections to Voice servers.
 	 */
-	private nodes: Record<string, VoiceServer> = {};
+	private nodes: Record<string, VoiceEndpoint> = {};
 
 	/**
 	 * The URL of the server to transmit our voice data to.
@@ -400,7 +400,7 @@ export class VoiceServerCluster implements VoiceServerLike {
 	 */
 	addVoiceServer(url: string) {
 		if (!(url in this.nodes)) {
-			let server = new VoiceServer(url, this.userID);
+			let server = new VoiceEndpoint(url, this.userID);
 			// Forward events
 			server.on('addtrack', (data) => {
 				this.tracksByUser[data.userID].add(data.track);

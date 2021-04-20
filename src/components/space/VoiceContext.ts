@@ -5,8 +5,8 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {createContext} from 'react';
-import {VoiceServerLike} from '../../media/VoiceServer';
+import {VoiceState} from './VoiceState';
 
-const SpaceVoiceContext = createContext<null | VoiceServerLike>(null);
+const SpaceVoiceContext = createContext<VoiceState>(new VoiceState());
 
 export default SpaceVoiceContext;

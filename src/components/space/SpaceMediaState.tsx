@@ -1,5 +1,5 @@
 import {Record} from 'immutable';
-import {VoiceServerLike} from '../../media/VoiceServer';
+import {VoiceServerLike} from '../../media/VoiceEndpoint';
 import LocalDevicesSDK, {LocalDevicesState} from './LocalDevicesSDK';
 
 export type SpaceMediaStateProps = {

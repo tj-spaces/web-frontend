@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {VoiceServerLike} from '../../media/VoiceServer';
+import {VoiceServerLike} from '../../media/VoiceEndpoint';
 import LocalDevicesSDK, {LocalDevicesState} from './LocalDevicesSDK';
 import SpaceMediaState from './SpaceMediaState';
 import SpaceMediaContext from './SpaceMediaContext';

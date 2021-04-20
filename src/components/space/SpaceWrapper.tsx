@@ -21,7 +21,7 @@ import SimulationServer from './SimulationServer';
 import SimulationServerContext from './SimulationServerContext';
 import Space from './Space';
 import SpaceMediaProvider from './SpaceMediaProvider';
-import VoiceWrapper from './VoiceWrapper';
+import VoiceProvider from './VoiceProvider';
 
 const logger = getLogger('space/wrapper');
 
@@ -169,7 +169,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 						}}
 					/>
 				) : (
-					<VoiceWrapper spaceID={id} voiceURL={voiceURL}>
+					<VoiceProvider spaceID={id} voiceURL={voiceURL}>
 						<div className={styles('container')}>
 							<div className={styles('topHeading')}>
 								<BaseText variant="secondary-title" alignment="center">
@@ -227,7 +227,7 @@ export default function SpaceWrapper({id}: {id: string}) {
 								<DeviceControlButtons />
 							</BaseRow>
 						</div>
-					</VoiceWrapper>
+					</VoiceProvider>
 				)}
 			</SpaceMediaProvider>
 		</SimulationServerContext.Provider>
