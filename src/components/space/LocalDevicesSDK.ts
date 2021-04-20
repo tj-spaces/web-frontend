@@ -68,6 +68,11 @@ export default class LocalDevicesSDK {
 					track.stop();
 				}
 			});
+			if (kind === 'audio') {
+				this.state = this.state.clearUserAudioTracks();
+			} else {
+				this.state = this.state.clearUserVideoTracks();
+			}
 		}
 	}
 

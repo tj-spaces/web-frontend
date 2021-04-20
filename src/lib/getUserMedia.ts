@@ -4,6 +4,12 @@ const nativeGetUserMedia =
 	navigator.mediaDevices.getUserMedia?.bind(navigator.mediaDevices);
 
 function getUserMedia(constraints: MediaStreamConstraints) {
+	console.info({
+		event: 'getUserMedia',
+		message: `Executing getUserMedia with constraints ${JSON.stringify(
+			constraints
+		)}`,
+	});
 	return new Promise<MediaStream>((resolve, reject) =>
 		nativeGetUserMedia(constraints, resolve, reject)
 	);
