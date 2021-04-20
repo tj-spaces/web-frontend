@@ -10,6 +10,7 @@ export default class VoiceEndpoint {
 	public readonly endpointUrl: string;
 	private listeners = new Set<VoiceEndpointStateListener>();
 	private peer: RTCPeerConnection;
+	private _spaceId: string | null = null;
 	private _state = new VoiceEndpointState();
 	// Queue for messages that want to be sent before the websocket is opened
 	private _mq: {event: string; data: string}[] = [];
@@ -78,6 +79,12 @@ export default class VoiceEndpoint {
 			let message = JSON.parse(event.data);
 
 			switch (message.event) {
+				case 'auth':
+					if (this._spaceId) {
+						this.sendMessage('join_room', this._spaceId);
+					}
+					break;
+
 				case 'offer':
 					this.peer.setRemoteDescription(JSON.parse(message.data));
 					this.peer.createAnswer().then((answer) => {
@@ -148,11 +155,13 @@ export default class VoiceEndpoint {
 	}
 
 	joinSpace(spaceId: string, userId: string) {
+		this._spaceId = spaceId;
 		console.log({event: 'joinSpace', spaceId});
 		this.sendMessage('auth', userId);
 	}
 
-	leaveSpace(spaceId: string) {
-		console.log({event: 'leaveSpace', spaceId});
+	leaveSpace() {
+		console.log({event: 'leaveSpace'});
+		this.sendMessage('leave_room', '');
 	}
 }

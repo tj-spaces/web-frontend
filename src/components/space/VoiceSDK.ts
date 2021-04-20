@@ -1,3 +1,4 @@
+import {RTCUser} from './RTCUser';
 import VoiceEndpoint from './VoiceEndpoint';
 import VoiceState from './VoiceState';
 
@@ -36,6 +37,30 @@ export default class VoiceSDK {
 
 	removeVoiceEndpoint(endpointId: string) {
 		this.state = this.state.removeVoiceEndpoint(endpointId);
+	}
+
+	addUser(user: RTCUser) {
+		this.state = this.state.set(
+			'rtcUsers',
+			this.state.rtcUsers.set(user.id, user)
+		);
+	}
+
+	removeUser(user: RTCUser) {
+		this.state = this.state.set(
+			'rtcUsers',
+			this.state.rtcUsers.delete(user.id)
+		);
+	}
+
+	updateUser(userId: string, updater: (user: RTCUser) => RTCUser) {
+		const user = this.state.rtcUsers.get(userId);
+		if (user) {
+			this.state = this.state.set(
+				'rtcUsers',
+				this.state.rtcUsers.set(userId, updater(user))
+			);
+		}
 	}
 
 	addStreamToUser(userId: string, stream: MediaStream) {
@@ -121,7 +146,7 @@ export default class VoiceSDK {
 	leaveSpace(spaceId: string) {
 		const voiceEndpoints = Array.from(this.state.voiceEndpoints.values());
 		voiceEndpoints.forEach((endpoint) => {
-			endpoint.leaveSpace(spaceId);
+			endpoint.leaveSpace();
 		});
 	}
 }
