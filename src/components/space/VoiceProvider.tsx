@@ -1,4 +1,6 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useContext, useEffect, useMemo, useState} from 'react';
+import AuthContext from '../AuthContext';
+import {useLocalTracks, useUserMediaStream} from './LocalDevicesHooks';
 import VoiceContext from './VoiceContext';
 import VoiceSDK from './VoiceSDK';
 import VoiceState from './VoiceState';
@@ -14,6 +16,7 @@ export default function VoiceProvider({
 }) {
 	const voiceSDK = useMemo(() => new VoiceSDK(), []);
 	const [voiceState, setVoiceState] = useState(new VoiceState());
+	const {user} = useContext(AuthContext);
 
 	// Listen to changes to the voice state from the SDK
 	useEffect(() => {
@@ -29,8 +32,29 @@ export default function VoiceProvider({
 	}, [voiceSDK, voiceURL]);
 
 	useEffect(() => {
-		//
-	}, [voiceSDK, spaceID]);
+		if (user) {
+			voiceSDK.joinSpace(spaceID, user.id);
+			return () => {
+				voiceSDK.leaveSpace(spaceID);
+			};
+		}
+	}, [voiceSDK, spaceID, user]);
+
+	const tracks = useLocalTracks();
+	const userMediaStream = useUserMediaStream();
+
+	useEffect(() => {
+		if (userMediaStream) {
+			tracks.forEach((track) => {
+				voiceSDK.addLocalTrack(track, userMediaStream);
+			});
+			return () => {
+				tracks.forEach((track) => {
+					voiceSDK.removeLocalTrack(track);
+				});
+			};
+		}
+	}, [tracks, userMediaStream, voiceSDK]);
 
 	// TODO: add adding/removing local tracks
 	// TODO: add joining room

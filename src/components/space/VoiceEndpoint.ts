@@ -11,6 +11,8 @@ export default class VoiceEndpoint {
 	private listeners = new Set<VoiceEndpointStateListener>();
 	private peer: RTCPeerConnection;
 	private _state = new VoiceEndpointState();
+	// Queue for messages that want to be sent before the websocket is opened
+	private _mq: {event: string; data: string}[] = [];
 
 	private set state(newValue: VoiceEndpointState) {
 		this._state = newValue;
@@ -43,6 +45,9 @@ export default class VoiceEndpoint {
 		this.websocket = new WebSocket(url);
 		this.websocket.onopen = () => {
 			this.state = this.state.setSignalingConnectionState('OPEN');
+			this._mq.forEach((message) =>
+				this.websocket.send(JSON.stringify(message))
+			);
 		};
 		this.websocket.onclose = () => {
 			this.state = this.state.setSignalingConnectionState('CLOSED');
@@ -57,7 +62,11 @@ export default class VoiceEndpoint {
 	}
 
 	private sendMessage = (event: string, data: string) => {
-		this.websocket.send(JSON.stringify({event, data}));
+		if (this.websocket.readyState !== this.websocket.OPEN) {
+			this._mq.push({event, data});
+		} else {
+			this.websocket.send(JSON.stringify({event, data}));
+		}
 	};
 
 	/**
@@ -114,6 +123,36 @@ export default class VoiceEndpoint {
 	}
 
 	addLocalTrack(track: MediaStreamTrack, stream: MediaStream) {
-		this.peer.addTrack(track, stream);
+		if (!this.state.localTracks.has(track.id)) {
+			console.log({event: 'addLocalTrack', track, stream});
+			const sender = this.peer.addTrack(track, stream);
+			this.state = this.state.set(
+				'localTracks',
+				this.state.localTracks.set(track.id, sender)
+			);
+		}
+	}
+
+	removeLocalTrack(track: MediaStreamTrack) {
+		if (this.state.localTracks.has(track.id)) {
+			console.log({event: 'removeLocalTrack', track});
+			const sender = this.state.localTracks.get(track.id)!;
+			if (sender) {
+				this.peer.removeTrack(sender);
+				this.state = this.state.set(
+					'localTracks',
+					this.state.localTracks.delete(track.id)
+				);
+			}
+		}
+	}
+
+	joinSpace(spaceId: string, userId: string) {
+		console.log({event: 'joinSpace', spaceId});
+		this.sendMessage('auth', userId);
+	}
+
+	leaveSpace(spaceId: string) {
+		console.log({event: 'leaveSpace', spaceId});
 	}
 }

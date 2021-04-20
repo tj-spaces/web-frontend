@@ -69,6 +69,13 @@ export default class VoiceSDK {
 		});
 	}
 
+	removeLocalTrack(track: MediaStreamTrack) {
+		const voiceEndpoints = Array.from(this.state.voiceEndpoints.values());
+		voiceEndpoints.forEach((endpoint) => {
+			endpoint.removeLocalTrack(track);
+		});
+	}
+
 	addTrack(track: MediaStreamTrack) {
 		this.state = this.state.set(
 			'tracks',
@@ -102,5 +109,19 @@ export default class VoiceSDK {
 			'rtcUsers',
 			this.state.rtcUsers.set(userId, rtcUser.removeTrackID(trackId))
 		);
+	}
+
+	joinSpace(spaceId: string, userId: string) {
+		const voiceEndpoints = Array.from(this.state.voiceEndpoints.values());
+		voiceEndpoints.forEach((endpoint) => {
+			endpoint.joinSpace(spaceId, userId);
+		});
+	}
+
+	leaveSpace(spaceId: string) {
+		const voiceEndpoints = Array.from(this.state.voiceEndpoints.values());
+		voiceEndpoints.forEach((endpoint) => {
+			endpoint.leaveSpace(spaceId);
+		});
 	}
 }

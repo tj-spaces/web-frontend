@@ -27,7 +27,15 @@ export default class LocalDevicesState extends Record<LocalDevicesStateProps>({
 		return this.set('userAudioTracks', this.userAudioTracks.delete(track));
 	}
 
-	hasLocalMedia() {
+	clearUserVideoTracks() {
+		return this.set('userVideoTracks', Set());
+	}
+
+	clearUserAudioTracks() {
+		return this.set('userAudioTracks', Set());
+	}
+
+	hasUserMedia() {
 		return this.userMedia;
 	}
 

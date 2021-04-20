@@ -34,7 +34,21 @@ export default class LocalDevicesSDK {
 	}
 
 	setUserMedia(stream: MediaStream | null) {
-		this.state = this.state.set('userMedia', stream);
+		let state = this.state
+			.set('userMedia', stream)
+			.clearUserAudioTracks()
+			.clearUserVideoTracks();
+
+		if (stream) {
+			for (let track of stream.getVideoTracks()) {
+				state = state.addUserVideoTrack(track);
+			}
+			for (let track of stream.getAudioTracks()) {
+				state = state.addUserAudioTrack(track);
+			}
+		}
+
+		this.state = state;
 	}
 
 	closeMediaStream() {
