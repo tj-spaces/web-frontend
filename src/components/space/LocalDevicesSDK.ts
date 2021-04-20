@@ -1,4 +1,3 @@
-import transferMediaTracks from '../../media/transferMediaTracks';
 import LocalDevicesState from './LocalDevicesState';
 
 export type LocalDevicesStateListener = (state: LocalDevicesState) => void;
@@ -74,8 +73,18 @@ export default class LocalDevicesSDK {
 
 	transferLocalTracksFromStream(stream: MediaStream, kind: 'video' | 'audio') {
 		if (this.state.userMedia) {
-			transferMediaTracks(stream, this.state.userMedia, kind);
+			for (let track of stream
+				.getTracks()
+				.filter((track) => track.kind === kind)) {
+				this.state.userMedia.addTrack(track);
+				stream.removeTrack(track);
 
+				if (kind === 'audio') {
+					this.state.addUserAudioTrack(track);
+				} else if (kind === 'video') {
+					this.state.addUserVideoTrack(track);
+				}
+			}
 			this.emitChange();
 		}
 	}
