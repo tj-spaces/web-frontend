@@ -35,17 +35,17 @@ export default function LocalDevicesProvider({
 			}
 		} else {
 			if (!state.hasLocalVideoTracks()) {
-				getUserMedia(
-					{video: true},
-					(media) => {
+				getUserMedia({video: true})
+					.then((media) => {
 						if (state.hasLocalAudioTracks()) {
 							sdk.transferLocalTracksFromStream(media, 'video');
 						} else {
 							sdk.setUserMedia(media);
 						}
-					},
-					(error) => {}
-				);
+					})
+					.catch((error) => {
+						console.error({event: 'getUserMedia', error});
+					});
 			}
 		}
 	}, [cameraEnabled, sdk, state]);
@@ -57,17 +57,17 @@ export default function LocalDevicesProvider({
 			}
 		} else {
 			if (!state.hasLocalAudioTracks()) {
-				getUserMedia(
-					{audio: true},
-					(media) => {
+				getUserMedia({audio: true})
+					.then((media) => {
 						if (state.hasLocalVideoTracks()) {
 							sdk.transferLocalTracksFromStream(media, 'audio');
 						} else {
 							sdk.setUserMedia(media);
 						}
-					},
-					(error) => {}
-				);
+					})
+					.catch((error) => {
+						console.error({event: 'getUserMedia', error});
+					});
 			}
 		}
 	}, [micEnabled, sdk, state]);
