@@ -13,6 +13,12 @@ export default function LocalDevicesProvider({
 	const [state, setState] = useState(new LocalDevicesState());
 
 	useEffect(() => {
+		return () => {
+			sdk.closeMediaStream();
+		};
+	}, [sdk]);
+
+	useEffect(() => {
 		let handle = sdk.addListener(setState);
 		return () => handle.remove();
 	}, [sdk]);

@@ -5,10 +5,10 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useParams} from 'react-router-dom';
-import SpaceWrapper from '../components/space/SpaceWrapper';
+import SpaceAppRoot from '../components/space/SpaceAppRoot';
 
 export default function SpacePage() {
 	const {spaceId} = useParams<{spaceId: string}>();
 
-	return <SpaceWrapper id={spaceId} />;
+	return <SpaceAppRoot id={spaceId} />;
 }

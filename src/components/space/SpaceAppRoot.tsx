@@ -4,7 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useContext, useEffect, useMemo, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {getSpaceServerURLs, useSpace} from '../../api/spaces';
 // import {getLogger} from '../../lib/ClusterLogger';
 import {createStylesheet} from '../../styles/createStylesheet';
@@ -16,7 +16,6 @@ import ChatModal from './chatModal/ChatModal';
 import DeviceControlButtons from './DeviceControlButtons';
 import EnterPreparationModal from './EnterPreparationModal';
 import LocalDevicesProvider from './LocalDevicesProvider';
-import LocalDevicesSDK from './LocalDevicesSDK';
 import SimulationServer from './SimulationServer';
 import SimulationServerContext from './SimulationServerContext';
 import Space from './Space';
@@ -90,8 +89,7 @@ const styles = createStylesheet({
 	},
 });
 
-export default function SpaceWrapper({id}: {id: string}) {
-	const localDevicesSDK = useMemo(() => new LocalDevicesSDK(), []);
+export default function SpaceAppRoot({id}: {id: string}) {
 	const [simulation, setSimulation] = useState<SimulationServer>();
 	const [audio, setAudio] = useState<AudioContext | null>(null);
 	const [chatModalOpen, setChatModalOpen] = useState(false);
@@ -113,10 +111,6 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	const auth = useContext(AuthContext);
 	const space = useSpace(id);
-
-	useEffect(() => {
-		return () => localDevicesSDK.closeMediaStream();
-	}, [localDevicesSDK]);
 
 	useEffect(() => {
 		setConnectionStatus('connecting');
