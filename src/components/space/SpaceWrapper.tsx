@@ -16,11 +16,13 @@ import BaseText from '../base/BaseText';
 import ChatModal from './chatModal/ChatModal';
 import DeviceControlButtons from './DeviceControlButtons';
 import EnterPreparationModal from './EnterPreparationModal';
+import LocalDevicesProvider from './LocalDevicesProvider';
 import LocalDevicesSDK from './LocalDevicesSDK';
 import SimulationServer from './SimulationServer';
 import SimulationServerContext from './SimulationServerContext';
 import Space from './Space';
 import SpaceMediaProvider from './SpaceMediaProvider';
+import UserSettingsProvider from './UserSettingsProvider';
 import VoiceProvider from './VoiceProvider';
 
 const logger = getLogger('space/wrapper');
@@ -156,80 +158,83 @@ export default function SpaceWrapper({id}: {id: string}) {
 
 	return (
 		<SimulationServerContext.Provider value={simulation}>
-			<SpaceMediaProvider
-				localDevicesSDK={localDevicesSDK}
-				audioContext={audio}
-				voiceServer={null}
-			>
-				{!ready ? (
-					<EnterPreparationModal
-						onReady={() => {
-							setReady(true);
-							setAudio(new AudioContext());
-						}}
-					/>
-				) : (
-					<VoiceProvider spaceID={id} voiceURL={voiceURL}>
-						<div className={styles('container')}>
-							<div className={styles('topHeading')}>
-								<BaseText variant="secondary-title" alignment="center">
-									{space && 'value' in space ? space.value.name : 'Loading'}
-								</BaseText>
-							</div>
-
-							<div className={styles('content')}>
-								{currentMessage && (
-									<BaseText variant="secondary-title" xstyle={styles.message}>
-										{currentMessage}
-									</BaseText>
-								)}
-
-								{connectionStatus === 'errored' && (
-									<BaseRow
-										direction="column"
-										alignment="center"
-										justifyContent="center"
-										height="100%"
-									>
-										<BaseText variant="secondary-title">
-											Couldn't connect.{' '}
+			<UserSettingsProvider>
+				<LocalDevicesProvider>
+					<SpaceMediaProvider audioContext={audio} voiceServer={null}>
+						{!ready ? (
+							<EnterPreparationModal
+								onReady={() => {
+									setReady(true);
+									setAudio(new AudioContext());
+								}}
+							/>
+						) : (
+							<VoiceProvider spaceID={id} voiceURL={voiceURL}>
+								<div className={styles('container')}>
+									<div className={styles('topHeading')}>
+										<BaseText variant="secondary-title" alignment="center">
+											{space && 'value' in space ? space.value.name : 'Loading'}
 										</BaseText>
-										<BaseButton
-											variant="positive"
-											onClick={() => window.location.reload()}
-										>
-											Retry
+									</div>
+
+									<div className={styles('content')}>
+										{currentMessage && (
+											<BaseText
+												variant="secondary-title"
+												xstyle={styles.message}
+											>
+												{currentMessage}
+											</BaseText>
+										)}
+
+										{connectionStatus === 'errored' && (
+											<BaseRow
+												direction="column"
+												alignment="center"
+												justifyContent="center"
+												height="100%"
+											>
+												<BaseText variant="secondary-title">
+													Couldn't connect.{' '}
+												</BaseText>
+												<BaseButton
+													variant="positive"
+													onClick={() => window.location.reload()}
+												>
+													Retry
+												</BaseButton>
+											</BaseRow>
+										)}
+
+										{connectionStatus === 'connected' && <Space />}
+									</div>
+
+									<BaseRow
+										direction="row"
+										justifyContent="center"
+										alignment="center"
+										spacing={1}
+										rails={2}
+										xstyle={styles.bottomButtons}
+									>
+										<BaseButton onClick={() => setChatModalOpen(true)}>
+											Chat
 										</BaseButton>
+
+										{chatModalOpen && (
+											<ChatModal onClose={() => setChatModalOpen(false)} />
+										)}
+
+										<BaseButton to="..">Leave</BaseButton>
+
+										<DeviceControlButtons />
 									</BaseRow>
-								)}
-
-								{connectionStatus === 'connected' && <Space />}
-							</div>
-
-							<BaseRow
-								direction="row"
-								justifyContent="center"
-								alignment="center"
-								spacing={1}
-								rails={2}
-								xstyle={styles.bottomButtons}
-							>
-								<BaseButton onClick={() => setChatModalOpen(true)}>
-									Chat
-								</BaseButton>
-
-								{chatModalOpen && (
-									<ChatModal onClose={() => setChatModalOpen(false)} />
-								)}
-
-								<BaseButton to="..">Leave</BaseButton>
-
-								<DeviceControlButtons />
-							</BaseRow>
-						</div>
-					</VoiceProvider>
-				)}
-			</SpaceMediaProvider>
+								</div>
+							</VoiceProvider>
+						)}
+					</SpaceMediaProvider>
+				</LocalDevicesProvider>
+			</UserSettingsProvider>
 		</SimulationServerContext.Provider>
 	);
 }

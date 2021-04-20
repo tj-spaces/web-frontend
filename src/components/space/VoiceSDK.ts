@@ -62,6 +62,13 @@ export default class VoiceSDK {
 		);
 	}
 
+	addLocalTrack(track: MediaStreamTrack, stream: MediaStream) {
+		const voiceEndpoints = Array.from(this.state.voiceEndpoints.values());
+		voiceEndpoints.forEach((endpoint) => {
+			endpoint.addLocalTrack(track, stream);
+		});
+	}
+
 	addTrack(track: MediaStreamTrack) {
 		this.state = this.state.set(
 			'tracks',

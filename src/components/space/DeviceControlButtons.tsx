@@ -6,28 +6,28 @@
 */
 import {useContext} from 'react';
 import BaseButton from '../base/BaseButton';
-import SpaceMediaContext from './SpaceMediaContext';
+import UserSettingsContext from './UserSettingsContext';
 
 export default function DeviceControlButtons() {
-	const {localDevicesSDK, localDevices} = useContext(SpaceMediaContext);
+	const {userSettingsSDK, userSettings} = useContext(UserSettingsContext);
 	return (
 		<>
-			{!localDevices.micEnabled ? (
-				<BaseButton onClick={() => localDevicesSDK.setMicEnabled(true)}>
+			{!userSettings.micEnabled ? (
+				<BaseButton onClick={() => userSettingsSDK.setMicEnabled(true)}>
 					<i className="fas fa-microphone-slash"></i>
 				</BaseButton>
 			) : (
-				<BaseButton onClick={() => localDevicesSDK.setMicEnabled(false)}>
+				<BaseButton onClick={() => userSettingsSDK.setMicEnabled(false)}>
 					<i className="fas fa-microphone"></i>
 				</BaseButton>
 			)}
 
-			{localDevices.cameraEnabled ? (
-				<BaseButton onClick={() => localDevicesSDK.setCameraEnabled(false)}>
+			{userSettings.cameraEnabled ? (
+				<BaseButton onClick={() => userSettingsSDK.setCameraEnabled(false)}>
 					<i className="fas fa-video"></i>
 				</BaseButton>
 			) : (
-				<BaseButton onClick={() => localDevicesSDK.setCameraEnabled(true)}>
+				<BaseButton onClick={() => userSettingsSDK.setCameraEnabled(true)}>
 					<i className="fas fa-video-slash"></i>
 				</BaseButton>
 			)}

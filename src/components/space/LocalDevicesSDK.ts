@@ -1,5 +1,4 @@
 import {Record} from 'immutable';
-import getUserMedia from '../../lib/getUserMedia';
 import transferMediaTracks from '../../media/transferMediaTracks';
 
 export type LocalDevicesStateProps = {
@@ -42,34 +41,8 @@ export default class LocalDevicesSDK {
 		};
 	}
 
-	setCameraEnabled(enabled: boolean) {
-		this.state = this.state.set('cameraEnabled', enabled);
-
-		if (!enabled) {
-			if (this.state.mediaStream) {
-				this.state.mediaStream.getVideoTracks().forEach((track) => {
-					track.stop();
-				});
-				this.emitChange();
-			}
-		} else {
-			getUserMedia(
-				{video: true, audio: true},
-				(media) => {
-					if (!this.state.mediaStream) {
-						this.state = this.state.set('mediaStream', media);
-					} else {
-						transferMediaTracks(media, this.state.mediaStream, 'video');
-						this.emitChange();
-					}
-				},
-				(error) => {}
-			);
-		}
-	}
-
-	setMicEnabled(enabled: boolean) {
-		this.state = this.state.set('micEnabled', enabled);
+	getMediaStream() {
+		return this.state.mediaStream;
 	}
 
 	setMediaStream(stream: MediaStream | null) {
@@ -85,5 +58,32 @@ export default class LocalDevicesSDK {
 		}
 
 		this.state = this.state.set('mediaStream', null);
+	}
+
+	stopLocalTracks(kind: 'audio' | 'video') {
+		if (this.state.mediaStream) {
+			this.state.mediaStream.getTracks().forEach((track) => {
+				if (track.kind === kind) {
+					track.stop();
+				}
+			});
+		}
+	}
+
+	transferLocalTracksFromStream(stream: MediaStream, kind: 'video' | 'audio') {
+		if (this.state.mediaStream) {
+			transferMediaTracks(stream, this.state.mediaStream, kind);
+			this.emitChange();
+		}
+	}
+
+	hasLocalVideoTracks() {
+		if (!this.state.mediaStream) return false;
+		return this.state.mediaStream.getVideoTracks().length > 0;
+	}
+
+	hasLocalAudioTracks() {
+		if (!this.state.mediaStream) return false;
+		return this.state.mediaStream.getAudioTracks().length > 0;
 	}
 }

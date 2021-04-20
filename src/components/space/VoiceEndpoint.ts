@@ -1,3 +1,4 @@
+import {USE_VOICE_SERVER_SSL} from '../../lib/constants';
 import VoiceEndpointState from './VoiceEndpointState';
 import VoiceSDK from './VoiceSDK';
 
@@ -6,6 +7,7 @@ export type VoiceEndpointStateListener = (state: VoiceEndpointState) => void;
 export default class VoiceEndpoint {
 	websocket: WebSocket;
 
+	public readonly endpointUrl: string;
 	private listeners = new Set<VoiceEndpointStateListener>();
 	private peer: RTCPeerConnection;
 	private _state = new VoiceEndpointState();
@@ -32,11 +34,13 @@ export default class VoiceEndpoint {
 		};
 	}
 
-	constructor(
-		public readonly entrypointUrl: string,
-		private voiceSDK: VoiceSDK
-	) {
-		this.websocket = new WebSocket(entrypointUrl);
+	constructor(url: string, private voiceSDK: VoiceSDK) {
+		const wssRegex = /^wss?:\/\//;
+		if (!wssRegex.test(url)) {
+			url = (USE_VOICE_SERVER_SSL ? 'wss://' : 'ws://') + url + '/websocket';
+		}
+		this.endpointUrl = url;
+		this.websocket = new WebSocket(url);
 		this.websocket.onopen = () => {
 			this.state = this.state.setSignalingConnectionState('OPEN');
 		};
@@ -107,5 +111,9 @@ export default class VoiceEndpoint {
 		this.voiceSDK.addStreamToUser(userID, stream);
 		this.voiceSDK.addTrack(event.track);
 		this.voiceSDK.addTrackIDToUser(userID, event.track.id);
+	}
+
+	addLocalTrack(track: MediaStreamTrack, stream: MediaStream) {
+		this.peer.addTrack(track, stream);
 	}
 }
