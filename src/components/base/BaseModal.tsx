@@ -42,6 +42,7 @@ export const variantStyles = createStylesheet({
 	wide: {
 		minWidth: '100ch',
 	},
+	fitContent: {},
 });
 
 export default function BaseModal({
@@ -51,7 +52,7 @@ export default function BaseModal({
 	closable = true,
 }: {
 	children: React.ReactNode;
-	variant?: 'wide';
+	variant?: keyof typeof variantStyles;
 	onClose: () => void;
 	closable?: boolean;
 }) {

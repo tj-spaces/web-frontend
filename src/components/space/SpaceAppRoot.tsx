@@ -129,6 +129,7 @@ export default function SpaceAppRoot({id}: {id: string}) {
 									setReady(true);
 									setAudio(new AudioContext());
 								}}
+								onCancel={window.history.back.bind(window.history)}
 							/>
 						) : (
 							<VoiceProvider spaceID={id} voiceURL={voiceURL}>
