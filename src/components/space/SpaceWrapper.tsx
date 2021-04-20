@@ -4,10 +4,9 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useCallback, useContext, useEffect, useMemo, useState} from 'react';
+import {useContext, useEffect, useMemo, useState} from 'react';
 import {getSpaceServerURLs, useSpace} from '../../api/spaces';
-import {getLogger} from '../../lib/ClusterLogger';
-import getUserMedia from '../../lib/getUserMedia';
+// import {getLogger} from '../../lib/ClusterLogger';
 import {createStylesheet} from '../../styles/createStylesheet';
 import AuthContext from '../AuthContext';
 import BaseButton from '../base/BaseButton';
@@ -25,7 +24,7 @@ import SpaceMediaProvider from './SpaceMediaProvider';
 import UserSettingsProvider from './UserSettingsProvider';
 import VoiceProvider from './VoiceProvider';
 
-const logger = getLogger('space/wrapper');
+// const logger = getLogger('space/wrapper');
 
 const styles = createStylesheet({
 	container: {
@@ -104,13 +103,13 @@ export default function SpaceWrapper({id}: {id: string}) {
 	 * 'ready' is true when a user has chosen their settings before entering a Space.
 	 */
 	const [ready, setReady] = useState(false);
-	const [currentMessage, __setCurrentMessage] = useState<string>();
+	const [currentMessage] = useState<string>();
 	const [voiceURL, setVoiceURL] = useState<string>();
 
-	const setCurrentMessage = useCallback((message: string, time: number) => {
-		__setCurrentMessage(message);
-		setTimeout(() => __setCurrentMessage(undefined), time);
-	}, []);
+	// const setCurrentMessage = useCallback((message: string, time: number) => {
+	// 	__setCurrentMessage(message);
+	// 	setTimeout(() => __setCurrentMessage(undefined), time);
+	// }, []);
 
 	const auth = useContext(AuthContext);
 	const space = useSpace(id);
@@ -132,25 +131,6 @@ export default function SpaceWrapper({id}: {id: string}) {
 			})
 			.catch(() => setConnectionStatus('errored'));
 	}, [auth.user, id]);
-
-	useEffect(() => {
-		if (ready) {
-			const onGetUserMediaError = () =>
-				setCurrentMessage('Microphone is Disabled', 10000);
-			if (getUserMedia) {
-				getUserMedia(
-					{audio: true, video: true},
-					(stream) => localDevicesSDK.setMediaStream(stream),
-					(error) => {
-						logger.error({event: 'get_user_media', error});
-						onGetUserMediaError();
-					}
-				);
-			} else {
-				onGetUserMediaError();
-			}
-		}
-	}, [localDevicesSDK, ready, setCurrentMessage]);
 
 	if (!simulation) {
 		return null;
