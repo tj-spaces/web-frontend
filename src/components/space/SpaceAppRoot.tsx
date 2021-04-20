@@ -9,15 +9,15 @@ import {getSpaceServerURLs, useSpace} from '../../api/spaces';
 // import {getLogger} from '../../lib/ClusterLogger';
 import {createStylesheet} from '../../styles/createStylesheet';
 import {useCurrentUser} from '../AuthHooks';
-import BaseButton from '../base/BaseButton';
-import BaseRow from '../base/BaseRow';
 import BaseText from '../base/BaseText';
 import EnterPreparationModal from './EnterPreparationModal';
 import LocalDevicesProvider from './LocalDevicesProvider';
 import SimulationServer from './SimulationServer';
 import SimulationServerContext from './SimulationServerContext';
 import Space from './Space';
-import {SpaceFooter} from './SpaceFooter';
+import SpaceConnectionErrored from './SpaceConnectionErrored';
+import SpaceFooter from './SpaceFooter';
+import SpaceInfoMessage from './SpaceInfoMessage';
 import SpaceMediaProvider from './SpaceMediaProvider';
 import UserSettingsProvider from './UserSettingsProvider';
 import VoiceProvider from './VoiceProvider';
@@ -65,16 +65,6 @@ const styles = createStylesheet({
 		right: '0px',
 		top: '5em',
 		bottom: '5em',
-	},
-	/**
-	 * Message
-	 */
-	message: {
-		position: 'absolute',
-		top: '50%',
-		width: '100%',
-		textAlign: 'center',
-		zIndex: 1,
 	},
 });
 
@@ -142,31 +132,11 @@ export default function SpaceAppRoot({id}: {id: string}) {
 
 									<div className={styles('content')}>
 										{currentMessage && (
-											<BaseText
-												variant="secondary-title"
-												xstyle={styles.message}
-											>
-												{currentMessage}
-											</BaseText>
+											<SpaceInfoMessage message={currentMessage} />
 										)}
 
 										{connectionStatus === 'errored' && (
-											<BaseRow
-												direction="column"
-												alignment="center"
-												justifyContent="center"
-												height="100%"
-											>
-												<BaseText variant="secondary-title">
-													Couldn't connect.{' '}
-												</BaseText>
-												<BaseButton
-													variant="positive"
-													onClick={() => window.location.reload()}
-												>
-													Retry
-												</BaseButton>
-											</BaseRow>
+											<SpaceConnectionErrored />
 										)}
 
 										{connectionStatus === 'connected' && <Space />}

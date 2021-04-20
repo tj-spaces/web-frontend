@@ -17,7 +17,7 @@ const styles = createStylesheet({
 	},
 });
 
-export function SpaceFooter() {
+export default function SpaceFooter() {
 	const [chatModalOpen, setChatModalOpen] = useState(false);
 
 	return (
