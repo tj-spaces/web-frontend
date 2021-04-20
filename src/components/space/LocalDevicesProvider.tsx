@@ -1,7 +1,8 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import getUserMedia from '../../lib/getUserMedia';
 import LocalDevicesContext from './LocalDevicesContext';
-import LocalDevicesSDK, {LocalDevicesState} from './LocalDevicesSDK';
+import LocalDevicesSDK from './LocalDevicesSDK';
+import LocalDevicesState from './LocalDevicesState';
 import UserSettingsContext from './UserSettingsContext';
 
 export default function LocalDevicesProvider({
@@ -29,43 +30,47 @@ export default function LocalDevicesProvider({
 
 	useEffect(() => {
 		if (!cameraEnabled) {
-			sdk.stopLocalTracks('video');
+			if (state.hasLocalVideoTracks()) {
+				sdk.stopLocalTracks('video');
+			}
 		} else {
-			if (!sdk.hasLocalVideoTracks()) {
+			if (!state.hasLocalVideoTracks()) {
 				getUserMedia(
 					{video: true},
 					(media) => {
-						if (sdk.hasLocalAudioTracks()) {
+						if (state.hasLocalAudioTracks()) {
 							sdk.transferLocalTracksFromStream(media, 'video');
 						} else {
-							sdk.setMediaStream(media);
+							sdk.setUserMedia(media);
 						}
 					},
 					(error) => {}
 				);
 			}
 		}
-	}, [cameraEnabled, sdk]);
+	}, [cameraEnabled, sdk, state]);
 
 	useEffect(() => {
 		if (!micEnabled) {
-			sdk.stopLocalTracks('audio');
+			if (state.hasLocalAudioTracks()) {
+				sdk.stopLocalTracks('audio');
+			}
 		} else {
-			if (!sdk.hasLocalAudioTracks()) {
+			if (!state.hasLocalAudioTracks()) {
 				getUserMedia(
 					{audio: true},
 					(media) => {
-						if (sdk.hasLocalVideoTracks()) {
+						if (state.hasLocalVideoTracks()) {
 							sdk.transferLocalTracksFromStream(media, 'audio');
 						} else {
-							sdk.setMediaStream(media);
+							sdk.setUserMedia(media);
 						}
 					},
 					(error) => {}
 				);
 			}
 		}
-	}, [micEnabled, sdk]);
+	}, [micEnabled, sdk, state]);
 
 	return (
 		<LocalDevicesContext.Provider

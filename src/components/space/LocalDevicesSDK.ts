@@ -1,17 +1,5 @@
-import {Record} from 'immutable';
 import transferMediaTracks from '../../media/transferMediaTracks';
-
-export type LocalDevicesStateProps = {
-	cameraEnabled: boolean;
-	micEnabled: boolean;
-	mediaStream: MediaStream | null;
-};
-
-export class LocalDevicesState extends Record<LocalDevicesStateProps>({
-	cameraEnabled: false,
-	micEnabled: false,
-	mediaStream: null,
-}) {}
+import LocalDevicesState from './LocalDevicesState';
 
 export type LocalDevicesStateListener = (state: LocalDevicesState) => void;
 
@@ -42,27 +30,27 @@ export default class LocalDevicesSDK {
 	}
 
 	getMediaStream() {
-		return this.state.mediaStream;
+		return this.state.userMedia;
 	}
 
-	setMediaStream(stream: MediaStream | null) {
-		this.state = this.state.set('mediaStream', stream);
+	setUserMedia(stream: MediaStream | null) {
+		this.state = this.state.set('userMedia', stream);
 	}
 
 	closeMediaStream() {
-		const mediaStream = this.state.mediaStream;
+		const mediaStream = this.state.userMedia;
 		if (mediaStream) {
 			mediaStream.getTracks().forEach((track) => {
 				track.stop();
 			});
 		}
 
-		this.state = this.state.set('mediaStream', null);
+		this.setUserMedia(null);
 	}
 
 	stopLocalTracks(kind: 'audio' | 'video') {
-		if (this.state.mediaStream) {
-			this.state.mediaStream.getTracks().forEach((track) => {
+		if (this.state.userMedia) {
+			this.state.userMedia.getTracks().forEach((track) => {
 				if (track.kind === kind) {
 					track.stop();
 				}
@@ -71,19 +59,10 @@ export default class LocalDevicesSDK {
 	}
 
 	transferLocalTracksFromStream(stream: MediaStream, kind: 'video' | 'audio') {
-		if (this.state.mediaStream) {
-			transferMediaTracks(stream, this.state.mediaStream, kind);
+		if (this.state.userMedia) {
+			transferMediaTracks(stream, this.state.userMedia, kind);
+
 			this.emitChange();
 		}
-	}
-
-	hasLocalVideoTracks() {
-		if (!this.state.mediaStream) return false;
-		return this.state.mediaStream.getVideoTracks().length > 0;
-	}
-
-	hasLocalAudioTracks() {
-		if (!this.state.mediaStream) return false;
-		return this.state.mediaStream.getAudioTracks().length > 0;
 	}
 }

@@ -1,5 +1,6 @@
 import {createContext} from 'react';
-import LocalDevicesSDK, {LocalDevicesState} from './LocalDevicesSDK';
+import LocalDevicesSDK from './LocalDevicesSDK';
+import LocalDevicesState from './LocalDevicesState';
 
 export type LocalDevicesContextProps = {
 	localDevicesState: LocalDevicesState;
