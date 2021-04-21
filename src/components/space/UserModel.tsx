@@ -25,6 +25,7 @@ export default function UserModel({
 	const {camera} = useThree();
 	const videoElement = useMemo(() => document.createElement('video'), []);
 	const videoTracks = useUserTracks(id, 'video');
+	const hasVideoTracks = videoTracks.length > 0;
 	const pov = useContext(PointOfViewContext);
 
 	// Camera positioning
@@ -49,25 +50,23 @@ export default function UserModel({
 
 	// Video element
 	useEffect(() => {
-		if (videoElement) {
-			if (videoTracks.length > 0) {
-				if (!videoElement.srcObject) {
-					const stream = new MediaStream(videoTracks);
-					// videoElement.muted = false;
-					videoElement.srcObject = stream;
-					if (videoElement.paused) {
-						videoElement.play();
-					}
-				} else {
-					let obj = videoElement.srcObject as MediaStream;
-					// Clear the current tracks
-					obj.getTracks().forEach((track) => {
-						obj.removeTrack(track);
-					});
-					// Add the new tracks
-					for (let track of videoTracks) {
-						obj.addTrack(track);
-					}
+		if (videoTracks.length > 0) {
+			if (!videoElement.srcObject) {
+				const stream = new MediaStream(videoTracks);
+				// videoElement.muted = false;
+				videoElement.srcObject = stream;
+				if (videoElement.paused) {
+					videoElement.play();
+				}
+			} else {
+				let obj = videoElement.srcObject as MediaStream;
+				// Clear the current tracks
+				obj.getTracks().forEach((track) => {
+					obj.removeTrack(track);
+				});
+				// Add the new tracks
+				for (let track of videoTracks) {
+					obj.addTrack(track);
 				}
 			}
 		}
@@ -86,11 +85,11 @@ export default function UserModel({
 				!(me && pov === 'first-person') && (
 					<meshBasicMaterial
 						attach="material"
-						color={!videoTracks ? (me ? '#ff6666' : '#66ff66') : undefined}
+						color={!hasVideoTracks ? (me ? '#ff6666' : '#66ff66') : undefined}
 						side={THREE.DoubleSide}
 						flatShading
 					>
-						{videoTracks && (
+						{hasVideoTracks && (
 							<videoTexture
 								attach="map"
 								args={[videoElement]}

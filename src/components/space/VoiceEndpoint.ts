@@ -9,11 +9,16 @@ export default class VoiceEndpoint {
 
 	public readonly endpointUrl: string;
 	private listeners = new Set<VoiceEndpointStateListener>();
-	private peer: RTCPeerConnection;
+	private publisher: RTCPeerConnection;
+	private subscriber: RTCPeerConnection;
 	private _spaceId: string | null = null;
 	private _state = new VoiceEndpointState();
 	// Queue for messages that want to be sent before the websocket is opened
 	private _mq: {event: string; data: string}[] = [];
+	// If we add a track before we receive and answer from the voice endpoint and need to
+	// renegotiate, wait for their answer. If this is set to true, then when we receive the
+	// answer, we'll send a new offer.
+	private _negotiationNeededAfterAnswer = false;
 
 	private set state(newValue: VoiceEndpointState) {
 		this._state = newValue;
@@ -55,21 +60,37 @@ export default class VoiceEndpoint {
 		};
 		this.websocket.onmessage = (ev) => this.processSignalingMessage(ev);
 
-		this.peer = new RTCPeerConnection();
-		this.peer.addEventListener('track', (ev) => this.processAddTrackEvent(ev));
-		this.peer.addEventListener('icecandidate', (ev) =>
-			this.processIceCandidate(ev)
+		this.subscriber = new RTCPeerConnection();
+		this.subscriber.addEventListener('track', (ev) =>
+			this.processAddTrackEvent(ev)
 		);
-		this.peer.addEventListener('negotiationneeded', (ev) => {
-			this.peer.createOffer().then((offer) => {
-				const sdp = offer.sdp;
-				if (!sdp) {
-					console.error({error: 'sdpIsNull', offer});
-				} else {
-					this.sendMessage('offer', sdp);
-				}
-			});
+		this.subscriber.addEventListener('icecandidate', (ev) => {
+			this.sendMessage(
+				'rtc_subscriber_ice_candidate',
+				JSON.stringify(ev.candidate)
+			);
 		});
+
+		this.publisher = new RTCPeerConnection();
+		this.publisher.addEventListener('negotiationneeded', () => {
+			console.log({event: 'negotiationNeeded'});
+			this.onNegotiationNeeded();
+		});
+	}
+
+	/**
+	 * The server will create all the offers, because the session description will probably
+	 * change more frequently for the many people surrounding a user than the user themself.
+	 */
+	private async onNegotiationNeeded() {
+		const offer = await this.publisher.createOffer();
+		if (this.publisher.signalingState !== 'stable') {
+			this._negotiationNeededAfterAnswer = true;
+			return;
+		}
+		this._negotiationNeededAfterAnswer = false;
+		this.publisher.setLocalDescription(offer);
+		this.sendMessage('offer', JSON.stringify(offer));
 	}
 
 	private sendMessage = (event: string, data: string) => {
@@ -95,17 +116,28 @@ export default class VoiceEndpoint {
 					}
 					break;
 
-				case 'offer':
-					this.peer.setRemoteDescription(JSON.parse(message.data));
-					this.peer.createAnswer().then((answer) => {
-						this.peer.setLocalDescription(answer);
+				case 'rtc_subscriber_offer':
+					this.subscriber.setRemoteDescription(JSON.parse(message.data));
+					this.subscriber.createAnswer().then((answer) => {
+						this.subscriber.setLocalDescription(answer);
 						this.sendMessage('answer', JSON.stringify(answer));
 					});
 					break;
 
-				case 'candidate':
-					this.peer.addIceCandidate(JSON.parse(message.data));
+				case 'rtc_subscriber_candidate':
+					this.subscriber.addIceCandidate(JSON.parse(message.data));
 					break;
+
+				case 'rtc_publisher_candidate':
+					this.publisher.addIceCandidate(JSON.parse(message.data));
+					break;
+
+				case 'rtc_publisher_answer':
+					this.publisher.setRemoteDescription(JSON.parse(message.data));
+					if (this._negotiationNeededAfterAnswer) {
+						this.onNegotiationNeeded();
+						this._negotiationNeededAfterAnswer = false;
+					}
 			}
 		} catch (error) {
 			console.error({
@@ -137,12 +169,17 @@ export default class VoiceEndpoint {
 		this.voiceSDK.addStreamToUser(userID, stream);
 		this.voiceSDK.addTrack(event.track);
 		this.voiceSDK.addTrackIDToUser(userID, event.track.id);
+		stream.addEventListener('removetrack', (event) => {
+			console.info({event: 'removeTrack', userID, track: event.track});
+			this.voiceSDK.removeTrackIDFromUser(userID, event.track.id);
+			this.voiceSDK.removeTrack(event.track);
+		});
 	}
 
 	addLocalTrack(track: MediaStreamTrack, stream: MediaStream) {
 		if (!this.state.localTracks.has(track.id)) {
 			console.log({event: 'addLocalTrack', track, stream});
-			const sender = this.peer.addTrack(track, stream);
+			const sender = this.publisher.addTrack(track, stream);
 			this.state = this.state.set(
 				'localTracks',
 				this.state.localTracks.set(track.id, sender)
@@ -155,7 +192,7 @@ export default class VoiceEndpoint {
 			console.log({event: 'removeLocalTrack', track});
 			const sender = this.state.localTracks.get(track.id)!;
 			if (sender) {
-				this.peer.removeTrack(sender);
+				this.publisher.removeTrack(sender);
 				this.state = this.state.set(
 					'localTracks',
 					this.state.localTracks.delete(track.id)
@@ -177,6 +214,7 @@ export default class VoiceEndpoint {
 
 	close() {
 		this.websocket.close();
-		this.peer.close();
+		this.publisher.close();
+		this.subscriber.close();
 	}
 }

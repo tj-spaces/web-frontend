@@ -35,7 +35,20 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	}
 
 	removeUser(userId: string) {
-		this.state = this.state.set('rtcUsers', this.state.rtcUsers.delete(userId));
+		const user = this.state.rtcUsers.get(userId);
+		if (user) {
+			user.trackIDs.forEach((id) => {
+				this.removeTrackIDFromUser(userId, id);
+				const track = this.state.tracks.get(id);
+				if (track) {
+					this.removeTrack(track);
+				}
+			});
+			this.state = this.state.set(
+				'rtcUsers',
+				this.state.rtcUsers.delete(userId)
+			);
+		}
 	}
 
 	updateUser(userId: string, updater: (user: RTCUser) => RTCUser) {
@@ -63,14 +76,12 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 
 	deleteStreamFromUser(userId: string, stream: MediaStream) {
 		const rtcUser = this.state.rtcUsers.get(userId);
-		if (!rtcUser) {
-			throw new Error('RTCUser not found: ' + userId);
+		if (rtcUser) {
+			this.state = this.state.set(
+				'rtcUsers',
+				this.state.rtcUsers.set(userId, rtcUser.removeStream(stream))
+			);
 		}
-
-		this.state = this.state.set(
-			'rtcUsers',
-			this.state.rtcUsers.set(userId, rtcUser.removeStream(stream))
-		);
 	}
 
 	addLocalTrack(track: MediaStreamTrack, stream: MediaStream) {
@@ -112,14 +123,12 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 
 	removeTrackIDFromUser(userId: string, trackId: string) {
 		const rtcUser = this.state.rtcUsers.get(userId);
-		if (!rtcUser) {
-			throw new Error('RTCUser not found: ' + userId);
+		if (rtcUser) {
+			this.state = this.state.set(
+				'rtcUsers',
+				this.state.rtcUsers.set(userId, rtcUser.removeTrackID(trackId))
+			);
 		}
-
-		this.state = this.state.set(
-			'rtcUsers',
-			this.state.rtcUsers.set(userId, rtcUser.removeTrackID(trackId))
-		);
 	}
 
 	joinSpace(spaceId: string, userId: string) {
