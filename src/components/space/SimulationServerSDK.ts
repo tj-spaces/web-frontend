@@ -124,7 +124,7 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 	}
 
 	setMoveDirection(direction: MovementDirection) {
-		this.send('move-direction', direction);
+		this.send('move', direction);
 	}
 
 	/**
