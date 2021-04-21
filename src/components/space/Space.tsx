@@ -90,7 +90,7 @@ export default function Space() {
 				position={myPosition ?? {x: 0, y: 0, z: 0}}
 				rotation={0}
 			/>
-			{participants.forEach((participant, id) =>
+			{Object.entries(participants.toJS()).map(([id, participant]) =>
 				id !== myID ? (
 					<RemoteAudio userID={id} position={participant.position} key={id} />
 				) : null

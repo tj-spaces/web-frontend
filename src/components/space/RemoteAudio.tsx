@@ -23,18 +23,20 @@ export default function RemoteAudio({
 
 	return (
 		<>
-			{streams.map((stream) =>
-				stream
-					.getAudioTracks()
-					.map((track) => (
-						<SpatialAudioTrack
-							position={position}
-							rotation={0}
-							track={track}
-							key={track.id}
-						/>
-					))
-			)}
+			{streams
+				.map((stream) =>
+					stream
+						.getAudioTracks()
+						.map((track) => (
+							<SpatialAudioTrack
+								position={position}
+								rotation={0}
+								track={track}
+								key={track.id}
+							/>
+						))
+				)
+				.toArray()}
 		</>
 	);
 }
