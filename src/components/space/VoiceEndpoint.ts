@@ -19,6 +19,9 @@ export default class VoiceEndpoint {
 	// renegotiate, wait for their answer. If this is set to true, then when we receive the
 	// answer, we'll send a new offer.
 	private _negotiationNeededAfterAnswer = false;
+	// ICE candidates need to be added when a remote session description has been created.
+	// See https://stackoverflow.com/questions/38198751/domexception-error-processing-ice-candidate
+	private _subscriberIceCandidateQueue: RTCIceCandidateInit[] = [];
 
 	private set state(newValue: VoiceEndpointState) {
 		this._state = newValue;
@@ -61,9 +64,9 @@ export default class VoiceEndpoint {
 		this.websocket.onmessage = (ev) => this.processSignalingMessage(ev);
 
 		this.subscriber = new RTCPeerConnection();
-		this.subscriber.addEventListener('track', (ev) =>
-			this.processAddTrackEvent(ev)
-		);
+		this.subscriber.addEventListener('track', (ev) => {
+			this.processAddTrackEvent(ev);
+		});
 		this.subscriber.addEventListener('icecandidate', (ev) => {
 			this.sendMessage(
 				'rtc_subscriber_ice_candidate',
@@ -71,26 +74,43 @@ export default class VoiceEndpoint {
 			);
 		});
 
-		this.publisher = new RTCPeerConnection();
+		this.publisher = new RTCPeerConnection({
+			iceServers: [
+				{
+					urls: 'stun:stun.l.google.com:19302',
+				},
+			],
+		});
 		this.publisher.addEventListener('negotiationneeded', () => {
 			console.log({event: 'negotiationNeeded'});
-			this.onNegotiationNeeded();
+			this.createAndSendPublisherOffer();
 		});
+		this.publisher.addEventListener('icecandidate', (ev) => {
+			this.sendMessage(
+				'rtc_publisher_ice_candidate',
+				JSON.stringify(ev.candidate)
+			);
+		});
+		this.createAndSendPublisherOffer();
 	}
 
 	/**
 	 * The server will create all the offers, because the session description will probably
 	 * change more frequently for the many people surrounding a user than the user themself.
 	 */
-	private async onNegotiationNeeded() {
+	private async createAndSendPublisherOffer() {
 		const offer = await this.publisher.createOffer();
+		console.log({offer});
 		if (this.publisher.signalingState !== 'stable') {
+			console.log({info: 'signalingState!==stable'});
 			this._negotiationNeededAfterAnswer = true;
 			return;
+		} else {
+			console.log({info: 'signalingState===stable'});
 		}
 		this._negotiationNeededAfterAnswer = false;
 		this.publisher.setLocalDescription(offer);
-		this.sendMessage('offer', JSON.stringify(offer));
+		this.sendMessage('rtc_publisher_offer', JSON.stringify(offer));
 	}
 
 	private sendMessage = (event: string, data: string) => {
@@ -116,16 +136,25 @@ export default class VoiceEndpoint {
 					}
 					break;
 
-				case 'rtc_subscriber_offer':
-					this.subscriber.setRemoteDescription(JSON.parse(message.data));
-					this.subscriber.createAnswer().then((answer) => {
-						this.subscriber.setLocalDescription(answer);
-						this.sendMessage('answer', JSON.stringify(answer));
-					});
+				case 'rtc_subscriber_candidate':
+					if (this.subscriber.remoteDescription == null) {
+						this._subscriberIceCandidateQueue.push(JSON.parse(message.data));
+					} else {
+						this.subscriber.addIceCandidate(JSON.parse(message.data));
+					}
 					break;
 
-				case 'rtc_subscriber_candidate':
-					this.subscriber.addIceCandidate(JSON.parse(message.data));
+				case 'rtc_subscriber_offer':
+					this.subscriber.setRemoteDescription(JSON.parse(message.data));
+					while (this._subscriberIceCandidateQueue.length > 0) {
+						this.subscriber.addIceCandidate(
+							this._subscriberIceCandidateQueue.pop()!
+						);
+					}
+					this.subscriber.createAnswer().then((answer) => {
+						this.subscriber.setLocalDescription(answer);
+						this.sendMessage('rtc_subscriber_answer', JSON.stringify(answer));
+					});
 					break;
 
 				case 'rtc_publisher_candidate':
@@ -135,7 +164,7 @@ export default class VoiceEndpoint {
 				case 'rtc_publisher_answer':
 					this.publisher.setRemoteDescription(JSON.parse(message.data));
 					if (this._negotiationNeededAfterAnswer) {
-						this.onNegotiationNeeded();
+						this.createAndSendPublisherOffer();
 						this._negotiationNeededAfterAnswer = false;
 					}
 			}
@@ -149,21 +178,11 @@ export default class VoiceEndpoint {
 	}
 
 	/**
-	 * When the client gets an ICE server candidate (from the browser),
-	 * it sends the candidate to the Voice server.
-	 * @param event The native event
-	 */
-	private processIceCandidate(event: RTCPeerConnectionIceEvent) {
-		if (event.candidate) {
-			this.sendMessage('candidate', JSON.stringify(event.candidate));
-		}
-	}
-
-	/**
 	 * Handles a new track received from the Voice endpoint.
 	 * @param event The native event
 	 */
 	private processAddTrackEvent(event: RTCTrackEvent) {
+		console.info({eventName: 'addTrack', event});
 		let stream = event.streams[0];
 		let userID = stream.id.slice('user_'.length);
 		this.voiceSDK.addStreamToUser(userID, stream);
