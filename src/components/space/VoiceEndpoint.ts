@@ -60,6 +60,16 @@ export default class VoiceEndpoint {
 		this.peer.addEventListener('icecandidate', (ev) =>
 			this.processIceCandidate(ev)
 		);
+		this.peer.addEventListener('negotiationneeded', (ev) => {
+			this.peer.createOffer().then((offer) => {
+				const sdp = offer.sdp;
+				if (!sdp) {
+					console.error({error: 'sdpIsNull', offer});
+				} else {
+					this.sendMessage('offer', sdp);
+				}
+			});
+		});
 	}
 
 	private sendMessage = (event: string, data: string) => {
@@ -163,5 +173,10 @@ export default class VoiceEndpoint {
 	leaveSpace() {
 		console.log({event: 'leaveSpace'});
 		this.sendMessage('leave_room', '');
+	}
+
+	close() {
+		this.websocket.close();
+		this.peer.close();
 	}
 }

@@ -112,15 +112,17 @@ export default function Space() {
 									</Suspense>
 									<ambientLight intensity={0.5} />
 									<Floor />
-									{participants.map((participant, id) => (
-										<UserModel
-											position={participant.position}
-											rotation={participant.rotation}
-											key={id}
-											me={id === myID}
-											id={id}
-										/>
-									))}
+									{Object.entries(participants.toJSON()).map(
+										([id, participant]) => (
+											<UserModel
+												position={participant.position}
+												rotation={participant.rotation}
+												key={id}
+												me={id === myID}
+												id={id}
+											/>
+										)
+									)}
 								</PointOfViewContext.Provider>
 							</VoiceContext.Provider>
 						</SpaceMediaContext.Provider>

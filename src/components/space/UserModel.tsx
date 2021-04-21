@@ -4,7 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useMemo} from 'react';
 import {useThree} from 'react-three-fiber';
 import * as THREE from 'three';
 import {Position} from '../../typings/Space';
@@ -23,7 +23,7 @@ export default function UserModel({
 	id: string;
 }) {
 	const {camera} = useThree();
-	const [videoElement] = useState(() => document.createElement('video'));
+	const videoElement = useMemo(() => document.createElement('video'), []);
 	const videoTracks = useUserTracks(id, 'video');
 	const pov = useContext(PointOfViewContext);
 
@@ -86,16 +86,18 @@ export default function UserModel({
 				!(me && pov === 'first-person') && (
 					<meshBasicMaterial
 						attach="material"
-						// color={me ? '#ff6666' : '#66ff66'}
+						color={!videoTracks ? (me ? '#ff6666' : '#66ff66') : undefined}
 						side={THREE.DoubleSide}
 						flatShading
 					>
-						<videoTexture
-							attach="map"
-							args={[videoElement]}
-							wrapS={THREE.RepeatWrapping}
-							wrapT={THREE.RepeatWrapping}
-						/>
+						{videoTracks && (
+							<videoTexture
+								attach="map"
+								args={[videoElement]}
+								wrapS={THREE.RepeatWrapping}
+								wrapT={THREE.RepeatWrapping}
+							/>
+						)}
 					</meshBasicMaterial>
 				)
 			}

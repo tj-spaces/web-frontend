@@ -14,7 +14,13 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	}
 
 	removeVoiceEndpoint(endpointId: string) {
-		this.state = this.state.removeVoiceEndpoint(endpointId);
+		const endpoint = this.state.voiceEndpoints.get(endpointId);
+		if (endpoint) {
+			endpoint.close();
+			this.state = this.state.removeVoiceEndpoint(endpointId);
+		} else {
+			this.emitChange();
+		}
 	}
 
 	addUser(user: RTCUser) {
@@ -24,11 +30,12 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		);
 	}
 
-	removeUser(user: RTCUser) {
-		this.state = this.state.set(
-			'rtcUsers',
-			this.state.rtcUsers.delete(user.id)
-		);
+	hasUser(userId: string) {
+		return this.state.rtcUsers.has(userId);
+	}
+
+	removeUser(userId: string) {
+		this.state = this.state.set('rtcUsers', this.state.rtcUsers.delete(userId));
 	}
 
 	updateUser(userId: string, updater: (user: RTCUser) => RTCUser) {
@@ -44,6 +51,7 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	addStreamToUser(userId: string, stream: MediaStream) {
 		const rtcUser = this.state.rtcUsers.get(userId);
 		if (!rtcUser) {
+			console.log({event: 'addStreamToUser', userId, stream});
 			throw new Error('RTCUser not found: ' + userId);
 		}
 

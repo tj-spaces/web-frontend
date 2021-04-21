@@ -8,11 +8,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {getMe} from '../api/api';
 import AuthContext, {AuthState} from './AuthContext';
 
-export default function AuthenticationWrapper({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default function AuthProvider({children}: {children: React.ReactNode}) {
 	const sessionId = localStorage.getItem('session_id');
 	// Prevent race conditions
 	const [authState, setAuthState] = useState<AuthState>({
@@ -34,6 +30,12 @@ export default function AuthenticationWrapper({
 	useEffect(() => {
 		refreshAuthState();
 	}, [refreshAuthState]);
+
+	useEffect(() => {
+		console.log({
+			id: authState?.user?.id,
+		});
+	}, [authState]);
 
 	if (authState?.isLoggedIn == null) {
 		return null;

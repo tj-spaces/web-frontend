@@ -9,7 +9,7 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
 import './App.css';
 
-import AuthenticationWrapper from './components/AuthenticationWrapper';
+import AuthProvider from './components/AuthProvider';
 import CenteredLoadingText from './components/CenteredLoadingText';
 import ErrorBoundary from './components/ErrorBoundary';
 import StreamerModeContext from './components/StreamerModeContext';
@@ -31,7 +31,7 @@ const TermsPage = lazy(() => import('./pages/TermsPage'));
 function App() {
 	return (
 		<ErrorBoundary>
-			<AuthenticationWrapper>
+			<AuthProvider>
 				<StreamerModeContext.Provider value={false}>
 					<ThemeProvider>
 						<BrowserRouter>
@@ -55,7 +55,7 @@ function App() {
 						</BrowserRouter>
 					</ThemeProvider>
 				</StreamerModeContext.Provider>
-			</AuthenticationWrapper>
+			</AuthProvider>
 		</ErrorBoundary>
 	);
 }
