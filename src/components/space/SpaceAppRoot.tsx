@@ -80,6 +80,7 @@ export default function SpaceAppRoot({id}: {id: string}) {
 	const [currentMessage] = useState<string>();
 	const [voiceURL, setVoiceURL] = useState<string>();
 	const [simulationURL, setSimulationURL] = useState<string>();
+	const [token, setToken] = useState<string>();
 
 	// const setCurrentMessage = useCallback((message: string, time: number) => {
 	// 	__setCurrentMessage(message);
@@ -90,18 +91,19 @@ export default function SpaceAppRoot({id}: {id: string}) {
 	const space = useSpace(id);
 
 	useEffect(() => {
-		setConnectionStatus('connecting');
+		// setConnectionStatus('connecting');
 
 		getSpaceServerURLs(id)
 			.then(({voiceURL, simulationURL, token}) => {
 				setSimulationURL(simulationURL);
+				setToken(token);
 				setVoiceURL(voiceURL);
 			})
 			.catch(() => setConnectionStatus('errored'));
 	}, [user, id]);
 
 	return (
-		<SimulationServerProvider simulationURL={simulationURL}>
+		<SimulationServerProvider simulationURL={simulationURL} token={token}>
 			<UserSettingsProvider>
 				<LocalDevicesProvider>
 					<SpaceMediaProvider audioContext={audio} voiceServer={null}>

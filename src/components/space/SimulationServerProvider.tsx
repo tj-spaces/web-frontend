@@ -7,9 +7,11 @@ import SimulationServerState from './SimulationServerState';
 export default function SimulationServerProvider({
 	children,
 	simulationURL,
+	token,
 }: {
 	children: React.ReactNode;
 	simulationURL?: string;
+	token?: string;
 }) {
 	const simulationSDK = useMemo(
 		() => new SimulationServerSDK(new ChatSDK()),
@@ -25,14 +27,14 @@ export default function SimulationServerProvider({
 	}, [simulationSDK]);
 
 	useEffect(() => {
-		if (simulationURL) {
-			simulationSDK.connect(simulationURL, 'EMPTY_TOKEN');
+		if (simulationURL && token) {
+			simulationSDK.connect(simulationURL, token);
 
 			return () => {
 				simulationSDK.disconnect();
 			};
 		}
-	}, [simulationSDK, simulationURL]);
+	}, [simulationSDK, simulationURL, token]);
 
 	return (
 		<SimulationServerContext.Provider value={{simulationSDK, simulationState}}>
