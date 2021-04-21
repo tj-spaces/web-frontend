@@ -1,44 +1,31 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import {ReactNode, useMemo} from 'react';
+import useSDKState from '../../hooks/useSDKState';
+import {ChatProvider} from './ChatProvider';
 import ChatSDK from './ChatSDK';
+import {useSimulationURL} from './SimulationHooks';
 import SimulationServerContext from './SimulationServerContext';
 import SimulationServerSDK from './SimulationServerSDK';
-import SimulationServerState from './SimulationServerState';
 
 export default function SimulationServerProvider({
 	children,
 	simulationURL,
 	token,
 }: {
-	children: React.ReactNode;
+	children: ReactNode;
 	simulationURL?: string;
 	token?: string;
 }) {
-	const simulationSDK = useMemo(
-		() => new SimulationServerSDK(new ChatSDK()),
-		[]
-	);
-	const [simulationState, setSimulationState] = useState(
-		new SimulationServerState()
-	);
+	const chatSDK = useMemo(() => new ChatSDK(), []);
+	const simulationSDK = useMemo(() => new SimulationServerSDK(chatSDK), [
+		chatSDK,
+	]);
+	const simulationState = useSDKState(simulationSDK);
 
-	useEffect(() => {
-		const handle = simulationSDK.addListener(setSimulationState);
-		return () => handle.remove();
-	}, [simulationSDK]);
-
-	useEffect(() => {
-		if (simulationURL && token) {
-			simulationSDK.connect(simulationURL, token);
-
-			return () => {
-				simulationSDK.disconnect();
-			};
-		}
-	}, [simulationSDK, simulationURL, token]);
+	useSimulationURL(simulationSDK, simulationURL, token);
 
 	return (
 		<SimulationServerContext.Provider value={{simulationSDK, simulationState}}>
-			{children}
+			<ChatProvider chatSDK={chatSDK}>{children}</ChatProvider>
 		</SimulationServerContext.Provider>
 	);
 }

@@ -1,5 +1,6 @@
-import {useContext} from 'react';
+import {useContext, useEffect} from 'react';
 import SimulationServerContext from './SimulationServerContext';
+import SimulationServerSDK from './SimulationServerSDK';
 
 export function useMyAnonymousID() {
 	const {simulationState} = useContext(SimulationServerContext);
@@ -10,4 +11,20 @@ export function useParticipants() {
 	const {simulationState} = useContext(SimulationServerContext);
 
 	return simulationState.participants;
+}
+
+export function useSimulationURL(
+	simulationSDK: SimulationServerSDK,
+	simulationURL?: string,
+	token?: string
+) {
+	useEffect(() => {
+		if (simulationURL && token) {
+			simulationSDK.connect(simulationURL, token);
+
+			return () => {
+				simulationSDK.disconnect();
+			};
+		}
+	}, [simulationSDK, simulationURL, token]);
 }
