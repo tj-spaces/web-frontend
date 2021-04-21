@@ -6,7 +6,7 @@ export type RTCUserState = {
 	trackIDs: Set<string>;
 };
 
-export class RTCUser extends Record<RTCUserState>({
+export default class RTCUser extends Record<RTCUserState>({
 	id: '',
 	streams: Set(),
 	trackIDs: Set(),

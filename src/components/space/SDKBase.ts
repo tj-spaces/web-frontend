@@ -17,7 +17,7 @@ export default class SDKBase<State> {
 		return this._state;
 	}
 
-	private emitChange() {
+	protected emitChange() {
 		this.listeners.forEach((listener) => listener(this.state));
 	}
 

@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, {useContext, useEffect, useMemo} from 'react';
+import useSDKState from '../../hooks/useSDKState';
 import getUserMedia from '../../lib/getUserMedia';
 import LocalDevicesContext from './LocalDevicesContext';
 import LocalDevicesSDK from './LocalDevicesSDK';
-import LocalDevicesState from './LocalDevicesState';
 import UserSettingsContext from './UserSettingsContext';
 
 export default function LocalDevicesProvider({
@@ -11,7 +11,6 @@ export default function LocalDevicesProvider({
 	children: React.ReactNode;
 }) {
 	const sdk = useMemo(() => new LocalDevicesSDK(), []);
-	const [state, setState] = useState(new LocalDevicesState());
 
 	useEffect(() => {
 		return () => {
@@ -19,10 +18,7 @@ export default function LocalDevicesProvider({
 		};
 	}, [sdk]);
 
-	useEffect(() => {
-		let handle = sdk.addListener(setState);
-		return () => handle.remove();
-	}, [sdk]);
+	const state = useSDKState(sdk);
 
 	const {
 		userSettings: {cameraEnabled, micEnabled},

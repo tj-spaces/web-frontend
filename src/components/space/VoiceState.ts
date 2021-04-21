@@ -1,5 +1,5 @@
 import {Record, Map} from 'immutable';
-import {RTCUser} from './RTCUser';
+import RTCUser from './RTCUser';
 import VoiceEndpoint from './VoiceEndpoint';
 import VoiceEndpointState from './VoiceEndpointState';
 

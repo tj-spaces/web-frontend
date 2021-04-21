@@ -1,7 +1,7 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
+import useSDKState from '../../hooks/useSDKState';
 import UserSettingsContext from './UserSettingsContext';
 import UserSettingsSDK from './UserSettingsSDK';
-import UserSettingsState from './UserSettingsState';
 
 export default function UserSettingsProvider({
 	children,
@@ -9,12 +9,7 @@ export default function UserSettingsProvider({
 	children: React.ReactNode;
 }) {
 	const sdk = useMemo(() => new UserSettingsSDK(), []);
-	const [state, setState] = useState(new UserSettingsState());
-
-	useEffect(() => {
-		let handle = sdk.addListener(setState);
-		return () => handle.remove();
-	}, [sdk]);
+	const state = useSDKState(sdk);
 
 	return (
 		<UserSettingsContext.Provider

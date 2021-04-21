@@ -1,31 +1,9 @@
 import LocalDevicesState from './LocalDevicesState';
+import SDKBase from './SDKBase';
 
-export type LocalDevicesStateListener = (state: LocalDevicesState) => void;
-
-export default class LocalDevicesSDK {
-	private listeners = new Set<LocalDevicesStateListener>();
-	private _state = new LocalDevicesState();
-
-	private set state(newValue: LocalDevicesState) {
-		this._state = newValue;
-		this.emitChange();
-	}
-
-	private get state() {
-		return this._state;
-	}
-
-	private emitChange() {
-		this.listeners.forEach((listener) => listener(this.state));
-	}
-
-	addListener(listener: LocalDevicesStateListener) {
-		this.listeners.add(listener);
-		return {
-			remove: () => {
-				this.listeners.delete(listener);
-			},
-		};
+export default class LocalDevicesSDK extends SDKBase<LocalDevicesState> {
+	getInitialState() {
+		return new LocalDevicesState();
 	}
 
 	getMediaStream() {

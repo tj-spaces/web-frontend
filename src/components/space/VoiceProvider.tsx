@@ -1,9 +1,9 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo} from 'react';
+import useSDKState from '../../hooks/useSDKState';
 import {useCurrentUser} from '../AuthHooks';
 import {useLocalTracks, useUserMediaStream} from './LocalDevicesHooks';
 import VoiceContext from './VoiceContext';
 import VoiceSDK from './VoiceSDK';
-import VoiceState from './VoiceState';
 
 export default function VoiceProvider({
 	children,
@@ -15,14 +15,9 @@ export default function VoiceProvider({
 	voiceURL?: string;
 }) {
 	const voiceSDK = useMemo(() => new VoiceSDK(), []);
-	const [voiceState, setVoiceState] = useState(new VoiceState());
 	const user = useCurrentUser();
 
-	// Listen to changes to the voice state from the SDK
-	useEffect(() => {
-		const handle = voiceSDK.addListener(setVoiceState);
-		return () => handle.remove();
-	}, [voiceSDK]);
+	const voiceState = useSDKState(voiceSDK);
 
 	useEffect(() => {
 		if (voiceURL) {
