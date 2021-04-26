@@ -1,6 +1,7 @@
 import RTCUser from './RTCUser';
 import SDKBase from './SDKBase';
 import VoiceEndpoint from './VoiceEndpoint';
+import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 import VoiceState from './VoiceState';
 
 export default class VoiceSDK extends SDKBase<VoiceState> {
@@ -30,23 +31,23 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		);
 	}
 
-	hasUser(userId: string) {
-		return this.state.rtcUsers.has(userId);
+	hasUser(userID: string) {
+		return this.state.rtcUsers.has(userID);
 	}
 
-	removeUser(userId: string) {
-		const user = this.state.rtcUsers.get(userId);
+	removeUser(userID: string) {
+		const user = this.state.rtcUsers.get(userID);
 		if (user) {
 			user.trackIDs.forEach((id) => {
-				this.removeTrackIDFromUser(userId, id);
+				this.removeTrackIDFromUser(userID, id);
 				const track = this.state.tracks.get(id);
 				if (track) {
-					this.removeTrack(track);
+					this.removeTrackByID(track.trackID);
 				}
 			});
 			this.state = this.state.set(
 				'rtcUsers',
-				this.state.rtcUsers.delete(userId)
+				this.state.rtcUsers.delete(userID)
 			);
 		}
 	}
@@ -98,15 +99,15 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		});
 	}
 
-	addTrack(track: MediaStreamTrack) {
+	addTrack(track: VoiceImmutableMediaTrack) {
 		this.state = this.state.set(
 			'tracks',
-			this.state.tracks.set(track.id, track)
+			this.state.tracks.set(track.trackID!, track)
 		);
 	}
 
-	removeTrack(track: MediaStreamTrack) {
-		this.state = this.state.set('tracks', this.state.tracks.delete(track.id));
+	removeTrackByID(trackID: string) {
+		this.state = this.state.set('tracks', this.state.tracks.delete(trackID));
 	}
 
 	addTrackIDToUser(userId: string, trackId: string) {

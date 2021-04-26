@@ -16,6 +16,7 @@ type SubscriptionResponse =
 	  };
 
 type SubscriptionResponseHandler = (response: SubscriptionResponse) => void;
+type SubscribeOfferHandler = (offerTarget: SubscriptionRequestTarget) => void;
 
 export const PING_TIMEOUT = 60 * 1000;
 export const PING_INTERVAL = 15 * 1000;
@@ -30,6 +31,11 @@ export default class SignalingChannel {
 	private subscriptionResponseHandlers = new Set<SubscriptionResponseListenerWithTarget>();
 	private ackHandlers = new Map<string, Function>();
 	private timeoutHandlers = new Set<Function>();
+	private offeredSubscriptionHandlers = new Set<SubscribeOfferHandler>();
+	private revokedSubscriptionHandlers = new Map<
+		SubscriptionRequestTarget,
+		Set<Function>
+	>();
 
 	constructor(signalingUrl: string) {
 		this.websocket = new WebSocket(signalingUrl);
@@ -50,9 +56,22 @@ export default class SignalingChannel {
 			case 'rtc_ice_candidate':
 				this.iceCandidateHandlers.forEach((listener) => listener(eventData));
 				break;
+
 			case 'rtc_offer':
 			case 'rtc_answer':
 				this.sdpHandlers.forEach((listener) => listener(eventData));
+				break;
+
+			case 'rtc_subscribe_offer':
+				this.offeredSubscriptionHandlers.forEach((handler) =>
+					handler(eventData)
+				);
+				break;
+
+			case 'rtc_subscription_revoked':
+				this.revokedSubscriptionHandlers
+					.get(eventData)
+					?.forEach((handler) => handler());
 		}
 	}
 
@@ -138,10 +157,30 @@ export default class SignalingChannel {
 		};
 	}
 
-	sendSubscribeRequest(
-		userId: string,
-		contentType: 'userAudio' | 'userVideo' | 'screenVideo'
-	) {
-		this._send('rtc_subscribe_request', {userId, contentType});
+	onSubscriptionRevoked(target: SubscriptionRequestTarget, fn: Function) {
+		if (!this.revokedSubscriptionHandlers.has(target)) {
+			this.revokedSubscriptionHandlers.set(target, new Set());
+		}
+		this.revokedSubscriptionHandlers.get(target)!.add(fn);
+	}
+
+	sendSubscribeRequest(target: SubscriptionRequestTarget) {
+		this._send('rtc_subscribe_request', target);
+	}
+
+	sendUnsubscribeRequest(target: SubscriptionRequestTarget) {
+		this._send('rtc_unsubscribe_request', target);
+	}
+
+	onOfferedSubscription(fn: (target: SubscriptionRequestTarget) => void) {
+		this.offeredSubscriptionHandlers.add(fn);
+
+		return {
+			remove: () => this.offeredSubscriptionHandlers.delete(fn),
+		};
+	}
+
+	declineStreamOffer(target: SubscriptionRequestTarget) {
+		this._send('rtc_subscribe_offer_decline', target);
 	}
 }

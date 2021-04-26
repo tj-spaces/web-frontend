@@ -1,44 +1,55 @@
 import SignalingChannel, {ContentType} from './SignalingChannel';
+import {createImmutableMediaTrackFromTrack} from './VoiceImmutableMediaTrack';
+import VoiceSDK from './VoiceSDK';
 
 export type SubscriptionRequestTarget = {
 	userID: string;
 	contentType: ContentType;
 };
 
-type StreamHandler = (stream: MediaStream) => void;
-
 export function getStreamTargetFromStreamID(
 	id: string
-): SubscriptionRequestTarget {
+): {userID: string; streamType: 'user' | 'screen'} {
 	const [contentType, userID] = id.split(':');
 	switch (contentType) {
 		case 'userAudio':
 		case 'userVideo':
+			return {userID, streamType: 'user'};
 		case 'screenVideo':
-			return {userID, contentType};
+			return {userID, streamType: 'screen'};
 		default:
 			throw new Error('invalid stream content type');
 	}
 }
 
+const SUBSCRIPTION_REQUEST_TIMEOUT = 30000;
+
 export default class VoiceDownstream {
 	private signalingChannel: SignalingChannel;
 	private connection: RTCPeerConnection;
-	private streamHandlers = new Map<SubscriptionRequestTarget, StreamHandler>();
+	private subscribeTimeouts = new Map<
+		SubscriptionRequestTarget,
+		NodeJS.Timeout
+	>();
 
-	constructor(signalingUrl: string) {
+	constructor(signalingUrl: string, private voiceSDK: VoiceSDK) {
 		this.signalingChannel = new SignalingChannel(signalingUrl);
 		this.connection = new RTCPeerConnection();
 		this.connection.addEventListener('track', (event) => {
-			event.streams.forEach((stream) => {});
+			this.handleTrackEvent(event);
 		});
 
-		const sdpListener = this.signalingChannel.onSdp(async (sdp) => {
-			sdpListener.remove();
+		this.signalingChannel.onSdp(async (sdp) => {
 			if (sdp.type === 'offer') {
 				this.connection.setRemoteDescription(sdp);
 				await this.createAnswer();
+			} else {
+				console.warn('Received non-offer from Voice Downstream');
 			}
+		});
+
+		this.signalingChannel.onIceCandidate(async (candidate) => {
+			await this.connection.addIceCandidate(candidate);
 		});
 	}
 
@@ -47,54 +58,57 @@ export default class VoiceDownstream {
 		this.signalingChannel.sendAnswer(answer);
 	}
 
-	private addNewStreamListener(
-		userID: string,
-		contentType: 'userAudio' | 'userVideo' | 'screenVideo',
-		handler: StreamHandler
-	) {
-		const key = {userID, contentType};
-		this.streamHandlers.set(key, handler);
-		return {
-			remove: () => {
-				this.streamHandlers.delete(key);
-			},
-		};
-	}
-
-	private async waitForStream(
-		userID: string,
-		contentType: ContentType,
-		timeout: number = -1
-	) {
-		const streamPromise = new Promise<MediaStream>((resolve, reject) => {
-			const listener = this.addNewStreamListener(
-				userID,
-				contentType,
-				(stream) => {
-					listener.remove();
-					resolve(stream);
-				}
+	private handleTrackEvent(event: RTCTrackEvent) {
+		const [stream] = event.streams;
+		const track = event.track;
+		if (!stream) {
+			throw new Error(
+				'Invariant: Track had no stream: ' + JSON.stringify(event.track)
 			);
+		}
+		const {userID, streamType} = getStreamTargetFromStreamID(stream.id);
+		const contentType: ContentType =
+			streamType === 'user'
+				? track.kind === 'audio'
+					? 'userAudio'
+					: 'userVideo'
+				: 'screenVideo';
+
+		const immutableMediaTrack = createImmutableMediaTrackFromTrack(
+			track,
+			contentType,
+			true
+		);
+
+		track.addEventListener('ended', () => {
+			this.voiceSDK.removeTrackIDFromUser(userID, immutableMediaTrack.trackID);
+			this.voiceSDK.removeTrackByID(immutableMediaTrack.trackID);
 		});
 
-		if (timeout !== -1) {
-			return await Promise.race([
-				streamPromise,
-				new Promise((resolve, reject) => {
-					setTimeout(() => reject('timeout'), timeout);
-				}),
-			]);
-		} else {
-			return await streamPromise;
+		this.voiceSDK.addTrack(immutableMediaTrack);
+		this.voiceSDK.addTrackIDToUser(userID, immutableMediaTrack.trackID);
+	}
+
+	private startSubscribeTimeout(target: SubscriptionRequestTarget) {
+		if (!this.subscribeTimeouts.has(target)) {
+			this.subscribeTimeouts.set(
+				target,
+				setTimeout(() => {
+					console.error(`Subscription request for target ${target} failed`);
+				}, SUBSCRIPTION_REQUEST_TIMEOUT)
+			);
 		}
 	}
 
-	async requestStream(target: SubscriptionRequestTarget, timeout: number = -1) {
-		this.signalingChannel.sendSubscribeRequest(
-			target.userID,
-			target.contentType
-		);
+	private clearSubscribeTimeout(target: SubscriptionRequestTarget) {
+		if (this.subscribeTimeouts.has(target)) {
+			const timeoutID = this.subscribeTimeouts.get(target)!;
+			clearTimeout(timeoutID);
+			this.subscribeTimeouts.delete(target);
+		}
+	}
 
-		return await this.waitForStream(target.userID, target.contentType, timeout);
+	sendSubscribeRequest(userID: string, contentType: ContentType) {
+		//
 	}
 }

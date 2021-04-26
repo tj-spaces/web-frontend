@@ -2,11 +2,12 @@ import {Record, Map} from 'immutable';
 import RTCUser from './RTCUser';
 import VoiceEndpoint from './VoiceEndpoint';
 import VoiceEndpointState from './VoiceEndpointState';
+import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 
 export type VoiceStateProps = {
 	voiceEndpoints: Map<string, VoiceEndpoint>;
 	voiceEndpointStates: Map<string, VoiceEndpointState>;
-	tracks: Map<string, MediaStreamTrack>;
+	tracks: Map<string, VoiceImmutableMediaTrack>;
 	rtcUsers: Map<string, RTCUser>;
 };
 
@@ -19,7 +20,7 @@ export default class VoiceState extends Record<VoiceStateProps>({
 	getUserTracks(userId: string) {
 		const user = this.rtcUsers.get(userId);
 		if (user) {
-			const tracks: MediaStreamTrack[] = [];
+			const tracks: VoiceImmutableMediaTrack[] = [];
 			user.trackIDs.forEach((trackID) => {
 				const track = this.tracks.get(trackID);
 				if (track) {
