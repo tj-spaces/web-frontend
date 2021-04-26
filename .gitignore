@@ -24,3 +24,5 @@ yarn-error.log*
 
 .eslintcache
 build.zip
+galene.js
+protocol.js
