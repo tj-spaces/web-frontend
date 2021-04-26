@@ -1,18 +1,15 @@
 import {USE_VOICE_SERVER_SSL} from '../../lib/constants';
+import SDKBase from './SDKBase';
 import VoiceEndpointState from './VoiceEndpointState';
 import VoiceSDK from './VoiceSDK';
 
-export type VoiceEndpointStateListener = (state: VoiceEndpointState) => void;
-
-export default class VoiceEndpoint {
+export default class VoiceEndpoint extends SDKBase<VoiceEndpointState> {
 	websocket: WebSocket;
 
 	public readonly endpointUrl: string;
-	private listeners = new Set<VoiceEndpointStateListener>();
 	private publisher: RTCPeerConnection;
 	private subscriber: RTCPeerConnection;
 	private _spaceId: string | null = null;
-	private _state = new VoiceEndpointState();
 	// Queue for messages that want to be sent before the websocket is opened
 	private _mq: {event: string; data: string}[] = [];
 	// If we add a track before we receive and answer from the voice endpoint and need to
@@ -23,29 +20,9 @@ export default class VoiceEndpoint {
 	// See https://stackoverflow.com/questions/38198751/domexception-error-processing-ice-candidate
 	private _subscriberIceCandidateQueue: RTCIceCandidateInit[] = [];
 
-	private set state(newValue: VoiceEndpointState) {
-		this._state = newValue;
-		this.emitChange();
-	}
-
-	private get state() {
-		return this._state;
-	}
-
-	private emitChange() {
-		this.listeners.forEach((listener) => listener(this.state));
-	}
-
-	addListener(listener: VoiceEndpointStateListener) {
-		this.listeners.add(listener);
-		return {
-			remove: () => {
-				this.listeners.delete(listener);
-			},
-		};
-	}
-
 	constructor(url: string, private voiceSDK: VoiceSDK) {
+		super();
+
 		const wssRegex = /^wss?:\/\//;
 		if (!wssRegex.test(url)) {
 			url = (USE_VOICE_SERVER_SSL ? 'wss://' : 'ws://') + url + '/websocket';
