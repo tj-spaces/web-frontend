@@ -1,11 +1,35 @@
-type SdpListener = (answer: RTCSessionDescriptionInit) => void;
-type IceCandidateListener = (candidate: RTCIceCandidate) => void;
+import {SubscriptionRequestTarget} from './VoiceDownstream';
+
+type SdpHandler = (answer: RTCSessionDescriptionInit) => void;
+type IceCandidateHandler = (candidate: RTCIceCandidate) => void;
+type SubscriptionResponseListenerWithTarget = {
+	target: SubscriptionRequestTarget;
+	handler: SubscriptionResponseHandler;
+};
+type SubscriptionResponse =
+	| {
+			status: 'available';
+			streamID: string;
+	  }
+	| {
+			status: 'unavailable';
+	  };
+
+type SubscriptionResponseHandler = (response: SubscriptionResponse) => void;
+
+export const PING_TIMEOUT = 60 * 1000;
+export const PING_INTERVAL = 15 * 1000;
+
+export type ContentType = 'userAudio' | 'userVideo' | 'screenVideo';
 
 export default class SignalingChannel {
 	private websocket: WebSocket;
 	private messageQueue: [string, any][] = [];
-	private sdpListeners = new Set<SdpListener>();
-	private iceCandidateListeners = new Set<IceCandidateListener>();
+	private sdpHandlers = new Set<SdpHandler>();
+	private iceCandidateHandlers = new Set<IceCandidateHandler>();
+	private subscriptionResponseHandlers = new Set<SubscriptionResponseListenerWithTarget>();
+	private ackHandlers = new Map<string, Function>();
+	private timeoutHandlers = new Set<Function>();
 
 	constructor(signalingUrl: string) {
 		this.websocket = new WebSocket(signalingUrl);
@@ -24,20 +48,46 @@ export default class SignalingChannel {
 	private _handleMessage(eventName: string, eventData: any) {
 		switch (eventName) {
 			case 'rtc_ice_candidate':
-				this.iceCandidateListeners.forEach((listener) => listener(eventData));
+				this.iceCandidateHandlers.forEach((listener) => listener(eventData));
 				break;
 			case 'rtc_offer':
 			case 'rtc_answer':
-				this.sdpListeners.forEach((listener) => listener(eventData));
+				this.sdpHandlers.forEach((listener) => listener(eventData));
 		}
 	}
 
-	private _send(eventName: string, eventData: any) {
-		if (this.websocket.readyState !== WebSocket.OPEN) {
-			this.messageQueue.push([eventName, eventData]);
+	private async _sendPing() {
+		const result = await Promise.race([
+			new Promise<'success'>((resolve) =>
+				this._send('ping').then(() => resolve('success'))
+			),
+			new Promise<'timeout'>((resolve) =>
+				setTimeout(() => resolve('timeout'), PING_TIMEOUT)
+			),
+		]);
+
+		if (result === 'success') {
+			setTimeout(() => this._sendPing(), PING_INTERVAL);
 		} else {
-			this.websocket.send(JSON.stringify({event: eventName, data: eventData}));
+			this.timeoutHandlers.forEach((handler) => handler());
 		}
+	}
+
+	private _send(event: string, data?: any) {
+		return new Promise<{event: string; data?: any}>((resolve, reject) => {
+			if (this.websocket.readyState !== WebSocket.OPEN) {
+				this.messageQueue.push([event, data]);
+			} else {
+				const onTimeout = () => reject('timeout');
+				const nonce = Math.random().toString(36).slice(2);
+				this.websocket.send(JSON.stringify({nonce, event, data}));
+				this.ackHandlers.set(nonce, (event: string, data?: any) => {
+					this.timeoutHandlers.delete(onTimeout);
+					resolve({event, data});
+				});
+				this.timeoutHandlers.add(onTimeout);
+			}
+		});
 	}
 
 	sendOffer(offer: RTCSessionDescriptionInit) {
@@ -52,17 +102,46 @@ export default class SignalingChannel {
 		this._send('rtc_ice_candidate', candidate);
 	}
 
-	onIceCandidate(fn: IceCandidateListener) {
-		this.iceCandidateListeners.add(fn);
+	onIceCandidate(fn: IceCandidateHandler) {
+		this.iceCandidateHandlers.add(fn);
 		return {
-			remove: () => this.iceCandidateListeners.delete(fn),
+			remove: () => this.iceCandidateHandlers.delete(fn),
 		};
 	}
 
-	onSdp(fn: SdpListener) {
-		this.sdpListeners.add(fn);
+	onSdp(fn: SdpHandler) {
+		this.sdpHandlers.add(fn);
 		return {
-			remove: () => this.sdpListeners.delete(fn),
+			remove: () => this.sdpHandlers.delete(fn),
 		};
+	}
+
+	onSubscribeResponse(
+		userID: string,
+		contentType: ContentType | 'userVideo' | 'screenVideo',
+		handler: SubscriptionResponseHandler
+	) {
+		const value = {
+			handler,
+			target: {
+				userID,
+				contentType,
+			},
+		};
+
+		this.subscriptionResponseHandlers.add(value);
+
+		return {
+			remove: () => {
+				this.subscriptionResponseHandlers.delete(value);
+			},
+		};
+	}
+
+	sendSubscribeRequest(
+		userId: string,
+		contentType: 'userAudio' | 'userVideo' | 'screenVideo'
+	) {
+		this._send('rtc_subscribe_request', {userId, contentType});
 	}
 }
