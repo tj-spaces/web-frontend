@@ -17,7 +17,7 @@ export default class VoiceState extends Record<VoiceStateProps>({
 		const user = this.rtcUsers.get(userId);
 		if (user) {
 			const tracks: VoiceImmutableMediaTrack[] = [];
-			user.trackIDs.forEach((trackID) => {
+			user.streamIDs.forEach((trackID) => {
 				const track = this.tracks.get(trackID);
 				if (track) {
 					tracks.push(track);

@@ -1,7 +1,8 @@
 import RTCUser from './RTCUser';
 import SDKBase from './SDKBase';
-import {ContentType} from './SignalingChannel';
-import VoiceDownstream from './VoiceDownstream';
+import VoiceDownstream, {
+	SubscriptionStreamConstraints,
+} from './VoiceDownstream';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 import VoiceState from './VoiceState';
 import VoiceUpstream from './VoiceUpstream';
@@ -10,11 +11,14 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	// This lets us get a list of the users associated with a Downstream
 	private voiceDownstreamDelegates = new Map<VoiceDownstream, Set<string>>();
 	// This lets us get the Downstream associated with a user
-	private userToVoiceDownstream = new Map<string, VoiceDownstream>();
+	private streamToVoiceDownstream = new Map<string, VoiceDownstream>();
 	// This stores each downstream by its signaling url
 	private internalDownstreamCache = new Map<string, VoiceDownstream>();
 	private voiceUpstream: VoiceUpstream | null = null;
-	private requestedContentTypesByUser = new Map<string, Set<ContentType>>();
+	private subscriptionConstraintsByStream = new Map<
+		string,
+		SubscriptionStreamConstraints
+	>();
 
 	setVoiceUpstreamUrl(url: string) {
 		this.voiceUpstream = new VoiceUpstream(url);
@@ -34,24 +38,24 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		}
 	}
 
-	associateUserWithDownstream(userID: string, downstreamUrl: string) {
+	associateStreamWithDownstream(streamID: string, downstreamUrl: string) {
 		const downstream = this.getOrCreateDownstream(downstreamUrl);
 
 		if (this.voiceDownstreamDelegates.has(downstream)) {
-			this.voiceDownstreamDelegates.get(downstream)!.add(userID);
+			this.voiceDownstreamDelegates.get(downstream)!.add(streamID);
 		} else {
-			this.voiceDownstreamDelegates.set(downstream, new Set([userID]));
+			this.voiceDownstreamDelegates.set(downstream, new Set([streamID]));
 		}
 
-		this.userToVoiceDownstream.set(userID, downstream);
+		this.streamToVoiceDownstream.set(streamID, downstream);
 
 		// If there are some content types we're already requesting,
 		// we'll send the subscribe requests.
-		const requestedContentTypes = this.requestedContentTypesByUser.get(userID);
+		const requestedContentTypes = this.subscriptionConstraintsByStream.get(
+			streamID
+		);
 		if (requestedContentTypes) {
-			requestedContentTypes.forEach((contentType) => {
-				downstream.sendSubscribeRequest({userID, contentType});
-			});
+			downstream.sendSubscribeRequest(streamID, requestedContentTypes);
 		}
 	}
 
@@ -60,7 +64,7 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		if (downstream) {
 			this.voiceDownstreamDelegates.get(downstream)?.delete(userID);
 		}
-		this.userToVoiceDownstream.delete(userID);
+		this.streamToVoiceDownstream.delete(userID);
 	}
 
 	addTrack(track: VoiceImmutableMediaTrack, userID: string) {
@@ -89,7 +93,7 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		// Update rtcUsers
 		if (state.rtcUsers.has(userID)) {
 			const newRTCUser = state.rtcUsers.get(userID)!.removeTrackID(trackID);
-			if (newRTCUser.trackIDs.size === 0) {
+			if (newRTCUser.streamIDs.size === 0) {
 				state = state.set('rtcUsers', state.rtcUsers.delete(userID));
 			} else {
 				state = state.set('rtcUsers', state.rtcUsers.set(userID, newRTCUser));
@@ -124,23 +128,16 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		}
 	}
 
-	private _addRequestedContentTypeForUser(
-		userID: string,
-		contentType: ContentType
+	private _updateStreamRequest(
+		streamID: string,
+		constraints: SubscriptionStreamConstraints
 	) {
-		if (!this.requestedContentTypesByUser.has(userID)) {
-			this.requestedContentTypesByUser.set(userID, new Set([contentType]));
-		} else {
-			this.requestedContentTypesByUser.get(userID)!.add(contentType);
-		}
+		this.subscriptionConstraintsByStream.set(streamID, constraints);
 	}
 
-	private _removeRequestedContentTypeForUser(
-		userID: string,
-		contentType: ContentType
-	) {
-		if (this.requestedContentTypesByUser.has(userID)) {
-			this.requestedContentTypesByUser.get(userID)!.delete(contentType);
+	private _deleteStreamRequest(streamID: string) {
+		if (this.subscriptionConstraintsByStream.has(streamID)) {
+			this.subscriptionConstraintsByStream.delete(streamID);
 		} else {
 			console.warn(
 				'removeRequestedContentTypeForUser: user does not have any requested tracks'
@@ -148,10 +145,10 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		}
 	}
 
-	sendSubscribeRequest(userID: string, contentType: ContentType) {
-		const downstream = this.userToVoiceDownstream.get(userID);
+	subscribe(streamID: string, constraints: SubscriptionStreamConstraints) {
+		const downstream = this.streamToVoiceDownstream.get(streamID);
 
-		this._addRequestedContentTypeForUser(userID, contentType);
+		this._updateStreamRequest(streamID, constraints);
 
 		if (!downstream) {
 			console.warn(
@@ -160,19 +157,19 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 			return;
 		}
 
-		downstream.sendSubscribeRequest({userID, contentType});
+		downstream.sendSubscribeRequest(streamID, constraints);
 	}
 
-	sendUnsubscribeRequest(userID: string, contentType: ContentType) {
-		const downstream = this.userToVoiceDownstream.get(userID);
+	unsubscribe(streamID: string) {
+		const downstream = this.streamToVoiceDownstream.get(streamID);
 
-		this._removeRequestedContentTypeForUser(userID, contentType);
+		this._deleteStreamRequest(streamID);
 
 		if (!downstream) {
-			console.warn('No downstream for user when trying to unsubscribe');
+			console.warn('No downstream for stream when trying to unsubscribe');
 			return;
 		}
 
-		downstream.sendUnsubscribeRequest({userID, contentType});
+		downstream.sendSubscribeRequest(streamID, {audio: false, video: false});
 	}
 }

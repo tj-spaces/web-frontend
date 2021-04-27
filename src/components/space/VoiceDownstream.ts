@@ -1,37 +1,35 @@
-import SignalingChannel, {ContentType} from './SignalingChannel';
+import SignalingChannel from './SignalingChannel';
 import {createImmutableMediaTrackFromTrack} from './VoiceImmutableMediaTrack';
 import VoiceSDK from './VoiceSDK';
 
-export type SubscriptionTarget = {
-	userID: string;
-	contentType: ContentType;
+export type SubscriptionDescriptor = {
+	streamID: string;
+	constraints: SubscriptionStreamConstraints;
+};
+
+export type SubscriptionStreamConstraints = {
+	audio?: boolean;
+	video?: boolean;
 };
 
 export function getStreamTargetFromStreamID(
 	id: string
-): {userID: string; streamType: 'user' | 'screen'} {
-	const [contentType, userID] = id.split(':');
-	switch (contentType) {
-		case 'userAudio':
-		case 'userVideo':
-			return {userID, streamType: 'user'};
-		case 'screenVideo':
-			return {userID, streamType: 'screen'};
-		default:
-			throw new Error('invalid stream content type');
-	}
+): {userID: string; streamLabel: string} {
+	const [userID, streamLabel] = id.split(':');
+	return {userID, streamLabel};
 }
 
+// eslint-disable-next-line
 const SUBSCRIPTION_REQUEST_TIMEOUT = 30000;
 
 export default class VoiceDownstream {
 	private signalingChannel: SignalingChannel;
 	private connection: RTCPeerConnection;
-	private subscribeTimeouts = new Map<SubscriptionTarget, NodeJS.Timeout>();
+	private subscribeTimeouts = new Map<SubscriptionDescriptor, NodeJS.Timeout>();
 	// ICE candidates need to be added when a remote session description has been created.
 	// See https://stackoverflow.com/questions/38198751/domexception-error-processing-ice-candidate
 	private iceCandidateQueue: RTCIceCandidateInit[] = [];
-	private confirmedReceivedSubscriptionTargets = new Set<SubscriptionTarget>();
+	private confirmedReceivedSubscriptionTargets = new Set<SubscriptionDescriptor>();
 
 	constructor(signalingUrl: string, private voiceSDK: VoiceSDK) {
 		this.signalingChannel = new SignalingChannel(signalingUrl);
@@ -75,59 +73,48 @@ export default class VoiceDownstream {
 				'Invariant: Track had no stream: ' + JSON.stringify(event.track)
 			);
 		}
-		const {userID, streamType} = getStreamTargetFromStreamID(stream.id);
-		const contentType: ContentType =
-			streamType === 'user'
-				? track.kind === 'audio'
-					? 'userAudio'
-					: 'userVideo'
-				: 'screenVideo';
-
-		const reconstructedSubscriptionTarget = {userID, contentType};
-
-		this.subscriptionTargetAdded(reconstructedSubscriptionTarget);
 
 		const immutableMediaTrack = createImmutableMediaTrackFromTrack(
 			track,
-			contentType,
+			stream.id,
 			true
 		);
 
 		track.addEventListener('ended', () => {
-			this.voiceSDK.removeTrackByID(immutableMediaTrack.trackID, userID);
-			this.subscriptionTargetEnded(reconstructedSubscriptionTarget);
+			this.voiceSDK.removeTrackByID(immutableMediaTrack.trackID, stream.id);
+			// this.subscriptionTargetEnded(reconstructedSubscriptionTarget);
 		});
 
-		this.voiceSDK.addTrack(immutableMediaTrack, userID);
+		this.voiceSDK.addTrack(immutableMediaTrack, stream.id);
 	}
 
-	private startSubscribeTimeout(target: SubscriptionTarget) {
-		if (!this.subscribeTimeouts.has(target)) {
-			this.subscribeTimeouts.set(
-				target,
-				setTimeout(() => {
-					console.error(`Subscription request for target ${target} failed`);
-				}, SUBSCRIPTION_REQUEST_TIMEOUT)
-			);
-		}
-	}
+	// private startSubscribeTimeout(target: SubscriptionDescriptor) {
+	// 	if (!this.subscribeTimeouts.has(target)) {
+	// 		this.subscribeTimeouts.set(
+	// 			target,
+	// 			setTimeout(() => {
+	// 				console.error(`Subscription request for target ${target} failed`);
+	// 			}, SUBSCRIPTION_REQUEST_TIMEOUT)
+	// 		);
+	// 	}
+	// }
 
-	private clearSubscribeTimeout(target: SubscriptionTarget) {
-		if (this.subscribeTimeouts.has(target)) {
-			const timeoutID = this.subscribeTimeouts.get(target)!;
-			clearTimeout(timeoutID);
-			this.subscribeTimeouts.delete(target);
-		}
-	}
+	// private clearSubscribeTimeout(target: SubscriptionDescriptor) {
+	// 	if (this.subscribeTimeouts.has(target)) {
+	// 		const timeoutID = this.subscribeTimeouts.get(target)!;
+	// 		clearTimeout(timeoutID);
+	// 		this.subscribeTimeouts.delete(target);
+	// 	}
+	// }
 
-	private subscriptionTargetAdded(target: SubscriptionTarget) {
-		this.clearSubscribeTimeout(target);
-		this.confirmedReceivedSubscriptionTargets.add(target);
-	}
+	// private subscriptionTargetAdded(target: SubscriptionDescriptor) {
+	// 	this.clearSubscribeTimeout(target);
+	// 	this.confirmedReceivedSubscriptionTargets.add(target);
+	// }
 
-	private subscriptionTargetEnded(target: SubscriptionTarget) {
-		this.confirmedReceivedSubscriptionTargets.delete(target);
-	}
+	// private subscriptionTargetEnded(target: SubscriptionDescriptor) {
+	// 	this.confirmedReceivedSubscriptionTargets.delete(target);
+	// }
 
 	/**
 	 * This will send a request to the SFU to receive one of a user's media tracks.
@@ -136,16 +123,11 @@ export default class VoiceDownstream {
 	 * If the request is successful, the track will be added to the Voice state for the
 	 * requested user.
 	 */
-	sendSubscribeRequest(target: SubscriptionTarget) {
-		this.signalingChannel.sendSubscribeRequest(target);
-		this.startSubscribeTimeout(target);
-	}
-
-	/**
-	 * This will send a request to the SFU to stop receiving one of a user's media tracks.
-	 * This one is not promise-based.
-	 */
-	sendUnsubscribeRequest(target: SubscriptionTarget) {
-		this.signalingChannel.sendUnsubscribeRequest(target);
+	sendSubscribeRequest(
+		streamID: string,
+		constraints: SubscriptionStreamConstraints
+	) {
+		this.signalingChannel.sendSubscriptionUpdate(streamID, constraints);
+		// this.startSubscribeTimeout(target);
 	}
 }

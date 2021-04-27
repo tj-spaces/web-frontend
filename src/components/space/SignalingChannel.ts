@@ -1,39 +1,33 @@
-import {SubscriptionTarget} from './VoiceDownstream';
+import {
+	SubscriptionStreamConstraints,
+	SubscriptionDescriptor,
+} from './VoiceDownstream';
 
 type SdpHandler = (answer: RTCSessionDescriptionInit) => void;
 type IceCandidateHandler = (candidate: RTCIceCandidate) => void;
-type SubscriptionResponseListenerWithTarget = {
-	target: SubscriptionTarget;
-	handler: SubscriptionResponseHandler;
-};
-type SubscriptionResponse =
-	| {
-			status: 'available';
-			streamID: string;
-	  }
-	| {
-			status: 'unavailable';
-	  };
+
+type SubscriptionResponse = {status: 'available'} | {status: 'unavailable'};
 
 type SubscriptionResponseHandler = (response: SubscriptionResponse) => void;
-type SubscribeOfferHandler = (offerTarget: SubscriptionTarget) => void;
+type SubscribeOfferHandler = (offerTarget: SubscriptionDescriptor) => void;
 
 export const PING_TIMEOUT = 60 * 1000;
 export const PING_INTERVAL = 15 * 1000;
-
-export type ContentType = 'userAudio' | 'userVideo' | 'screenVideo';
 
 export default class SignalingChannel {
 	private websocket: WebSocket;
 	private messageQueue: [string, any][] = [];
 	private sdpHandlers = new Set<SdpHandler>();
 	private iceCandidateHandlers = new Set<IceCandidateHandler>();
-	private subscriptionResponseHandlers = new Set<SubscriptionResponseListenerWithTarget>();
+	private subscriptionResponseHandlers = new Map<
+		string,
+		SubscriptionResponseHandler
+	>();
 	private ackHandlers = new Map<string, Function>();
 	private timeoutHandlers = new Set<Function>();
 	private offeredSubscriptionHandlers = new Set<SubscribeOfferHandler>();
 	private revokedSubscriptionHandlers = new Map<
-		SubscriptionTarget,
+		SubscriptionDescriptor,
 		Set<Function>
 	>();
 
@@ -135,44 +129,33 @@ export default class SignalingChannel {
 		};
 	}
 
-	onSubscribeResponse(
-		userID: string,
-		contentType: ContentType | 'userVideo' | 'screenVideo',
-		handler: SubscriptionResponseHandler
-	) {
-		const value = {
-			handler,
-			target: {
-				userID,
-				contentType,
-			},
-		};
-
-		this.subscriptionResponseHandlers.add(value);
+	onSubscribeResponse(streamID: string, handler: SubscriptionResponseHandler) {
+		this.subscriptionResponseHandlers.set(streamID, handler);
 
 		return {
 			remove: () => {
-				this.subscriptionResponseHandlers.delete(value);
+				if (this.subscriptionResponseHandlers.get(streamID) === handler) {
+					this.subscriptionResponseHandlers.delete(streamID);
+				}
 			},
 		};
 	}
 
-	onSubscriptionRevoked(target: SubscriptionTarget, fn: Function) {
+	onSubscriptionRevoked(target: SubscriptionDescriptor, fn: Function) {
 		if (!this.revokedSubscriptionHandlers.has(target)) {
 			this.revokedSubscriptionHandlers.set(target, new Set());
 		}
 		this.revokedSubscriptionHandlers.get(target)!.add(fn);
 	}
 
-	sendSubscribeRequest(target: SubscriptionTarget) {
-		this._send('rtc_subscribe_request', target);
+	sendSubscriptionUpdate(
+		streamID: string,
+		constraints: SubscriptionStreamConstraints
+	) {
+		this._send('rtc_subscription_update', {streamID, constraints});
 	}
 
-	sendUnsubscribeRequest(target: SubscriptionTarget) {
-		this._send('rtc_unsubscribe_request', target);
-	}
-
-	onOfferedSubscription(fn: (target: SubscriptionTarget) => void) {
+	onOfferedSubscription(fn: (target: SubscriptionDescriptor) => void) {
 		this.offeredSubscriptionHandlers.add(fn);
 
 		return {
@@ -180,7 +163,7 @@ export default class SignalingChannel {
 		};
 	}
 
-	declineStreamOffer(target: SubscriptionTarget) {
+	declineStreamOffer(target: SubscriptionDescriptor) {
 		this._send('rtc_subscribe_offer_decline', target);
 	}
 }

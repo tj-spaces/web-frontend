@@ -1,5 +1,4 @@
 import immutable from 'immutable';
-import {ContentType} from './SignalingChannel';
 
 export type VoiceImmutableMediaTrackProps = {
 	contentHint: string;
@@ -10,8 +9,8 @@ export type VoiceImmutableMediaTrackProps = {
 	pausedDownlink: boolean;
 	remote: boolean;
 	trackID: string;
+	streamID: string;
 	userMuted: boolean;
-	// webrtcStream?: MediaStream;
 	webrtcTrack?: MediaStreamTrack;
 };
 
@@ -24,9 +23,9 @@ class VoiceImmutableMediaTrack extends immutable.Record<VoiceImmutableMediaTrack
 		label: '',
 		pausedDownlink: false,
 		remote: false,
+		streamID: '',
 		trackID: '',
 		userMuted: false,
-		// webrtcStream: undefined,
 		webrtcTrack: undefined,
 	}
 ) {}
@@ -35,12 +34,12 @@ export default VoiceImmutableMediaTrack;
 
 export function createImmutableMediaTrackFromTrack(
 	track: MediaStreamTrack,
-	contentType: ContentType,
+	streamID: string,
 	remote: boolean
 ) {
 	return new VoiceImmutableMediaTrack({
 		webrtcTrack: track,
-		contentType,
+		streamID,
 		remote,
 	});
 }

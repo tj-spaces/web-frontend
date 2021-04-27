@@ -2,17 +2,17 @@ import {Record, Set} from 'immutable';
 
 export type RTCUserState = {
 	id: string;
-	trackIDs: Set<string>;
+	streamIDs: Set<string>;
 };
 
 export default class RTCUser extends Record<RTCUserState>({
 	id: '',
-	trackIDs: Set(),
+	streamIDs: Set(),
 }) {
 	addTrackID(id: string) {
-		return this.set('trackIDs', this.trackIDs.add(id));
+		return this.set('streamIDs', this.streamIDs.add(id));
 	}
 	removeTrackID(id: string) {
-		return this.set('trackIDs', this.trackIDs.delete(id));
+		return this.set('streamIDs', this.streamIDs.delete(id));
 	}
 }

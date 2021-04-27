@@ -23,14 +23,15 @@ function getDownstreamUrlForUser(_userID: string) {
 	return '0.voice.joinnebula.co';
 }
 
+// eslint-disable-next-line
 function requestUserScreen(userID: string) {
-	sdk.sendSubscribeRequest(userID, 'screenVideo');
+	sdk.subscribe(`${userID}:screen`, {video: true});
 
 	// You can associate a user with a downstream after requesting their media!
 
 	const userDownstreamUrl = getDownstreamUrlForUser(userID);
 
-	sdk.associateUserWithDownstream(userID, userDownstreamUrl);
+	sdk.associateStreamWithDownstream(userID, userDownstreamUrl);
 }
 
 export {};
