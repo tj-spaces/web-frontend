@@ -117,7 +117,7 @@ export default class VoiceDownstream {
 	 * If the request is successful, the track will be added to the Voice state for the
 	 * requested user.
 	 */
-	async sendSubscribeRequest(target: SubscriptionRequestTarget) {
+	sendSubscribeRequest(target: SubscriptionRequestTarget) {
 		this.signalingChannel.sendSubscribeRequest(target);
 		this.startSubscribeTimeout(target);
 	}

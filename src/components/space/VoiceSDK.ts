@@ -1,27 +1,57 @@
 import RTCUser from './RTCUser';
 import SDKBase from './SDKBase';
-import VoiceEndpoint from './VoiceEndpoint';
+import VoiceDownstream from './VoiceDownstream';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 import VoiceState from './VoiceState';
+import VoiceUpstream from './VoiceUpstream';
 
 export default class VoiceSDK extends SDKBase<VoiceState> {
+	// This lets us get a list of the users associated with a Downstream
+	private voiceDownstreamDelegates = new Map<VoiceDownstream, Set<string>>();
+	// This lets us get the Downstream associated with a user
+	private userToVoiceDownstream = new Map<string, VoiceDownstream>();
+	// This stores each downstream by its signaling url
+	private internalDownstreamCache = new Map<string, VoiceDownstream>();
+	private voiceUpstream: VoiceUpstream | null = null;
+
+	setVoiceUpstreamUrl(url: string) {
+		this.voiceUpstream = new VoiceUpstream(url);
+	}
+
+	addLocalTrack(track: MediaStreamTrack, type: 'screen' | 'user') {
+		this.voiceUpstream?.startSendingTrack(track, 'user');
+	}
+
 	getInitialState() {
 		return new VoiceState();
 	}
 
-	addVoiceEndpoint(endpointId: string) {
-		let endpoint = new VoiceEndpoint(endpointId, this);
-		this.state = this.state.addVoiceEndpoint(endpointId, endpoint);
+	private getOrCreateDownstream(downstreamUrl: string) {
+		if (!this.internalDownstreamCache.has(downstreamUrl)) {
+			const downstream = new VoiceDownstream(downstreamUrl, this);
+			this.internalDownstreamCache.set(downstreamUrl, downstream);
+			return downstream;
+		} else {
+			return this.internalDownstreamCache.get(downstreamUrl)!;
+		}
 	}
 
-	removeVoiceEndpoint(endpointId: string) {
-		const endpoint = this.state.voiceEndpoints.get(endpointId);
-		if (endpoint) {
-			endpoint.close();
-			this.state = this.state.removeVoiceEndpoint(endpointId);
+	associateUserWithDownstream(userID: string, downstreamUrl: string) {
+		const downstream = this.getOrCreateDownstream(downstreamUrl);
+		if (this.voiceDownstreamDelegates.has(downstream)) {
+			this.voiceDownstreamDelegates.get(downstream)?.add(userID);
 		} else {
-			this.emitChange();
+			this.voiceDownstreamDelegates.set(downstream, new Set([userID]));
 		}
+		this.userToVoiceDownstream.set(userID, downstream);
+	}
+
+	disassociateUserFromDownstream(userID: string, downstreamUrl: string) {
+		const downstream = this.internalDownstreamCache.get(downstreamUrl);
+		if (downstream) {
+			this.voiceDownstreamDelegates.get(downstream)?.delete(userID);
+		}
+		this.userToVoiceDownstream.delete(userID);
 	}
 
 	addUser(user: RTCUser) {
@@ -85,20 +115,6 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		}
 	}
 
-	addLocalTrack(track: MediaStreamTrack, stream: MediaStream) {
-		const voiceEndpoints = Array.from(this.state.voiceEndpoints.values());
-		voiceEndpoints.forEach((endpoint) => {
-			endpoint.addLocalTrack(track, stream);
-		});
-	}
-
-	removeLocalTrack(track: MediaStreamTrack) {
-		const voiceEndpoints = Array.from(this.state.voiceEndpoints.values());
-		voiceEndpoints.forEach((endpoint) => {
-			endpoint.removeLocalTrack(track);
-		});
-	}
-
 	addTrack(track: VoiceImmutableMediaTrack) {
 		this.state = this.state.set(
 			'tracks',
@@ -130,19 +146,5 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 				this.state.rtcUsers.set(userId, rtcUser.removeTrackID(trackId))
 			);
 		}
-	}
-
-	joinSpace(spaceId: string, userId: string) {
-		const voiceEndpoints = Array.from(this.state.voiceEndpoints.values());
-		voiceEndpoints.forEach((endpoint) => {
-			endpoint.joinSpace(spaceId, userId);
-		});
-	}
-
-	leaveSpace(spaceId: string) {
-		const voiceEndpoints = Array.from(this.state.voiceEndpoints.values());
-		voiceEndpoints.forEach((endpoint) => {
-			endpoint.leaveSpace();
-		});
 	}
 }

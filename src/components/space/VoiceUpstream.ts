@@ -10,8 +10,8 @@ export default class VoiceUpstream {
 	private initialOfferSent = false;
 	private initialAnswerReceived = false;
 	private signalingChannel: SignalingChannel;
-	private rtpSendersByTrackId = new Map<string, RTCRtpSender>();
-	private currentlySendingTracks = new Set<MediaStreamTrack>();
+	private rtpSendersByTrackID = new Map<string, RTCRtpSender>();
+	private streamByContentType = new Map<'screen' | 'user', MediaStream>();
 
 	constructor(public readonly signalingUrl: string) {
 		this.connection = new RTCPeerConnection(
@@ -25,32 +25,42 @@ export default class VoiceUpstream {
 		this.connection.getSenders().forEach((sender) => {
 			this.connection.removeTrack(sender);
 		});
-		this.currentlySendingTracks.clear();
-		this.rtpSendersByTrackId.clear();
+		this.rtpSendersByTrackID.clear();
 	}
 
-	startSendingTrack(track: MediaStreamTrack, stream: MediaStream) {
-		if (this.currentlySendingTracks.has(track)) {
-			console.warn('startSendingTrack on track that is already being sent');
+	private getOrCreateStreamForContentType(
+		type: 'screen' | 'user'
+	): MediaStream {
+		if (this.streamByContentType.has(type)) {
+			return this.streamByContentType.get(type)!;
 		} else {
-			const sender = this.connection.addTrack(track, stream);
-			this.rtpSendersByTrackId.set(track.id, sender);
-			this.currentlySendingTracks.add(track);
+			const stream = new MediaStream();
+			this.streamByContentType.set(type, stream);
+			return stream;
 		}
 	}
 
-	getCurrentlySendingTracks() {
-		return this.currentlySendingTracks;
+	startSendingTrack(track: MediaStreamTrack, type: 'screen' | 'user') {
+		const stream = this.getOrCreateStreamForContentType(type);
+		if (stream.getTracks().includes(track)) {
+			console.warn('Already sending track');
+			return;
+		}
+
+		stream.addTrack(track);
+		const sender = this.connection.addTrack(track, stream);
+		this.rtpSendersByTrackID.set(track.id, sender);
 	}
 
-	stopSendingTrackById(trackId: string) {
-		if (this.rtpSendersByTrackId.has(trackId)) {
-			const sender = this.rtpSendersByTrackId.get(trackId)!;
-			if (sender.track) {
-				this.currentlySendingTracks.delete(sender.track);
+	stopSendingTrackByID(trackID: string) {
+		if (this.rtpSendersByTrackID.has(trackID)) {
+			const sender = this.rtpSendersByTrackID.get(trackID);
+			if (!sender) {
+				console.error('Could not find RTPSender for trackID', trackID);
+			} else {
+				this.connection.removeTrack(sender);
 			}
-			this.connection.removeTrack(sender);
-			this.rtpSendersByTrackId.delete(trackId);
+			this.rtpSendersByTrackID.delete(trackID);
 		}
 	}
 
