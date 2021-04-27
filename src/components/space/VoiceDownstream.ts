@@ -31,6 +31,9 @@ export default class VoiceDownstream {
 		SubscriptionRequestTarget,
 		NodeJS.Timeout
 	>();
+	// ICE candidates need to be added when a remote session description has been created.
+	// See https://stackoverflow.com/questions/38198751/domexception-error-processing-ice-candidate
+	private iceCandidateQueue: RTCIceCandidateInit[] = [];
 
 	constructor(signalingUrl: string, private voiceSDK: VoiceSDK) {
 		this.signalingChannel = new SignalingChannel(signalingUrl);
@@ -42,6 +45,14 @@ export default class VoiceDownstream {
 		this.signalingChannel.onSdp(async (sdp) => {
 			if (sdp.type === 'offer') {
 				this.connection.setRemoteDescription(sdp);
+				if (this.iceCandidateQueue) {
+					await Promise.all(
+						this.iceCandidateQueue.map((candidate) =>
+							this.connection.addIceCandidate(candidate)
+						)
+					);
+					this.iceCandidateQueue = [];
+				}
 				await this.createAnswer();
 			} else {
 				console.warn('Received non-offer from Voice Downstream');
@@ -83,7 +94,7 @@ export default class VoiceDownstream {
 		);
 
 		track.addEventListener('ended', () => {
-			this.voiceSDK.removeTrack(immutableMediaTrack.trackID, userID);
+			this.voiceSDK.removeTrackByID(immutableMediaTrack.trackID, userID);
 		});
 
 		this.voiceSDK.addTrack(immutableMediaTrack, userID);
