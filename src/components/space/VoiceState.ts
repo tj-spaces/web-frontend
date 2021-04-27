@@ -26,12 +26,4 @@ export default class VoiceState extends Record<VoiceStateProps>({
 			return null;
 		}
 	}
-
-	getUserStreams(userId: string) {
-		if (this.rtcUsers.has(userId)) {
-			return this.rtcUsers.get(userId)!.streams;
-		} else {
-			return null;
-		}
-	}
 }
