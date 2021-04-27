@@ -11,7 +11,6 @@ import {createStylesheet} from '../../styles/createStylesheet';
 import {useCurrentUser} from '../AuthHooks';
 import BaseText from '../base/BaseText';
 import EnterPreparationModal from './EnterPreparationModal';
-import LocalDevicesProvider from './LocalDevicesProvider';
 import SimulationServerProvider from './SimulationServerProvider';
 import Space from './Space';
 import SpaceConnectionErrored from './SpaceConnectionErrored';
@@ -105,43 +104,39 @@ export default function SpaceAppRoot({id}: {id: string}) {
 	return (
 		<SimulationServerProvider simulationURL={simulationURL} token={token}>
 			<UserSettingsProvider>
-				<LocalDevicesProvider>
-					<SpaceMediaProvider audioContext={audio} voiceServer={null}>
-						{!ready ? (
-							<EnterPreparationModal
-								onReady={() => {
-									setReady(true);
-									setAudio(new AudioContext());
-								}}
-								onCancel={window.history.back.bind(window.history)}
-							/>
-						) : (
-							<VoiceProvider spaceID={id} voiceURL={voiceURL}>
-								<div className={styles('container')}>
-									<div className={styles('topHeading')}>
-										<BaseText variant="secondary-title" alignment="center">
-											{space && 'value' in space ? space.value.name : 'Loading'}
-										</BaseText>
-									</div>
-
-									<div className={styles('content')}>
-										{currentMessage && (
-											<SpaceInfoMessage message={currentMessage} />
-										)}
-
-										{connectionStatus === 'errored' && (
-											<SpaceConnectionErrored />
-										)}
-
-										{connectionStatus === 'connected' && <Space />}
-									</div>
-
-									<SpaceFooter />
+				<SpaceMediaProvider audioContext={audio}>
+					{!ready ? (
+						<EnterPreparationModal
+							onReady={() => {
+								setReady(true);
+								setAudio(new AudioContext());
+							}}
+							onCancel={window.history.back.bind(window.history)}
+						/>
+					) : (
+						<VoiceProvider voiceURL={voiceURL}>
+							<div className={styles('container')}>
+								<div className={styles('topHeading')}>
+									<BaseText variant="secondary-title" alignment="center">
+										{space && 'value' in space ? space.value.name : 'Loading'}
+									</BaseText>
 								</div>
-							</VoiceProvider>
-						)}
-					</SpaceMediaProvider>
-				</LocalDevicesProvider>
+
+								<div className={styles('content')}>
+									{currentMessage && (
+										<SpaceInfoMessage message={currentMessage} />
+									)}
+
+									{connectionStatus === 'errored' && <SpaceConnectionErrored />}
+
+									{connectionStatus === 'connected' && <Space />}
+								</div>
+
+								<SpaceFooter />
+							</div>
+						</VoiceProvider>
+					)}
+				</SpaceMediaProvider>
 			</UserSettingsProvider>
 		</SimulationServerProvider>
 	);

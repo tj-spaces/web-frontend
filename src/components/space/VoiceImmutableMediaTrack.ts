@@ -1,8 +1,7 @@
 import immutable from 'immutable';
 
 export type VoiceImmutableMediaTrackProps = {
-	contentHint: string;
-	contentType?: string;
+	kind: 'audio' | 'video';
 	enabled: boolean;
 	flags: any;
 	label: string;
@@ -11,13 +10,12 @@ export type VoiceImmutableMediaTrackProps = {
 	trackID: string;
 	streamID: string;
 	userMuted: boolean;
-	webrtcTrack?: MediaStreamTrack;
+	webrtcTrack: MediaStreamTrack;
 };
 
 class VoiceImmutableMediaTrack extends immutable.Record<VoiceImmutableMediaTrackProps>(
 	{
-		contentHint: '',
-		contentType: undefined,
+		kind: 'audio',
 		enabled: false,
 		flags: Object.freeze({}),
 		label: '',
@@ -26,7 +24,7 @@ class VoiceImmutableMediaTrack extends immutable.Record<VoiceImmutableMediaTrack
 		streamID: '',
 		trackID: '',
 		userMuted: false,
-		webrtcTrack: undefined,
+		webrtcTrack: null!,
 	}
 ) {}
 

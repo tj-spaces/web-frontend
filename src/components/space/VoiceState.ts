@@ -1,10 +1,10 @@
 import {Record, Map, Set} from 'immutable';
-import RTCUser from './RTCUser';
+import VoiceUser from './VoiceUser';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 
 export type VoiceStateProps = {
 	streams: Map<string, Set<VoiceImmutableMediaTrack>>;
-	users: Map<string, RTCUser>;
+	users: Map<string, VoiceUser>;
 };
 
 export default class VoiceState extends Record<VoiceStateProps>({
@@ -20,9 +20,40 @@ export default class VoiceState extends Record<VoiceStateProps>({
 			'users',
 			this.users.set(
 				userID,
-				this.users.get(userID, new RTCUser({id: userID})).addStreamID(streamID)
+				this.users
+					.get(userID, new VoiceUser({id: userID}))
+					.addStreamID(streamID)
 			)
 		);
+	}
+	deleteStream(userID: string, streamID: string) {
+		let state = this;
+		if (state.users.has(userID)) {
+			const newUser = state.users.get(userID)!.removeStreamID(streamID);
+			if (newUser.streamIDs.size === 0) {
+				state = state.set('users', state.users.delete(userID));
+			} else {
+				state = state.set('users', state.users.set(userID, newUser));
+			}
+		}
+		state = state.set('streams', state.streams.delete(streamID));
+		return state;
+	}
+	deleteTrack(userID: string, streamID: string, trackID: string) {
+		let state = this;
+		state = state.set(
+			'streams',
+			state.streams.set(
+				streamID,
+				state.streams
+					.get(streamID, Set())
+					.filter((track) => track.trackID !== trackID)
+			)
+		);
+		if (state.streams.get(streamID, Set()).size === 0) {
+			state = state.deleteStream(userID, streamID);
+		}
+		return state;
 	}
 	addTrack(track: VoiceImmutableMediaTrack, streamID: string, userID: string) {
 		let state = this;
@@ -42,5 +73,16 @@ export default class VoiceState extends Record<VoiceStateProps>({
 	}
 	addLocalScreenTrack(track: VoiceImmutableMediaTrack) {
 		return this.addTrack(track, '@me:screen', '@me');
+	}
+	getTracks(streamID: string) {
+		return this.streams
+			.get(streamID, Set<VoiceImmutableMediaTrack>())
+			.toArray();
+	}
+	getLocalUserTracks() {
+		return this.getTracks('@me:user');
+	}
+	getLocalScreenTracks() {
+		return this.getTracks('@me:screen');
 	}
 }

@@ -1,18 +1,18 @@
 import {Record, Set} from 'immutable';
 
-export type RTCUserState = {
+export type VoiceUserState = {
 	id: string;
 	streamIDs: Set<string>;
 };
 
-export default class RTCUser extends Record<RTCUserState>({
+export default class VoiceUser extends Record<VoiceUserState>({
 	id: '',
 	streamIDs: Set(),
 }) {
-	addTrackID(id: string) {
+	addStreamID(id: string) {
 		return this.set('streamIDs', this.streamIDs.add(id));
 	}
-	removeTrackID(id: string) {
+	removeStreamID(id: string) {
 		return this.set('streamIDs', this.streamIDs.delete(id));
 	}
 }

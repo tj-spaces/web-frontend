@@ -9,7 +9,7 @@ import {useThree} from 'react-three-fiber';
 import * as THREE from 'three';
 import {Position} from '../../typings/Space';
 import PointOfViewContext from './PointOfViewContext';
-import {useUserTracks} from './VoiceHooks';
+import {useTracks} from './VoiceHooks';
 
 export default function UserModel({
 	position,
@@ -24,7 +24,7 @@ export default function UserModel({
 }) {
 	const {camera} = useThree();
 	const videoElement = useMemo(() => document.createElement('video'), []);
-	const videoTracks = useUserTracks(id, 'video');
+	const videoTracks = useTracks(id, 'video');
 	const hasVideoTracks = videoTracks.length > 0;
 	const pov = useContext(PointOfViewContext);
 
@@ -52,7 +52,9 @@ export default function UserModel({
 	useEffect(() => {
 		if (videoTracks.length > 0) {
 			if (!videoElement.srcObject) {
-				const stream = new MediaStream(videoTracks);
+				const stream = new MediaStream(
+					videoTracks.map((track) => track.webrtcTrack)
+				);
 				// videoElement.muted = false;
 				videoElement.srcObject = stream;
 				if (videoElement.paused) {
@@ -66,7 +68,7 @@ export default function UserModel({
 				});
 				// Add the new tracks
 				for (let track of videoTracks) {
-					obj.addTrack(track);
+					obj.addTrack(track.webrtcTrack);
 				}
 			}
 		}

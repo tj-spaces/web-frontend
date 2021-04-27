@@ -1,4 +1,3 @@
-import RTCUser from './RTCUser';
 import SDKBase from './SDKBase';
 import VoiceDownstream, {
 	SubscriptionStreamConstraints,
@@ -67,64 +66,61 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		this.streamToVoiceDownstream.delete(userID);
 	}
 
-	addTrack(track: VoiceImmutableMediaTrack, userID: string) {
-		let state = this.state;
-		// Add RTCUser if we need to
-		if (!state.rtcUsers.has(userID)) {
-			state = state.set(
-				'rtcUsers',
-				state.rtcUsers.set(userID, new RTCUser({id: userID}))
-			);
-		}
-
-		const rtcUser = state.rtcUsers.get(userID)!;
-
-		state = state.set('tracks', state.tracks.set(track.trackID, track));
-		state = state.set(
-			'rtcUsers',
-			state.rtcUsers.set(userID, rtcUser.addTrackID(track.trackID))
-		);
-
-		this.state = state;
+	addTrack(track: VoiceImmutableMediaTrack, streamID: string, userID: string) {
+		this.state = this.state.addTrack(track, streamID, userID);
 	}
 
-	removeTrackByID(trackID: string, userID: string) {
-		let state = this.state;
-		// Update rtcUsers
-		if (state.rtcUsers.has(userID)) {
-			const newRTCUser = state.rtcUsers.get(userID)!.removeTrackID(trackID);
-			if (newRTCUser.streamIDs.size === 0) {
-				state = state.set('rtcUsers', state.rtcUsers.delete(userID));
-			} else {
-				state = state.set('rtcUsers', state.rtcUsers.set(userID, newRTCUser));
-			}
-		}
-		// Update tracks
-		state = state.set('tracks', this.state.tracks.delete(trackID));
-		// Emit change
-		this.state = state;
+	removeTrackByID(userID: string, streamID: string, trackID: string) {
+		this.state = this.state.deleteTrack(userID, streamID, trackID);
 	}
 
-	addLocalTrack(track: VoiceImmutableMediaTrack, type: 'screen' | 'user') {
-		let state = this.state;
-		state = state.set(
-			'localUser',
-			this.state.localUser.addTrackID(track.trackID)
-		);
-		state = state.set('tracks', state.tracks.set(track.trackID, track));
-		this.state = state;
+	addLocalScreenTrack(track: VoiceImmutableMediaTrack) {
+		this.state = this.state.addLocalScreenTrack(track);
 		if (!this.voiceUpstream) {
 			console.warn('Voice upstream does not exist');
 		} else {
-			this.voiceUpstream.startSendingTrack(track, type);
+			this.voiceUpstream.startSendingTrack(track, 'screen');
 		}
 	}
 
-	removeLocalTrackByID(trackID: string) {
+	addLocalUserTrack(track: VoiceImmutableMediaTrack) {
+		this.state = this.state.addLocalUserTrack(track);
+		if (!this.voiceUpstream) {
+			console.warn('Voice upstream does not exist');
+		} else {
+			this.voiceUpstream.startSendingTrack(track, 'screen');
+		}
+	}
+
+	removeLocalScreenTrack(trackID: string) {
+		this.state = this.state.deleteTrack('@me', '@me:screen', trackID);
 		if (!this.voiceUpstream) {
 			console.warn('Voice upstream does not exist');
 		} else {
 			this.voiceUpstream.stopSendingTrackByID(trackID);
+		}
+	}
+
+	removeLocalUserTrack(trackID: string) {
+		this.state = this.state.deleteTrack('@me', '@me:user', trackID);
+		if (!this.voiceUpstream) {
+			console.warn('Voice upstream does not exist');
+		} else {
+			this.voiceUpstream.stopSendingTrackByID(trackID);
+		}
+	}
+
+	removeLocalUserTracks(kind?: 'video' | 'audio', stopTracks = false) {
+		const tracks =
+			kind !== undefined
+				? this.state.getLocalUserTracks().filter((track) => track.kind === kind)
+				: this.state.getLocalUserTracks();
+
+		for (let track of tracks) {
+			this.removeLocalUserTrack(track.trackID);
+			if (stopTracks) {
+				track.webrtcTrack?.stop();
+			}
 		}
 	}
 

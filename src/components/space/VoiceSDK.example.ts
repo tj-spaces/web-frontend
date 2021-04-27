@@ -15,23 +15,25 @@ async function sendLocalMedia() {
 	sdk.setVoiceUpstreamUrl('0.voice.joinnebula.co');
 
 	const userMedia = await getUserMedia({audio: true, video: true});
-	userMedia.forEach((track) => sdk.addLocalTrack(track, 'user'));
+	userMedia.forEach((track) => sdk.addLocalUserTrack(track));
 }
 
 // eslint-disable-next-line
-function getDownstreamUrlForUser(_userID: string) {
+function getDownstreamUrlForStream(_streamID: string) {
 	return '0.voice.joinnebula.co';
 }
 
 // eslint-disable-next-line
-function requestUserScreen(userID: string) {
-	sdk.subscribe(`${userID}:screen`, {video: true});
+function subscribeToScreen(userID: string) {
+	const streamID = `${userID}:screen`;
+
+	sdk.subscribe(streamID, {video: true});
 
 	// You can associate a user with a downstream after requesting their media!
 
-	const userDownstreamUrl = getDownstreamUrlForUser(userID);
+	const streamDownstreamUrl = getDownstreamUrlForStream(streamID);
 
-	sdk.associateStreamWithDownstream(userID, userDownstreamUrl);
+	sdk.associateStreamWithDownstream(streamID, streamDownstreamUrl);
 }
 
 export {};

@@ -74,6 +74,9 @@ export default class VoiceDownstream {
 			);
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const [userID, streamTag] = stream.id.split(':');
+
 		const immutableMediaTrack = createImmutableMediaTrackFromTrack(
 			track,
 			stream.id,
@@ -81,11 +84,14 @@ export default class VoiceDownstream {
 		);
 
 		track.addEventListener('ended', () => {
-			this.voiceSDK.removeTrackByID(immutableMediaTrack.trackID, stream.id);
-			// this.subscriptionTargetEnded(reconstructedSubscriptionTarget);
+			this.voiceSDK.removeTrackByID(
+				userID,
+				immutableMediaTrack.trackID,
+				stream.id
+			);
 		});
 
-		this.voiceSDK.addTrack(immutableMediaTrack, stream.id);
+		this.voiceSDK.addTrack(immutableMediaTrack, stream.id, userID);
 	}
 
 	// private startSubscribeTimeout(target: SubscriptionDescriptor) {

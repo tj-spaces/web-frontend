@@ -6,6 +6,7 @@
 */
 import {useContext, useEffect, useRef} from 'react';
 import SpaceMediaContext from '../components/space/SpaceMediaContext';
+import VoiceImmutableMediaTrack from '../components/space/VoiceImmutableMediaTrack';
 import {getLogger} from '../lib/ClusterLogger';
 import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
 import {Position} from '../typings/Space';
@@ -19,7 +20,7 @@ export default function SpatialAudioTrack({
 }: {
 	position: Position;
 	rotation: number;
-	track: MediaStreamTrack;
+	track: VoiceImmutableMediaTrack;
 }) {
 	const {audioContext} = useContext(SpaceMediaContext);
 	const pannerNode = useRef<PannerNode>();
@@ -35,7 +36,7 @@ export default function SpatialAudioTrack({
 		}
 
 		let audio = new Audio();
-		audio.srcObject = new MediaStream([track]);
+		audio.srcObject = new MediaStream([track.webrtcTrack]);
 		audio.muted = true;
 
 		let audioSource = audioContext.createMediaStreamSource(audio.srcObject);

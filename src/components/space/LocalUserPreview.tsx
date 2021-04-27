@@ -1,6 +1,5 @@
-import {useLayoutEffect, useRef, useContext} from 'react';
+import {useLayoutEffect, useRef, useContext, useMemo, useEffect} from 'react';
 import {createStylesheet} from '../../styles/createStylesheet';
-import {useHasLocalVideo, useUserMediaStream} from './LocalDevicesHooks';
 import Mic from '@material-ui/icons/Mic';
 import MicOff from '@material-ui/icons/MicOff';
 import Videocam from '@material-ui/icons/Videocam';
@@ -8,6 +7,7 @@ import VideocamOff from '@material-ui/icons/VideocamOff';
 import BaseRow from '../base/BaseRow';
 import {useCurrentUser} from '../AuthHooks';
 import UserSettingsContext from './UserSettingsContext';
+import {useLocalScreenTracks} from './VoiceHooks';
 
 const styles = createStylesheet({
 	container: {
@@ -42,17 +42,32 @@ const styles = createStylesheet({
 
 export default function LocalUserPreview() {
 	const currentUser = useCurrentUser();
-	const userMedia = useUserMediaStream();
-	const hasLocalVideo = useHasLocalVideo();
+	const stream = useMemo(() => new MediaStream(), []);
+	const userTracks = useLocalScreenTracks();
 	const {userSettings, userSettingsSDK} = useContext(UserSettingsContext);
 	const videoRef = useRef<HTMLVideoElement>(null);
 
+	useEffect(() => {
+		const existingTracks = new Set(stream.getTracks());
+		userTracks.forEach((track) => {
+			if (track.webrtcTrack) {
+				if (!existingTracks.has(track.webrtcTrack)) {
+					stream.addTrack(track.webrtcTrack);
+				}
+			}
+		});
+	}, [stream, userTracks]);
+
 	useLayoutEffect(() => {
 		if (videoRef.current) {
-			videoRef.current.srcObject = userMedia;
+			videoRef.current.srcObject = stream;
 			videoRef.current.play();
 		}
-	}, [userMedia]);
+	}, [stream]);
+
+	const hasLocalVideo = useMemo(() => {
+		return userTracks.some((track) => track.kind === 'video');
+	}, [userTracks]);
 
 	return (
 		<div className={styles('container')}>

@@ -1,16 +1,25 @@
-import {useContext} from 'react';
-import {ContentType} from './SignalingChannel';
+import {useContext, useMemo} from 'react';
 import VoiceContext from './VoiceContext';
 
-export function useUserTracks(userID: string, contentType: ContentType) {
+export function useTracks(streamID: string, kind?: 'audio' | 'video') {
 	const {voiceState} = useContext(VoiceContext);
-	const userTracks = voiceState.getUserTracks(userID);
-	if (userTracks) {
-		if (contentType) {
-			return userTracks.filter((track) => track.contentType === contentType);
-		} else {
-			return userTracks;
+	return useMemo(() => {
+		const tracks = voiceState.getTracks(streamID);
+		if (tracks) {
+			if (kind) {
+				return tracks.filter((track) => track.kind === kind);
+			} else {
+				return tracks;
+			}
 		}
-	}
-	return [];
+		return [];
+	}, [streamID, kind, voiceState]);
+}
+
+export function useLocalScreenTracks() {
+	return useTracks('@me:screen');
+}
+
+export function useLocalUserTracks() {
+	return useTracks('@me:user');
 }

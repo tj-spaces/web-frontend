@@ -6,7 +6,7 @@
 */
 import SpatialAudioTrack from '../../media/SpatialAudioTrack';
 import {Position} from '../../typings/Space';
-import {useUserTracks} from './VoiceHooks';
+import {useTracks} from './VoiceHooks';
 
 export default function RemoteAudio({
 	userID,
@@ -15,7 +15,7 @@ export default function RemoteAudio({
 	userID: string;
 	position: Position;
 }) {
-	const tracks = useUserTracks(userID, 'audio');
+	const tracks = useTracks(userID, 'audio');
 
 	if (!tracks) {
 		return null;
@@ -28,7 +28,7 @@ export default function RemoteAudio({
 					position={position}
 					rotation={0}
 					track={track}
-					key={track.id}
+					key={track.trackID}
 				/>
 			))}
 		</>
