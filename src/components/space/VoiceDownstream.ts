@@ -74,6 +74,8 @@ export default class VoiceDownstream {
 					: 'userVideo'
 				: 'screenVideo';
 
+		this.clearSubscribeTimeout({userID, contentType});
+
 		const immutableMediaTrack = createImmutableMediaTrackFromTrack(
 			track,
 			contentType,
@@ -108,7 +110,23 @@ export default class VoiceDownstream {
 		}
 	}
 
-	sendSubscribeRequest(userID: string, contentType: ContentType) {
-		//
+	/**
+	 * This will send a request to the SFU to receive one of a user's media tracks.
+	 * It starts a timer, and if the request is not fulfilled within the allotted time,
+	 * an error will be logged.
+	 * If the request is successful, the track will be added to the Voice state for the
+	 * requested user.
+	 */
+	async sendSubscribeRequest(target: SubscriptionRequestTarget) {
+		this.signalingChannel.sendSubscribeRequest(target);
+		this.startSubscribeTimeout(target);
+	}
+
+	/**
+	 * This will send a request to the SFU to stop receiving one of a user's media tracks.
+	 * This one is not promise-based.
+	 */
+	sendUnsubscribeRequest(target: SubscriptionRequestTarget) {
+		this.signalingChannel.sendUnsubscribeRequest(target);
 	}
 }
