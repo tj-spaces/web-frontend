@@ -1,9 +1,9 @@
-import {SubscriptionRequestTarget} from './VoiceDownstream';
+import {SubscriptionTarget} from './VoiceDownstream';
 
 type SdpHandler = (answer: RTCSessionDescriptionInit) => void;
 type IceCandidateHandler = (candidate: RTCIceCandidate) => void;
 type SubscriptionResponseListenerWithTarget = {
-	target: SubscriptionRequestTarget;
+	target: SubscriptionTarget;
 	handler: SubscriptionResponseHandler;
 };
 type SubscriptionResponse =
@@ -16,7 +16,7 @@ type SubscriptionResponse =
 	  };
 
 type SubscriptionResponseHandler = (response: SubscriptionResponse) => void;
-type SubscribeOfferHandler = (offerTarget: SubscriptionRequestTarget) => void;
+type SubscribeOfferHandler = (offerTarget: SubscriptionTarget) => void;
 
 export const PING_TIMEOUT = 60 * 1000;
 export const PING_INTERVAL = 15 * 1000;
@@ -33,7 +33,7 @@ export default class SignalingChannel {
 	private timeoutHandlers = new Set<Function>();
 	private offeredSubscriptionHandlers = new Set<SubscribeOfferHandler>();
 	private revokedSubscriptionHandlers = new Map<
-		SubscriptionRequestTarget,
+		SubscriptionTarget,
 		Set<Function>
 	>();
 
@@ -157,22 +157,22 @@ export default class SignalingChannel {
 		};
 	}
 
-	onSubscriptionRevoked(target: SubscriptionRequestTarget, fn: Function) {
+	onSubscriptionRevoked(target: SubscriptionTarget, fn: Function) {
 		if (!this.revokedSubscriptionHandlers.has(target)) {
 			this.revokedSubscriptionHandlers.set(target, new Set());
 		}
 		this.revokedSubscriptionHandlers.get(target)!.add(fn);
 	}
 
-	sendSubscribeRequest(target: SubscriptionRequestTarget) {
+	sendSubscribeRequest(target: SubscriptionTarget) {
 		this._send('rtc_subscribe_request', target);
 	}
 
-	sendUnsubscribeRequest(target: SubscriptionRequestTarget) {
+	sendUnsubscribeRequest(target: SubscriptionTarget) {
 		this._send('rtc_unsubscribe_request', target);
 	}
 
-	onOfferedSubscription(fn: (target: SubscriptionRequestTarget) => void) {
+	onOfferedSubscription(fn: (target: SubscriptionTarget) => void) {
 		this.offeredSubscriptionHandlers.add(fn);
 
 		return {
@@ -180,7 +180,7 @@ export default class SignalingChannel {
 		};
 	}
 
-	declineStreamOffer(target: SubscriptionRequestTarget) {
+	declineStreamOffer(target: SubscriptionTarget) {
 		this._send('rtc_subscribe_offer_decline', target);
 	}
 }

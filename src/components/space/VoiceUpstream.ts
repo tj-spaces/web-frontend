@@ -1,4 +1,5 @@
 import SignalingChannel from './SignalingChannel';
+import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 
 export const defaultVoiceUpstreamPeerConnectionConfig: RTCConfiguration = {
 	iceServers: [{urls: 'stun:stun.l.google.com:19302'}],
@@ -63,24 +64,29 @@ export default class VoiceUpstream {
 		this.tracks.clear();
 	}
 
-	startSendingTrack(track: MediaStreamTrack, type: 'screen' | 'user') {
-		if (this.tracks.has(track.id)) {
+	startSendingTrack(track: VoiceImmutableMediaTrack, type: 'screen' | 'user') {
+		if (this.tracks.has(track.trackID)) {
 			console.warn('Already sending track');
 			return;
 		}
 
+		if (!track.webrtcTrack) {
+			console.warn('webRTC track does not exist for local', type, 'track');
+			return;
+		}
+
 		const stream = this.getOrCreateStreamForContentType(type);
-		if (stream.getTracks().includes(track)) {
+		if (stream.getTracks().includes(track.webrtcTrack!)) {
 			console.warn('Already sending track');
 			return;
 		}
 
 		const voiceUpstreamTrack = new VoiceUpstreamTrack(
 			this.connection,
-			track,
+			track.webrtcTrack,
 			type
 		);
-		this.tracks.set(track.id, voiceUpstreamTrack);
+		this.tracks.set(track.trackID, voiceUpstreamTrack);
 		voiceUpstreamTrack.send(stream);
 	}
 

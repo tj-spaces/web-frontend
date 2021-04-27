@@ -1,3 +1,7 @@
+import VoiceImmutableMediaTrack, {
+	createImmutableMediaTrackFromTrack,
+} from '../components/space/VoiceImmutableMediaTrack';
+
 // Check if it's possible to getUserMedia. This will be undefined if it's not possible
 const nativeGetUserMedia =
 	navigator.getUserMedia?.bind(navigator) ||
@@ -10,8 +14,24 @@ function getUserMedia(constraints: MediaStreamConstraints) {
 			constraints
 		)}`,
 	});
-	return new Promise<MediaStream>((resolve, reject) =>
-		nativeGetUserMedia(constraints, resolve, reject)
+	return new Promise<VoiceImmutableMediaTrack[]>((resolve, reject) =>
+		nativeGetUserMedia(
+			constraints,
+			(stream) => {
+				resolve(
+					stream
+						.getTracks()
+						.map((track) =>
+							createImmutableMediaTrackFromTrack(
+								track,
+								track.kind === 'audio' ? 'userAudio' : 'userVideo',
+								false
+							)
+						)
+				);
+			},
+			reject
+		)
 	);
 }
 

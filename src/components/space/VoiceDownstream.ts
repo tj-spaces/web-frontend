@@ -2,7 +2,7 @@ import SignalingChannel, {ContentType} from './SignalingChannel';
 import {createImmutableMediaTrackFromTrack} from './VoiceImmutableMediaTrack';
 import VoiceSDK from './VoiceSDK';
 
-export type SubscriptionRequestTarget = {
+export type SubscriptionTarget = {
 	userID: string;
 	contentType: ContentType;
 };
@@ -27,13 +27,11 @@ const SUBSCRIPTION_REQUEST_TIMEOUT = 30000;
 export default class VoiceDownstream {
 	private signalingChannel: SignalingChannel;
 	private connection: RTCPeerConnection;
-	private subscribeTimeouts = new Map<
-		SubscriptionRequestTarget,
-		NodeJS.Timeout
-	>();
+	private subscribeTimeouts = new Map<SubscriptionTarget, NodeJS.Timeout>();
 	// ICE candidates need to be added when a remote session description has been created.
 	// See https://stackoverflow.com/questions/38198751/domexception-error-processing-ice-candidate
 	private iceCandidateQueue: RTCIceCandidateInit[] = [];
+	private confirmedReceivedSubscriptionTargets = new Set<SubscriptionTarget>();
 
 	constructor(signalingUrl: string, private voiceSDK: VoiceSDK) {
 		this.signalingChannel = new SignalingChannel(signalingUrl);
@@ -85,7 +83,9 @@ export default class VoiceDownstream {
 					: 'userVideo'
 				: 'screenVideo';
 
-		this.clearSubscribeTimeout({userID, contentType});
+		const reconstructedSubscriptionTarget = {userID, contentType};
+
+		this.subscriptionTargetAdded(reconstructedSubscriptionTarget);
 
 		const immutableMediaTrack = createImmutableMediaTrackFromTrack(
 			track,
@@ -95,12 +95,13 @@ export default class VoiceDownstream {
 
 		track.addEventListener('ended', () => {
 			this.voiceSDK.removeTrackByID(immutableMediaTrack.trackID, userID);
+			this.subscriptionTargetEnded(reconstructedSubscriptionTarget);
 		});
 
 		this.voiceSDK.addTrack(immutableMediaTrack, userID);
 	}
 
-	private startSubscribeTimeout(target: SubscriptionRequestTarget) {
+	private startSubscribeTimeout(target: SubscriptionTarget) {
 		if (!this.subscribeTimeouts.has(target)) {
 			this.subscribeTimeouts.set(
 				target,
@@ -111,12 +112,21 @@ export default class VoiceDownstream {
 		}
 	}
 
-	private clearSubscribeTimeout(target: SubscriptionRequestTarget) {
+	private clearSubscribeTimeout(target: SubscriptionTarget) {
 		if (this.subscribeTimeouts.has(target)) {
 			const timeoutID = this.subscribeTimeouts.get(target)!;
 			clearTimeout(timeoutID);
 			this.subscribeTimeouts.delete(target);
 		}
+	}
+
+	private subscriptionTargetAdded(target: SubscriptionTarget) {
+		this.clearSubscribeTimeout(target);
+		this.confirmedReceivedSubscriptionTargets.add(target);
+	}
+
+	private subscriptionTargetEnded(target: SubscriptionTarget) {
+		this.confirmedReceivedSubscriptionTargets.delete(target);
 	}
 
 	/**
@@ -126,7 +136,7 @@ export default class VoiceDownstream {
 	 * If the request is successful, the track will be added to the Voice state for the
 	 * requested user.
 	 */
-	sendSubscribeRequest(target: SubscriptionRequestTarget) {
+	sendSubscribeRequest(target: SubscriptionTarget) {
 		this.signalingChannel.sendSubscribeRequest(target);
 		this.startSubscribeTimeout(target);
 	}
@@ -135,7 +145,7 @@ export default class VoiceDownstream {
 	 * This will send a request to the SFU to stop receiving one of a user's media tracks.
 	 * This one is not promise-based.
 	 */
-	sendUnsubscribeRequest(target: SubscriptionRequestTarget) {
+	sendUnsubscribeRequest(target: SubscriptionTarget) {
 		this.signalingChannel.sendUnsubscribeRequest(target);
 	}
 }

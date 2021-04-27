@@ -36,7 +36,7 @@ export default VoiceImmutableMediaTrack;
 export function createImmutableMediaTrackFromTrack(
 	track: MediaStreamTrack,
 	contentType: ContentType,
-	remote = true
+	remote: boolean
 ) {
 	return new VoiceImmutableMediaTrack({
 		webrtcTrack: track,

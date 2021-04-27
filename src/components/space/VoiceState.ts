@@ -5,11 +5,13 @@ import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 export type VoiceStateProps = {
 	tracks: Map<string, VoiceImmutableMediaTrack>;
 	rtcUsers: Map<string, RTCUser>;
+	localUser: RTCUser;
 };
 
 export default class VoiceState extends Record<VoiceStateProps>({
 	tracks: Map(),
 	rtcUsers: Map(),
+	localUser: new RTCUser({}),
 }) {
 	getUserTracks(userId: string) {
 		const user = this.rtcUsers.get(userId);
