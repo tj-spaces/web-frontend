@@ -19,7 +19,19 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	}
 
 	addLocalTrack(track: MediaStreamTrack, type: 'screen' | 'user') {
-		this.voiceUpstream?.startSendingTrack(track, 'user');
+		if (!this.voiceUpstream) {
+			console.warn('Voice upstream does not exist');
+		} else {
+			this.voiceUpstream.startSendingTrack(track, type);
+		}
+	}
+
+	removeLocalTrackByID(trackID: string) {
+		if (!this.voiceUpstream) {
+			console.warn('Voice upstream does not exist');
+		} else {
+			this.voiceUpstream.stopSendingTrackByID(trackID);
+		}
 	}
 
 	getInitialState() {
@@ -54,97 +66,41 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		this.userToVoiceDownstream.delete(userID);
 	}
 
-	addUser(user: RTCUser) {
-		this.state = this.state.set(
+	addTrack(track: VoiceImmutableMediaTrack, userID: string) {
+		let state = this.state;
+		// Add RTCUser if we need to
+		if (!state.rtcUsers.has(userID)) {
+			state = state.set(
+				'rtcUsers',
+				state.rtcUsers.set(userID, new RTCUser({id: userID}))
+			);
+		}
+
+		const rtcUser = state.rtcUsers.get(userID)!;
+
+		state = state.set('tracks', state.tracks.set(track.trackID, track));
+		state = state.set(
 			'rtcUsers',
-			this.state.rtcUsers.set(user.id, user)
+			state.rtcUsers.set(userID, rtcUser.addTrackID(track.trackID))
 		);
+
+		this.state = state;
 	}
 
-	hasUser(userID: string) {
-		return this.state.rtcUsers.has(userID);
-	}
-
-	removeUser(userID: string) {
-		const user = this.state.rtcUsers.get(userID);
-		if (user) {
-			user.trackIDs.forEach((id) => {
-				this.removeTrackIDFromUser(userID, id);
-				const track = this.state.tracks.get(id);
-				if (track) {
-					this.removeTrackByID(track.trackID);
-				}
-			});
-			this.state = this.state.set(
-				'rtcUsers',
-				this.state.rtcUsers.delete(userID)
-			);
+	removeTrackByID(trackID: string, userID: string) {
+		let state = this.state;
+		// Update rtcUsers
+		if (state.rtcUsers.has(userID)) {
+			const newRTCUser = state.rtcUsers.get(userID)!.removeTrackID(trackID);
+			if (newRTCUser.trackIDs.size === 0) {
+				state = state.set('rtcUsers', state.rtcUsers.delete(userID));
+			} else {
+				state = state.set('rtcUsers', state.rtcUsers.set(userID, newRTCUser));
+			}
 		}
-	}
-
-	updateUser(userId: string, updater: (user: RTCUser) => RTCUser) {
-		const user = this.state.rtcUsers.get(userId);
-		if (user) {
-			this.state = this.state.set(
-				'rtcUsers',
-				this.state.rtcUsers.set(userId, updater(user))
-			);
-		}
-	}
-
-	addStreamToUser(userId: string, stream: MediaStream) {
-		const rtcUser = this.state.rtcUsers.get(userId);
-		if (!rtcUser) {
-			console.log({event: 'addStreamToUser', userId, stream});
-			throw new Error('RTCUser not found: ' + userId);
-		}
-
-		this.state = this.state.set(
-			'rtcUsers',
-			this.state.rtcUsers.set(userId, rtcUser.addStream(stream))
-		);
-	}
-
-	deleteStreamFromUser(userId: string, stream: MediaStream) {
-		const rtcUser = this.state.rtcUsers.get(userId);
-		if (rtcUser) {
-			this.state = this.state.set(
-				'rtcUsers',
-				this.state.rtcUsers.set(userId, rtcUser.removeStream(stream))
-			);
-		}
-	}
-
-	addTrack(track: VoiceImmutableMediaTrack) {
-		this.state = this.state.set(
-			'tracks',
-			this.state.tracks.set(track.trackID!, track)
-		);
-	}
-
-	removeTrackByID(trackID: string) {
-		this.state = this.state.set('tracks', this.state.tracks.delete(trackID));
-	}
-
-	addTrackIDToUser(userId: string, trackId: string) {
-		const rtcUser = this.state.rtcUsers.get(userId);
-		if (!rtcUser) {
-			throw new Error('RTCUser not found: ' + userId);
-		}
-
-		this.state = this.state.set(
-			'rtcUsers',
-			this.state.rtcUsers.set(userId, rtcUser.addTrackID(trackId))
-		);
-	}
-
-	removeTrackIDFromUser(userId: string, trackId: string) {
-		const rtcUser = this.state.rtcUsers.get(userId);
-		if (rtcUser) {
-			this.state = this.state.set(
-				'rtcUsers',
-				this.state.rtcUsers.set(userId, rtcUser.removeTrackID(trackId))
-			);
-		}
+		// Update tracks
+		state = state.set('tracks', this.state.tracks.delete(trackID));
+		// Emit change
+		this.state = state;
 	}
 }

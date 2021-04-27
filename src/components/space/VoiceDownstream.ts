@@ -83,12 +83,10 @@ export default class VoiceDownstream {
 		);
 
 		track.addEventListener('ended', () => {
-			this.voiceSDK.removeTrackIDFromUser(userID, immutableMediaTrack.trackID);
-			this.voiceSDK.removeTrackByID(immutableMediaTrack.trackID);
+			this.voiceSDK.removeTrack(immutableMediaTrack.trackID, userID);
 		});
 
-		this.voiceSDK.addTrack(immutableMediaTrack);
-		this.voiceSDK.addTrackIDToUser(userID, immutableMediaTrack.trackID);
+		this.voiceSDK.addTrack(immutableMediaTrack, userID);
 	}
 
 	private startSubscribeTimeout(target: SubscriptionRequestTarget) {
