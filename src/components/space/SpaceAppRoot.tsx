@@ -105,16 +105,16 @@ export default function SpaceAppRoot({id}: {id: string}) {
 		<SimulationServerProvider simulationURL={simulationURL} token={token}>
 			<UserSettingsProvider>
 				<SpaceMediaProvider audioContext={audio}>
-					{!ready ? (
-						<EnterPreparationModal
-							onReady={() => {
-								setReady(true);
-								setAudio(new AudioContext());
-							}}
-							onCancel={window.history.back.bind(window.history)}
-						/>
-					) : (
-						<VoiceProvider voiceURL={voiceURL}>
+					<VoiceProvider voiceURL={voiceURL}>
+						{!ready ? (
+							<EnterPreparationModal
+								onReady={() => {
+									setReady(true);
+									setAudio(new AudioContext());
+								}}
+								onCancel={window.history.back.bind(window.history)}
+							/>
+						) : (
 							<div className={styles('container')}>
 								<div className={styles('topHeading')}>
 									<BaseText variant="secondary-title" alignment="center">
@@ -134,8 +134,8 @@ export default function SpaceAppRoot({id}: {id: string}) {
 
 								<SpaceFooter />
 							</div>
-						</VoiceProvider>
-					)}
+						)}
+					</VoiceProvider>
 				</SpaceMediaProvider>
 			</UserSettingsProvider>
 		</SimulationServerProvider>

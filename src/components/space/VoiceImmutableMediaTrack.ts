@@ -39,5 +39,6 @@ export function createImmutableMediaTrackFromTrack(
 		webrtcTrack: track,
 		streamID,
 		remote,
+		kind: track.kind === 'video' ? 'video' : 'audio',
 	});
 }

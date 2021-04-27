@@ -27,7 +27,7 @@ export default function VoiceProvider({
 				});
 			});
 		} else {
-			voiceSDK.removeLocalUserTracks('video');
+			voiceSDK.removeLocalUserTracks('video', true);
 		}
 	}, [cameraEnabled, voiceSDK]);
 
@@ -39,7 +39,7 @@ export default function VoiceProvider({
 				});
 			});
 		} else {
-			voiceSDK.removeLocalUserTracks('audio');
+			voiceSDK.removeLocalUserTracks('audio', true);
 		}
 	}, [micEnabled, voiceSDK]);
 
@@ -48,6 +48,10 @@ export default function VoiceProvider({
 			voiceSDK.setVoiceUpstreamUrl(voiceURL);
 		}
 	}, [voiceSDK, voiceURL]);
+
+	useEffect(() => {
+		voiceSDK.removeLocalUserTracks(undefined, true);
+	}, [voiceSDK]);
 
 	return (
 		<VoiceContext.Provider value={{voiceState, voiceSDK}}>

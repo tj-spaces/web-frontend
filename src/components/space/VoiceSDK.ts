@@ -1,3 +1,5 @@
+import {getLogger} from '../../lib/ClusterLogger';
+import createVoiceEndpointURL from '../../lib/createVoiceEndpointURL';
 import SDKBase from './SDKBase';
 import VoiceDownstream, {
 	SubscriptionStreamConstraints,
@@ -5,6 +7,8 @@ import VoiceDownstream, {
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 import VoiceState from './VoiceState';
 import VoiceUpstream from './VoiceUpstream';
+
+const logger = getLogger('space/voice-sdk');
 
 export default class VoiceSDK extends SDKBase<VoiceState> {
 	// This lets us get a list of the users associated with a Downstream
@@ -20,6 +24,7 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	>();
 
 	setVoiceUpstreamUrl(url: string) {
+		url = createVoiceEndpointURL(url);
 		this.voiceUpstream = new VoiceUpstream(url);
 	}
 
@@ -111,15 +116,18 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	}
 
 	removeLocalUserTracks(kind?: 'video' | 'audio', stopTracks = false) {
-		const tracks =
-			kind !== undefined
-				? this.state.getLocalUserTracks().filter((track) => track.kind === kind)
-				: this.state.getLocalUserTracks();
+		logger.info({event: 'removeTracks', stopTracks, kind});
+
+		let tracks = this.state.getLocalUserTracks();
+		if (kind) {
+			tracks = tracks.filter((track) => track.kind === kind);
+		}
 
 		for (let track of tracks) {
+			logger.debug({removedTrack: track});
 			this.removeLocalUserTrack(track.trackID);
 			if (stopTracks) {
-				track.webrtcTrack?.stop();
+				track.webrtcTrack.stop();
 			}
 		}
 	}

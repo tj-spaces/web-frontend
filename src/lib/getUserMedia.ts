@@ -22,11 +22,7 @@ function getUserMedia(constraints: MediaStreamConstraints) {
 					stream
 						.getTracks()
 						.map((track) =>
-							createImmutableMediaTrackFromTrack(
-								track,
-								track.kind === 'audio' ? 'userAudio' : 'userVideo',
-								false
-							)
+							createImmutableMediaTrackFromTrack(track, '@me:user', false)
 						)
 				);
 			},

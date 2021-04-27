@@ -75,9 +75,12 @@ export default class VoiceState extends Record<VoiceStateProps>({
 		return this.addTrack(track, '@me:screen', '@me');
 	}
 	getTracks(streamID: string) {
-		return this.streams
-			.get(streamID, Set<VoiceImmutableMediaTrack>())
-			.toArray();
+		const stream = this.streams.get(streamID);
+		if (!stream) {
+			return [];
+		} else {
+			return stream.toArray();
+		}
 	}
 	getLocalUserTracks() {
 		return this.getTracks('@me:user');

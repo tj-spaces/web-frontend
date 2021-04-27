@@ -17,6 +17,7 @@ export type LogCategory =
 	| 'space/participant-bubble'
 	| 'space/simulation'
 	| 'space/spatial-audio'
+	| 'space/voice-sdk'
 	| 'loader/incoming-friend-requests'
 	| 'loader/model-loader'
 	| 'api'
