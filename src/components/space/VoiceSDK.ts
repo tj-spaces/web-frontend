@@ -142,6 +142,17 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	}
 
 	subscribe(streamID: string, constraints: SubscriptionStreamConstraints) {
+		const stream = this.state.streams.get(streamID);
+		if (stream) {
+			let hasEquivalentAudio =
+				!!constraints.audio === stream.some((track) => track.kind === 'audio');
+			let hasEquivalentVideo =
+				!!constraints.video === stream.some((track) => track.kind === 'video');
+			if (hasEquivalentAudio && hasEquivalentVideo) {
+				return;
+			}
+		}
+
 		const downstream = this.streamToVoiceDownstream.get(streamID);
 
 		this._updateStreamRequest(streamID, constraints);

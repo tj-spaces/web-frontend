@@ -15,6 +15,7 @@ async function sendLocalMedia() {
 	sdk.setVoiceUpstreamUrl('0.voice.joinnebula.co');
 
 	const userMedia = await getUserMedia({audio: true, video: true});
+
 	userMedia.forEach((track) => sdk.addLocalUserTrack(track));
 }
 

@@ -45,9 +45,17 @@ export default function Space() {
 	);
 	const rotation = useRef<number>(0);
 
-	useEffect(() => {
-		// console.log(rotation.current);
+	const {voiceSDK} = useContext(VoiceContext);
 
+	useEffect(() => {
+		participants.valueSeq().forEach((participant) => {
+			const userStreamID = participant.id + ':user';
+			voiceSDK.associateStreamWithDownstream(userStreamID, 'localhost');
+			voiceSDK.subscribe(userStreamID, {audio: true, video: true});
+		});
+	}, [participants, voiceSDK]);
+
+	useEffect(() => {
 		// A and D move left and right (-X and +X)
 		// W and S move forward and backward (-Z and +Z)
 
