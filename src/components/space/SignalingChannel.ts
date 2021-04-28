@@ -1,3 +1,4 @@
+import AirwaveLoggerGlobal from './AirwaveLogger';
 import {
 	SubscriptionStreamConstraints,
 	SubscriptionDescriptor,
@@ -42,6 +43,13 @@ export default class SignalingChannel {
 		this.websocket.onmessage = (event) => {
 			const message = JSON.parse(event.data);
 			this._handleMessage(message.event, message.data);
+		};
+		this.websocket.onerror = (event) => {
+			AirwaveLoggerGlobal.error(
+				'Error when connecting to Websocket: [unknown]. Readystate: %p, SignalingURL: %p',
+				this.websocket.readyState,
+				signalingUrl
+			);
 		};
 	}
 

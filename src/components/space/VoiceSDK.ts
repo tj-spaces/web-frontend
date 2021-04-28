@@ -1,5 +1,6 @@
 import {getLogger} from '../../lib/ClusterLogger';
 import createVoiceEndpointURL from '../../lib/createVoiceEndpointURL';
+import getUserMedia from '../../lib/getUserMedia';
 import SDKBase from './SDKBase';
 import VoiceDownstream, {
 	SubscriptionStreamConstraints,
@@ -8,6 +9,7 @@ import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 import VoiceState from './VoiceState';
 import VoiceUpstream from './VoiceUpstream';
 
+// eslint-disable-next-line
 const logger = getLogger('space/voice-sdk');
 
 export default class VoiceSDK extends SDKBase<VoiceState> {
@@ -116,19 +118,45 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	}
 
 	removeLocalUserTracks(kind?: 'video' | 'audio', stopTracks = false) {
-		logger.info({event: 'removeTracks', stopTracks, kind});
-
 		let tracks = this.state.getLocalUserTracks();
 		if (kind) {
 			tracks = tracks.filter((track) => track.kind === kind);
 		}
 
 		for (let track of tracks) {
-			logger.debug({removedTrack: track});
 			this.removeLocalUserTrack(track.trackID);
 			if (stopTracks) {
 				track.webrtcTrack.stop();
 			}
+		}
+	}
+
+	async updateUserMedia(constraints: {audio: boolean; video: boolean}) {
+		if (constraints.audio === false) {
+			if (this.hasLocalAudio()) {
+				this.removeLocalUserTracks('audio', true);
+			}
+		}
+		if (constraints.video === false) {
+			if (this.hasLocalVideo()) {
+				this.removeLocalUserTracks('video', true);
+			}
+		}
+		let requestAudio = constraints.audio && !this.hasLocalAudio();
+		let requestVideo = constraints.video && !this.hasLocalVideo();
+
+		if (requestAudio || requestVideo) {
+			console.debug({
+				requestAudio,
+				requestVideo,
+				hasLocalAudio: this.hasLocalAudio(),
+				hasLocalVideo: this.hasLocalVideo(),
+			});
+			const stream = await getUserMedia({
+				audio: requestAudio,
+				video: requestVideo,
+			});
+			stream.forEach((track) => this.addLocalUserTrack(track));
 		}
 	}
 
@@ -186,5 +214,22 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		}
 
 		downstream.sendSubscribeRequest(streamID, {audio: false, video: false});
+	}
+
+	hasLocalVideo() {
+		return this.streamHasTrackOfKind('@me:user', 'video');
+	}
+
+	hasLocalAudio() {
+		return this.streamHasTrackOfKind('@me:user', 'audio');
+	}
+
+	streamHasTrackOfKind(streamID: string, kind: 'video' | 'audio'): boolean {
+		if (this.state.streams.has(streamID)) {
+			let stream = this.state.streams.get(streamID);
+			return !!stream?.some((track) => track.kind === kind);
+		} else {
+			return false;
+		}
 	}
 }

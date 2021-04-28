@@ -7,7 +7,7 @@ import VideocamOff from '@material-ui/icons/VideocamOff';
 import BaseRow from '../base/BaseRow';
 import {useCurrentUser} from '../AuthHooks';
 import UserSettingsContext from './UserSettingsContext';
-import {useLocalScreenTracks} from './VoiceHooks';
+import {useLocalUserTracks} from './VoiceHooks';
 
 const styles = createStylesheet({
 	container: {
@@ -43,7 +43,7 @@ const styles = createStylesheet({
 export default function LocalUserPreview() {
 	const currentUser = useCurrentUser();
 	const stream = useMemo(() => new MediaStream(), []);
-	const userTracks = useLocalScreenTracks();
+	const userTracks = useLocalUserTracks();
 	const {userSettings, userSettingsSDK} = useContext(UserSettingsContext);
 	const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -56,6 +56,11 @@ export default function LocalUserPreview() {
 				}
 			}
 		});
+		existingTracks.forEach((existingTrack) => {
+			if (!userTracks.find((track) => track.webrtcTrack === existingTrack)) {
+				stream.removeTrack(existingTrack);
+			}
+		});
 	}, [stream, userTracks]);
 
 	useLayoutEffect(() => {
@@ -63,7 +68,7 @@ export default function LocalUserPreview() {
 			videoRef.current.srcObject = stream;
 			videoRef.current.play();
 		}
-	}, [stream]);
+	}, [stream, userTracks]);
 
 	const hasLocalVideo = useMemo(() => {
 		return userTracks.some((track) => track.kind === 'video');

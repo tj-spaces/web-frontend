@@ -1,6 +1,5 @@
 import {useContext, useEffect, useMemo} from 'react';
 import useSDKState from '../../hooks/useSDKState';
-import getUserMedia from '../../lib/getUserMedia';
 import UserSettingsContext from './UserSettingsContext';
 import VoiceContext from './VoiceContext';
 import VoiceSDK from './VoiceSDK';
@@ -20,28 +19,8 @@ export default function VoiceProvider({
 	} = useContext(UserSettingsContext);
 
 	useEffect(() => {
-		if (cameraEnabled) {
-			getUserMedia({video: true}).then((tracks) => {
-				tracks.forEach((track) => {
-					voiceSDK.addLocalUserTrack(track);
-				});
-			});
-		} else {
-			voiceSDK.removeLocalUserTracks('video', true);
-		}
-	}, [cameraEnabled, voiceSDK]);
-
-	useEffect(() => {
-		if (micEnabled) {
-			getUserMedia({audio: true}).then((tracks) => {
-				tracks.forEach((track) => {
-					voiceSDK.addLocalUserTrack(track);
-				});
-			});
-		} else {
-			voiceSDK.removeLocalUserTracks('audio', true);
-		}
-	}, [micEnabled, voiceSDK]);
+		voiceSDK.updateUserMedia({video: cameraEnabled, audio: micEnabled});
+	}, [cameraEnabled, micEnabled, voiceSDK]);
 
 	useEffect(() => {
 		if (voiceURL) {

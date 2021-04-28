@@ -40,6 +40,7 @@ export default class VoiceState extends Record<VoiceStateProps>({
 		return state;
 	}
 	deleteTrack(userID: string, streamID: string, trackID: string) {
+		console.debug({event: 'deleteTrack', trackID, streamID, userID});
 		let state = this;
 		state = state.set(
 			'streams',
@@ -56,6 +57,13 @@ export default class VoiceState extends Record<VoiceStateProps>({
 		return state;
 	}
 	addTrack(track: VoiceImmutableMediaTrack, streamID: string, userID: string) {
+		console.debug({
+			event: 'addTrack',
+			trackID: track.trackID,
+			kind: track.kind,
+			streamID,
+			userID,
+		});
 		let state = this;
 		if (!state.streams.has(streamID)) {
 			state.addStream(streamID, userID);

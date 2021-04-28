@@ -26,7 +26,15 @@ class VoiceImmutableMediaTrack extends immutable.Record<VoiceImmutableMediaTrack
 		userMuted: false,
 		webrtcTrack: null!,
 	}
-) {}
+) {
+	constructor(args: Partial<VoiceImmutableMediaTrackProps>) {
+		if (!args.trackID || !args.streamID || !args.webrtcTrack) {
+			throw new Error('Missing field in args: ' + JSON.stringify(args));
+		}
+
+		super(args);
+	}
+}
 
 export default VoiceImmutableMediaTrack;
 
@@ -37,6 +45,7 @@ export function createImmutableMediaTrackFromTrack(
 ) {
 	return new VoiceImmutableMediaTrack({
 		webrtcTrack: track,
+		trackID: track.id,
 		streamID,
 		remote,
 		kind: track.kind === 'video' ? 'video' : 'audio',

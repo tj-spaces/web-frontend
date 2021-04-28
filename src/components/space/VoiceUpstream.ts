@@ -1,3 +1,4 @@
+import AirwaveLoggerGlobal from './AirwaveLogger';
 import SignalingChannel from './SignalingChannel';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 
@@ -66,7 +67,10 @@ export default class VoiceUpstream {
 
 	startSendingTrack(track: VoiceImmutableMediaTrack, type: 'screen' | 'user') {
 		if (this.tracks.has(track.trackID)) {
-			console.warn('Already sending track');
+			console.warn(
+				'Already sending track [found in internal cache]',
+				track.toJS()
+			);
 			return;
 		}
 
@@ -77,7 +81,7 @@ export default class VoiceUpstream {
 
 		const stream = this.getOrCreateStreamForContentType(type);
 		if (stream.getTracks().includes(track.webrtcTrack!)) {
-			console.warn('Already sending track');
+			console.warn('Already sending track [found in stream]', track.toJS());
 			return;
 		}
 
@@ -96,7 +100,10 @@ export default class VoiceUpstream {
 			voiceUpstreamTrack.unsend();
 			this.tracks.delete(trackID);
 		} else {
-			console.warn('Could not find track when unsending track', trackID);
+			AirwaveLoggerGlobal.mustfix(
+				'Could not find track when unsending track: id %p',
+				trackID
+			);
 		}
 	}
 
