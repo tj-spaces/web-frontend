@@ -2,9 +2,7 @@ import {getLogger} from '../../lib/ClusterLogger';
 import createVoiceEndpointURL from '../../lib/createVoiceEndpointURL';
 import getUserMedia from '../../lib/getUserMedia';
 import SDKBase from './SDKBase';
-import VoiceDownstream, {
-	SubscriptionStreamConstraints,
-} from './VoiceDownstream';
+import VoiceDownstream, {SubscriptionState} from './VoiceDownstream';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 import VoiceState from './VoiceState';
 import VoiceUpstream from './VoiceUpstream';
@@ -22,7 +20,7 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	private voiceUpstream: VoiceUpstream | null = null;
 	private subscriptionConstraintsByStream = new Map<
 		string,
-		SubscriptionStreamConstraints
+		SubscriptionState
 	>();
 
 	setVoiceUpstreamUrl(url: string) {
@@ -162,7 +160,7 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 
 	private _updateStreamRequest(
 		streamID: string,
-		constraints: SubscriptionStreamConstraints
+		constraints: SubscriptionState
 	) {
 		this.subscriptionConstraintsByStream.set(streamID, constraints);
 	}
@@ -177,7 +175,7 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		}
 	}
 
-	subscribe(streamID: string, constraints: SubscriptionStreamConstraints) {
+	subscribe(streamID: string, constraints: SubscriptionState) {
 		const stream = this.state.streams.get(streamID);
 		if (stream) {
 			let hasEquivalentAudio =

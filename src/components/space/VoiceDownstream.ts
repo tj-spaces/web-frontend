@@ -4,10 +4,10 @@ import VoiceSDK from './VoiceSDK';
 
 export type SubscriptionDescriptor = {
 	streamID: string;
-	constraints: SubscriptionStreamConstraints;
+	constraints: SubscriptionState;
 };
 
-export type SubscriptionStreamConstraints = {
+export type SubscriptionState = {
 	audio?: boolean;
 	video?: boolean;
 };
@@ -129,10 +129,7 @@ export default class VoiceDownstream {
 	 * If the request is successful, the track will be added to the Voice state for the
 	 * requested user.
 	 */
-	sendSubscribeRequest(
-		streamID: string,
-		constraints: SubscriptionStreamConstraints
-	) {
+	sendSubscribeRequest(streamID: string, constraints: SubscriptionState) {
 		this.signalingChannel.sendSubscriptionUpdate(streamID, constraints);
 		// this.startSubscribeTimeout(target);
 	}

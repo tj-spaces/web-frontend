@@ -1,35 +1,23 @@
 import AirwaveLoggerGlobal from './AirwaveLogger';
-import {
-	SubscriptionStreamConstraints,
-	SubscriptionDescriptor,
-} from './VoiceDownstream';
-
-type SdpHandler = (answer: RTCSessionDescriptionInit) => void;
-type IceCandidateHandler = (candidate: RTCIceCandidate) => void;
-
-type SubscriptionResponse = {status: 'available'} | {status: 'unavailable'};
-
-type SubscriptionResponseHandler = (response: SubscriptionResponse) => void;
-type SubscribeOfferHandler = (offerTarget: SubscriptionDescriptor) => void;
+import {SubscriptionDescriptor, SubscriptionState} from './VoiceDownstream';
 
 export const PING_TIMEOUT = 60 * 1000;
 export const PING_INTERVAL = 15 * 1000;
+
+export type SdpHandler = (answer: RTCSessionDescriptionInit) => void;
+export type IceCandidateHandler = (candidate: RTCIceCandidate) => void;
+export type SubscriptionStateListener = (newState: SubscriptionState) => void;
 
 export default class SignalingChannel {
 	private websocket: WebSocket;
 	private messageQueue: [string, any][] = [];
 	private sdpHandlers = new Set<SdpHandler>();
 	private iceCandidateHandlers = new Set<IceCandidateHandler>();
-	private subscriptionResponseHandlers = new Map<
-		string,
-		SubscriptionResponseHandler
-	>();
 	private ackHandlers = new Map<string, Function>();
 	private timeoutHandlers = new Set<Function>();
-	private offeredSubscriptionHandlers = new Set<SubscribeOfferHandler>();
-	private revokedSubscriptionHandlers = new Map<
-		SubscriptionDescriptor,
-		Set<Function>
+	private streamSubscriptionStateListeners = new Map<
+		string,
+		Set<SubscriptionStateListener>
 	>();
 
 	constructor(signalingUrl: string) {
@@ -64,16 +52,15 @@ export default class SignalingChannel {
 				this.sdpHandlers.forEach((listener) => listener(eventData));
 				break;
 
-			case 'rtc_subscribe_offer':
-				this.offeredSubscriptionHandlers.forEach((handler) =>
-					handler(eventData)
-				);
-				break;
+			case 'rtc_subscription_state': {
+				const {streamID, constraints}: SubscriptionDescriptor = eventData;
 
-			case 'rtc_subscription_revoked':
-				this.revokedSubscriptionHandlers
-					.get(eventData)
-					?.forEach((handler) => handler());
+				const listeners = this.streamSubscriptionStateListeners.get(streamID);
+				if (listeners) {
+					listeners.forEach((listener) => listener(constraints));
+				}
+				break;
+			}
 		}
 	}
 
@@ -137,41 +124,20 @@ export default class SignalingChannel {
 		};
 	}
 
-	onSubscribeResponse(streamID: string, handler: SubscriptionResponseHandler) {
-		this.subscriptionResponseHandlers.set(streamID, handler);
-
-		return {
-			remove: () => {
-				if (this.subscriptionResponseHandlers.get(streamID) === handler) {
-					this.subscriptionResponseHandlers.delete(streamID);
-				}
-			},
-		};
-	}
-
-	onSubscriptionRevoked(target: SubscriptionDescriptor, fn: Function) {
-		if (!this.revokedSubscriptionHandlers.has(target)) {
-			this.revokedSubscriptionHandlers.set(target, new Set());
+	onSubscriptionUpdated(streamID: string, handler: SubscriptionStateListener) {
+		if (!this.streamSubscriptionStateListeners.has(streamID)) {
+			this.streamSubscriptionStateListeners.set(streamID, new Set([handler]));
+		} else {
+			this.streamSubscriptionStateListeners.get(streamID)!.add(handler);
+			return {
+				remove: () => {
+					this.streamSubscriptionStateListeners.get(streamID)?.delete(handler);
+				},
+			};
 		}
-		this.revokedSubscriptionHandlers.get(target)!.add(fn);
 	}
 
-	sendSubscriptionUpdate(
-		streamID: string,
-		constraints: SubscriptionStreamConstraints
-	) {
+	sendSubscriptionUpdate(streamID: string, constraints: SubscriptionState) {
 		this._send('rtc_subscription_update', {streamID, constraints});
-	}
-
-	onOfferedSubscription(fn: (target: SubscriptionDescriptor) => void) {
-		this.offeredSubscriptionHandlers.add(fn);
-
-		return {
-			remove: () => this.offeredSubscriptionHandlers.delete(fn),
-		};
-	}
-
-	declineStreamOffer(target: SubscriptionDescriptor) {
-		this._send('rtc_subscribe_offer_decline', target);
 	}
 }
