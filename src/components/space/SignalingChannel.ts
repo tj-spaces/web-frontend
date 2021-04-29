@@ -52,7 +52,7 @@ export default class SignalingChannel {
 				this.sdpHandlers.forEach((listener) => listener(eventData));
 				break;
 
-			case 'rtc_subscription_state': {
+			case 'rtc_subscription_update': {
 				const {streamID, constraints}: SubscriptionDescriptor = eventData;
 
 				const listeners = this.streamSubscriptionStateListeners.get(streamID);
@@ -110,6 +110,14 @@ export default class SignalingChannel {
 		this._send('rtc_ice_candidate', candidate);
 	}
 
+	sendSubscriptionUpdate(streamID: string, constraints: SubscriptionState) {
+		this._send('rtc_subscription_update_request', {streamID, constraints});
+	}
+
+	sendCloseAllSubscriptions() {
+		this._send('rtc_close_connection', '');
+	}
+
 	onIceCandidate(fn: IceCandidateHandler) {
 		this.iceCandidateHandlers.add(fn);
 		return {
@@ -135,9 +143,5 @@ export default class SignalingChannel {
 				},
 			};
 		}
-	}
-
-	sendSubscriptionUpdate(streamID: string, constraints: SubscriptionState) {
-		this._send('rtc_subscription_update', {streamID, constraints});
 	}
 }
