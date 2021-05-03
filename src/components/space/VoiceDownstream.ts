@@ -1,3 +1,4 @@
+import AirwaveLoggerGlobal from './AirwaveLogger';
 import SignalingChannel from './SignalingChannel';
 import {createImmutableMediaTrackFromTrack} from './VoiceImmutableMediaTrack';
 import VoiceSDK from './VoiceSDK';
@@ -28,18 +29,31 @@ export default class VoiceDownstream {
 	private subscribeTimeouts = new Map<SubscriptionDescriptor, NodeJS.Timeout>();
 	// ICE candidates need to be added when a remote session description has been created.
 	// See https://stackoverflow.com/questions/38198751/domexception-error-processing-ice-candidate
-	private iceCandidateQueue: RTCIceCandidateInit[] = [];
-	private confirmedReceivedSubscriptionTargets = new Set<SubscriptionDescriptor>();
+	private iceCandidateQueue: RTCIceCandidate[] = [];
 
 	constructor(signalingUrl: string, private voiceSDK: VoiceSDK) {
-		this.signalingChannel = new SignalingChannel(signalingUrl);
+		const userID = this.voiceSDK.getCurrentUserID();
+		if (!userID) {
+			throw new Error('Should never get null userID for VoiceDownstream');
+		}
+		this.signalingChannel = new SignalingChannel(signalingUrl, {
+			userID,
+			role: 'subscriber',
+		});
 		this.connection = new RTCPeerConnection();
 		this.connection.addEventListener('track', (event) => {
 			this.handleTrackEvent(event);
 		});
+		this.connection.addEventListener('icecandidate', (event) => {
+			if (event.candidate) {
+				AirwaveLoggerGlobal.checkpoint('receiveSubscriberICECandidate');
+				this.signalingChannel.sendIceCandidate(event.candidate, 'subscriber');
+			}
+		});
 
 		this.signalingChannel.onSdp(async (sdp) => {
 			if (sdp.type === 'offer') {
+				AirwaveLoggerGlobal.checkpoint('receiveSubscriberOffer');
 				this.connection.setRemoteDescription(sdp);
 				if (this.iceCandidateQueue) {
 					await Promise.all(
@@ -56,11 +70,16 @@ export default class VoiceDownstream {
 		});
 
 		this.signalingChannel.onIceCandidate(async (candidate) => {
-			await this.connection.addIceCandidate(candidate);
+			if (this.connection.remoteDescription) {
+				await this.connection.addIceCandidate(candidate);
+			} else {
+				this.iceCandidateQueue.push(candidate);
+			}
 		});
 	}
 
 	private async createAnswer() {
+		AirwaveLoggerGlobal.checkpoint('createAnswer');
 		const answer = await this.connection.createAnswer();
 		this.signalingChannel.sendAnswer(answer);
 	}
