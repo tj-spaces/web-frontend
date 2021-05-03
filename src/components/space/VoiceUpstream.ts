@@ -1,6 +1,7 @@
 import AirwaveLoggerGlobal from './AirwaveLogger';
 import SignalingChannel from './SignalingChannel';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
+import VoiceSDK from './VoiceSDK';
 
 export const defaultVoiceUpstreamPeerConnectionConfig: RTCConfiguration = {
 	iceServers: [{urls: 'stun:stun.l.google.com:19302'}],
@@ -50,11 +51,24 @@ export default class VoiceUpstream {
 		}
 	}
 
-	constructor(public readonly signalingUrl: string) {
+	constructor(
+		public readonly signalingUrl: string,
+		private voiceSDK: VoiceSDK
+	) {
 		this.connection = new RTCPeerConnection(
 			defaultVoiceUpstreamPeerConnectionConfig
 		);
-		this.signalingChannel = new SignalingChannel(signalingUrl);
+		this.createEmptyDatachannelForICEUfrag();
+		const userID = this.voiceSDK.getCurrentUserID();
+		if (!userID) {
+			throw new Error(
+				'Should never have null userID when creating the VoiceUpstream'
+			);
+		}
+		this.signalingChannel = new SignalingChannel(signalingUrl, {
+			userID,
+			role: 'publisher',
+		});
 		this.createOffer();
 	}
 
@@ -107,6 +121,10 @@ export default class VoiceUpstream {
 		}
 	}
 
+	private createEmptyDatachannelForICEUfrag() {
+		this.connection.createDataChannel('ice-ufrag-hack');
+	}
+
 	private async renegotiate() {
 		if (!this.initialAnswerReceived) {
 			this.waitingForAnswerToSendNextOffer = true;
@@ -119,6 +137,10 @@ export default class VoiceUpstream {
 		const offer = await this.connection.createOffer();
 		this.signalingChannel.sendOffer(offer);
 		this.initialOfferSent = true;
+		AirwaveLoggerGlobal.checkpoint(
+			'createOffer',
+			'Creating and sending initial offer'
+		);
 
 		const listener = this.signalingChannel.onSdp((answer) => {
 			this.connection.setRemoteDescription(answer);
