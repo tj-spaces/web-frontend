@@ -1,7 +1,6 @@
 import AirwaveLoggerGlobal from './AirwaveLogger';
 import SignalingChannel from './SignalingChannel';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
-import VoiceSDK from './VoiceSDK';
 
 export const defaultVoiceUpstreamPeerConnectionConfig: RTCConfiguration = {
 	iceServers: [{urls: 'stun:stun.l.google.com:19302'}],
@@ -51,25 +50,20 @@ export default class VoiceUpstream {
 		}
 	}
 
-	constructor(
-		public readonly signalingUrl: string,
-		private voiceSDK: VoiceSDK
-	) {
+	constructor(public readonly signalingUrl: string) {
 		this.connection = new RTCPeerConnection(
 			defaultVoiceUpstreamPeerConnectionConfig
 		);
 		this.createEmptyDatachannelForICEUfrag();
-		const userID = this.voiceSDK.getCurrentUserID();
-		if (!userID) {
-			throw new Error(
-				'Should never have null userID when creating the VoiceUpstream'
-			);
-		}
-		this.signalingChannel = new SignalingChannel(signalingUrl, {
+		this.signalingChannel = new SignalingChannel(signalingUrl);
+		this.createOffer();
+	}
+
+	connect(userID: string) {
+		this.signalingChannel.connect({
 			userID,
 			role: 'publisher',
 		});
-		this.createOffer();
 	}
 
 	stopSendingAnyTracks() {

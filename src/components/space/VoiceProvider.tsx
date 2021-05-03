@@ -1,6 +1,6 @@
-import {useContext, useEffect, useMemo} from 'react';
+import React, {useContext, useEffect, useMemo} from 'react';
 import useSDKState from '../../hooks/useSDKState';
-import {useCurrentUserID} from '../AuthHooks';
+import EnterPreparationModal from './EnterPreparationModal';
 import UserSettingsContext from './UserSettingsContext';
 import VoiceContext from './VoiceContext';
 import VoiceSDK from './VoiceSDK';
@@ -19,11 +19,6 @@ export default function VoiceProvider({
 		userSettings: {cameraEnabled, micEnabled},
 	} = useContext(UserSettingsContext);
 
-	const userID = useCurrentUserID();
-	useEffect(() => {
-		voiceSDK.setUserID(userID);
-	}, [userID, voiceSDK]);
-
 	useEffect(() => {
 		voiceSDK.updateUserMedia({video: cameraEnabled, audio: micEnabled});
 	}, [cameraEnabled, micEnabled, voiceSDK]);
@@ -40,7 +35,13 @@ export default function VoiceProvider({
 
 	return (
 		<VoiceContext.Provider value={{voiceState, voiceSDK}}>
-			{children}
+			{voiceState.ready ? (
+				children
+			) : (
+				<EnterPreparationModal
+					onCancel={window.history.back.bind(window.history)}
+				/>
+			)}
 		</VoiceContext.Provider>
 	);
 }

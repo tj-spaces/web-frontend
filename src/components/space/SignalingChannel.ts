@@ -9,7 +9,7 @@ export type IceCandidateHandler = (candidate: RTCIceCandidate) => void;
 export type SubscriptionStateListener = (newState: SubscriptionState) => void;
 
 export default class SignalingChannel {
-	private websocket: WebSocket;
+	private websocket: WebSocket | null = null;
 	private messageQueue: [string, any][] = [];
 	private sdpHandlers = new Set<SdpHandler>();
 	private iceCandidateHandlers = new Set<IceCandidateHandler>();
@@ -20,11 +20,10 @@ export default class SignalingChannel {
 		Set<SubscriptionStateListener>
 	>();
 
-	constructor(
-		signalingUrl: string,
-		helloInfo: {userID: string; role: 'publisher' | 'subscriber'}
-	) {
-		this.websocket = new WebSocket(signalingUrl);
+	constructor(private url: string) {}
+
+	connect(helloInfo: {userID: string; role: 'publisher' | 'subscriber'}) {
+		this.websocket = new WebSocket(this.url);
 		this.websocket.onopen = () => {
 			this._send('hello', `${helloInfo.userID}:${helloInfo.role}`);
 		};
@@ -35,8 +34,8 @@ export default class SignalingChannel {
 		this.websocket.onerror = (event) => {
 			AirwaveLoggerGlobal.error(
 				'Error when connecting to Websocket: [unknown]. Readystate: %p, SignalingURL: %p',
-				this.websocket.readyState,
-				signalingUrl
+				this.websocket!.readyState,
+				this.url
 			);
 		};
 	}
@@ -109,7 +108,10 @@ export default class SignalingChannel {
 
 	private _send(event: string, data?: any) {
 		return new Promise<{event: string; data?: any}>((resolve, reject) => {
-			if (this.websocket.readyState !== WebSocket.OPEN) {
+			if (
+				this.websocket == null ||
+				this.websocket.readyState !== WebSocket.OPEN
+			) {
 				this.messageQueue.push([event, data]);
 			} else {
 				const onTimeout = () => reject('timeout');

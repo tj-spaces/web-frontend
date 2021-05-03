@@ -16,7 +16,7 @@ import PointOfViewContext from './PointOfViewContext';
 import RemoteAudio from './RemoteAudio';
 import {useMyAnonymousID, useParticipants} from './SimulationHooks';
 import SimulationServerContext from './SimulationServerContext';
-import SpaceMediaContext from './SpaceMediaContext';
+import SpaceAudioContext from './SpaceAudioContext';
 import UserModel from './UserModel';
 import VoiceContext from './VoiceContext';
 
@@ -85,7 +85,7 @@ export default function Space() {
 	// So we need to pass them in manually
 	const auth = useContext(AuthContext);
 	const simulation = useContext(SimulationServerContext);
-	const mediaState = useContext(SpaceMediaContext);
+	const mediaState = useContext(SpaceAudioContext);
 	const voice = useContext(VoiceContext);
 	const [canvas, setCanvas] = useState<HTMLDivElement>();
 
@@ -106,7 +106,7 @@ export default function Space() {
 			<Canvas>
 				<AuthContext.Provider value={auth}>
 					<SimulationServerContext.Provider value={simulation}>
-						<SpaceMediaContext.Provider value={mediaState}>
+						<SpaceAudioContext.Provider value={mediaState}>
 							<VoiceContext.Provider value={voice ?? null}>
 								<PointOfViewContext.Provider value="first-person">
 									<PointerLockControls
@@ -133,7 +133,7 @@ export default function Space() {
 									)}
 								</PointOfViewContext.Provider>
 							</VoiceContext.Provider>
-						</SpaceMediaContext.Provider>
+						</SpaceAudioContext.Provider>
 					</SimulationServerContext.Provider>
 				</AuthContext.Provider>
 			</Canvas>

@@ -5,7 +5,7 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {useContext, useEffect} from 'react';
-import SpaceMediaContext from '../components/space/SpaceMediaContext';
+import SpaceAudioContext from '../components/space/SpaceAudioContext';
 import {Position} from '../typings/Space';
 
 export default function SpatialAudioListener({
@@ -15,7 +15,7 @@ export default function SpatialAudioListener({
 	position: Position;
 	rotation: number;
 }) {
-	const {audioContext} = useContext(SpaceMediaContext);
+	const [audioContext] = useContext(SpaceAudioContext);
 	const listener = audioContext?.listener;
 
 	useEffect(() => {

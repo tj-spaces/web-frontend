@@ -5,12 +5,18 @@ import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 export type VoiceStateProps = {
 	streams: Map<string, Set<VoiceImmutableMediaTrack>>;
 	users: Map<string, VoiceUser>;
+	ready: boolean;
 };
 
 export default class VoiceState extends Record<VoiceStateProps>({
 	streams: Map(),
 	users: Map(),
+	ready: false,
 }) {
+	setReady(ready: boolean) {
+		return this.set('ready', ready);
+	}
+
 	private addTrackToStream(streamID: string, track: VoiceImmutableMediaTrack) {
 		const stream = this.streams.get(streamID, Set()).add(track);
 		return this.set('streams', this.streams.set(streamID, stream));

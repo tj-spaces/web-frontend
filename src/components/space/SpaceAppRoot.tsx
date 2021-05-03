@@ -10,17 +10,14 @@ import {getSpaceServerURLs, useSpace} from '../../api/spaces';
 import {createStylesheet} from '../../styles/createStylesheet';
 import {useCurrentUser} from '../AuthHooks';
 import BaseText from '../base/BaseText';
-import EnterPreparationModal from './EnterPreparationModal';
 import SimulationServerProvider from './SimulationServerProvider';
 import Space from './Space';
 import SpaceConnectionErrored from './SpaceConnectionErrored';
 import SpaceFooter from './SpaceFooter';
 import SpaceInfoMessage from './SpaceInfoMessage';
-import SpaceMediaProvider from './SpaceMediaProvider';
+import SpaceMediaProvider from './SpaceAudioContextProvider';
 import UserSettingsProvider from './UserSettingsProvider';
 import VoiceProvider from './VoiceProvider';
-
-// const logger = getLogger('space/wrapper');
 
 const styles = createStylesheet({
 	container: {
@@ -72,10 +69,6 @@ export default function SpaceAppRoot({id}: {id: string}) {
 		null | 'connecting' | 'connected' | 'errored'
 	>('connected');
 
-	/**
-	 * 'ready' is true when a user has chosen their settings before entering a Space.
-	 */
-	const [ready, setReady] = useState(false);
 	const [currentMessage] = useState<string>();
 	const [voiceURL, setVoiceURL] = useState<string>();
 	const [simulationURL, setSimulationURL] = useState<string>();
@@ -104,37 +97,27 @@ export default function SpaceAppRoot({id}: {id: string}) {
 	return (
 		<SimulationServerProvider simulationURL={simulationURL} token={token}>
 			<UserSettingsProvider>
-				<SpaceMediaProvider audioContext={audio}>
+				<SpaceMediaProvider audioContext={audio} setAudioContext={setAudio}>
 					<VoiceProvider voiceURL={voiceURL}>
-						{!ready ? (
-							<EnterPreparationModal
-								onReady={() => {
-									setReady(true);
-									setAudio(new AudioContext());
-								}}
-								onCancel={window.history.back.bind(window.history)}
-							/>
-						) : (
-							<div className={styles('container')}>
-								<div className={styles('topHeading')}>
-									<BaseText variant="secondary-title" alignment="center">
-										{space && 'value' in space ? space.value.name : 'Loading'}
-									</BaseText>
-								</div>
-
-								<div className={styles('content')}>
-									{currentMessage && (
-										<SpaceInfoMessage message={currentMessage} />
-									)}
-
-									{connectionStatus === 'errored' && <SpaceConnectionErrored />}
-
-									{connectionStatus === 'connected' && <Space />}
-								</div>
-
-								<SpaceFooter />
+						<div className={styles('container')}>
+							<div className={styles('topHeading')}>
+								<BaseText variant="secondary-title" alignment="center">
+									{space && 'value' in space ? space.value.name : 'Loading'}
+								</BaseText>
 							</div>
-						)}
+
+							<div className={styles('content')}>
+								{currentMessage && (
+									<SpaceInfoMessage message={currentMessage} />
+								)}
+
+								{connectionStatus === 'errored' && <SpaceConnectionErrored />}
+
+								{connectionStatus === 'connected' && <Space />}
+							</div>
+
+							<SpaceFooter />
+						</div>
 					</VoiceProvider>
 				</SpaceMediaProvider>
 			</UserSettingsProvider>

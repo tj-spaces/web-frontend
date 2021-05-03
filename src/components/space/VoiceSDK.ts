@@ -22,19 +22,22 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		string,
 		SubscriptionState
 	>();
-	private userID: string | null = null;
 
-	setUserID(userID: string | null) {
-		this.userID = userID;
+	setReady(ready: boolean) {
+		this.state = this.state.setReady(ready);
 	}
 
-	getCurrentUserID() {
-		return this.userID;
+	connect(userID: string) {
+		if (this.voiceUpstream) {
+			this.voiceUpstream.connect(userID);
+		}
+		for (let downstream of Array.from(this.internalDownstreamCache.values())) {
+			downstream.connect(userID);
+		}
 	}
 
 	setVoiceUpstreamUrl(url: string) {
-		url = createVoiceEndpointURL(url);
-		this.voiceUpstream = new VoiceUpstream(url, this);
+		this.voiceUpstream = new VoiceUpstream(createVoiceEndpointURL(url));
 	}
 
 	getInitialState() {

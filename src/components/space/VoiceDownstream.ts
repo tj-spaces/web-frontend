@@ -32,14 +32,7 @@ export default class VoiceDownstream {
 	private iceCandidateQueue: RTCIceCandidate[] = [];
 
 	constructor(signalingUrl: string, private voiceSDK: VoiceSDK) {
-		const userID = this.voiceSDK.getCurrentUserID();
-		if (!userID) {
-			throw new Error('Should never get null userID for VoiceDownstream');
-		}
-		this.signalingChannel = new SignalingChannel(signalingUrl, {
-			userID,
-			role: 'subscriber',
-		});
+		this.signalingChannel = new SignalingChannel(signalingUrl);
 		this.connection = new RTCPeerConnection();
 		this.connection.addEventListener('track', (event) => {
 			this.handleTrackEvent(event);
@@ -75,6 +68,13 @@ export default class VoiceDownstream {
 			} else {
 				this.iceCandidateQueue.push(candidate);
 			}
+		});
+	}
+
+	connect(userID: string) {
+		this.signalingChannel.connect({
+			userID,
+			role: 'subscriber',
 		});
 	}
 
