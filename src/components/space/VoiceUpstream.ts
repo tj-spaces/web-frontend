@@ -56,7 +56,6 @@ export default class VoiceUpstream {
 		);
 		this.createEmptyDatachannelForICEUfrag();
 		this.signalingChannel = new SignalingChannel(signalingUrl);
-		this.createOffer();
 	}
 
 	connect(userID: string) {
@@ -64,6 +63,7 @@ export default class VoiceUpstream {
 			userID,
 			role: 'publisher',
 		});
+		this.createOffer();
 	}
 
 	stopSendingAnyTracks() {

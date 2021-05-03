@@ -1,4 +1,5 @@
 import {useCallback, useContext} from 'react';
+import {useCurrentUserID} from '../AuthHooks';
 import BaseButton from '../base/BaseButton';
 import BaseModal from '../base/BaseModal';
 import BaseRow from '../base/BaseRow';
@@ -13,11 +14,13 @@ import VoiceContext from './VoiceContext';
 export default function EnterPreparationModal({onCancel}: {onCancel(): void}) {
 	const [, setAudioContext] = useContext(SpaceAudioContext);
 	const {voiceSDK} = useContext(VoiceContext);
+	const userID = useCurrentUserID()!;
 
 	const onReady = useCallback(() => {
 		setAudioContext(new AudioContext());
 		voiceSDK.setReady(true);
-	}, [setAudioContext, voiceSDK]);
+		voiceSDK.connect(userID);
+	}, [setAudioContext, userID, voiceSDK]);
 
 	return (
 		<BaseModal onClose={() => {}} variant="fitContent" closable={false}>
