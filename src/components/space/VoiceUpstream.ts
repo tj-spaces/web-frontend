@@ -32,11 +32,13 @@ class VoiceUpstreamTrack {
 export default class VoiceUpstream {
 	private connection: RTCPeerConnection;
 	private waitingForAnswerToSendNextOffer = false;
+	private connected = false;
 	private initialOfferSent = false;
 	private initialAnswerReceived = false;
 	private signalingChannel: SignalingChannel;
 	private tracks = new Map<string, VoiceUpstreamTrack>();
 	private streamByContentType = new Map<'screen' | 'user', MediaStream>();
+	private iceCandidates: RTCIceCandidate[] = [];
 
 	private getOrCreateStreamForContentType(
 		type: 'screen' | 'user'
@@ -54,6 +56,15 @@ export default class VoiceUpstream {
 		this.connection = new RTCPeerConnection(
 			defaultVoiceUpstreamPeerConnectionConfig
 		);
+		this.connection.addEventListener('icecandidate', (event) => {
+			const candidate = event.candidate;
+			if (candidate) {
+				this.iceCandidates.push(candidate);
+				if (this.connected) {
+					this.signalingChannel.sendIceCandidate(candidate);
+				}
+			}
+		});
 		this.createEmptyDatachannelForICEUfrag();
 		this.signalingChannel = new SignalingChannel(signalingUrl);
 	}
@@ -64,6 +75,12 @@ export default class VoiceUpstream {
 			role: 'publisher',
 		});
 		this.createOffer();
+		if (this.iceCandidates) {
+			this.iceCandidates.forEach((candidate) =>
+				this.signalingChannel.sendIceCandidate(candidate)
+			);
+		}
+		this.connected = true;
 	}
 
 	stopSendingAnyTracks() {
