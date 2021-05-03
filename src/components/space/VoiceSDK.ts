@@ -22,10 +22,19 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		string,
 		SubscriptionState
 	>();
+	private userID: string | null = null;
+
+	setUserID(userID: string | null) {
+		this.userID = userID;
+	}
+
+	getCurrentUserID() {
+		return this.userID;
+	}
 
 	setVoiceUpstreamUrl(url: string) {
 		url = createVoiceEndpointURL(url);
-		this.voiceUpstream = new VoiceUpstream(url);
+		this.voiceUpstream = new VoiceUpstream(url, this);
 	}
 
 	getInitialState() {
@@ -34,7 +43,10 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 
 	private getOrCreateDownstream(downstreamUrl: string) {
 		if (!this.internalDownstreamCache.has(downstreamUrl)) {
-			const downstream = new VoiceDownstream(downstreamUrl, this);
+			const downstream = new VoiceDownstream(
+				createVoiceEndpointURL(downstreamUrl),
+				this
+			);
 			this.internalDownstreamCache.set(downstreamUrl, downstream);
 			return downstream;
 		} else {

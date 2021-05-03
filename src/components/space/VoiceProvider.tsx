@@ -1,5 +1,6 @@
 import {useContext, useEffect, useMemo} from 'react';
 import useSDKState from '../../hooks/useSDKState';
+import {useCurrentUserID} from '../AuthHooks';
 import UserSettingsContext from './UserSettingsContext';
 import VoiceContext from './VoiceContext';
 import VoiceSDK from './VoiceSDK';
@@ -17,6 +18,11 @@ export default function VoiceProvider({
 	const {
 		userSettings: {cameraEnabled, micEnabled},
 	} = useContext(UserSettingsContext);
+
+	const userID = useCurrentUserID();
+	useEffect(() => {
+		voiceSDK.setUserID(userID);
+	}, [userID, voiceSDK]);
 
 	useEffect(() => {
 		voiceSDK.updateUserMedia({video: cameraEnabled, audio: micEnabled});
