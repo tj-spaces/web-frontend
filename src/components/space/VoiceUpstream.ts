@@ -129,6 +129,7 @@ export default class VoiceUpstream {
 
 	private async createOffer() {
 		const offer = await this.connection.createOffer();
+		await this.connection.setLocalDescription(offer);
 		this.signalingChannel.sendOffer(offer);
 		this.initialOfferSent = true;
 		AirwaveLoggerGlobal.checkpoint(
