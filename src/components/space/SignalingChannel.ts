@@ -42,15 +42,14 @@ export default class SignalingChannel {
 
 	private _handleMessage(eventName: string, eventData: any) {
 		switch (eventName) {
-			case 'rtc_subscriber_candidate':
-			case 'rtc_publisher_candidate': {
+			case 'rtc_candidate': {
 				const candidate = new RTCIceCandidate(JSON.parse(eventData));
 				this.iceCandidateHandlers.forEach((listener) => listener(candidate));
 				break;
 			}
 
-			case 'rtc_subscriber_offer':
-			case 'rtc_publisher_answer': {
+			case 'rtc_offer':
+			case 'rtc_answer': {
 				const sdp = new RTCSessionDescription(JSON.parse(eventData));
 				const handlers = this.sdpHandlers;
 				if (handlers.size === 0) {
@@ -60,7 +59,7 @@ export default class SignalingChannel {
 				break;
 			}
 
-			case 'rtc_subscription_update': {
+			case 'subscription_update': {
 				const {streamID, constraints}: SubscriptionDescriptor = eventData;
 
 				const listeners = this.streamSubscriptionStateListeners.get(streamID);
@@ -133,18 +132,15 @@ export default class SignalingChannel {
 	}
 
 	sendOffer(offer: RTCSessionDescriptionInit) {
-		this._send('rtc_publisher_offer', offer);
+		this._send('rtc_offer', offer);
 	}
 
 	sendAnswer(answer: RTCSessionDescriptionInit) {
-		this._send('rtc_subscriber_answer', answer);
+		this._send('rtc_answer', answer);
 	}
 
-	sendIceCandidate(
-		candidate: RTCIceCandidateInit,
-		type: 'subscriber' | 'publisher'
-	) {
-		this._send(`rtc_${type}_ice_candidate`, candidate);
+	sendIceCandidate(candidate: RTCIceCandidateInit) {
+		this._send(`rtc_ice_candidate`, candidate);
 	}
 
 	private serializeSubscriptionUpdate(
@@ -158,7 +154,7 @@ export default class SignalingChannel {
 
 	sendSubscriptionUpdate(streamID: string, constraints: SubscriptionState) {
 		this._send(
-			'rtc_subscription_update_request',
+			'subscription_update_request',
 			this.serializeSubscriptionUpdate(streamID, constraints)
 		);
 	}
