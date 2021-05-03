@@ -7,6 +7,9 @@ class AirwaveLogger {
 	error(messageFormat: string, ...params: any[]) {
 		console.error(formatMessage(messageFormat, ...params));
 	}
+	warn(messageFormat: string, ...params: any[]) {
+		console.warn(formatMessage(messageFormat, ...params));
+	}
 	info(messageFormat: string, ...params: any[]) {
 		console.log(formatMessage(messageFormat, ...params));
 	}
