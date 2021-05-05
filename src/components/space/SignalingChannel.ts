@@ -139,15 +139,15 @@ export default class SignalingChannel {
 		sdp: RTCSessionDescriptionInit;
 		streamDescriptions: {[streamID: string]: StreamDescription};
 	}) {
-		this._send('offer', offer);
+		this._send('rtc_offer', offer);
 	}
 
 	sendAnswer(answer: RTCSessionDescriptionInit) {
-		this._send('answer', answer);
+		this._send('rtc_answer', answer);
 	}
 
 	sendIceCandidate(candidate: RTCIceCandidateInit) {
-		this._send('ice_candidate', candidate);
+		this._send('rtc_ice_candidate', candidate);
 	}
 
 	private serializeSubscriptionUpdate(
