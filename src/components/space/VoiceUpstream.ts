@@ -66,7 +66,7 @@ export default class VoiceUpstream {
 			}
 		});
 		this.createEmptyDatachannelForICEUfrag();
-		this.signalingChannel = new SignalingChannel(signalingUrl);
+		this.signalingChannel = new SignalingChannel(signalingUrl + '/publish');
 	}
 
 	connect(userID: string) {

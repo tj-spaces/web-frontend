@@ -32,7 +32,7 @@ export default class VoiceDownstream {
 	private iceCandidateQueue: RTCIceCandidate[] = [];
 
 	constructor(signalingUrl: string, private voiceSDK: VoiceSDK) {
-		this.signalingChannel = new SignalingChannel(signalingUrl);
+		this.signalingChannel = new SignalingChannel(signalingUrl + '/subscribe');
 		this.connection = new RTCPeerConnection();
 		this.connection.addEventListener('track', (event) => {
 			this.handleTrackEvent(event);

@@ -1,3 +1,4 @@
+import createVoiceEndpointURL from '../../lib/createVoiceEndpointURL';
 import getUserMedia from '../../lib/getUserMedia';
 import SDKBase from './SDKBase';
 import VoiceDownstream, {SubscriptionState} from './VoiceDownstream';
@@ -32,7 +33,7 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	}
 
 	setVoiceUpstreamUrl(url: string) {
-		this.voiceUpstream = new VoiceUpstream(url);
+		this.voiceUpstream = new VoiceUpstream(createVoiceEndpointURL(url));
 	}
 
 	getInitialState() {

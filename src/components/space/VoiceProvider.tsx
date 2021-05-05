@@ -1,5 +1,6 @@
 import {useContext, useEffect, useMemo} from 'react';
 import useSDKState from '../../hooks/useSDKState';
+import EnterPreparationModal from './EnterPreparationModal';
 import UserSettingsContext from './UserSettingsContext';
 import VoiceContext from './VoiceContext';
 import VoiceSDK from './VoiceSDK';
@@ -34,7 +35,13 @@ export default function VoiceProvider({
 
 	return (
 		<VoiceContext.Provider value={{voiceState, voiceSDK}}>
-			{children}
+			{voiceState.ready ? (
+				children
+			) : (
+				<EnterPreparationModal
+					onCancel={window.history.back.bind(window.history)}
+				/>
+			)}
 		</VoiceContext.Provider>
 	);
 }
