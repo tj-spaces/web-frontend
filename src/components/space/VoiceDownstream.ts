@@ -72,10 +72,7 @@ export default class VoiceDownstream {
 	}
 
 	connect(userID: string) {
-		this.signalingChannel.connect({
-			userID,
-			role: 'subscriber',
-		});
+		this.signalingChannel.connect(userID);
 	}
 
 	private async createAnswer() {

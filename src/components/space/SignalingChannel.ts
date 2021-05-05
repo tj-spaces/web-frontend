@@ -8,6 +8,10 @@ export type SdpHandler = (answer: RTCSessionDescriptionInit) => void;
 export type IceCandidateHandler = (candidate: RTCIceCandidate) => void;
 export type SubscriptionStateListener = (newState: SubscriptionState) => void;
 
+export type StreamDescription = {
+	contentType: 'user' | 'screen';
+};
+
 export default class SignalingChannel {
 	private websocket: WebSocket | null = null;
 	private messageQueue: [string, any][] = [];
@@ -22,10 +26,10 @@ export default class SignalingChannel {
 
 	constructor(private url: string) {}
 
-	connect(helloInfo: {userID: string; role: 'publisher' | 'subscriber'}) {
+	connect(userID: string) {
 		this.websocket = new WebSocket(this.url);
 		this.websocket.onopen = () => {
-			this._send('hello', `${helloInfo.userID}:${helloInfo.role}`);
+			this._send('hello', userID);
 		};
 		this.websocket.onmessage = (event) => {
 			const message = JSON.parse(event.data);
@@ -131,7 +135,10 @@ export default class SignalingChannel {
 		});
 	}
 
-	sendOffer(offer: RTCSessionDescriptionInit) {
+	sendOffer(offer: {
+		sdp: RTCSessionDescriptionInit;
+		streamDescriptions: {[streamID: string]: StreamDescription};
+	}) {
 		this._send('offer', offer);
 	}
 

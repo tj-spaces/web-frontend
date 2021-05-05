@@ -1,5 +1,5 @@
 import AirwaveLoggerGlobal from './AirwaveLogger';
-import SignalingChannel from './SignalingChannel';
+import SignalingChannel, {StreamDescription} from './SignalingChannel';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 
 export const defaultVoiceUpstreamPeerConnectionConfig: RTCConfiguration = {
@@ -70,10 +70,7 @@ export default class VoiceUpstream {
 	}
 
 	connect(userID: string) {
-		this.signalingChannel.connect({
-			userID,
-			role: 'publisher',
-		});
+		this.signalingChannel.connect(userID);
 		this.createOffer();
 		if (this.iceCandidates) {
 			this.iceCandidates.forEach((candidate) =>
@@ -144,11 +141,29 @@ export default class VoiceUpstream {
 		}
 	}
 
+	private createStreamDescriptions() {
+		const descriptions: Record<string, StreamDescription> = {};
+		for (let [contentType, stream] of Array.from(
+			this.streamByContentType.entries()
+		)) {
+			const streamID = stream.id;
+			descriptions[streamID] = {
+				contentType: contentType,
+			};
+		}
+		return descriptions;
+	}
+
 	private async createOffer() {
 		const offer = await this.connection.createOffer();
 		await this.connection.setLocalDescription(offer);
-		this.signalingChannel.sendOffer(offer);
+
+		this.signalingChannel.sendOffer({
+			sdp: offer,
+			streamDescriptions: this.createStreamDescriptions(),
+		});
 		this.initialOfferSent = true;
+
 		AirwaveLoggerGlobal.checkpoint(
 			'createOffer',
 			'Creating and sending initial offer'
