@@ -65,6 +65,10 @@ export default class VoiceUpstream {
 				}
 			}
 		});
+		this.connection.addEventListener('negotiationneeded', async (event) => {
+			await this.renegotiate();
+			AirwaveLoggerGlobal.info('negotiation needed');
+		});
 		this.createEmptyDatachannelForICEUfrag();
 		this.signalingChannel = new SignalingChannel(signalingUrl + '/publish');
 	}
@@ -170,6 +174,8 @@ export default class VoiceUpstream {
 		);
 
 		const listener = this.signalingChannel.onSdp((answer) => {
+			AirwaveLoggerGlobal.checkpoint('receiveAnswer', 'Received answer');
+
 			this.connection.setRemoteDescription(answer);
 			this.initialAnswerReceived = true;
 			if (this.waitingForAnswerToSendNextOffer) {
