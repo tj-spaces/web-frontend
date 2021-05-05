@@ -101,7 +101,7 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		if (!this.voiceUpstream) {
 			console.warn('Voice upstream does not exist');
 		} else {
-			this.voiceUpstream.startSendingTrack(track, 'screen');
+			this.voiceUpstream.startSendingTrack(track, 'user');
 		}
 	}
 

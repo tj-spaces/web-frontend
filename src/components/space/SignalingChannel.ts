@@ -46,7 +46,7 @@ export default class SignalingChannel {
 
 	private _handleMessage(eventName: string, eventData: any) {
 		switch (eventName) {
-			case 'rtc_candidate': {
+			case 'rtc_ice_candidate': {
 				const candidate = new RTCIceCandidate(JSON.parse(eventData));
 				this.iceCandidateHandlers.forEach((listener) => listener(candidate));
 				break;
