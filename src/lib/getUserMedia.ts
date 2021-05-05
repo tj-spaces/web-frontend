@@ -1,4 +1,3 @@
-import AirwaveLoggerGlobal from '../components/space/AirwaveLogger';
 import VoiceImmutableMediaTrack, {
 	createImmutableMediaTrackFromTrack,
 } from '../components/space/VoiceImmutableMediaTrack';
@@ -9,10 +8,6 @@ const nativeGetUserMedia =
 	navigator.mediaDevices.getUserMedia?.bind(navigator.mediaDevices);
 
 function getUserMedia(constraints: MediaStreamConstraints) {
-	AirwaveLoggerGlobal.info(
-		'getUserMedia called with constraints %p',
-		constraints
-	);
 	return new Promise<VoiceImmutableMediaTrack[]>((resolve, reject) =>
 		nativeGetUserMedia(
 			constraints,

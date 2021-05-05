@@ -40,7 +40,7 @@ export default class VoiceDownstream {
 		this.connection.addEventListener('icecandidate', (event) => {
 			if (event.candidate) {
 				AirwaveLoggerGlobal.checkpoint('receiveSubscriberICECandidate');
-				this.signalingChannel.sendIceCandidate(event.candidate, 'subscriber');
+				this.signalingChannel.sendIceCandidate(event.candidate);
 			}
 		});
 

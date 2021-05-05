@@ -1,14 +1,9 @@
-import {getLogger} from '../../lib/ClusterLogger';
-import createVoiceEndpointURL from '../../lib/createVoiceEndpointURL';
 import getUserMedia from '../../lib/getUserMedia';
 import SDKBase from './SDKBase';
 import VoiceDownstream, {SubscriptionState} from './VoiceDownstream';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 import VoiceState from './VoiceState';
 import VoiceUpstream from './VoiceUpstream';
-
-// eslint-disable-next-line
-const logger = getLogger('space/voice-sdk');
 
 export default class VoiceSDK extends SDKBase<VoiceState> {
 	// This lets us get a list of the users associated with a Downstream
@@ -37,23 +32,20 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	}
 
 	setVoiceUpstreamUrl(url: string) {
-		this.voiceUpstream = new VoiceUpstream(createVoiceEndpointURL(url));
+		this.voiceUpstream = new VoiceUpstream(url);
 	}
 
 	getInitialState() {
 		return new VoiceState();
 	}
 
-	private getOrCreateDownstream(downstreamUrl: string) {
-		if (!this.internalDownstreamCache.has(downstreamUrl)) {
-			const downstream = new VoiceDownstream(
-				createVoiceEndpointURL(downstreamUrl),
-				this
-			);
-			this.internalDownstreamCache.set(downstreamUrl, downstream);
+	private getOrCreateDownstream(url: string) {
+		if (!this.internalDownstreamCache.has(url)) {
+			const downstream = new VoiceDownstream(url, this);
+			this.internalDownstreamCache.set(url, downstream);
 			return downstream;
 		} else {
-			return this.internalDownstreamCache.get(downstreamUrl)!;
+			return this.internalDownstreamCache.get(url)!;
 		}
 	}
 
