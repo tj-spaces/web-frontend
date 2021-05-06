@@ -1,5 +1,6 @@
-import createVoiceEndpointURL from '../../lib/createVoiceEndpointURL';
+import addWebsocketProtocolToVoiceNodeURL from '../../lib/createVoiceEndpointURL';
 import getUserMedia from '../../lib/getUserMedia';
+import AirwaveLoggerGlobal from './AirwaveLogger';
 import SDKBase from './SDKBase';
 import VoiceDownstream, {SubscriptionState} from './VoiceDownstream';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
@@ -7,9 +8,9 @@ import VoiceState from './VoiceState';
 import VoiceUpstream from './VoiceUpstream';
 
 export default class VoiceSDK extends SDKBase<VoiceState> {
-	// This lets us get a list of the users associated with a Downstream
-	private voiceDownstreamDelegates = new Map<VoiceDownstream, Set<string>>();
-	// This lets us get the Downstream associated with a user
+	// This lets us get a list of the streams associated with a Downstream
+	private voiceDownstreamStreams = new Map<VoiceDownstream, Set<string>>();
+	// This lets us get the Downstream associated with a stream
 	private streamToVoiceDownstream = new Map<string, VoiceDownstream>();
 	// This stores each downstream by its signaling url
 	private internalDownstreamCache = new Map<string, VoiceDownstream>();
@@ -18,6 +19,7 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		string,
 		SubscriptionState
 	>();
+	private lastUserID: string | null = null;
 
 	setReady(ready: boolean) {
 		this.state = this.state.setReady(ready);
@@ -30,10 +32,13 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		for (let downstream of Array.from(this.internalDownstreamCache.values())) {
 			downstream.connect(userID);
 		}
+		this.lastUserID = userID;
 	}
 
 	setVoiceUpstreamUrl(url: string) {
-		this.voiceUpstream = new VoiceUpstream(createVoiceEndpointURL(url));
+		this.voiceUpstream = new VoiceUpstream(
+			addWebsocketProtocolToVoiceNodeURL(url)
+		);
 	}
 
 	getInitialState() {
@@ -41,9 +46,20 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	}
 
 	private getOrCreateDownstream(url: string) {
+		url = addWebsocketProtocolToVoiceNodeURL(url);
 		if (!this.internalDownstreamCache.has(url)) {
 			const downstream = new VoiceDownstream(url, this);
+			AirwaveLoggerGlobal.checkpoint(
+				'createDownstream',
+				'Created downstream with url ' + url
+			);
 			this.internalDownstreamCache.set(url, downstream);
+
+			if (this.state.ready) {
+				if (this.lastUserID) {
+					downstream.connect(this.lastUserID);
+				}
+			}
 			return downstream;
 		} else {
 			return this.internalDownstreamCache.get(url)!;
@@ -53,10 +69,10 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	associateStreamWithDownstream(streamID: string, downstreamUrl: string) {
 		const downstream = this.getOrCreateDownstream(downstreamUrl);
 
-		if (this.voiceDownstreamDelegates.has(downstream)) {
-			this.voiceDownstreamDelegates.get(downstream)!.add(streamID);
+		if (this.voiceDownstreamStreams.has(downstream)) {
+			this.voiceDownstreamStreams.get(downstream)!.add(streamID);
 		} else {
-			this.voiceDownstreamDelegates.set(downstream, new Set([streamID]));
+			this.voiceDownstreamStreams.set(downstream, new Set([streamID]));
 		}
 
 		this.streamToVoiceDownstream.set(streamID, downstream);
@@ -71,12 +87,12 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		}
 	}
 
-	disassociateUserFromDownstream(userID: string, downstreamUrl: string) {
+	disassociateStreamFromDownstream(streamID: string, downstreamUrl: string) {
 		const downstream = this.internalDownstreamCache.get(downstreamUrl);
 		if (downstream) {
-			this.voiceDownstreamDelegates.get(downstream)?.delete(userID);
+			this.voiceDownstreamStreams.get(downstream)?.delete(streamID);
 		}
-		this.streamToVoiceDownstream.delete(userID);
+		this.streamToVoiceDownstream.delete(streamID);
 	}
 
 	addTrack(track: VoiceImmutableMediaTrack, streamID: string, userID: string) {
