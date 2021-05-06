@@ -23,3 +23,7 @@ export function useLocalScreenTracks() {
 export function useLocalUserTracks() {
 	return useTracks('@me:user');
 }
+
+export function useVoiceSDK() {
+	return useContext(VoiceContext).voiceSDK;
+}

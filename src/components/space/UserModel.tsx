@@ -9,7 +9,7 @@ import {useThree} from 'react-three-fiber';
 import * as THREE from 'three';
 import {Position} from '../../typings/Space';
 import PointOfViewContext from './PointOfViewContext';
-import {useTracks} from './VoiceHooks';
+import {useTracks, useVoiceSDK} from './VoiceHooks';
 
 export default function UserModel({
 	position,
@@ -27,6 +27,13 @@ export default function UserModel({
 	const videoTracks = useTracks(id, 'video');
 	const hasVideoTracks = videoTracks.length > 0;
 	const pov = useContext(PointOfViewContext);
+	const sdk = useVoiceSDK();
+
+	useEffect(() => {
+		sdk.associateStreamWithDownstream(`${id}:user`, 'localhost');
+		sdk.subscribe(`${id}:user`, {audio: true, video: true});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	// Camera positioning
 	useEffect(() => {
