@@ -33,7 +33,13 @@ export default class VoiceDownstream {
 
 	constructor(signalingUrl: string, private voiceSDK: VoiceSDK) {
 		this.signalingChannel = new SignalingChannel(signalingUrl + '/subscribe');
-		this.connection = new RTCPeerConnection();
+		this.connection = new RTCPeerConnection({
+			iceServers: [
+				{
+					urls: ['stun:stun.l.google.com:19302'],
+				},
+			],
+		});
 		this.connection.addEventListener('track', (event) => {
 			this.handleTrackEvent(event);
 		});
@@ -77,7 +83,11 @@ export default class VoiceDownstream {
 
 	private async createAnswer() {
 		AirwaveLoggerGlobal.checkpoint('createAnswer');
-		const answer = await this.connection.createAnswer();
+		const answer = await this.connection.createAnswer({
+			offerToReceiveAudio: true,
+			offerToReceiveVideo: true,
+		});
+		await this.connection.setLocalDescription(answer);
 		this.signalingChannel.sendAnswer(answer);
 	}
 

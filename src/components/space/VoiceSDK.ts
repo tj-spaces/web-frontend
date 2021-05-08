@@ -200,6 +200,8 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 	}
 
 	subscribe(streamID: string, constraints: SubscriptionState) {
+		console.trace(streamID);
+
 		const stream = this.state.streams.get(streamID);
 		if (stream) {
 			let hasEquivalentAudio =

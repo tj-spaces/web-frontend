@@ -15,7 +15,7 @@ export default function RemoteAudio({
 	userID: string;
 	position: Position;
 }) {
-	const tracks = useTracks(userID, 'audio');
+	const tracks = useTracks(`user$${userID}:user`, 'audio');
 
 	if (!tracks) {
 		return null;

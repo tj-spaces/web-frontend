@@ -37,7 +37,7 @@ export default function SpatialAudioTrack({
 
 		let audio = new Audio();
 		audio.srcObject = new MediaStream([track.webrtcTrack]);
-		audio.muted = true;
+		// audio.muted = true;
 
 		let audioSource = audioContext.createMediaStreamSource(audio.srcObject);
 		pannerNode.current = new PannerNode(
@@ -46,6 +46,10 @@ export default function SpatialAudioTrack({
 		);
 		audioSource.connect(pannerNode.current);
 		pannerNode.current.connect(audioContext.destination);
+
+		audio.play().then(() => {
+			console.log('playing audio');
+		});
 
 		return () => {
 			// audio.pause();
