@@ -1,12 +1,12 @@
 import {useContext} from 'react';
-import SpatialAudioListener from '../../media/SpatialAudioListener';
+import SpatialAudioListener from '../../../media/SpatialAudioListener';
 import RemoteAudio from './RemoteAudio';
 import {
 	useMyAnonymousID,
 	useMyPosition,
 	useParticipants,
-} from './simulation/SimulationHooks';
-import VoiceContext from './airwave/VoiceContext';
+} from '../simulation/SimulationHooks';
+import VoiceContext from '../airwave/VoiceContext';
 
 export default function SpaceRemoteAudioRoot() {
 	const {voiceState} = useContext(VoiceContext);

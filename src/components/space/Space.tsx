@@ -9,8 +9,8 @@ import {Suspense, useRef, useState} from 'react';
 import CameraPositionUpdater from './CameraPositionUpdater';
 import Floor from './Floor';
 import SpaceCanvasRoot from './SpaceCanvasRoot';
-import SpaceRemoteAudioRoot from './SpaceRemoteAudioRoot';
-import SpaceUserRendererRoot from './SpaceUserRendererRoot';
+import SpaceRemoteAudioRoot from './renderers/RemoteAudioRenderer';
+import SpaceUserRendererRoot from './renderers/UsersRenderer';
 import SushiTable from './SushiTable';
 import useMoveDirectionUpdater from './useMoveDirectionUpdater';
 

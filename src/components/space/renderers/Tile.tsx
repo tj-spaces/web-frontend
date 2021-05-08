@@ -5,7 +5,7 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import React from 'react';
-import {createStylesheet} from '../../styles/createStylesheet';
+import {createStylesheet} from '../../../styles/createStylesheet';
 
 export const styles = createStylesheet({
 	participantTile: {

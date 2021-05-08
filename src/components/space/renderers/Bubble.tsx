@@ -5,8 +5,8 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import React from 'react';
-import colors from '../../styles/colors';
-import {createStylesheet} from '../../styles/createStylesheet';
+import colors from '../../../styles/colors';
+import {createStylesheet} from '../../../styles/createStylesheet';
 
 export const styles = createStylesheet({
 	participantBubble: {

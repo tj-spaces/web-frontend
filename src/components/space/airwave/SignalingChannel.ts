@@ -1,8 +1,5 @@
-import AirwaveLoggerGlobal from './airwave/AirwaveLogger';
-import {
-	SubscriptionDescriptor,
-	SubscriptionState,
-} from './airwave/VoiceDownstream';
+import AirwaveLoggerGlobal from './AirwaveLogger';
+import {SubscriptionDescriptor, SubscriptionState} from './VoiceDownstream';
 
 export const PING_TIMEOUT = 60 * 1000;
 export const PING_INTERVAL = 15 * 1000;

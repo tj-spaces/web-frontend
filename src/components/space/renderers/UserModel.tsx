@@ -6,9 +6,9 @@
 */
 import {useEffect, useMemo} from 'react';
 import * as THREE from 'three';
-import {Position} from '../../typings/Space';
-import AirwaveLoggerGlobal from './airwave/AirwaveLogger';
-import {useTracks, useVoiceSDK} from './airwave/VoiceHooks';
+import {Position} from '../../../typings/Space';
+import AirwaveLoggerGlobal from '../airwave/AirwaveLogger';
+import {useTracks, useVoiceSDK} from '../airwave/VoiceHooks';
 
 export default function UserModel({
 	position,

@@ -4,9 +4,9 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import SpatialAudioTrack from '../../media/SpatialAudioTrack';
-import {Position} from '../../typings/Space';
-import {useTracks} from './airwave/VoiceHooks';
+import SpatialAudioTrack from '../../../media/SpatialAudioTrack';
+import {Position} from '../../../typings/Space';
+import {useTracks} from '../airwave/VoiceHooks';
 
 export default function RemoteAudio({
 	userID,
