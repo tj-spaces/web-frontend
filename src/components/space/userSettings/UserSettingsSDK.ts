@@ -1,4 +1,4 @@
-import SDKBase from '../SDKBase';
+import SDKBase from '../../../lib/SDKBase';
 import UserSettingsState from './UserSettingsState';
 
 export default class UserSettingsSDK extends SDKBase<UserSettingsState> {

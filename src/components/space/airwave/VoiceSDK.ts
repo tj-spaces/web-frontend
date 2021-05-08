@@ -1,7 +1,7 @@
 import addWebsocketProtocolToVoiceNodeURL from '../../../lib/createVoiceEndpointURL';
 import getUserMedia from '../../../lib/getUserMedia';
 import AirwaveLoggerGlobal from './AirwaveLogger';
-import SDKBase from '../SDKBase';
+import SDKBase from '../../../lib/SDKBase';
 import VoiceDownstream, {SubscriptionState} from './VoiceDownstream';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 import VoiceState from './VoiceState';
