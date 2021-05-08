@@ -5,7 +5,7 @@ import BaseModal from '../base/BaseModal';
 import BaseRow from '../base/BaseRow';
 import LocalUserPreview from './LocalUserPreview';
 import SpaceAudioContext from './SpaceAudioContext';
-import VoiceContext from './VoiceContext';
+import VoiceContext from './airwave/VoiceContext';
 
 /**
  * This is a modal shown where you can choose to enable or disable your camera and microphone

@@ -10,14 +10,14 @@ import {getSpaceServerURLs, useSpace} from '../../api/spaces';
 import {createStylesheet} from '../../styles/createStylesheet';
 import {useCurrentUser} from '../AuthHooks';
 import BaseText from '../base/BaseText';
-import SimulationServerProvider from './SimulationServerProvider';
+import SimulationServerProvider from './simulation/SimulationServerProvider';
 import Space from './Space';
 import SpaceConnectionErrored from './SpaceConnectionErrored';
 import SpaceFooter from './SpaceFooter';
 import SpaceInfoMessage from './SpaceInfoMessage';
 import SpaceMediaProvider from './SpaceAudioContextProvider';
-import UserSettingsProvider from './UserSettingsProvider';
-import VoiceProvider from './VoiceProvider';
+import UserSettingsProvider from './userSettings/UserSettingsProvider';
+import VoiceProvider from './airwave/VoiceProvider';
 
 const styles = createStylesheet({
 	container: {

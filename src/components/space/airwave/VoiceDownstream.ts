@@ -1,5 +1,5 @@
-import AirwaveLoggerGlobal from './airwave/AirwaveLogger';
-import SignalingChannel from './SignalingChannel';
+import AirwaveLoggerGlobal from './AirwaveLogger';
+import SignalingChannel from '../SignalingChannel';
 import {createImmutableMediaTrackFromTrack} from './VoiceImmutableMediaTrack';
 import VoiceSDK from './VoiceSDK';
 

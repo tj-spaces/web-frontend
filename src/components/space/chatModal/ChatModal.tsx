@@ -11,7 +11,7 @@ import BaseButton from '../../base/BaseButton';
 import BaseModal from '../../base/BaseModal';
 import BaseRow from '../../base/BaseRow';
 import BaseText from '../../base/BaseText';
-import SimulationServerContext from '../SimulationServerContext';
+import SimulationServerContext from '../simulation/SimulationServerContext';
 import ChatMessageList from './ChatMessageList';
 import ReplyToMessageContext from './ReplyToMessageContext';
 

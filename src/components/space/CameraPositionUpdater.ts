@@ -1,7 +1,7 @@
 import {MutableRefObject, useContext} from 'react';
 import {useThree} from 'react-three-fiber';
 import PointOfViewContext from './PointOfViewContext';
-import {useMyPosition} from './SimulationHooks';
+import {useMyPosition} from './simulation/SimulationHooks';
 
 /**
  * This is a component so we can easily access the Three.js camera.

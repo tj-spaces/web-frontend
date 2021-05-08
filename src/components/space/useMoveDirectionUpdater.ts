@@ -1,6 +1,6 @@
 import {MutableRefObject, useContext, useEffect} from 'react';
 import useKeyboardState from '../../hooks/useKeyboardState';
-import SimulationServerContext from './SimulationServerContext';
+import SimulationServerContext from './simulation/SimulationServerContext';
 
 export default function useMoveDirectionUpdater(
 	rotation: MutableRefObject<number>

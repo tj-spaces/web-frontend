@@ -1,5 +1,5 @@
-import AirwaveLoggerGlobal from './airwave/AirwaveLogger';
-import SignalingChannel, {StreamDescription} from './SignalingChannel';
+import AirwaveLoggerGlobal from './AirwaveLogger';
+import SignalingChannel, {StreamDescription} from '../SignalingChannel';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 
 export const defaultVoiceUpstreamPeerConnectionConfig: RTCConfiguration = {

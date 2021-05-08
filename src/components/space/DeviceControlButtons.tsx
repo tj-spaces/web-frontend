@@ -6,7 +6,7 @@
 */
 import {useContext} from 'react';
 import BaseButton from '../base/BaseButton';
-import UserSettingsContext from './UserSettingsContext';
+import UserSettingsContext from './userSettings/UserSettingsContext';
 
 export default function DeviceControlButtons() {
 	const {userSettingsSDK, userSettings} = useContext(UserSettingsContext);

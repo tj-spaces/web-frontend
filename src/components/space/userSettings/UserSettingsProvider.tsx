@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import useSDKState from '../../hooks/useSDKState';
+import useSDKState from '../../../hooks/useSDKState';
 import UserSettingsContext from './UserSettingsContext';
 import UserSettingsSDK from './UserSettingsSDK';
 

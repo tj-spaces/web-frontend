@@ -1,7 +1,7 @@
 import {useContext, useEffect, useMemo} from 'react';
-import useSDKState from '../../hooks/useSDKState';
-import EnterPreparationModal from './EnterPreparationModal';
-import UserSettingsContext from './UserSettingsContext';
+import useSDKState from '../../../hooks/useSDKState';
+import EnterPreparationModal from '../EnterPreparationModal';
+import UserSettingsContext from '../userSettings/UserSettingsContext';
 import VoiceContext from './VoiceContext';
 import VoiceSDK from './VoiceSDK';
 

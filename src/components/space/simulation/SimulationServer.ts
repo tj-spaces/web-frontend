@@ -4,16 +4,16 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {getLogger} from '../../lib/ClusterLogger';
+import {getLogger} from '../../../lib/ClusterLogger';
 import {
 	DisplayStatus,
 	Position,
 	SpaceMessage,
 	SpaceParticipant,
-} from '../../typings/Space';
+} from '../../../typings/Space';
 import JSONBig from 'json-bigint';
-import {DISABLE_DEV_SIMULATION_SERVER_SSL} from '../../lib/constants';
-import ChatSDK from './chat/ChatSDK';
+import {DISABLE_DEV_SIMULATION_SERVER_SSL} from '../../../lib/constants';
+import ChatSDK from '../chat/ChatSDK';
 
 const logger = getLogger('space');
 

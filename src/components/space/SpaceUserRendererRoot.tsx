@@ -1,6 +1,6 @@
 import {useContext} from 'react';
 import PointOfViewContext from './PointOfViewContext';
-import {useMyAnonymousID, useParticipants} from './SimulationHooks';
+import {useMyAnonymousID, useParticipants} from './simulation/SimulationHooks';
 import UserModel from './UserModel';
 
 export default function SpaceUserRendererRoot() {

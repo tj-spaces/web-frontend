@@ -2,9 +2,9 @@ import React, {ReactNode, useContext} from 'react';
 import {Canvas} from 'react-three-fiber';
 import AuthContext from '../AuthContext';
 import PointOfViewContext from './PointOfViewContext';
-import SimulationServerContext from './SimulationServerContext';
+import SimulationServerContext from './simulation/SimulationServerContext';
 import SpaceAudioContext from './SpaceAudioContext';
-import VoiceContext from './VoiceContext';
+import VoiceContext from './airwave/VoiceContext';
 
 // Because 'Canvas' creates a new React renderer, contexts cannot be shared, unfortunately
 // So we need to pass them in manually

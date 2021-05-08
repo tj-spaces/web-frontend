@@ -5,7 +5,7 @@
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
 import {createContext} from 'react';
-import ChatSDK from './chat/ChatSDK';
+import ChatSDK from '../chat/ChatSDK';
 import SimulationServerSDK from './SimulationServerSDK';
 import SimulationServerState from './SimulationServerState';
 

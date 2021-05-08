@@ -1,6 +1,6 @@
 /** Here are some examples of how to use the VoiceSDK */
 
-import getUserMedia from '../../lib/getUserMedia';
+import getUserMedia from '../../../lib/getUserMedia';
 import VoiceSDK from './VoiceSDK';
 
 const sdk = new VoiceSDK();

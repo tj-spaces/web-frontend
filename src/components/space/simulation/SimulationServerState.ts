@@ -1,5 +1,5 @@
 import {Map, Record} from 'immutable';
-import SpaceParticipantRecord from './SpaceParticipantRecord';
+import SpaceParticipantRecord from '../SpaceParticipantRecord';
 
 export type SimulationServerStateProps = {
 	participants: Map<string, SpaceParticipantRecord>;

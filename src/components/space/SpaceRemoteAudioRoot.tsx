@@ -5,8 +5,8 @@ import {
 	useMyAnonymousID,
 	useMyPosition,
 	useParticipants,
-} from './SimulationHooks';
-import VoiceContext from './VoiceContext';
+} from './simulation/SimulationHooks';
+import VoiceContext from './airwave/VoiceContext';
 
 export default function SpaceRemoteAudioRoot() {
 	const {voiceState} = useContext(VoiceContext);

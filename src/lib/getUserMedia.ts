@@ -1,6 +1,6 @@
 import VoiceImmutableMediaTrack, {
 	createImmutableMediaTrackFromTrack,
-} from '../components/space/VoiceImmutableMediaTrack';
+} from '../components/space/airwave/VoiceImmutableMediaTrack';
 
 // Check if it's possible to getUserMedia. This will be undefined if it's not possible
 const nativeGetUserMedia =

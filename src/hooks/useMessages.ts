@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import SimulationServer from '../components/space/SimulationServer';
+import SimulationServer from '../components/space/simulation/SimulationServer';
 import {SpaceMessage} from '../typings/Space';
 
 export function useMessages(space: SimulationServer) {
