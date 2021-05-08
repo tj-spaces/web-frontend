@@ -23,7 +23,7 @@ export default function UserModel({
 	id: string;
 }) {
 	const {camera} = useThree();
-	const videoElement = useMemo(() => document.createElement('video'), []);
+	const video = useMemo(() => document.createElement('video'), []);
 	const videoTracks = useTracks(`user$${id}:user`, 'video');
 	const hasVideoTracks = videoTracks.length > 0;
 	const pov = useContext(PointOfViewContext);
@@ -60,28 +60,63 @@ export default function UserModel({
 	// Video element
 	useEffect(() => {
 		if (videoTracks.length > 0) {
-			if (!videoElement.srcObject) {
+			if (!video.srcObject) {
+				const videoPlaying =
+					video.currentTime > 0 &&
+					!video.paused &&
+					!video.ended &&
+					video.readyState > video.HAVE_CURRENT_DATA;
+
 				const stream = new MediaStream(
 					videoTracks.map((track) => track.webrtcTrack)
 				);
-				// videoElement.muted = false;
-				videoElement.srcObject = stream;
-				if (videoElement.paused) {
-					videoElement.play();
+
+				if (videoPlaying) {
+					video.pause();
 				}
+
+				// videoElement.muted = false;
+				video.srcObject = stream;
+
+				video
+					.play()
+					.then(() => {
+						console.log('Playing video');
+					})
+					.catch((error) => {
+						console.error('Error playing video:', error);
+					});
 			} else {
-				let obj = videoElement.srcObject as MediaStream;
+				let obj = video.srcObject as MediaStream;
 				// Clear the current tracks
 				obj.getTracks().forEach((track) => {
 					obj.removeTrack(track);
 				});
-				// Add the new tracks
-				for (let track of videoTracks) {
-					obj.addTrack(track.webrtcTrack);
-				}
+
+				// Only add one track
+				obj.addTrack(videoTracks[0].webrtcTrack);
+
+				const videoPlaying =
+					video.currentTime > 0 &&
+					!video.paused &&
+					!video.ended &&
+					video.readyState > video.HAVE_CURRENT_DATA;
+
+				// if (videoPlaying) {
+				// 	video.pause();
+				// }
+
+				// video.srcObject = obj;
+
+				console.log(
+					'removed tracks from srcObject. currently:',
+					(video.srcObject as MediaStream).getTracks()
+				);
+
+				// video.play();
 			}
 		}
-	}, [videoElement, videoTracks]);
+	}, [video, videoTracks]);
 
 	return (
 		<mesh
@@ -93,23 +128,35 @@ export default function UserModel({
 			<planeBufferGeometry attach="geometry" args={[1, 1]} />
 			{
 				// Don't display my own avatar if in first person
-				!(me && pov === 'first-person') && (
-					<meshBasicMaterial
-						attach="material"
-						color={!hasVideoTracks ? (me ? '#ff6666' : '#66ff66') : undefined}
-						side={THREE.DoubleSide}
-						flatShading
-					>
-						{hasVideoTracks && (
-							<videoTexture
-								attach="map"
-								args={[videoElement]}
-								wrapS={THREE.RepeatWrapping}
-								wrapT={THREE.RepeatWrapping}
-							/>
-						)}
-					</meshBasicMaterial>
-				)
+				!(me && pov === 'first-person') &&
+					(console.log('not me, hasvideotracks is', hasVideoTracks),
+					(
+						<meshBasicMaterial
+							attach="material"
+							color={!hasVideoTracks ? (me ? '#ff6666' : '#66ff66') : '#ffffff'}
+							side={THREE.DoubleSide}
+							flatShading
+						>
+							{hasVideoTracks &&
+								(function () {
+									if (video.srcObject) {
+										console.log(
+											'videotracks:',
+											(video.srcObject as MediaStream).getTracks()
+										);
+									}
+
+									return (
+										<videoTexture
+											attach="map"
+											args={[video]}
+											wrapS={THREE.RepeatWrapping}
+											wrapT={THREE.RepeatWrapping}
+										/>
+									);
+								})()}
+						</meshBasicMaterial>
+					))
 			}
 		</mesh>
 	);
