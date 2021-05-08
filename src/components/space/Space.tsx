@@ -77,22 +77,20 @@ export default function Space() {
 	const simulation = useContext(SimulationServerContext);
 	const mediaState = useContext(SpaceAudioContext);
 	const voice = useContext(VoiceContext);
-	const [canvas, setCanvas] = useState<HTMLDivElement>();
+	const [canvas, setCanvas] = useState<HTMLDivElement | null>(null);
 
 	return (
-		<div
-			style={{width: '100%', height: '100%'}}
-			ref={(div) => setCanvas(div || undefined)}
-		>
+		<div style={{width: '100%', height: '100%'}} ref={(div) => setCanvas(div)}>
 			<SpatialAudioListener
 				position={myPosition ?? {x: 0, y: 0, z: 0}}
 				rotation={0}
 			/>
-			{Object.entries(participants.toJS()).map(([id, participant]) =>
-				id !== myID ? (
-					<RemoteAudio userID={id} position={participant.position} key={id} />
-				) : null
-			)}
+			{voice.voiceState.ready &&
+				Object.entries(participants.toJS()).map(([id, participant]) =>
+					id !== myID ? (
+						<RemoteAudio userID={id} position={participant.position} key={id} />
+					) : null
+				)}
 			<Canvas>
 				<AuthContext.Provider value={auth}>
 					<SimulationServerContext.Provider value={simulation}>
@@ -103,7 +101,7 @@ export default function Space() {
 										onUpdate={(controls) =>
 											(rotation.current = controls.getObject().rotation.z)
 										}
-										domElement={canvas}
+										domElement={canvas ?? undefined}
 									/>
 									<Suspense fallback="Loading model">
 										<SushiTable />
