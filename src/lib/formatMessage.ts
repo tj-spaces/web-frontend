@@ -1,19 +1,17 @@
 export default function formatMessage(messageFormat: string, ...params: any[]) {
 	let paramIndex = -1;
-	return messageFormat.replace('%p', () => {
+	return messageFormat.replace(/%[po]/g, (substring) => {
 		paramIndex++;
 
 		let param = params[paramIndex];
 
-		if (typeof param === 'string' || typeof param === 'number') {
+		if (substring === '%p') {
+			return String(param);
+		} else if (substring === '%o') {
+			return JSON.stringify(param);
+		} else {
+			console.warn('Invalid message format:', messageFormat);
 			return String(param);
 		}
-
-		let stringified = String(param);
-		if (stringified === '[object Object]') {
-			stringified = JSON.stringify(param);
-		}
-
-		return String(stringified);
 	});
 }
