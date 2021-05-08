@@ -96,24 +96,10 @@ export default function UserModel({
 				// Only add one track
 				obj.addTrack(videoTracks[0].webrtcTrack);
 
-				const videoPlaying =
-					video.currentTime > 0 &&
-					!video.paused &&
-					!video.ended &&
-					video.readyState > video.HAVE_CURRENT_DATA;
-
-				// if (videoPlaying) {
-				// 	video.pause();
-				// }
-
-				// video.srcObject = obj;
-
 				console.log(
 					'removed tracks from srcObject. currently:',
 					(video.srcObject as MediaStream).getTracks()
 				);
-
-				// video.play();
 			}
 		}
 	}, [video, videoTracks]);
