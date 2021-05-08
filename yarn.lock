@@ -1830,6 +1830,11 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
+"@seregpie/three.text-texture@^3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@seregpie/three.text-texture/-/three.text-texture-3.2.1.tgz#aedb9b26ec8f16c158ca59721b506d2d40f76f0d"
+  integrity sha512-+rBfu63PolUyg6WB56SxYIIGGw7BMiFMeoj6AcxGooGs1apnudu024EMY/6dr1KnpIa9lNIwSgJETeaclgT/BQ==
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.2.tgz#858f5c4b48d80778fde4b9d541f27edc0d56488b"

@@ -4,23 +4,22 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useEffect, useMemo} from 'react';
+import React, {Suspense, useEffect, useMemo} from 'react';
 import * as THREE from 'three';
-import {Position} from '../../../typings/Space';
 import AirwaveLoggerGlobal from '../airwave/AirwaveLogger';
 import {useTracks, useVoiceSDK} from '../airwave/VoiceHooks';
+import SpaceParticipantRecord from '../SpaceParticipantRecord';
+import Text from './Text';
 
 export default function UserModel({
-	position,
-	rotation = 0,
+	participant,
 	me,
-	id,
 }: {
-	position: Position;
-	rotation: number;
+	participant: SpaceParticipantRecord;
 	me: boolean;
-	id: string;
 }) {
+	const {id, rotation = 0, position} = participant;
+
 	const video = useMemo(() => document.createElement('video'), []);
 	const videoTracks = useTracks(`user$${id}:user`, 'video');
 	const hasVideoTracks = videoTracks.length > 0;
@@ -86,29 +85,37 @@ export default function UserModel({
 
 	return (
 		<>
+			<Suspense fallback={null}>
+				<Text
+					vAlign="center"
+					hAlign="center"
+					size={1}
+					position={[position.x, position.y + 3, position.z]}
+				>
+					{participant.display_name}
+				</Text>
+			</Suspense>
 			<mesh
 				position={[position.x, position.y + 2, position.z]}
 				// Vertical rotations must be made along the Z axis, because we rotate by pi/2 on the X axis.
-				rotation={[0, 0, rotation ?? 0]}
+				rotation={[0, 0, rotation]}
 			>
 				<planeBufferGeometry attach="geometry" args={[1, 1]} />
-				{
-					<meshBasicMaterial
-						attach="material"
-						color={!hasVideoTracks ? (me ? '#ff6666' : '#66ff66') : '#ffffff'}
-						side={THREE.DoubleSide}
-						flatShading
-					>
-						{hasVideoTracks && (
-							<videoTexture
-								attach="map"
-								args={[video]}
-								wrapS={THREE.RepeatWrapping}
-								wrapT={THREE.RepeatWrapping}
-							/>
-						)}
-					</meshBasicMaterial>
-				}
+				<meshBasicMaterial
+					attach="material"
+					color={!hasVideoTracks ? (me ? '#ff6666' : '#66ff66') : '#ffffff'}
+					side={THREE.DoubleSide}
+					flatShading
+				>
+					{hasVideoTracks && (
+						<videoTexture
+							attach="map"
+							args={[video]}
+							wrapS={THREE.RepeatWrapping}
+							wrapT={THREE.RepeatWrapping}
+						/>
+					)}
+				</meshBasicMaterial>
 			</mesh>
 		</>
 	);

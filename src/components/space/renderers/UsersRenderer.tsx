@@ -16,13 +16,7 @@ export default function UsersRenderer() {
 			{Object.entries(participants.toJSON()).map(([id, participant]) => {
 				if (id !== myID || shouldShowSelf) {
 					return (
-						<UserModel
-							position={participant.position}
-							rotation={participant.rotation}
-							key={id}
-							me={id === myID}
-							id={id}
-						/>
+						<UserModel participant={participant} key={id} me={id === myID} />
 					);
 				} else {
 					return null;
