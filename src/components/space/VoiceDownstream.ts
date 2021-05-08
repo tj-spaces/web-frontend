@@ -109,15 +109,33 @@ export default class VoiceDownstream {
 			true
 		);
 
-		track.addEventListener('ended', () => {
+		this.voiceSDK.addTrack(immutableMediaTrack, stream.id, userID);
+
+		stream.addEventListener('removetrack', (event) => {
+			AirwaveLoggerGlobal.info(
+				'track with id %p removed from stream',
+				event.track.id
+			);
+
 			this.voiceSDK.removeTrackByID(
 				userID,
-				immutableMediaTrack.trackID,
-				stream.id
+				stream.id,
+				immutableMediaTrack.trackID
 			);
 		});
 
-		this.voiceSDK.addTrack(immutableMediaTrack, stream.id, userID);
+		track.addEventListener('ended', () => {
+			AirwaveLoggerGlobal.info(
+				'track with id %p ended',
+				immutableMediaTrack.trackID
+			);
+
+			this.voiceSDK.removeTrackByID(
+				userID,
+				stream.id,
+				immutableMediaTrack.trackID
+			);
+		});
 	}
 
 	// private startSubscribeTimeout(target: SubscriptionDescriptor) {
