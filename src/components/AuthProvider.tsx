@@ -31,12 +31,6 @@ export default function AuthProvider({children}: {children: React.ReactNode}) {
 		refreshAuthState();
 	}, [refreshAuthState]);
 
-	useEffect(() => {
-		console.log({
-			id: authState?.user?.id,
-		});
-	}, [authState]);
-
 	if (authState?.isLoggedIn == null) {
 		return null;
 	} else {
