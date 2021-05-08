@@ -4,12 +4,10 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {useContext, useEffect, useMemo} from 'react';
-import {useThree} from 'react-three-fiber';
+import {useEffect, useMemo} from 'react';
 import * as THREE from 'three';
 import {Position} from '../../typings/Space';
 import AirwaveLoggerGlobal from './AirwaveLogger';
-import PointOfViewContext from './PointOfViewContext';
 import {useTracks, useVoiceSDK} from './VoiceHooks';
 
 export default function UserModel({
@@ -23,11 +21,9 @@ export default function UserModel({
 	me: boolean;
 	id: string;
 }) {
-	const {camera} = useThree();
 	const video = useMemo(() => document.createElement('video'), []);
 	const videoTracks = useTracks(`user$${id}:user`, 'video');
 	const hasVideoTracks = videoTracks.length > 0;
-	const pov = useContext(PointOfViewContext);
 	const sdk = useVoiceSDK();
 
 	useEffect(() => {
@@ -37,26 +33,6 @@ export default function UserModel({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	// Camera positioning
-	useEffect(() => {
-		if (me) {
-			if (pov === 'third-person') {
-				let offset = {
-					x: Math.sin(rotation),
-					z: Math.cos(rotation),
-				};
-				camera.position.set(
-					position.x + offset.x * 2,
-					position.y + 4,
-					position.z + offset.z * 6
-				);
-				camera.rotation.set(-Math.PI / 8, rotation, 0);
-			} else {
-				camera.position.set(position.x, position.y + 2, position.z);
-			}
-		}
-	}, [camera, camera.position, me, position, pov, rotation]);
 
 	// Video element
 	useEffect(() => {
@@ -105,45 +81,31 @@ export default function UserModel({
 	}, [video, videoTracks]);
 
 	return (
-		<mesh
-			position={[position.x, position.y + 2, position.z]}
-			// Vertical rotations must be made along the Z axis, because we rotate by pi/2 on the X axis.
-			rotation={[0, 0, rotation ?? 0]}
-		>
-			{/* <cylinderBufferGeometry attach="geometry" args={[0.5, 0.5, 0.125, 64]} /> */}
-			<planeBufferGeometry attach="geometry" args={[1, 1]} />
-			{
-				// Don't display my own avatar if in first person
-				!(me && pov === 'first-person') &&
-					(console.log('not me, hasvideotracks is', hasVideoTracks),
-					(
-						<meshBasicMaterial
-							attach="material"
-							color={!hasVideoTracks ? (me ? '#ff6666' : '#66ff66') : '#ffffff'}
-							side={THREE.DoubleSide}
-							flatShading
-						>
-							{hasVideoTracks &&
-								(function () {
-									if (video.srcObject) {
-										console.log(
-											'videotracks:',
-											(video.srcObject as MediaStream).getTracks()
-										);
-									}
-
-									return (
-										<videoTexture
-											attach="map"
-											args={[video]}
-											wrapS={THREE.RepeatWrapping}
-											wrapT={THREE.RepeatWrapping}
-										/>
-									);
-								})()}
-						</meshBasicMaterial>
-					))
-			}
-		</mesh>
+		<>
+			<mesh
+				position={[position.x, position.y + 2, position.z]}
+				// Vertical rotations must be made along the Z axis, because we rotate by pi/2 on the X axis.
+				rotation={[0, 0, rotation ?? 0]}
+			>
+				<planeBufferGeometry attach="geometry" args={[1, 1]} />
+				{
+					<meshBasicMaterial
+						attach="material"
+						color={!hasVideoTracks ? (me ? '#ff6666' : '#66ff66') : '#ffffff'}
+						side={THREE.DoubleSide}
+						flatShading
+					>
+						{hasVideoTracks && (
+							<videoTexture
+								attach="map"
+								args={[video]}
+								wrapS={THREE.RepeatWrapping}
+								wrapT={THREE.RepeatWrapping}
+							/>
+						)}
+					</meshBasicMaterial>
+				}
+			</mesh>
+		</>
 	);
 }

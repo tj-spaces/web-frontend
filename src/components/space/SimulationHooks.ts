@@ -28,3 +28,10 @@ export function useSimulationURL(
 		}
 	}, [simulationSDK, simulationURL, token]);
 }
+
+export function useMyPosition() {
+	const participants = useParticipants();
+	const myID = useMyAnonymousID();
+
+	return myID ? participants.get(myID)?.position : null;
+}
