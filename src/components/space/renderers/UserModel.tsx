@@ -30,9 +30,13 @@ export default function UserModel({
 		if (!me) {
 			sdk.associateStreamWithDownstream(`user$${id}:user`, 'localhost');
 			sdk.subscribe(`user$${id}:user`, {audio: true, video: true});
+
+			return () => {
+				sdk.disassociateStreamFromDownstream(`user$${id}:user`, 'localhost');
+				sdk.unsubscribe(`user$${id}:user`);
+			};
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [id, me, sdk]);
 
 	// Video element
 	useEffect(() => {
