@@ -4,7 +4,6 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {PointerLockControls} from '@react-three/drei';
 import {Suspense, useRef, useState} from 'react';
 import CameraPositionUpdater from './CameraPositionUpdater';
 import Floor from './Floor';
@@ -13,24 +12,27 @@ import RemoteAudioRenderer from './renderers/RemoteAudioRenderer';
 import UsersRenderer from './renderers/UsersRenderer';
 import SushiTable from './SushiTable';
 import useMoveDirectionUpdater from './useMoveDirectionUpdater';
+import PointerLockControls from '../PointerLockControls';
 
 export default function Space() {
 	const rotation = useRef<number>(0);
 
 	useMoveDirectionUpdater(rotation);
 
-	const [canvas, setCanvas] = useState<HTMLDivElement | null>(null);
+	const [canvasElement, setCanvasElement] = useState<HTMLDivElement | null>(
+		null
+	);
 
 	return (
-		<div style={{width: '100%', height: '100%'}} ref={setCanvas}>
+		<div style={{width: '100%', height: '100%'}} ref={setCanvasElement}>
 			<RemoteAudioRenderer />
 			<SpaceCanvasRoot>
-				<PointerLockControls
-					onUpdate={(controls) =>
-						(rotation.current = controls.getObject().rotation.z)
-					}
-					domElement={canvas ?? undefined}
-				/>
+				{canvasElement && (
+					<PointerLockControls
+						onUpdate={(camera) => (rotation.current = camera.rotation.z)}
+						element={canvasElement}
+					/>
+				)}
 
 				<CameraPositionUpdater rotation={rotation} />
 
