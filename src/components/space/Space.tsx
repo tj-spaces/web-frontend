@@ -9,8 +9,8 @@ import {Suspense, useRef, useState} from 'react';
 import CameraPositionUpdater from './CameraPositionUpdater';
 import Floor from './Floor';
 import SpaceCanvasRoot from './SpaceCanvasRoot';
-import SpaceRemoteAudioRoot from './renderers/RemoteAudioRenderer';
-import SpaceUserRendererRoot from './renderers/UsersRenderer';
+import RemoteAudioRenderer from './renderers/RemoteAudioRenderer';
+import UsersRenderer from './renderers/UsersRenderer';
 import SushiTable from './SushiTable';
 import useMoveDirectionUpdater from './useMoveDirectionUpdater';
 
@@ -23,7 +23,7 @@ export default function Space() {
 
 	return (
 		<div style={{width: '100%', height: '100%'}} ref={setCanvas}>
-			<SpaceRemoteAudioRoot />
+			<RemoteAudioRenderer />
 			<SpaceCanvasRoot>
 				<PointerLockControls
 					onUpdate={(controls) =>
@@ -36,7 +36,7 @@ export default function Space() {
 
 				<ambientLight intensity={0.5} />
 
-				<SpaceUserRendererRoot />
+				<UsersRenderer />
 
 				<Suspense fallback="Loading model">
 					<SushiTable />

@@ -3,7 +3,7 @@ import PointOfViewContext from '../PointOfViewContext';
 import {useMyAnonymousID, useParticipants} from '../simulation/SimulationHooks';
 import UserModel from './UserModel';
 
-export default function SpaceUserRendererRoot() {
+export default function UsersRenderer() {
 	const myID = useMyAnonymousID();
 	const participants = useParticipants();
 
