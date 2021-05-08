@@ -8,6 +8,7 @@ import {useContext, useEffect, useMemo} from 'react';
 import {useThree} from 'react-three-fiber';
 import * as THREE from 'three';
 import {Position} from '../../typings/Space';
+import AirwaveLoggerGlobal from './AirwaveLogger';
 import PointOfViewContext from './PointOfViewContext';
 import {useTracks, useVoiceSDK} from './VoiceHooks';
 
@@ -96,9 +97,8 @@ export default function UserModel({
 				// Only add one track
 				obj.addTrack(videoTracks[0].webrtcTrack);
 
-				console.log(
-					'removed tracks from srcObject. currently:',
-					(video.srcObject as MediaStream).getTracks()
+				AirwaveLoggerGlobal.debug(
+					`updated srcObject; currently: ${(video.srcObject as MediaStream).getTracks()}`
 				);
 			}
 		}
