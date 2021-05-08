@@ -14,6 +14,8 @@ const styles = createStylesheet({
 		bottom: '0px',
 		left: '0px',
 		right: '0px',
+
+		zIndex: 0,
 	},
 });
 

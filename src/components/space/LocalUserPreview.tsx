@@ -27,8 +27,8 @@ const styles = createStylesheet({
 	},
 	localUserIcons: {
 		position: 'absolute',
-		left: '2em',
-		bottom: '2em',
+		left: '0.5rem',
+		bottom: '0.5rem',
 	},
 	localUserProfilePhoto: {
 		position: 'absolute',
@@ -92,7 +92,7 @@ export default function LocalUserPreview({
 				)
 			)}
 			<div className={styles('localUserIcons')}>
-				<BaseRow direction="row" spacing={1} rails={1}>
+				<BaseRow direction="row" spacing={1}>
 					{userSettings.micEnabled ? (
 						<Mic
 							fontSize="large"

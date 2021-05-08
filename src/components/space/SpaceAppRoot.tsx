@@ -18,6 +18,7 @@ import SpaceInfoMessage from './SpaceInfoMessage';
 import SpaceMediaProvider from './SpaceAudioContextProvider';
 import UserSettingsProvider from './userSettings/UserSettingsProvider';
 import VoiceProvider from './airwave/VoiceProvider';
+import LocalUserPreview from './LocalUserPreview';
 
 const styles = createStylesheet({
 	container: {
@@ -60,6 +61,12 @@ const styles = createStylesheet({
 		right: '0px',
 		top: '5em',
 		bottom: '5em',
+	},
+	localUserPreview: {
+		position: 'absolute',
+		left: '2rem',
+		bottom: '2rem',
+		zIndex: 1,
 	},
 });
 
@@ -114,6 +121,10 @@ export default function SpaceAppRoot({id}: {id: string}) {
 								{connectionStatus === 'errored' && <SpaceConnectionErrored />}
 
 								{connectionStatus === 'connected' && <Space />}
+							</div>
+
+							<div className={styles('localUserPreview')}>
+								<LocalUserPreview width="15rem" height="10rem" />
 							</div>
 
 							<SpaceFooter />
