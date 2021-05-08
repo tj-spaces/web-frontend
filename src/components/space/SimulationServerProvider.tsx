@@ -1,7 +1,7 @@
 import {ReactNode, useMemo} from 'react';
 import useSDKState from '../../hooks/useSDKState';
-import {ChatProvider} from './ChatProvider';
-import ChatSDK from './ChatSDK';
+import {ChatProvider} from './chat/ChatProvider';
+import ChatSDK from './chat/ChatSDK';
 import {useSimulationURL} from './SimulationHooks';
 import SimulationServerContext from './SimulationServerContext';
 import SimulationServerSDK from './SimulationServerSDK';

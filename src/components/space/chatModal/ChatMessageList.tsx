@@ -6,7 +6,7 @@
 */
 import {ClassProvider} from '../../../styles/createStylesheet';
 import BaseRow from '../../base/BaseRow';
-import {useSpaceMessages} from '../ChatHooks';
+import {useSpaceMessages} from '../chat/ChatHooks';
 import ChatMessage from './ChatMessage';
 
 export default function ChatMessageList({xstyle}: {xstyle?: ClassProvider}) {

@@ -7,7 +7,7 @@
 import {useEffect, useMemo} from 'react';
 import * as THREE from 'three';
 import {Position} from '../../typings/Space';
-import AirwaveLoggerGlobal from './AirwaveLogger';
+import AirwaveLoggerGlobal from './airwave/AirwaveLogger';
 import {useTracks, useVoiceSDK} from './VoiceHooks';
 
 export default function UserModel({

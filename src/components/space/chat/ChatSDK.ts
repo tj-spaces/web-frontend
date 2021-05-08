@@ -1,6 +1,6 @@
-import {SpaceMessage} from '../../typings/Space';
+import {SpaceMessage} from '../../../typings/Space';
 import ChatState from './ChatState';
-import SDKBase from './SDKBase';
+import SDKBase from '../SDKBase';
 
 export default class ChatSDK extends SDKBase<ChatState> {
 	getInitialState() {

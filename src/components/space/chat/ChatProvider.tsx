@@ -1,4 +1,4 @@
-import useSDKState from '../../hooks/useSDKState';
+import useSDKState from '../../../hooks/useSDKState';
 import ChatContext from './ChatContext';
 import ChatSDK from './ChatSDK';
 

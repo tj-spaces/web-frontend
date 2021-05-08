@@ -1,7 +1,7 @@
 import JSONBig from 'json-bigint';
 import {DISABLE_DEV_SIMULATION_SERVER_SSL} from '../../lib/constants';
 import {SpaceParticipant} from '../../typings/Space';
-import ChatSDK from './ChatSDK';
+import ChatSDK from './chat/ChatSDK';
 import SimulationServerState from './SimulationServerState';
 import SDKBase from './SDKBase';
 import * as immutable from 'immutable';

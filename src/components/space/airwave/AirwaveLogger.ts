@@ -1,4 +1,4 @@
-import formatMessage from '../../lib/formatMessage';
+import formatMessage from '../../../lib/formatMessage';
 
 class AirwaveLogger {
 	mustfix(messageFormat: string, ...params: any[]) {

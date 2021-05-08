@@ -13,7 +13,7 @@ import {
 } from '../../typings/Space';
 import JSONBig from 'json-bigint';
 import {DISABLE_DEV_SIMULATION_SERVER_SSL} from '../../lib/constants';
-import ChatSDK from './ChatSDK';
+import ChatSDK from './chat/ChatSDK';
 
 const logger = getLogger('space');
 

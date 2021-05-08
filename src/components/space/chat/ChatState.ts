@@ -1,5 +1,5 @@
 import {Record, List, Map} from 'immutable';
-import {SpaceMessage} from '../../typings/Space';
+import {SpaceMessage} from '../../../typings/Space';
 
 export type ChatStateProps = {
 	chatModalOpen: boolean;

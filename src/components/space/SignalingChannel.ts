@@ -1,4 +1,4 @@
-import AirwaveLoggerGlobal from './AirwaveLogger';
+import AirwaveLoggerGlobal from './airwave/AirwaveLogger';
 import {SubscriptionDescriptor, SubscriptionState} from './VoiceDownstream';
 
 export const PING_TIMEOUT = 60 * 1000;
