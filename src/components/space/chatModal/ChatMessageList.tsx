@@ -7,10 +7,11 @@
 import {ClassProvider} from '../../../styles/createStylesheet';
 import BaseRow from '../../base/BaseRow';
 import {useSpaceMessages} from '../chat/ChatHooks';
+import {useSpaceID} from '../simulation/SimulationHooks';
 import ChatMessage from './ChatMessage';
 
 export default function ChatMessageList({xstyle}: {xstyle?: ClassProvider}) {
-	const messages = useSpaceMessages('_');
+	const messages = useSpaceMessages(useSpaceID());
 
 	return (
 		<BaseRow direction="column" overflow="scroll" width="100%" xstyle={xstyle}>

@@ -10,21 +10,26 @@ export default function SimulationServerProvider({
 	children,
 	simulationURL,
 	token,
+	spaceID,
 }: {
 	children: ReactNode;
 	simulationURL?: string;
 	token?: string;
+	spaceID: string;
 }) {
 	const chatSDK = useMemo(() => new ChatSDK(), []);
-	const simulationSDK = useMemo(() => new SimulationServerSDK(chatSDK), [
-		chatSDK,
-	]);
+	const simulationSDK = useMemo(
+		() => new SimulationServerSDK(chatSDK, spaceID),
+		[chatSDK, spaceID]
+	);
 	const simulationState = useSDKState(simulationSDK);
 
 	useSimulationURL(simulationSDK, simulationURL, token);
 
 	return (
-		<SimulationServerContext.Provider value={{simulationSDK, simulationState}}>
+		<SimulationServerContext.Provider
+			value={{spaceID, simulationSDK, simulationState}}
+		>
 			<ChatProvider chatSDK={chatSDK}>{children}</ChatProvider>
 		</SimulationServerContext.Provider>
 	);

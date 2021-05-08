@@ -2,6 +2,9 @@ import useSDKState from '../../../hooks/useSDKState';
 import ChatContext from './ChatContext';
 import ChatSDK from './ChatSDK';
 
+/**
+ * Note that this is provided already by the SimulationServerProvider.
+ */
 export function ChatProvider({
 	chatSDK,
 	children,

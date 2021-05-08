@@ -29,7 +29,7 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 
 	private outboundMessageQueue: [string, any][] = [];
 
-	constructor(private chatSDK: ChatSDK) {
+	constructor(private chatSDK: ChatSDK, public readonly spaceID: string) {
 		super();
 	}
 
@@ -93,10 +93,10 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 		let data = JSONBig({storeAsString: true}).parse(payload);
 		switch (type) {
 			case 'message':
-				this.chatSDK.addMessagesToSpace('0', [data]);
+				this.chatSDK.addMessagesToSpace(this.spaceID, [data]);
 				break;
 			case 'chat_history':
-				this.chatSDK.addMessagesToSpace('0', data);
+				this.chatSDK.addMessagesToSpace(this.spaceID, data);
 				break;
 			case 'users':
 				this.setParticipants(spaceParticipantMapToImmutableMapOfRecords(data));

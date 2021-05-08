@@ -2,6 +2,11 @@ import {useContext, useEffect} from 'react';
 import SimulationServerContext from './SimulationServerContext';
 import SimulationServerSDK from './SimulationServerSDK';
 
+export function useSpaceID() {
+	const {spaceID} = useContext(SimulationServerContext);
+	return spaceID;
+}
+
 export function useMyAnonymousID() {
 	const {simulationState} = useContext(SimulationServerContext);
 	return simulationState.anonymousParticipantID;

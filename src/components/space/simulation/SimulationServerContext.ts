@@ -12,9 +12,11 @@ import SimulationServerState from './SimulationServerState';
 const SimulationServerContext = createContext<{
 	simulationState: SimulationServerState;
 	simulationSDK: SimulationServerSDK;
+	spaceID: string;
 }>({
-	simulationSDK: new SimulationServerSDK(new ChatSDK()),
+	simulationSDK: new SimulationServerSDK(new ChatSDK(), ''),
 	simulationState: new SimulationServerState(),
+	spaceID: '',
 });
 
 export default SimulationServerContext;

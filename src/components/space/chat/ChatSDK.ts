@@ -7,11 +7,11 @@ export default class ChatSDK extends SDKBase<ChatState> {
 		return new ChatState();
 	}
 
-	addMessagesToSpace(spaceId: string, messages: SpaceMessage[]) {
-		this.state = this.state.addMessagesToSpace(spaceId, messages);
+	addMessagesToSpace(spaceID: string, messages: SpaceMessage[]) {
+		this.state = this.state.addMessagesToSpace(spaceID, messages);
 	}
 
-	getMessagesInSpace(spaceId: string) {
-		return this.state.getMessagesInSpace(spaceId);
+	getMessagesInSpace(spaceID: string) {
+		return this.state.getMessagesInSpace(spaceID);
 	}
 }

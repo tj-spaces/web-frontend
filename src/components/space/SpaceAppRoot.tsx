@@ -6,7 +6,6 @@
 */
 import {useEffect, useState} from 'react';
 import {getSpaceServerURLs, useSpace} from '../../api/spaces';
-// import {getLogger} from '../../lib/ClusterLogger';
 import {createStylesheet} from '../../styles/createStylesheet';
 import {useCurrentUser} from '../AuthHooks';
 import BaseText from '../base/BaseText';
@@ -102,7 +101,11 @@ export default function SpaceAppRoot({id}: {id: string}) {
 	}, [user, id]);
 
 	return (
-		<SimulationServerProvider simulationURL={simulationURL} token={token}>
+		<SimulationServerProvider
+			spaceID={id}
+			simulationURL={simulationURL}
+			token={token}
+		>
 			<UserSettingsProvider>
 				<SpaceMediaProvider audioContext={audio} setAudioContext={setAudio}>
 					<VoiceProvider voiceURL={voiceURL}>
