@@ -97,7 +97,7 @@ export default function Space() {
 				<AuthContext.Provider value={auth}>
 					<SimulationServerContext.Provider value={simulation}>
 						<SpaceAudioContext.Provider value={mediaState}>
-							<VoiceContext.Provider value={voice ?? null}>
+							<VoiceContext.Provider value={voice}>
 								<PointOfViewContext.Provider value="first-person">
 									<PointerLockControls
 										onUpdate={(controls) =>
