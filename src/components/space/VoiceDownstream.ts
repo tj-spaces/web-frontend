@@ -124,6 +124,18 @@ export default class VoiceDownstream {
 			);
 		});
 
+		track.addEventListener('mute', () => {
+			this.voiceSDK.setTrackMuted(stream.id, immutableMediaTrack.trackID, true);
+		});
+
+		track.addEventListener('unmute', () => {
+			this.voiceSDK.setTrackMuted(
+				stream.id,
+				immutableMediaTrack.trackID,
+				false
+			);
+		});
+
 		track.addEventListener('ended', () => {
 			AirwaveLoggerGlobal.info(
 				'track with id %p ended',

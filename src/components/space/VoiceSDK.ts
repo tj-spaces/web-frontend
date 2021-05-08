@@ -153,6 +153,26 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 		}
 	}
 
+	setTrackMuted(streamID: string, trackID: string, muted: boolean) {
+		let tracksInStream = this.state.streams.get(streamID);
+		if (!tracksInStream) {
+			AirwaveLoggerGlobal.warn(
+				`setting muted option of track in ${streamID} to ${muted}, but stream was not found`
+			);
+			return;
+		}
+		tracksInStream = tracksInStream.map((track) => {
+			if (track.trackID === trackID) {
+				return track.set('userMuted', muted);
+			}
+			return track;
+		});
+		this.state = this.state.set(
+			'streams',
+			this.state.streams.set(streamID, tracksInStream)
+		);
+	}
+
 	async updateUserMedia(constraints: {audio: boolean; video: boolean}) {
 		if (constraints.audio === false) {
 			if (this.hasLocalAudio()) {
