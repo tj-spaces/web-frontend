@@ -25,7 +25,7 @@ export default function EnterPreparationModal({onCancel}: {onCancel(): void}) {
 	return (
 		<BaseModal onClose={() => {}} variant="fitContent" closable={false}>
 			<BaseRow direction="column" spacing={2} rails={2} edges={2}>
-				<LocalUserPreview />
+				<LocalUserPreview width="30em" height="20em" />
 				<BaseRow direction="row" spacing={1}>
 					<BaseButton variant="primary" onClick={onReady}>
 						Join

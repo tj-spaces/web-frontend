@@ -11,8 +11,6 @@ import {useLocalUserTracks} from './airwave/VoiceHooks';
 
 const styles = createStylesheet({
 	container: {
-		width: '30rem',
-		height: '20rem',
 		overflow: 'hidden',
 		position: 'relative',
 		borderRadius: '1em',
@@ -40,7 +38,13 @@ const styles = createStylesheet({
 	},
 });
 
-export default function LocalUserPreview() {
+export default function LocalUserPreview({
+	width,
+	height,
+}: {
+	width: string;
+	height: string;
+}) {
 	const currentUser = useCurrentUser();
 	const stream = useMemo(() => new MediaStream(), []);
 	const userTracks = useLocalUserTracks();
@@ -75,7 +79,7 @@ export default function LocalUserPreview() {
 	}, [userTracks]);
 
 	return (
-		<div className={styles('container')}>
+		<div className={styles('container')} style={{width, height}}>
 			{hasLocalVideo ? (
 				<video className={styles('video')} muted ref={videoRef}></video>
 			) : (
