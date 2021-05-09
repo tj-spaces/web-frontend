@@ -1,6 +1,5 @@
 import JSONBig from 'json-bigint';
 import {DISABLE_DEV_SIMULATION_SERVER_SSL} from '../../../lib/constants';
-import {SpaceParticipant} from '../../../typings/Space';
 import ChatSDK from '../chat/ChatSDK';
 import SimulationServerState from './SimulationServerState';
 import SDKBase from '../../../lib/SDKBase';
@@ -23,9 +22,6 @@ export interface MovementDirection {
 
 export default class SimulationServerSDK extends SDKBase<SimulationServerState> {
 	private _websocket: WebSocket | null = null;
-
-	participants: Record<string, SpaceParticipant> = {};
-	participantID: string | null = null;
 
 	private outboundMessageQueue: [string, any][] = [];
 
@@ -134,20 +130,36 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 		this.setMoveDirection({x: 0, y: 0, z: 0});
 	}
 
-	/**
-	 *
-	 * @returns Whether the user is authenticated or not.
-	 */
-	isAuthenticated() {
-		return this.participantID != null;
+	private setConnectionState(
+		state: 'connecting' | 'connected' | 'disconnected'
+	) {
+		this.state = this.state.set('connectionState', state);
+		logger.info(`connection state: ${state}`);
 	}
 
 	connect(host: string, token: string) {
+		if (this._websocket != null) {
+			logger.error('Trying to connect when websocket is active');
+			return;
+		}
+
+		this.setConnectionState('connecting');
+
 		this._websocket = new WebSocket(
 			(DISABLE_DEV_SIMULATION_SERVER_SSL ? 'ws' : 'wss') + '://' + host
 		);
 
+		this._websocket.addEventListener('close', () => {
+			this.setConnectionState('disconnected');
+			this._websocket = null;
+		});
+
+		this._websocket.addEventListener('error', () => {
+			this._websocket?.close();
+		});
+
 		this._websocket.addEventListener('open', () => {
+			this.setConnectionState('connected');
 			this._websocket?.send('connect:' + token);
 		});
 
@@ -162,17 +174,11 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 				this.handleEvent(type, payload);
 			}
 		);
-
-		this._websocket.addEventListener('close', () => {
-			console.log({
-				event: 'simulationServerWebsocketClose',
-				timestamp: new Date(),
-			});
-		});
 	}
 
 	disconnect() {
 		this._websocket?.close();
+
 		console.info({
 			event: 'disconnectFromSpaceSimulation',
 			timestamp: new Date(),

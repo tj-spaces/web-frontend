@@ -40,3 +40,9 @@ export function useMyPosition() {
 
 	return myID ? participants.get(myID)?.position : null;
 }
+
+export function useConnectionState() {
+	const {connectionState} = useContext(SimulationServerContext).simulationState;
+
+	return connectionState;
+}
