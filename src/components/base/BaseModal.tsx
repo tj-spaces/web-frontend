@@ -56,7 +56,7 @@ export default function BaseModal({
 	size = 'wide',
 	onClose,
 	closable = true,
-	backgroundColor = 'none',
+	backgroundColor = 'dark',
 }: {
 	children: React.ReactNode;
 	onClose: () => void;
