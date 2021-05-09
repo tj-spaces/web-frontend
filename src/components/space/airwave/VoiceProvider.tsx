@@ -1,5 +1,6 @@
 import {useContext, useEffect, useMemo} from 'react';
 import useSDKState from '../../../hooks/useSDKState';
+import useControlKeyCommand from '../../../lib/useControlKeyCommand';
 import EnterPreparationModal from '../EnterPreparationModal';
 import UserSettingsContext from '../userSettings/UserSettingsContext';
 import VoiceContext from './VoiceContext';
@@ -15,9 +16,9 @@ export default function VoiceProvider({
 	const voiceSDK = useMemo(() => new VoiceSDK(), []);
 	const voiceState = useSDKState(voiceSDK);
 
-	const {cameraEnabled, micEnabled} = useContext(
-		UserSettingsContext
-	).userSettings;
+	const {userSettings, userSettingsSDK} = useContext(UserSettingsContext);
+
+	const {cameraEnabled, micEnabled} = userSettings;
 
 	useEffect(() => {
 		voiceSDK.updateUserMedia({video: cameraEnabled, audio: micEnabled});
@@ -32,6 +33,14 @@ export default function VoiceProvider({
 	useEffect(() => {
 		voiceSDK.removeLocalUserTracks(undefined, true);
 	}, [voiceSDK]);
+
+	useControlKeyCommand('r', () => {
+		userSettingsSDK.setCameraEnabled(!userSettings.cameraEnabled);
+	});
+
+	useControlKeyCommand('f', () => {
+		userSettingsSDK.setMicEnabled(!userSettings.micEnabled);
+	});
 
 	return (
 		<VoiceContext.Provider value={{voiceState, voiceSDK}}>
