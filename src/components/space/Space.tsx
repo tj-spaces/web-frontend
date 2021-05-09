@@ -16,12 +16,11 @@ import PointerLockControls from '../PointerLockControls';
 
 export default function Space() {
 	const rotation = useRef<number>(0);
-
-	useMoveDirectionUpdater(rotation);
-
 	const [canvasElement, setCanvasElement] = useState<HTMLDivElement | null>(
 		null
 	);
+
+	useMoveDirectionUpdater(rotation, canvasElement);
 
 	return (
 		<div style={{width: '100%', height: '100%'}} ref={setCanvasElement}>

@@ -26,6 +26,7 @@ export default function useKeyboardState(attach: HTMLElement | null) {
 			return () => {
 				attach.removeEventListener('keydown', onKeyDown);
 				attach.removeEventListener('keyup', onKeyUp);
+				setKeys({});
 			};
 		}
 	}, [attach, onKeyDown, onKeyUp]);

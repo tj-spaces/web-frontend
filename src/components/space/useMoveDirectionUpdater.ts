@@ -3,7 +3,8 @@ import useKeyboardState from '../../hooks/useKeyboardState';
 import SimulationServerContext from './simulation/SimulationServerContext';
 
 export default function useMoveDirectionUpdater(
-	rotation: MutableRefObject<number>
+	rotation: MutableRefObject<number>,
+	canvasElement: HTMLElement | null
 ) {
 	const {simulationSDK} = useContext(SimulationServerContext);
 
@@ -12,6 +13,13 @@ export default function useMoveDirectionUpdater(
 	);
 
 	useEffect(() => {
+		if (
+			document.pointerLockElement == null ||
+			document.pointerLockElement !== canvasElement
+		) {
+			return;
+		}
+
 		// A and D move left and right (-X and +X)
 		// W and S move forward and backward (-Z and +Z)
 
@@ -33,5 +41,5 @@ export default function useMoveDirectionUpdater(
 			y: 0,
 			z: -dz,
 		});
-	}, [a, s, d, w, simulationSDK, rotation]);
+	}, [a, s, d, w, simulationSDK, rotation, canvasElement]);
 }
