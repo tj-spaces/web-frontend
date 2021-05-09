@@ -1,0 +1,44 @@
+<div>
+	<div style="display: flex; flex-direction: row; width: 100%">
+		<button id="submit">Set URL</button>
+		<input id="url" type="text" placeholder="URL" />
+	</div>
+
+	<iframe id="player" src="" />
+</div>
+
+<script>
+	// Example Bot: Youtube streaming
+	function load(bot) {
+		const inputElement = document.getElementById('url');
+		const submitButton = document.getElementById('submit');
+		const player = document.getElementById('player');
+
+		bot.onMessage((message) => {
+			switch (message.event) {
+				case 'set-url':
+					setURL(message.url);
+					break;
+				case 'set-permission':
+					setSubmitButtonDisabled(!message.canSetURL);
+					break;
+			}
+		});
+
+		submitButton.addEventListener('click', () => {
+			const url = inputElement.value;
+
+			if (url && url.length > 0) {
+				bot.sendMessage({event: 'update-url', url});
+			}
+		});
+	}
+
+	function setURL(url) {
+		player.src = url;
+	}
+
+	function setSubmitButtonDisabled(disabled) {
+		submitButton.disabled = disabled;
+	}
+</script>
