@@ -57,6 +57,10 @@ const variantStyles = createStylesheet({
 		backgroundColor: 'var(--bg-primary)',
 		color: 'var(--text-primary)',
 	},
+	secondary: {
+		backgroundColor: 'var(--bg-secondary)',
+		color: 'var(--text-secondary)',
+	},
 	positive: {
 		backgroundColor: 'var(--text-primary)',
 		color: 'var(--bg-primary)',
