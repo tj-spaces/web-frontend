@@ -1,4 +1,4 @@
-import {useContext, useEffect} from 'react';
+import {useCallback, useContext, useEffect} from 'react';
 import SimulationServerContext from './SimulationServerContext';
 import SimulationServerSDK from './SimulationServerSDK';
 
@@ -45,4 +45,11 @@ export function useConnectionState() {
 	const {connectionState} = useContext(SimulationServerContext).simulationState;
 
 	return connectionState;
+}
+
+export function useReconnect() {
+	const {simulationSDK} = useContext(SimulationServerContext);
+	return useCallback(() => {
+		simulationSDK.reconnect();
+	}, [simulationSDK]);
 }

@@ -124,6 +124,7 @@ const BaseButton = (
 				)}
 				{...props}
 				onClick={(ev) => {
+					ev.preventDefault();
 					ev.stopPropagation();
 					props.onClick?.(ev);
 				}}

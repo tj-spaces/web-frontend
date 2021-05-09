@@ -1,7 +1,7 @@
 import JSONBig from 'json-bigint';
 import {DISABLE_DEV_SIMULATION_SERVER_SSL} from '../../../lib/constants';
 import ChatSDK from '../chat/ChatSDK';
-import SimulationServerState from './SimulationServerState';
+import SimulationServerState, {ConnectionState} from './SimulationServerState';
 import SDKBase from '../../../lib/SDKBase';
 import * as immutable from 'immutable';
 import SpaceParticipantRecord, {
@@ -20,10 +20,15 @@ export interface MovementDirection {
 	z: number;
 }
 
+const MAX_CONNECTION_RETRIES = 10;
+const RECONNECT_INTERVAL = 5000;
+
 export default class SimulationServerSDK extends SDKBase<SimulationServerState> {
 	private _websocket: WebSocket | null = null;
-
+	private shouldBeConnected = false;
 	private outboundMessageQueue: [string, any][] = [];
+	private lastHost: string = '';
+	private lastToken: string = '';
 
 	constructor(private chatSDK: ChatSDK, public readonly spaceID: string) {
 		super();
@@ -130,18 +135,36 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 		this.setMoveDirection({x: 0, y: 0, z: 0});
 	}
 
-	private setConnectionState(
-		state: 'connecting' | 'connected' | 'disconnected'
-	) {
-		this.state = this.state.set('connectionState', state);
-		logger.info(`connection state: ${state}`);
+	private setConnectionState(state: ConnectionState) {
+		if (this.state.connectionState !== state) {
+			this.state = this.state.set('connectionState', state);
+			logger.info(`connection state: ${state}`);
+		}
 	}
 
-	connect(host: string, token: string) {
+	reconnect() {
+		if (this.state.connectionState !== 'failed') {
+			logger.warn(
+				'reconnection attempted when connectionState was not `failed`'
+			);
+		} else {
+			this.connect(this.lastHost, this.lastToken);
+		}
+	}
+
+	connect(
+		host: string,
+		token: string,
+		remainingTries = MAX_CONNECTION_RETRIES
+	) {
 		if (this._websocket != null) {
 			logger.error('Trying to connect when websocket is active');
 			return;
 		}
+
+		this.lastHost = host;
+		this.lastToken = token;
+		this.shouldBeConnected = true;
 
 		this.setConnectionState('connecting');
 
@@ -150,8 +173,22 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 		);
 
 		this._websocket.addEventListener('close', () => {
-			this.setConnectionState('disconnected');
 			this._websocket = null;
+
+			if (this.shouldBeConnected) {
+				if (remainingTries <= 0) {
+					logger.error(
+						`Connection failed after ${MAX_CONNECTION_RETRIES} attempts`
+					);
+					this.setConnectionState('failed');
+					this.shouldBeConnected = false;
+				} else {
+					this.setConnectionState('connecting');
+					setTimeout(() => {
+						this.connect(host, token, remainingTries - 1);
+					}, RECONNECT_INTERVAL);
+				}
+			}
 		});
 
 		this._websocket.addEventListener('error', () => {
@@ -159,6 +196,7 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 		});
 
 		this._websocket.addEventListener('open', () => {
+			remainingTries = MAX_CONNECTION_RETRIES;
 			this.setConnectionState('connected');
 			this._websocket?.send('connect:' + token);
 		});
@@ -177,6 +215,10 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 	}
 
 	disconnect() {
+		this.shouldBeConnected = false;
+
+		// The event handler for this will notice that we aren't supposed to be connected
+		// It won't try to reconnect
 		this._websocket?.close();
 
 		console.info({

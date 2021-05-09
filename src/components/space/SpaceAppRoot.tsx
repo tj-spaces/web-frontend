@@ -11,7 +11,7 @@ import {useCurrentUser} from '../AuthHooks';
 import BaseText from '../base/BaseText';
 import SimulationServerProvider from './simulation/SimulationServerProvider';
 import Space from './Space';
-import SpaceConnectionErrored from './SpaceConnectionErrored';
+import SpaceConnectionFailed from './SpaceConnectionErrored';
 import SpaceFooter from './SpaceFooter';
 import SpaceInfoMessage from './SpaceInfoMessage';
 import SpaceMediaProvider from './SpaceAudioContextProvider';
@@ -121,7 +121,7 @@ export default function SpaceAppRoot({id}: {id: string}) {
 									<SpaceInfoMessage message={currentMessage} />
 								)}
 
-								{connectionStatus === 'errored' && <SpaceConnectionErrored />}
+								{connectionStatus === 'errored' && <SpaceConnectionFailed />}
 
 								{connectionStatus === 'connected' && <Space />}
 							</div>

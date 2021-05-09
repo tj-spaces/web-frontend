@@ -13,6 +13,8 @@ import UsersRenderer from './renderers/UsersRenderer';
 import SushiTable from './SushiTable';
 import useMoveDirectionUpdater from './useMoveDirectionUpdater';
 import PointerLockControls from '../PointerLockControls';
+import SpaceConnectionStatus from './SpaceConnectionStatus';
+import {useConnectionState} from './simulation/SimulationHooks';
 
 export default function Space() {
 	const rotation = useRef<number>(0);
@@ -21,6 +23,12 @@ export default function Space() {
 	);
 
 	useMoveDirectionUpdater(rotation, canvasElement);
+
+	const connectionStatus = useConnectionState();
+
+	if (connectionStatus !== 'connected') {
+		return <SpaceConnectionStatus />;
+	}
 
 	return (
 		<div style={{width: '100%', height: '100%'}} ref={setCanvasElement}>
