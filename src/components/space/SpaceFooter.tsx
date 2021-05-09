@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import useControlKeyCommand from '../../lib/useControlKeyCommand';
 import {createStylesheet} from '../../styles/createStylesheet';
 import BaseButton from '../base/BaseButton';
 import BaseRow from '../base/BaseRow';
@@ -21,6 +22,8 @@ const styles = createStylesheet({
 
 export default function SpaceFooter() {
 	const [chatModalOpen, setChatModalOpen] = useState(false);
+
+	useControlKeyCommand('e', () => setChatModalOpen((open) => !open));
 
 	return (
 		<BaseRow
