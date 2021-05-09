@@ -23,7 +23,6 @@ export const styles = createStylesheet({
 		cursor: 'auto',
 	},
 	modalForeground: {
-		backgroundColor: '#303030',
 		borderRadius: '0.5em',
 		transition: 'all 800ms ease',
 		padding: '1em',
@@ -45,22 +44,32 @@ export const variantStyles = createStylesheet({
 	fitContent: {},
 });
 
+export const backgroundColorStyles = createStylesheet({
+	none: {},
+	dark: {
+		backgroundColor: '#303030',
+	},
+});
+
 export default function BaseModal({
 	children,
-	variant = 'wide',
+	size = 'wide',
 	onClose,
 	closable = true,
+	backgroundColor = 'none',
 }: {
 	children: React.ReactNode;
-	variant?: keyof typeof variantStyles;
 	onClose: () => void;
 	closable?: boolean;
+	size?: keyof typeof variantStyles;
+	backgroundColor?: keyof typeof backgroundColorStyles;
 }) {
-	const fgRef = useRef<HTMLDivElement>(null);
+	const foreground = useRef<HTMLDivElement>(null);
+
 	useEffect(() => {
 		const checkForOutsideClick = (ev: MouseEvent) => {
 			let target = ev.target as HTMLDivElement;
-			if (!fgRef.current?.contains(target)) {
+			if (!foreground.current?.contains(target)) {
 				onClose();
 			}
 		};
@@ -69,11 +78,16 @@ export default function BaseModal({
 			document.removeEventListener('click', checkForOutsideClick);
 		};
 	}, [onClose]);
+
 	return (
 		<div className={styles('modalBackground')}>
 			<div
-				ref={fgRef}
-				className={stylex(styles.modalForeground, variantStyles[variant])}
+				ref={foreground}
+				className={stylex(
+					styles.modalForeground,
+					variantStyles[size],
+					backgroundColorStyles[backgroundColor]
+				)}
 			>
 				{closable && (
 					<BaseText
