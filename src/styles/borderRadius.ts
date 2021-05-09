@@ -8,6 +8,7 @@ import {createStylesheet} from './createStylesheet';
 
 export const borderRadiusStyles = createStylesheet({
 	0: {},
+	0.5: {borderRadius: '0.5rem'},
 	1: {borderRadius: '1rem'},
 	2: {borderRadius: '2rem'},
 });

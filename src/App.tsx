@@ -23,6 +23,7 @@ const AuthorizationCallback = lazy(
 const AccountPage = lazy(() => import('./pages/AccountPage'));
 const ClusterPage = lazy(() => import('./pages/ClusterPage'));
 const DefaultPage = lazy(() => import('./pages/DefaultPage'));
+const EventExperiencePage = lazy(() => import('./pages/EventExperiencePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const Logout = lazy(() => import('./pages/LogoutPage'));
 const SpacePage = lazy(() => import('./pages/SpacePage'));
@@ -41,6 +42,10 @@ function App() {
 									<Route
 										path="/auth/:provider/callback"
 										component={AuthorizationCallback}
+									/>
+									<Route
+										path="/events/:eventID"
+										component={EventExperiencePage}
 									/>
 									<Route path="/spaces/:spaceId" component={SpacePage} />
 									<Route path="/clusters/:clusterId" component={ClusterPage} />
