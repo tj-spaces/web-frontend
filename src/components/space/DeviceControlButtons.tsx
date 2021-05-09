@@ -4,6 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
+import {Mic, MicOff, Videocam, VideocamOff} from '@material-ui/icons';
 import {useContext} from 'react';
 import BaseButton from '../base/BaseButton';
 import UserSettingsContext from './userSettings/UserSettingsContext';
@@ -14,21 +15,21 @@ export default function DeviceControlButtons() {
 		<>
 			{!userSettings.micEnabled ? (
 				<BaseButton onClick={() => userSettingsSDK.setMicEnabled(true)}>
-					<i className="fas fa-microphone-slash"></i>
+					<MicOff />
 				</BaseButton>
 			) : (
 				<BaseButton onClick={() => userSettingsSDK.setMicEnabled(false)}>
-					<i className="fas fa-microphone"></i>
+					<Mic />
 				</BaseButton>
 			)}
 
 			{userSettings.cameraEnabled ? (
 				<BaseButton onClick={() => userSettingsSDK.setCameraEnabled(false)}>
-					<i className="fas fa-video"></i>
+					<Videocam />
 				</BaseButton>
 			) : (
 				<BaseButton onClick={() => userSettingsSDK.setCameraEnabled(true)}>
-					<i className="fas fa-video-slash"></i>
+					<VideocamOff />
 				</BaseButton>
 			)}
 		</>
