@@ -26,7 +26,16 @@ export default function EventScheduleItem({item}: Props) {
 					{item.description}
 				</BaseText>
 			)}
-			{item.url && <BaseText variant="body-bold">{item.url}</BaseText>}
+			{item.url && (
+				<a
+					href={item.url}
+					style={{textDecoration: 'underline'}}
+					target="_blank"
+					rel="noreferrer"
+				>
+					{item.url}
+				</a>
+			)}
 		</BaseRow>
 	);
 }
