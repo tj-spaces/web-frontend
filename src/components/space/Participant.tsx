@@ -4,7 +4,7 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {SpaceParticipant} from '../../typings/Space';
+import {ISpaceParticipant} from '../../typings/Space';
 import BaseVideo from '../base/BaseVideo';
 
 export default function Participant({
@@ -12,11 +12,11 @@ export default function Participant({
 	photoUrl,
 	videoTrack,
 }: {
-	participant: SpaceParticipant;
+	participant: ISpaceParticipant;
 	photoUrl?: string;
 	videoTrack?: MediaStreamTrack;
 }) {
-	const initials = participant.display_name
+	const initials = participant.displayName
 		.split(' ')
 		.filter(Boolean)
 		.map((word) => word.slice(0, 1).toUpperCase());
@@ -24,7 +24,7 @@ export default function Participant({
 	return videoTrack ? (
 		<BaseVideo track={videoTrack} />
 	) : photoUrl ? (
-		<img src={photoUrl} alt={participant.display_name} />
+		<img src={photoUrl} alt={participant.displayName} />
 	) : (
 		<h1>{initials}</h1>
 	);

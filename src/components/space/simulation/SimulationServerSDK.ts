@@ -4,9 +4,9 @@ import ChatSDK from '../chat/ChatSDK';
 import SimulationServerState, {ConnectionState} from './SimulationServerState';
 import SDKBase from '../../../lib/SDKBase';
 import * as immutable from 'immutable';
-import SpaceParticipantRecord, {
+import SpaceParticipant, {
 	spaceParticipantMapToImmutableMapOfRecords,
-} from '../SpaceParticipantRecord';
+} from '../SpaceParticipant';
 import {getLogger} from '../../../lib/ClusterLogger';
 
 const logger = getLogger('space/simulation');
@@ -53,7 +53,7 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 		}
 	}
 
-	private addParticipant(participant: SpaceParticipantRecord) {
+	private addParticipant(participant: SpaceParticipant) {
 		this.state = this.state.set(
 			'participants',
 			this.state.participants.set(participant.id, participant)
@@ -68,7 +68,7 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 	}
 
 	private setParticipants(
-		participants: immutable.Map<string, SpaceParticipantRecord>
+		participants: immutable.Map<string, SpaceParticipant>
 	) {
 		this.state = this.state.set('participants', participants);
 	}
@@ -79,7 +79,7 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 
 	updateParticipant(
 		participantId: string,
-		updater: (participant: SpaceParticipantRecord) => SpaceParticipantRecord
+		updater: (participant: SpaceParticipant) => SpaceParticipant
 	) {
 		const participant = this.getParticipant(participantId);
 		if (participant) {
@@ -91,7 +91,7 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 	}
 
 	private handleEvent(type: string, payload: string) {
-		let data = JSONBig({storeAsString: true}).parse(payload);
+		let data = payload ? JSONBig({storeAsString: true}).parse(payload) : null;
 		switch (type) {
 			case 'message':
 				this.chatSDK.addMessagesToSpace(this.spaceID, [data]);
@@ -104,21 +104,21 @@ export default class SimulationServerSDK extends SDKBase<SimulationServerState> 
 				break;
 			case 'me':
 			case 'user_join':
-				this.addParticipant(new SpaceParticipantRecord(data));
+				this.addParticipant(new SpaceParticipant(data));
 				break;
 			case 'user_leave':
 				this.removeParticipant(data);
 				break;
 			case 'user_move':
-				this.updateParticipant(data.id, (participant) =>
-					participant.moveTo(data.new_position)
+				this.updateParticipant(data.userID, (participant) =>
+					participant.moveTo(data.position)
 				);
 				break;
-			case 'auth':
+			case 'authenticated':
 				logger.debug({event: 'authenticated', data});
 				this.state = this.state.set(
 					'anonymousParticipantID',
-					data.participant_id
+					data.participantID
 				);
 				break;
 		}

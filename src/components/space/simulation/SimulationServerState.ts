@@ -1,5 +1,5 @@
 import {Map, Record} from 'immutable';
-import SpaceParticipantRecord from '../SpaceParticipantRecord';
+import SpaceParticipant from '../SpaceParticipant';
 
 /**
  * 'unconnected': Connection has not been attempted yet
@@ -11,7 +11,7 @@ export type ConnectionState =
 	| 'failed';
 
 export type SimulationServerStateProps = {
-	participants: Map<string, SpaceParticipantRecord>;
+	participants: Map<string, SpaceParticipant>;
 	anonymousParticipantID: string;
 	connectionState: ConnectionState;
 };

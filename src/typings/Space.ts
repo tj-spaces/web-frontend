@@ -50,7 +50,7 @@ export type DisplayStatus =
  * This is not the same as an Account, which holds necessary information such as a user's email, username,
  * birthday, and etc.
  */
-export interface SpaceParticipant {
+export interface ISpaceParticipant {
 	/**
 	 * An ID assigned to somebody when they join the Space
 	 * If a user joins as a guest from the browser, this ID stays with them even if they
@@ -61,12 +61,12 @@ export interface SpaceParticipant {
 	/**
 	 * Nickname to display for the user
 	 */
-	display_name: string;
+	displayName: string;
 
 	/**
 	 * Color of the user's avatar
 	 */
-	display_color:
+	displayColor:
 		| 'red'
 		| 'orange'
 		| 'yellow'
@@ -78,7 +78,7 @@ export interface SpaceParticipant {
 	/**
 	 * Anything from 'agree' to 'disagree' to 'go faster'
 	 */
-	display_status: DisplayStatus;
+	displayStatus: DisplayStatus;
 
 	can_present: boolean;
 
@@ -152,9 +152,9 @@ export type IMessageEvent = SpaceMessage;
 
 export type IChatHistoryEvent = SpaceMessage[];
 
-export type IUsersEvent = Record<string, SpaceParticipant>;
+export type IUsersEvent = Record<string, ISpaceParticipant>;
 
-export type IUserJoinEvent = SpaceParticipant;
+export type IUserJoinEvent = ISpaceParticipant;
 
 export type IUserMoveEvent = {
 	id: string;

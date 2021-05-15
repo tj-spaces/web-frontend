@@ -8,14 +8,14 @@ import React, {Suspense, useEffect, useMemo} from 'react';
 import * as THREE from 'three';
 import AirwaveLoggerGlobal from '../airwave/AirwaveLogger';
 import {useTracks, useVoiceSDK} from '../airwave/VoiceHooks';
-import SpaceParticipantRecord from '../SpaceParticipantRecord';
+import SpaceParticipant from '../SpaceParticipant';
 import Text from './Text';
 
 export default function UserModel({
 	participant,
 	me,
 }: {
-	participant: SpaceParticipantRecord;
+	participant: SpaceParticipant;
 	me: boolean;
 }) {
 	const {id, rotation = 0, position} = participant;
@@ -92,7 +92,7 @@ export default function UserModel({
 					size={1}
 					position={[position.x, position.y + 3, position.z]}
 				>
-					{participant.display_name}
+					{participant.displayName}
 				</Text>
 			</Suspense>
 			<mesh

@@ -1,27 +1,23 @@
 import {Map, Record} from 'immutable';
-import {Position, SpaceParticipant} from '../../typings/Space';
-
-export function spaceParticipantToRecord(participant: SpaceParticipant) {
-	return new SpaceParticipantRecord(participant);
-}
+import {ISpaceParticipant, Position} from '../../typings/Space';
 
 export function spaceParticipantMapToImmutableMapOfRecords(participantMap: {
-	[participantId: string]: SpaceParticipant;
+	[participantId: string]: ISpaceParticipant;
 }) {
 	const convertedRecords: {
-		[participantId: string]: SpaceParticipantRecord;
+		[participantId: string]: SpaceParticipant;
 	} = {};
 	for (let [id, object] of Object.entries(participantMap)) {
-		convertedRecords[id] = spaceParticipantToRecord(object);
+		convertedRecords[id] = new SpaceParticipant(object);
 	}
 	return Map(convertedRecords);
 }
 
-export default class SpaceParticipantRecord extends Record<SpaceParticipant>({
+export default class SpaceParticipant extends Record<ISpaceParticipant>({
 	id: '0',
-	display_color: 'red',
-	display_name: '',
-	display_status: 'none',
+	displayColor: 'red',
+	displayName: '',
+	displayStatus: 'none',
 	can_present: false,
 	can_activate_microphone: false,
 	can_activate_camera: false,
