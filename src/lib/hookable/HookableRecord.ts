@@ -6,7 +6,11 @@ type EventMap<T extends Record<string, unknown>> = {
 };
 
 function HookableRecord<T extends Record<string, unknown>>(defaultValues: T) {
-	class HookableRecordInternal extends TypedEventEmitter<EventMap<T>> {
+	// @ts-expect-error
+	class HookableRecordInternal
+		extends TypedEventEmitter<EventMap<T>>
+		implements T
+	{
 		private values: T;
 		constructor(values: Partial<T> = {}) {
 			super();
@@ -35,10 +39,7 @@ function HookableRecord<T extends Record<string, unknown>>(defaultValues: T) {
 		}
 	}
 
-	return (values?: Partial<T>): T & TypedEventEmitter<EventMap<T>> => {
-		// @ts-expect-error
-		return new HookableRecordInternal(values);
-	};
+	return HookableRecordInternal;
 }
 
 export type IHookableRecord<T extends Record<string, unknown>> = T &
