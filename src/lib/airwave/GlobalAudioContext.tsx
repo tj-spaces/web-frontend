@@ -1,7 +1,7 @@
 import {createContext, Dispatch, SetStateAction} from 'react';
 
-const SpaceAudioContext = createContext<
+const GlobalAudioContext = createContext<
 	[AudioContext | null, Dispatch<SetStateAction<AudioContext | null>>]
 >(null!);
 
-export default SpaceAudioContext;
+export default GlobalAudioContext;

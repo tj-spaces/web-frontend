@@ -1,10 +1,11 @@
 import {useContext, useEffect, useMemo} from 'react';
 import useSDKState from '../../hooks/useSDKState';
 import useControlKeyCommand from '../useControlKeyCommand';
-import EnterPreparationModal from '../../components/space/EnterPreparationModal';
+import EnterPreparationModal from './EnterPreparationModal';
 import UserSettingsContext from '../../components/space/userSettings/UserSettingsContext';
 import VoiceContext from './VoiceContext';
 import VoiceSDK from './VoiceSDK';
+import AudioContextProvider from './AudioContextProvider';
 
 export default function VoiceProvider({
 	children,
@@ -43,14 +44,16 @@ export default function VoiceProvider({
 	});
 
 	return (
-		<VoiceContext.Provider value={{voiceState, voiceSDK}}>
-			{voiceState.ready ? (
-				children
-			) : (
-				<EnterPreparationModal
-					onCancel={window.history.back.bind(window.history)}
-				/>
-			)}
-		</VoiceContext.Provider>
+		<AudioContextProvider>
+			<VoiceContext.Provider value={{voiceState, voiceSDK}}>
+				{voiceState.ready ? (
+					children
+				) : (
+					<EnterPreparationModal
+						onCancel={window.history.back.bind(window.history)}
+					/>
+				)}
+			</VoiceContext.Provider>
+		</AudioContextProvider>
 	);
 }

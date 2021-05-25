@@ -6,6 +6,7 @@ module.exports = {
 			'@': path.resolve(__dirname, 'src/'),
 			'@airwave': path.resolve(__dirname, 'src/lib/airwave'),
 			'@components': path.resolve(__dirname, 'src/components'),
+			'@pages': path.resolve(__dirname, 'src/pages'),
 		},
 	},
 };

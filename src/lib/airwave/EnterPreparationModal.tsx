@@ -1,18 +1,18 @@
 import {useCallback, useContext} from 'react';
-import {useCurrentUserID} from '../AuthHooks';
-import BaseButton from '../base/BaseButton';
-import BaseModal from '../base/BaseModal';
-import BaseRow from '../base/BaseRow';
-import LocalUserPreview from './LocalUserPreview';
-import SpaceAudioContext from './SpaceAudioContext';
-import VoiceContext from '../../lib/airwave/VoiceContext';
+import {useCurrentUserID} from '@components/AuthHooks';
+import BaseButton from '@components/base/BaseButton';
+import BaseModal from '@components/base/BaseModal';
+import BaseRow from '@components/base/BaseRow';
+import LocalUserPreview from '@components/space/LocalUserPreview';
+import GlobalAudioContext from './GlobalAudioContext';
+import VoiceContext from './VoiceContext';
 
 /**
  * This is a modal shown where you can choose to enable or disable your camera and microphone
  * before entering a Space.
  */
 export default function EnterPreparationModal({onCancel}: {onCancel(): void}) {
-	const [, setAudioContext] = useContext(SpaceAudioContext);
+	const [, setAudioContext] = useContext(GlobalAudioContext);
 	const {voiceSDK} = useContext(VoiceContext);
 	const userID = useCurrentUserID()!;
 

@@ -3,7 +3,7 @@ import {Canvas} from 'react-three-fiber';
 import AuthContext from '../AuthContext';
 import PointOfViewContext from './PointOfViewContext';
 import SimulationServerContext from './simulation/SimulationServerContext';
-import SpaceAudioContext from './SpaceAudioContext';
+import GlobalAudioContext from '../../lib/airwave/GlobalAudioContext';
 import VoiceContext from '../../lib/airwave/VoiceContext';
 import ChatContext from './chat/ChatContext';
 
@@ -12,7 +12,7 @@ import ChatContext from './chat/ChatContext';
 export default function SpaceCanvasRoot({children}: {children: ReactNode}) {
 	const auth = useContext(AuthContext);
 	const simulation = useContext(SimulationServerContext);
-	const audio = useContext(SpaceAudioContext);
+	const audio = useContext(GlobalAudioContext);
 	const voice = useContext(VoiceContext);
 	const chat = useContext(ChatContext);
 	const pov = useContext(PointOfViewContext);
@@ -21,7 +21,7 @@ export default function SpaceCanvasRoot({children}: {children: ReactNode}) {
 		<Canvas>
 			<AuthContext.Provider value={auth}>
 				<SimulationServerContext.Provider value={simulation}>
-					<SpaceAudioContext.Provider value={audio}>
+					<GlobalAudioContext.Provider value={audio}>
 						<VoiceContext.Provider value={voice}>
 							<ChatContext.Provider value={chat}>
 								<PointOfViewContext.Provider value={pov}>
@@ -29,7 +29,7 @@ export default function SpaceCanvasRoot({children}: {children: ReactNode}) {
 								</PointOfViewContext.Provider>
 							</ChatContext.Provider>
 						</VoiceContext.Provider>
-					</SpaceAudioContext.Provider>
+					</GlobalAudioContext.Provider>
 				</SimulationServerContext.Provider>
 			</AuthContext.Provider>
 		</Canvas>

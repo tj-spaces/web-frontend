@@ -17,7 +17,9 @@
 		"jsx": "react-jsx",
 		"baseUrl": "./",
 		"paths": {
-			"@airwave/*": ["src/lib/airwave/*"]
+			"@airwave/*": ["src/lib/airwave/*"],
+			"@components/*": ["src/components/*"],
+			"@pages/*": ["src/pages/*"]
 		}
 	},
 	"include": ["src"]

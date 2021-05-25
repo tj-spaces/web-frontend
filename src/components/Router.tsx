@@ -3,16 +3,17 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import CenteredLoadingText from './CenteredLoadingText';
 
 const AuthorizationCallback = lazy(
-	() => import('../pages/AuthenticationCallback')
+	() => import('@pages/AuthenticationCallback')
 );
-const AccountPage = lazy(() => import('../pages/AccountPage'));
-const ClusterPage = lazy(() => import('../pages/ClusterPage'));
-const DefaultPage = lazy(() => import('../pages/DefaultPage'));
-const EventExperiencePage = lazy(() => import('../pages/EventExperiencePage'));
-const LoginPage = lazy(() => import('../pages/LoginPage'));
-const Logout = lazy(() => import('../pages/LogoutPage'));
-const SpacePage = lazy(() => import('../pages/SpacePage'));
-const TermsPage = lazy(() => import('../pages/TermsPage'));
+const AccountPage = lazy(() => import('@pages/AccountPage'));
+const ClusterPage = lazy(() => import('@pages/ClusterPage'));
+const DefaultPage = lazy(() => import('@pages/DefaultPage'));
+const EventExperiencePage = lazy(() => import('@pages/EventExperiencePage'));
+const LoginPage = lazy(() => import('@pages/LoginPage'));
+const Logout = lazy(() => import('@pages/LogoutPage'));
+const Room = lazy(() => import('@components/room/Room'));
+const SpacePage = lazy(() => import('@pages/SpacePage'));
+const TermsPage = lazy(() => import('@pages/TermsPage'));
 
 export default function Router() {
 	return (
@@ -32,6 +33,7 @@ export default function Router() {
 					<Route path="/terms" exact component={TermsPage} />
 					{/* <Route path="/testnbla" exact component={TestNbla} /> */}
 					{/* <Route path="/voice" exact component={VoiceChannel} /> */}
+					<Route path="/room/:roomID" component={Room} />
 					<Route path="/" exact component={DefaultPage} />
 				</Switch>
 			</Suspense>

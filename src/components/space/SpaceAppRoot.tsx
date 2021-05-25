@@ -14,7 +14,7 @@ import Space from './Space';
 import SpaceConnectionFailed from './SpaceConnectionErrored';
 import SpaceFooter from './SpaceFooter';
 import SpaceInfoMessage from './SpaceInfoMessage';
-import SpaceMediaProvider from './SpaceAudioContextProvider';
+import SpaceAudioContextProvider from '../../lib/airwave/AudioContextProvider';
 import UserSettingsProvider from './userSettings/UserSettingsProvider';
 import VoiceProvider from '../../lib/airwave/VoiceProvider';
 import LocalUserPreview from './LocalUserPreview';
@@ -70,7 +70,6 @@ const styles = createStylesheet({
 });
 
 export default function SpaceAppRoot({id}: {id: string}) {
-	const [audio, setAudio] = useState<AudioContext | null>(null);
 	const [connectionStatus, setConnectionStatus] =
 		useState<null | 'connecting' | 'connected' | 'errored'>('connected');
 
@@ -106,7 +105,7 @@ export default function SpaceAppRoot({id}: {id: string}) {
 			token={token}
 		>
 			<UserSettingsProvider>
-				<SpaceMediaProvider audioContext={audio} setAudioContext={setAudio}>
+				<SpaceAudioContextProvider>
 					<VoiceProvider voiceURL={voiceURL}>
 						<div className={styles('container')}>
 							<div className={styles('topHeading')}>
@@ -132,7 +131,7 @@ export default function SpaceAppRoot({id}: {id: string}) {
 							<SpaceFooter />
 						</div>
 					</VoiceProvider>
-				</SpaceMediaProvider>
+				</SpaceAudioContextProvider>
 			</UserSettingsProvider>
 		</SimulationServerProvider>
 	);

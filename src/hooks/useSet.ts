@@ -23,6 +23,9 @@ function useSet<T>(initialValue?: Iterable<T>) {
 		keys() {
 			return set.keys();
 		},
+		map<U>(mapper: (value: T) => U): U[] {
+			return Array.from(set.values()).map(mapper);
+		},
 		get size() {
 			return set.size;
 		},
