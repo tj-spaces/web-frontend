@@ -4,7 +4,7 @@ import AuthContext from '../AuthContext';
 import PointOfViewContext from './PointOfViewContext';
 import SimulationServerContext from './simulation/SimulationServerContext';
 import SpaceAudioContext from './SpaceAudioContext';
-import VoiceContext from './airwave/VoiceContext';
+import VoiceContext from '../../lib/airwave/VoiceContext';
 import ChatContext from './chat/ChatContext';
 
 // Because 'Canvas' creates a new React renderer, contexts cannot be shared, unfortunately

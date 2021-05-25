@@ -1,8 +1,8 @@
 import {useContext, useEffect, useMemo} from 'react';
-import useSDKState from '../../../hooks/useSDKState';
-import useControlKeyCommand from '../../../lib/useControlKeyCommand';
-import EnterPreparationModal from '../EnterPreparationModal';
-import UserSettingsContext from '../userSettings/UserSettingsContext';
+import useSDKState from '../../hooks/useSDKState';
+import useControlKeyCommand from '../useControlKeyCommand';
+import EnterPreparationModal from '../../components/space/EnterPreparationModal';
+import UserSettingsContext from '../../components/space/userSettings/UserSettingsContext';
 import VoiceContext from './VoiceContext';
 import VoiceSDK from './VoiceSDK';
 
@@ -10,7 +10,7 @@ export default function VoiceProvider({
 	children,
 	voiceURL,
 }: {
-	children: React.ReactNode;
+	children?: React.ReactNode;
 	voiceURL?: string;
 }) {
 	const voiceSDK = useMemo(() => new VoiceSDK(), []);

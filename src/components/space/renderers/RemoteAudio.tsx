@@ -6,7 +6,7 @@
 */
 import SpatialAudioTrack from '../../../media/SpatialAudioTrack';
 import {Position} from '../../../typings/Space';
-import {useTracks} from '../airwave/VoiceHooks';
+import {useTracks} from '../../../lib/airwave/VoiceHooks';
 
 export default function RemoteAudio({
 	userID,

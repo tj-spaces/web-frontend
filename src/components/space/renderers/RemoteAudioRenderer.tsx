@@ -6,7 +6,7 @@ import {
 	useMyPosition,
 	useParticipants,
 } from '../simulation/SimulationHooks';
-import VoiceContext from '../airwave/VoiceContext';
+import VoiceContext from '../../../lib/airwave/VoiceContext';
 
 export default function RemoteAudioRenderer() {
 	const {voiceState} = useContext(VoiceContext);

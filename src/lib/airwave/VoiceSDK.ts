@@ -1,7 +1,7 @@
-import addWebsocketProtocolToVoiceNodeURL from '../../../lib/createVoiceEndpointURL';
-import getUserMedia from '../../../lib/getUserMedia';
+import addWebsocketProtocolToVoiceNodeURL from '../createVoiceEndpointURL';
+import getUserMedia from '../getUserMedia';
 import AirwaveLoggerGlobal from './AirwaveLogger';
-import SDKBase from '../../../lib/SDKBase';
+import SDKBase from '../SDKBase';
 import VoiceDownstream, {SubscriptionState} from './VoiceDownstream';
 import VoiceImmutableMediaTrack from './VoiceImmutableMediaTrack';
 import VoiceState from './VoiceState';
@@ -79,9 +79,8 @@ export default class VoiceSDK extends SDKBase<VoiceState> {
 
 		// If there are some content types we're already requesting,
 		// we'll send the subscribe requests.
-		const requestedContentTypes = this.subscriptionConstraintsByStream.get(
-			streamID
-		);
+		const requestedContentTypes =
+			this.subscriptionConstraintsByStream.get(streamID);
 		if (requestedContentTypes) {
 			downstream.sendSubscribeRequest(streamID, requestedContentTypes);
 		}

@@ -16,7 +16,7 @@ import SpaceFooter from './SpaceFooter';
 import SpaceInfoMessage from './SpaceInfoMessage';
 import SpaceMediaProvider from './SpaceAudioContextProvider';
 import UserSettingsProvider from './userSettings/UserSettingsProvider';
-import VoiceProvider from './airwave/VoiceProvider';
+import VoiceProvider from '../../lib/airwave/VoiceProvider';
 import LocalUserPreview from './LocalUserPreview';
 
 const styles = createStylesheet({
@@ -71,9 +71,8 @@ const styles = createStylesheet({
 
 export default function SpaceAppRoot({id}: {id: string}) {
 	const [audio, setAudio] = useState<AudioContext | null>(null);
-	const [connectionStatus, setConnectionStatus] = useState<
-		null | 'connecting' | 'connected' | 'errored'
-	>('connected');
+	const [connectionStatus, setConnectionStatus] =
+		useState<null | 'connecting' | 'connected' | 'errored'>('connected');
 
 	const [currentMessage] = useState<string>();
 	const [voiceURL, setVoiceURL] = useState<string>();

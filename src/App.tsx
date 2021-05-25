@@ -4,30 +4,15 @@
   Proprietary and confidential.
   Written by Michael Fatemi <myfatemi04@gmail.com>, February 2021.
 */
-import {lazy, Suspense} from 'react';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
 import './App.css';
 
 import AuthProvider from './components/AuthProvider';
-import CenteredLoadingText from './components/CenteredLoadingText';
 import ErrorBoundary from './components/ErrorBoundary';
+import Router from './components/Router';
 import StreamerModeContext from './components/StreamerModeContext';
-import TestNbla from './components/testNbla/NblaEditor';
 // import VoiceChannel from './components/voiceChannel/VoiceChannel';
 import ThemeProvider from './ThemeProvider';
-
-const AuthorizationCallback = lazy(
-	() => import('./pages/AuthenticationCallback')
-);
-const AccountPage = lazy(() => import('./pages/AccountPage'));
-const ClusterPage = lazy(() => import('./pages/ClusterPage'));
-const DefaultPage = lazy(() => import('./pages/DefaultPage'));
-const EventExperiencePage = lazy(() => import('./pages/EventExperiencePage'));
-const LoginPage = lazy(() => import('./pages/LoginPage'));
-const Logout = lazy(() => import('./pages/LogoutPage'));
-const SpacePage = lazy(() => import('./pages/SpacePage'));
-const TermsPage = lazy(() => import('./pages/TermsPage'));
 
 function App() {
 	return (
@@ -35,29 +20,7 @@ function App() {
 			<AuthProvider>
 				<StreamerModeContext.Provider value={false}>
 					<ThemeProvider>
-						<BrowserRouter>
-							<Suspense fallback={<CenteredLoadingText />}>
-								<Switch>
-									<Route path="/account" component={AccountPage} />
-									<Route
-										path="/auth/:provider/callback"
-										component={AuthorizationCallback}
-									/>
-									<Route
-										path="/events/:eventID"
-										component={EventExperiencePage}
-									/>
-									<Route path="/spaces/:spaceId" component={SpacePage} />
-									<Route path="/clusters/:clusterId" component={ClusterPage} />
-									<Route path="/login" exact component={LoginPage} />
-									<Route path="/logout" exact component={Logout} />
-									<Route path="/terms" exact component={TermsPage} />
-									<Route path="/testnbla" exact component={TestNbla} />
-									{/* <Route path="/voice" exact component={VoiceChannel} /> */}
-									<Route path="/" exact component={DefaultPage} />
-								</Switch>
-							</Suspense>
-						</BrowserRouter>
+						<Router />
 					</ThemeProvider>
 				</StreamerModeContext.Provider>
 			</AuthProvider>

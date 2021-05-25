@@ -7,7 +7,7 @@ import VideocamOff from '@material-ui/icons/VideocamOff';
 import BaseRow from '../base/BaseRow';
 import {useCurrentUser} from '../AuthHooks';
 import UserSettingsContext from './userSettings/UserSettingsContext';
-import {useLocalUserTracks} from './airwave/VoiceHooks';
+import {useLocalUserTracks} from '../../lib/airwave/VoiceHooks';
 
 const styles = createStylesheet({
 	container: {

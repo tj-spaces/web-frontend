@@ -6,7 +6,7 @@
 */
 import {useContext, useEffect, useRef} from 'react';
 import SpaceAudioContext from '../components/space/SpaceAudioContext';
-import VoiceImmutableMediaTrack from '../components/space/airwave/VoiceImmutableMediaTrack';
+import VoiceImmutableMediaTrack from '../lib/airwave/VoiceImmutableMediaTrack';
 import {getLogger} from '../lib/ClusterLogger';
 import {defaultPannerNodeSettings} from '../lib/defaultPannerNodeSettings';
 import {Position} from '../typings/Space';

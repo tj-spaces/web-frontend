@@ -6,8 +6,8 @@
 */
 import React, {Suspense, useEffect, useMemo} from 'react';
 import * as THREE from 'three';
-import AirwaveLoggerGlobal from '../airwave/AirwaveLogger';
-import {useTracks, useVoiceSDK} from '../airwave/VoiceHooks';
+import AirwaveLoggerGlobal from '../../../lib/airwave/AirwaveLogger';
+import {useTracks, useVoiceSDK} from '../../../lib/airwave/VoiceHooks';
 import SpaceParticipant from '../SpaceParticipant';
 import Text from './Text';
 
@@ -77,7 +77,9 @@ export default function UserModel({
 				obj.addTrack(videoTracks[0].webrtcTrack);
 
 				AirwaveLoggerGlobal.debug(
-					`updated srcObject; currently: ${(video.srcObject as MediaStream).getTracks()}`
+					`updated srcObject; currently: ${(
+						video.srcObject as MediaStream
+					).getTracks()}`
 				);
 			}
 		}
