@@ -1,5 +1,6 @@
 import * as immutable from 'immutable';
 import {Dispatch, SetStateAction} from 'react';
+import io from './io';
 
 type RoomProps = {
 	id: string;
@@ -14,7 +15,18 @@ export class Room extends immutable.Record<RoomProps>({
 }) {}
 
 export class RoomSDK {
+	private _room = new Room();
+
 	constructor(private setRoom: Dispatch<SetStateAction<Room>>) {}
+
+	private set room(room: Room) {
+		this._room = room;
+		this.setRoom(room);
+	}
+
+	private get room() {
+		return this._room;
+	}
 
 	setID(id: string) {
 		this.setRoom((room) => room.set('id', id));
@@ -37,13 +49,12 @@ export class RoomSDK {
 	}
 
 	leave() {
+		io.emit('leave-room');
 		this.setRoom((room) => room.set('connectionState', 'disconnected'));
 	}
 
 	join(id: string) {
+		io.emit('join-room', id);
 		this.setRoom(() => new Room({id}));
-		setTimeout(() => {
-			this.setRoom((room) => room.set('connectionState', 'connected'));
-		}, 5000);
 	}
 }
