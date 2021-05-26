@@ -11,7 +11,7 @@ const DefaultPage = lazy(() => import('@pages/DefaultPage'));
 const EventExperiencePage = lazy(() => import('@pages/EventExperiencePage'));
 const LoginPage = lazy(() => import('@pages/LoginPage'));
 const Logout = lazy(() => import('@pages/LogoutPage'));
-const Room = lazy(() => import('@components/room/Room'));
+const Room = lazy(() => import('@components/room/RoomRoot'));
 const SpacePage = lazy(() => import('@pages/SpacePage'));
 const TermsPage = lazy(() => import('@pages/TermsPage'));
 

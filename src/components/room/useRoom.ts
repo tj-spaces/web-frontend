@@ -1,24 +1,18 @@
-import * as immutable from 'immutable';
-import {useEffect, useState} from 'react';
+import {useContext} from 'react';
+import {RoomContext} from './RoomProvider';
 
-type RoomProps = {
-	id: string;
-	connectionState: 'connecting' | 'connected' | 'disconnected';
-	participants: immutable.Map<string, any>;
-};
+export function useRoomConnectionState() {
+	return useContext(RoomContext).room.connectionState;
+}
 
-class Room extends immutable.Record<RoomProps>({
-	id: '',
-	connectionState: 'connecting',
-	participants: immutable.Map(),
-}) {}
+export function useRoomSDK() {
+	return useContext(RoomContext).roomSDK;
+}
 
-export default function useRoom(id: string): Room {
-	const [room, setRoom] = useState(new Room());
+export function useRoomParticipants() {
+	return useContext(RoomContext).room.participants;
+}
 
-	useEffect(() => {
-		setRoom(new Room({id}));
-	}, [id]);
-
-	return room;
+export function useRoomID() {
+	return useContext(RoomContext).room.id;
 }
