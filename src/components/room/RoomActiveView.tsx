@@ -10,9 +10,11 @@ export default function RoomActiveView() {
 		<>
 			<h1>Room {id}</h1>
 			<RoomControl leaveRoom={() => roomSDK.leave()} />
-			{participants.map((participant) => (
-				<RoomPresence key={participant.id} username={participant.id} />
-			))}
+			{participants
+				.map((participant) => (
+					<RoomPresence key={participant.id} username={participant.id} />
+				))
+				.valueSeq()}
 		</>
 	);
 }

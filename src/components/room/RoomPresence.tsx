@@ -22,5 +22,5 @@ export default function RoomPresence({username}: Props) {
 		};
 	}, [username, voiceSDK]);
 
-	return <div>{username}</div>;
+	return <div>user {username}</div>;
 }
