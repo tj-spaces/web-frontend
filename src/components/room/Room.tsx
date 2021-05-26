@@ -34,6 +34,7 @@ export default function Room({id}: {id: string}) {
 	const onJoinedRoom = useCallback(
 		(roomID: string) => {
 			roomSDK.setConnectionState('connected');
+			roomSDK.addParticipant('@me', {id: '@me'});
 		},
 		[roomSDK]
 	);
@@ -51,6 +52,7 @@ export default function Room({id}: {id: string}) {
 
 	const onParticipantLeft = useCallback(
 		(participantID: string) => {
+			console.log('participant left:', participantID);
 			roomSDK.removeParticipant(participantID);
 		},
 		[roomSDK]

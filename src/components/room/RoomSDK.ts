@@ -2,10 +2,14 @@ import * as immutable from 'immutable';
 import {Dispatch, SetStateAction} from 'react';
 import io from './io';
 
+type Participant = {
+	id: string;
+};
+
 type RoomProps = {
 	id: string;
 	connectionState: 'connecting' | 'connected' | 'disconnected' | 'failed';
-	participants: immutable.Map<string, any>;
+	participants: immutable.Map<string, Participant>;
 };
 
 export class Room extends immutable.Record<RoomProps>({

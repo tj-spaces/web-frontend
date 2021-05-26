@@ -1,18 +1,34 @@
-import {useContext} from 'react';
+import {useContext, useDebugValue} from 'react';
 import {RoomContext} from './RoomProvider';
 
 export function useRoomConnectionState() {
-	return useContext(RoomContext).room.connectionState;
+	const {connectionState} = useContext(RoomContext).room;
+
+	useDebugValue(connectionState);
+
+	return connectionState;
 }
 
 export function useRoomSDK() {
-	return useContext(RoomContext).roomSDK;
+	const {roomSDK} = useContext(RoomContext);
+
+	useDebugValue(roomSDK);
+
+	return roomSDK;
 }
 
 export function useRoomParticipants() {
-	return useContext(RoomContext).room.participants;
+	const {participants} = useContext(RoomContext).room;
+
+	useDebugValue(participants.toJS());
+
+	return participants;
 }
 
 export function useRoomID() {
-	return useContext(RoomContext).room.id;
+	const {id} = useContext(RoomContext).room;
+
+	useDebugValue(id);
+
+	return id;
 }
