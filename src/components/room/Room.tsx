@@ -3,10 +3,10 @@ import BaseButton from '@components/base/BaseButton';
 import UserSettingsProvider from '@components/space/userSettings/UserSettingsProvider';
 import {useState} from 'react';
 import {useParams} from 'react-router';
-import useSet from 'src/hooks/useSet';
 import {createStylesheet} from 'src/styles/createStylesheet';
 import RoomControl from './RoomControl';
 import RoomPresence from './RoomPresence';
+import useRoom from './useRoom';
 
 const styles = createStylesheet({
 	room: {
@@ -18,7 +18,7 @@ const styles = createStylesheet({
 
 export default function Room() {
 	const {roomID} = useParams<{roomID: string}>();
-	const users = useSet<string>();
+	const room = useRoom(roomID);
 	const [leftRoom, setLeftRoom] = useState(false);
 
 	return (
@@ -36,7 +36,7 @@ export default function Room() {
 						<>
 							<h1>Room {roomID}</h1>
 							<RoomControl leaveRoom={() => setLeftRoom(true)} />
-							{users.map((username) => (
+							{room.participants.map((username) => (
 								<RoomPresence key={username} username={username} />
 							))}
 						</>
