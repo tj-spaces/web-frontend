@@ -39,11 +39,11 @@ const styles = createStylesheet({
 });
 
 export default function LocalUserPreview({
-	width,
-	height,
+	width = '12rem',
+	height = '8rem',
 }: {
-	width: string;
-	height: string;
+	width?: string;
+	height?: string;
 }) {
 	const currentUser = useCurrentUser();
 	const stream = useMemo(() => new MediaStream(), []);

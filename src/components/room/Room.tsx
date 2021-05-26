@@ -1,24 +1,48 @@
 import VoiceProvider from '@airwave/VoiceProvider';
+import BaseButton from '@components/base/BaseButton';
+import UserSettingsProvider from '@components/space/userSettings/UserSettingsProvider';
+import {useState} from 'react';
 import {useParams} from 'react-router';
-import useInterval from 'src/hooks/useInterval';
 import useSet from 'src/hooks/useSet';
+import {createStylesheet} from 'src/styles/createStylesheet';
+import RoomControl from './RoomControl';
 import RoomPresence from './RoomPresence';
+
+const styles = createStylesheet({
+	room: {
+		marginLeft: '2rem',
+		marginRight: '2rem',
+		minWidth: '20rem',
+	},
+});
 
 export default function Room() {
 	const {roomID} = useParams<{roomID: string}>();
 	const users = useSet<string>();
-
-	useInterval(() => {
-		users.add('hello' + new Date().getTime());
-		console.log('adding hello');
-	}, 1000);
+	const [leftRoom, setLeftRoom] = useState(false);
 
 	return (
-		<VoiceProvider voiceURL="localhost">
-			<h1>Room {roomID}</h1>
-			{users.map((username) => (
-				<RoomPresence key={username} username={username} />
-			))}
-		</VoiceProvider>
+		<UserSettingsProvider>
+			<VoiceProvider voiceURL="localhost">
+				<div className={styles('room')}>
+					{leftRoom ? (
+						<>
+							<h1>You left the room</h1>
+							<BaseButton variant="theme" onClick={() => setLeftRoom(false)}>
+								Rejoin
+							</BaseButton>
+						</>
+					) : (
+						<>
+							<h1>Room {roomID}</h1>
+							<RoomControl leaveRoom={() => setLeftRoom(true)} />
+							{users.map((username) => (
+								<RoomPresence key={username} username={username} />
+							))}
+						</>
+					)}
+				</div>
+			</VoiceProvider>
+		</UserSettingsProvider>
 	);
 }
